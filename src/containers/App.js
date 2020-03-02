@@ -5,9 +5,10 @@ import { Route } from 'react-router-dom';
 import './App.css';
 import '../assets/fontawesome/css/all.css'
 
-import Navbar from '../components/Navbar';
-import Login from '../components/Login';
-import Products from '../components/Product/Products';
+import Navbar from '../components/Navbar/Navbar';
+import Login from './User/Login';
+import Products from './Product/Products';
+import ErrorHandler from './ErrorHandler/ErrorHandler';
 
 
 class App extends Component {
