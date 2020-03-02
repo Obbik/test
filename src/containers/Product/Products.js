@@ -25,6 +25,7 @@ class Products extends Component {
     }
 
     render() {
+        console.log(this.props);
         return(
             <div className="row">
                 {this.state.products.map(product => <Product key={product.Ean} product={product}/>)}

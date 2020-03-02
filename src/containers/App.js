@@ -21,19 +21,19 @@ class App extends Component {
     }
 
     componentDidMount() {
-        // const token = localStorage.getItem('token');
-        // const userId = localStorage.getItem('userId');
-        // const userName = localStorage.getItem('userName');
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+        const userName = localStorage.getItem('userName');
 
-        // // if (!token) {
-        // //     return;
-        // // }
+        // if (!token) {
+        //     return;
+        // }
 
-        // this.setState({
-        //     token: token, 
-        //     userId: userId,
-        //     userName: userName
-        // });
+        this.setState({
+            token: token, 
+            userId: userId,
+            userName: userName
+        });
     }
 
     login = (user) => {

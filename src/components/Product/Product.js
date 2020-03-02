@@ -2,11 +2,11 @@ import React from 'react';
 
 const product = (props) => {
     return (
-        <div className="col-md-3 col-sm-6 mb-3">
+        <div className="col-md-4 col-sm-6 mb-3">
             <div className="card">
-                <img src="https://bulma.io/images/placeholders/256x256.png" className="card-img-top" alt={props.Name} />
+                <img src="https://bulma.io/images/placeholders/256x256.png" className="card-img-top" alt={props.product.Name} />
                 <div className="card-body">
-                    <h5 className="card-title"></h5>
+                    <h5 className="card-title">{props.product.Name}</h5>
                     <div className="row">
                         <div className="col-md-6 mt-1">
                             <a href="" className="btn btn-secondary btn-block"><i className="fas fa-pencil-alt"></i></a>
