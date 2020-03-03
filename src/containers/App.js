@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import axios from 'axios';
-import { Route } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import './App.css';
 import '../assets/fontawesome/css/all.css'
 
-import Navbar from '../components/Navbar/Navbar';
+import Navbar from './Navbar/Navbar';
 import Login from './User/Login';
 import Products from './Product/Products';
-import ErrorHandler from './ErrorHandler/ErrorHandler';
+// import ErrorHandler from './ErrorHandler/ErrorHandler';
+import FullProduct from '../components/Product/FullProduct';
 
 
 class App extends Component {
@@ -17,7 +18,7 @@ class App extends Component {
         token: null,
         userId: null,
         userName: null,
-        test: null
+        isAuth: false
     }
 
     componentDidMount() {
@@ -25,14 +26,15 @@ class App extends Component {
         const userId = localStorage.getItem('userId');
         const userName = localStorage.getItem('userName');
 
-        // if (!token) {
-        //     return;
-        // }
+        if (!token) {
+            return;
+        }
 
         this.setState({
             token: token, 
             userId: userId,
-            userName: userName
+            userName: userName,
+            isAuth: true
         });
     }
 
@@ -48,6 +50,7 @@ class App extends Component {
             return res.data;
         })
         .then(res => {
+            console.log('res.data', res);
             const token = res.token;
             const userId = res.userId;
             const userName = res.userName;
@@ -55,7 +58,8 @@ class App extends Component {
             this.setState({
                 token: token,
                 userId: userId,
-                userName: userName 
+                userName: userName,
+                isAuth: true
             })
 
             localStorage.setItem('token', token);
@@ -69,34 +73,64 @@ class App extends Component {
     }
 
     logout = () => {
-        this.setState({ token: null });
+        this.setState({ 
+            token: null,
+            isAuth: false
+        });
+
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
         localStorage.removeItem('userName');
     };
 
     render() {
-        return (
-            <div>
-                <Navbar/>
-                <div className="container">
+        console.log(this.state.isAuth);
+        let routes = 
+            <Switch>
+                <Route
+                    exact path="/"
+                    render={() => (
+                        <Login onLogin={this.login} />
+                    )}
+                />
+                {/* <Redirect to="/" /> */}
+            </Switch>
+
+        if (this.state.isAuth) {
+            routes =
+                <div>
                     <Route
                         exact path="/"
-                        render={() => (
-                            <Login onLogin={this.login} />
-                        )}
-                    />
-                    <Route
-                        exact path="/products"
-                        render={() => (
+                        render={props => (
                             <Products
                                 url={this.state.url}
                                 token={this.state.token}
                             />
                         )}
                     />
+                    <Route
+                        exact path="/categories"
+                        render={props => (
+                            <h1>Categories</h1>
+                        )}
+                    />
+                    <Route
+                        exact path="/test"
+                        render={props => (
+                            <FullProduct/>
+                        )}
+                    />
+                    {/* <Redirect to="/" /> */}
                 </div>
-            </div>
+        }
+
+        return (
+            <Fragment>
+                <Navbar onLogout={this.logout} />
+                <div className="container">
+                    {routes}
+                </div>
+            </Fragment>
         );
     }
 }

@@ -6,13 +6,14 @@ const product = (props) => {
             <div className="card">
                 <img src="https://bulma.io/images/placeholders/256x256.png" className="card-img-top" alt={props.product.Name} />
                 <div className="card-body">
-                    <h5 className="card-title">{props.product.Name}</h5>
+                    <h4 className="card-title">{props.product.Name}</h4>
+                    <p>{props.product.Ean}</p>
                     <div className="row">
                         <div className="col-md-6 mt-1">
-                            <a href="" className="btn btn-secondary btn-block"><i className="fas fa-pencil-alt"></i></a>
+                            <button className="btn btn-secondary btn-block"><i className="fas fa-pencil-alt"></i></button>
                         </div>
                         <div className="col-md-6 mt-1">
-                            <button type="submit" value="delete" className="btn btn-danger btn-block"><i className="fa fa-trash"></i></button>
+                            <button className="btn btn-danger btn-block"><i className="fa fa-trash"></i></button>
                         </div>
                     </div>
                 </div>
