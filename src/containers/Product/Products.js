@@ -11,6 +11,25 @@ class Products extends Component {
     }
 
     componentDidMount() {
+        this.getProducts();
+    }
+
+    deleteProduct = ean => {
+        axios.delete(this.props.url + 'api/product/' + ean, {
+            headers: {
+                Authorization: 'Bearer ' + this.props.token
+            }
+        })
+        .then(res => {
+            console.log(res.data);
+            this.getProducts();
+        })
+        .catch(err => {
+            console.log('err.response.data', err.response.data);
+        });
+    }
+
+    getProducts = () => {
         axios.get(this.props.url + 'api/products', {
             headers: {
                 Authorization: 'Bearer ' + this.props.token
@@ -32,13 +51,19 @@ class Products extends Component {
                         <h1>Produkty</h1>
                     </div>
                     <div className="col-sm">
-                        <Link to={'product/add'} className="btn btn-success float-right">
+                        <Link to="/product/add" className="btn btn-success float-right">
                             <i className="fa fa-plus"></i> &nbsp; Dodaj produkt
                         </Link>
                     </div>
                 </div>
                 <div className="row">
-                    {this.state.products.map(product => <Product key={product.Ean} product={product}/>)}
+                    {this.state.products.map(product => 
+                        <Product 
+                            key={product.Ean} 
+                            product={product}
+                            onDeleteProduct = {() => this.deleteProduct(product.Ean)}
+                        />
+                    )}
                 </div>
             </Fragment>
         )

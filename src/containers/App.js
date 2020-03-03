@@ -134,7 +134,7 @@ class App extends Component {
                         )}
                     />
                     <Route
-                        exact path="/:id"
+                        exact path="/product/:id"
                         render={props => (
                             <FullProduct
                                 {...props}
