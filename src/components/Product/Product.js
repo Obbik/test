@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const product = (props) => {
     return (
@@ -10,10 +11,10 @@ const product = (props) => {
                     <p>{props.product.Ean}</p>
                     <div className="row">
                         <div className="col-md-6 mt-1">
-                            <button className="btn btn-secondary btn-block"><i className="fas fa-pencil-alt"></i></button>
+                            <Link to={props.product.Ean} className="btn btn-secondary btn-block"><i className="fas fa-pencil-alt"></i></Link>
                         </div>
                         <div className="col-md-6 mt-1">
-                            <button className="btn btn-danger btn-block"><i className="fa fa-trash"></i></button>
+                            <Link to={props.product.Ean} className="btn btn-danger btn-block"><i className="fa fa-trash"></i></Link>
                         </div>
                     </div>
                 </div>

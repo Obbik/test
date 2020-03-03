@@ -1,4 +1,6 @@
 import React, { Component, Fragment } from 'react';
+import { Link } from 'react-router-dom';
+
 import axios from 'axios';
 
 import Product from '../../components/Product/Product';
@@ -9,7 +11,6 @@ class Products extends Component {
     }
 
     componentDidMount() {
-        console.log('componentDidMount');
         axios.get(this.props.url + 'api/products', {
             headers: {
                 Authorization: 'Bearer ' + this.props.token
@@ -31,9 +32,9 @@ class Products extends Component {
                         <h1>Produkty</h1>
                     </div>
                     <div className="col-sm">
-                        <button className="btn btn-success float-right">
+                        <Link to={'product/add'} className="btn btn-success float-right">
                             <i className="fa fa-plus"></i> &nbsp; Dodaj produkt
-                        </button>
+                        </Link>
                     </div>
                 </div>
                 <div className="row">

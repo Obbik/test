@@ -9,7 +9,7 @@ import Navbar from './Navbar/Navbar';
 import Login from './User/Login';
 import Products from './Product/Products';
 // import ErrorHandler from './ErrorHandler/ErrorHandler';
-import FullProduct from '../components/Product/FullProduct';
+import FullProduct from './Product/FullProduct';
 
 
 class App extends Component {
@@ -25,10 +25,18 @@ class App extends Component {
         const token = localStorage.getItem('token');
         const userId = localStorage.getItem('userId');
         const userName = localStorage.getItem('userName');
+        const expiryDate = localStorage.getItem('expiryDate');
 
-        if (!token) {
+        if (!token || !expiryDate) {
             return;
         }
+
+        if (new Date(expiryDate) <= new Date()) {
+            this.logoutHandler();
+            return;
+        }
+
+        const remainingMilliseconds = new Date(expiryDate).getTime() - new Date().getTime();
 
         this.setState({
             token: token, 
@@ -36,6 +44,8 @@ class App extends Component {
             userName: userName,
             isAuth: true
         });
+
+        this.setAutoLogout(remainingMilliseconds);
     }
 
     login = (user) => {
@@ -66,11 +76,26 @@ class App extends Component {
             localStorage.setItem('userId', userId);
             localStorage.setItem('userName', userName);
 
+            const remainingMilliseconds = 60 * 60 * 1000;
+            const expiryDate = new Date(
+                new Date().getTime() + remainingMilliseconds
+            );
+
+            localStorage.setItem('expiryDate', expiryDate.toISOString());
+
+            this.setAutoLogout(remainingMilliseconds);
+
         })
         .catch(err => {
             console.log('err.response.data', err.response.data);
         });
     }
+
+    setAutoLogout = milliseconds => {
+        setTimeout(() => {
+          this.logout();
+        }, milliseconds);
+    };
 
     logout = () => {
         this.setState({ 
@@ -84,7 +109,7 @@ class App extends Component {
     };
 
     render() {
-        console.log(this.state.isAuth);
+        console.log('isAuth', this.state.isAuth);
         let routes = 
             <Switch>
                 <Route
@@ -109,15 +134,19 @@ class App extends Component {
                         )}
                     />
                     <Route
-                        exact path="/categories"
+                        exact path="/:id"
                         render={props => (
-                            <h1>Categories</h1>
+                            <FullProduct
+                                {...props}
+                                url={this.state.url}
+                                token={this.state.token}
+                            />
                         )}
                     />
                     <Route
-                        exact path="/test"
+                        exact path="/categories"
                         render={props => (
-                            <FullProduct/>
+                            <h1>Categories</h1>
                         )}
                     />
                     {/* <Redirect to="/" /> */}
