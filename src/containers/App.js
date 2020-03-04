@@ -8,7 +8,7 @@ import '../assets/fontawesome/css/all.css'
 import Navbar from './Navbar/Navbar';
 import Login from './User/Login';
 import Products from './Product/Products';
-// import ErrorHandler from './ErrorHandler/ErrorHandler';
+import ErrorHandler from '../components/ErrorHandler/ErrorHandler';
 import FullProduct from './Product/FullProduct';
 
 
@@ -18,7 +18,8 @@ class App extends Component {
         token: null,
         userId: null,
         userName: null,
-        isAuth: false
+        isAuth: false,
+        error: null
     }
 
     componentDidMount() {
@@ -32,7 +33,7 @@ class App extends Component {
         }
 
         if (new Date(expiryDate) <= new Date()) {
-            this.logoutHandler();
+            this.logout();
             return;
         }
 
@@ -60,7 +61,6 @@ class App extends Component {
             return res.data;
         })
         .then(res => {
-            console.log('res.data', res);
             const token = res.token;
             const userId = res.userId;
             const userName = res.userName;
@@ -87,7 +87,17 @@ class App extends Component {
 
         })
         .catch(err => {
-            console.log('err.response.data', err.response.data);
+            this.setState({
+                isAuth: false,
+                error: err
+            })
+
+            setTimeout(() => {
+                this.setState({
+                    error: null
+                })
+            }, 5000);
+
         });
     }
 
@@ -108,8 +118,11 @@ class App extends Component {
         localStorage.removeItem('userName');
     };
 
+    errorHandler = () => {
+        this.setState({ error: null });
+    };
+
     render() {
-        console.log('isAuth', this.state.isAuth);
         let routes = 
             <Switch>
                 <Route
@@ -118,7 +131,7 @@ class App extends Component {
                         <Login onLogin={this.login} />
                     )}
                 />
-                {/* <Redirect to="/" /> */}
+                <Redirect to="/" />
             </Switch>
 
         if (this.state.isAuth) {
@@ -149,14 +162,18 @@ class App extends Component {
                             <h1>Categories</h1>
                         )}
                     />
-                    {/* <Redirect to="/" /> */}
+                    <Redirect to="/" />
                 </div>
         }
 
         return (
             <Fragment>
                 <Navbar onLogout={this.logout} />
-                <div className="container">
+                <div className="container navbar-margin">
+                    <ErrorHandler 
+                        error={this.state.error} 
+                        onHandle={this.errorHandler} 
+                    />
                     {routes}
                 </div>
             </Fragment>

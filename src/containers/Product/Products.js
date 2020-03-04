@@ -59,7 +59,8 @@ class Products extends Component {
                 <div className="row">
                     {this.state.products.map(product => 
                         <Product 
-                            key={product.Ean} 
+                            key={product.Ean}
+                            url={this.props.url}
                             product={product}
                             onDeleteProduct = {() => this.deleteProduct(product.Ean)}
                         />

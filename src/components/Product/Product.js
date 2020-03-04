@@ -5,7 +5,7 @@ const product = (props) => {
     return (
         <div className="col-md-4 col-sm-6 mb-3">
             <div className="card">
-                <img src="https://bulma.io/images/placeholders/256x256.png" className="card-img-top" alt={props.product.Name} />
+                <img src={props.url + props.product.Image} className="card-img-top" alt={props.product.Name} />
                 <div className="card-body">
                     <h4 className="card-title">{props.product.Name}</h4>
                     <p>{props.product.Ean}</p>

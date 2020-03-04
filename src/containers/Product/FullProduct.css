@@ -1,0 +1,16 @@
+.file-field {
+	position: relative;
+	overflow: hidden;
+	text-align: center;
+	margin: 10px;
+}
+
+.file-field input.upload {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	opacity: 0;
+	filter: alpha(opacity=0);
+}
