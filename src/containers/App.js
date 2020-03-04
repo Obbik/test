@@ -8,6 +8,7 @@ import '../assets/fontawesome/css/all.css'
 import Navbar from './Navbar/Navbar';
 import Login from './User/Login';
 import Products from './Product/Products';
+import Categories from './Category/Categories';
 import ErrorHandler from '../components/ErrorHandler/ErrorHandler';
 import FullProduct from './Product/FullProduct';
 
@@ -159,7 +160,10 @@ class App extends Component {
                     <Route
                         exact path="/categories"
                         render={props => (
-                            <h1>Categories</h1>
+                            <Categories
+                                url={this.state.url}
+                                token={this.state.token}
+                            />
                         )}
                     />
                     <Redirect to="/" />
@@ -168,7 +172,7 @@ class App extends Component {
 
         return (
             <Fragment>
-                <Navbar onLogout={this.logout} />
+                <Navbar onLogout={this.logout} isAuth={this.state.isAuth} />
                 <div className="container navbar-margin">
                     <ErrorHandler 
                         error={this.state.error} 

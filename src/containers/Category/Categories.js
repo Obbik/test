@@ -2,28 +2,28 @@ import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-import Product from '../../components/Product/Product';
+import Category from '../../components/Category/Category';
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 
-class Products extends Component {
+class Categories extends Component {
     state = {
-        products: [],
+        categories: [],
         error: null
     }
 
     componentDidMount() {
-        this.getProducts();
+        this.getCategories();
     }
 
-    deleteProduct = ean => {
-        axios.delete(this.props.url + 'api/product/' + ean, {
+    deleteCategory = id => {
+        axios.delete(this.props.url + 'api/category/' + id, {
             headers: {
                 Authorization: 'Bearer ' + this.props.token
             }
         })
         .then(res => {
             console.log(res.data);
-            this.getProducts();
+            this.getCategories();
         })
         .catch(err => {
             this.setState({ error: err });
@@ -34,14 +34,14 @@ class Products extends Component {
         });
     }
 
-    getProducts = () => {
-        axios.get(this.props.url + 'api/products', {
+    getCategories = () => {
+        axios.get(this.props.url + 'api/categories', {
             headers: {
                 Authorization: 'Bearer ' + this.props.token
             }
         })
         .then(res => {
-            this.setState({ products: res.data })
+            this.setState({ categories: res.data })
         })
         .catch(err => {
             this.setState({ error: err });
@@ -65,21 +65,21 @@ class Products extends Component {
                 />
                 <div className="row mb-3">
                     <div className="col-sm">
-                        <h1>Produkty</h1>
+                        <h1>Kategorie</h1>
                     </div>
                     <div className="col-sm">
-                        <Link to="/product/add" className="btn btn-success float-right">
-                            <i className="fa fa-plus"></i> &nbsp; Dodaj produkt
+                        <Link to="/category/add" className="btn btn-success float-right">
+                            <i className="fa fa-plus"></i> &nbsp; Dodaj kategorię
                         </Link>
                     </div>
                 </div>
                 <div className="row">
-                    {this.state.products.map(product => 
-                        <Product 
-                            key={product.Ean}
+                    {this.state.categories.map(category => 
+                        <Category 
+                            key={category.Id}
                             url={this.props.url}
-                            product={product}
-                            onDeleteProduct = {() => this.deleteProduct(product.Ean)}
+                            category={category}
+                            onDeleteCategory = {() => this.deleteCategory(category.Id)}
                         />
                     )}
                 </div>
@@ -88,4 +88,4 @@ class Products extends Component {
     }
 }
 
-export default Products;
+export default Categories;

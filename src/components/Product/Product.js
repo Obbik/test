@@ -8,7 +8,8 @@ const product = (props) => {
                 <img src={props.url + props.product.Image} className="card-img-top" alt={props.product.Name} />
                 <div className="card-body">
                     <h4 className="card-title">{props.product.Name}</h4>
-                    <p>{props.product.Ean}</p>
+                    <h6>{props.product.Ean}</h6>
+                    <p>{props.product.Price}</p>
                     <div className="row">
                         <div className="col-md-6 mt-1">
                             <Link to={"/product/" + props.product.Ean} className="btn btn-secondary btn-block"><i className="fas fa-pencil-alt"></i></Link>

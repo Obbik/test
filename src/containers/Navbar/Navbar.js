@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
 const logo = require('../../assets/images/logo-vendim.png');
@@ -39,19 +39,22 @@ class Navbar extends Component {
 
                         </ul>
                         <ul className="navbar-nav ml-auto">
-                            <li className="nav-item">
-                                <Link to="/" className="nav-link">Produkty</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link to="/categories" className="nav-link">Kategorie</Link>
-                            </li>
-                            <li className="nav-item dropdown">
-                                {/* <Link to="/" className="nav-link">User</Link> */}
-                                <div onClick={this.handleDropdown}  className="nav-link dropdown-toggle">
-                                    <i className="far fa-user"></i>
-                                </div>
-                                {dropdown}
-                            </li>
+                            {this.props.isAuth ?
+                            <Fragment>
+                                <li className="nav-item">
+                                    <Link to="/" className="nav-link">Produkty</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link to="/categories" className="nav-link">Kategorie</Link>
+                                </li>
+                                <li className="nav-item dropdown">
+                                    {/* <Link to="/" className="nav-link">User</Link> */}
+                                    <div onClick={this.handleDropdown}  className="nav-link dropdown-toggle">
+                                        <i className="far fa-user"></i>
+                                    </div>
+                                    {dropdown}
+                                </li> 
+                            </Fragment> : null}
                         </ul>
                     </div>
                 </div>

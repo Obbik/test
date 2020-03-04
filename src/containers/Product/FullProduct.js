@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
-
-import './FullProduct.css';
-
+import React, { Component, Fragment } from 'react';
 import axios from 'axios';
+
+import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 
 class FullProduct extends Component {
     state = {
@@ -11,10 +10,18 @@ class FullProduct extends Component {
             name: '',
             price: '',
             discountedPrice: '',
+            shortDescription: '',
             description: '',
+            ingredients: '',
+            useMethod: '',
+            associations: '',
+            groups: '',
+            image: '',
+            video: '',
             defaultCategoryId: ''
         },
-        addProduct: false
+        addProduct: false,
+        error: null
     }
 
     componentDidMount() {
@@ -28,7 +35,7 @@ class FullProduct extends Component {
             })
             .then(res => {
                 if(res.status !== 200) {
-                    throw new Error('Failed to fetch status');
+                    throw new Error('Failed to fetch status.');
                 }
                 return res.data;
             })
@@ -40,13 +47,18 @@ class FullProduct extends Component {
                         price: res.Price,
                         discountedPrice: res.DiscountedPrice || '',
                         description: res.Description,
+                        image: res.Image,
                         defaultCategoryId: res.DefaultCategoryId
                     },
                     addProduct: false
                 });
             })
             .catch(err => {
-                console.log(err.response.data);
+                this.setState({ error: err });
+
+                setTimeout(() => {
+                    this.setState({ error: null })
+                }, 5000);
             });
         } else {
             this.setState({
@@ -113,11 +125,16 @@ class FullProduct extends Component {
             console.log(res.data);
         })
         .catch(err => {
-            console.log('err.response.data', err.response.data);
+            this.setState({ error: err });
+
+            setTimeout(() => {
+                this.setState({ error: null })
+            }, 5000);
         });
     }
 
     editProduct = (product) => {
+        console.log(product);
         const id = this.props.match.params.id;
 
         const formData = new FormData();
@@ -139,48 +156,63 @@ class FullProduct extends Component {
             console.log(res.data);
         })
         .catch(err => {
-            console.log('err.response', err.response);
+            this.setState({ error: err });
+
+            setTimeout(() => {
+                this.setState({ error: null })
+            }, 5000);
         });
     }
+
+    errorHandler = () => {
+        this.setState({ error: null });
+    }
+
      
     render() {
         return(
-            <div className="card card-body bg-light mt-5">
-                <div className="text-center">
-                    <h2>{this.state.addProduct ? 'Dodaj produkt' : this.state.product.name}</h2>
+            <Fragment>
+                <ErrorHandler 
+                    error={this.state.error} 
+                    onHandle={this.errorHandler} 
+                />
+                <div className="card card-body bg-light mt-5">
+                    <div className="text-center">
+                        <h2>{this.state.addProduct ? 'Dodaj produkt' : this.state.product.name}</h2>
+                    </div>
+                    <form onSubmit={this.handleSubmit}>
+                        <div className="form-group">
+                            <label>Ean</label>
+                            <input type="number" name="ean" className="form-control form-control-lg" value={this.state.product.ean} onChange={this.handleChange} readOnly={!this.state.addProduct}/>
+                        </div>
+                        <div className="form-group">
+                            <label>Zdjęcie</label>
+                            <input type="file" name="image" className="form-control form-control-lg" onChange={this.handleChange}/>
+                        </div>
+                        <div className="form-group">
+                            <label>Nazwa produktu</label>
+                            <input type="text" name="name" className="form-control form-control-lg" value={this.state.product.name} onChange={this.handleChange}/>
+                        </div>
+                        <div className="form-group">
+                            <label>Cena</label>
+                            <input type="number" name="price" className="form-control form-control-lg" value={this.state.product.price} onChange={this.handleChange}/>
+                        </div>
+                        <div className="form-group">
+                            <label>Cena promocyjna</label>
+                            <input type="number" name="discountedPrice" className="form-control form-control-lg" value={this.state.product.discountedPrice} onChange={this.handleChange}/>
+                        </div>
+                        <div className="form-group">
+                            <label>Opis</label>
+                            <textarea type="text" name="description" className="form-control" rows="4" value={this.state.product.description} onChange={this.handleChange}/>
+                        </div>
+                        <div className="form-group">
+                            <label>Domyślna kategoria</label>
+                            <input type="number" name="defaultCategoryId" className="form-control form-control-lg" value={this.state.product.defaultCategoryId} onChange={this.handleChange}/>
+                        </div>
+                        <input type="submit" className="btn btn-success" value="Zapisz"/>
+                    </form>
                 </div>
-                <form onSubmit={this.handleSubmit}>
-                    <div className="form-group">
-                        <label>Ean</label>
-                        <input type="number" name="ean" className="form-control form-control-lg" value={this.state.product.ean} onChange={this.handleChange} readOnly={!this.state.addProduct}/>
-                    </div>
-                    <div className="form-group">
-                        <label>Zdjęcie</label>
-                        <input type="file" name="image" className="form-control form-control-lg" onChange={this.handleChange}/>
-                    </div>
-                    <div className="form-group">
-                        <label>Nazwa produktu</label>
-                        <input type="text" name="name" className="form-control form-control-lg" value={this.state.product.name} onChange={this.handleChange}/>
-                    </div>
-                    <div className="form-group">
-                        <label>Cena</label>
-                        <input type="number" name="price" className="form-control form-control-lg" value={this.state.product.price} onChange={this.handleChange}/>
-                    </div>
-                    <div className="form-group">
-                        <label>Cena promocyjna</label>
-                        <input type="number" name="discountedPrice" className="form-control form-control-lg" value={this.state.product.discountedPrice} onChange={this.handleChange}/>
-                    </div>
-                    <div className="form-group">
-                        <label>Opis</label>
-                        <textarea type="text" name="description" className="form-control" rows="4" value={this.state.product.description} onChange={this.handleChange}/>
-                    </div>
-                    <div className="form-group">
-                        <label>Domyślna kategoria</label>
-                        <input type="number" name="defaultCategoryId" className="form-control form-control-lg" value={this.state.product.defaultCategoryId} onChange={this.handleChange}/>
-                    </div>
-                    <input type="submit" className="btn btn-success" value="Zapisz"/>
-                </form>
-            </div>
+            </Fragment>
         );
     }
 }

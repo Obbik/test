@@ -3,6 +3,9 @@ import React, { Fragment } from 'react';
 import './ErrorHandler.css'
 
 const errorHandler = (props) => {
+    if(props.error) {
+        console.log('error', props.error.response);
+    }    
     const alert = props.error ?
         <div className="alert alert-danger" role="alert">
             {props.error.response.data.message}
