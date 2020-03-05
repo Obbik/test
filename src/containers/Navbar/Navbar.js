@@ -28,7 +28,7 @@ class Navbar extends Component {
             </div> : null
 
         return (
-            <nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-dark mb-">
+            <nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
                 <div className="container">
                     <Link to="/" className="navbar-brand"><img src={logo} alt="logo" height="54" /></Link>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

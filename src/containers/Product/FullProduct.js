@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import axios from 'axios';
 
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
+import ProductNav from '../../components/Product/ProductNav';
 
 class FullProduct extends Component {
     state = {
@@ -67,7 +68,7 @@ class FullProduct extends Component {
         }
     }
 
-    handleChange = (e) => {
+    handleChange = e => {
         e.preventDefault();
 		const inputName = e.target.name;
         let inputValue = e.target.value;
@@ -85,7 +86,7 @@ class FullProduct extends Component {
         }));
     }
 
-    handleSubmit = (e) => {
+    handleSubmit = e => {
         e.preventDefault();
 
         const product = {
@@ -105,7 +106,7 @@ class FullProduct extends Component {
         }
     }
 
-    addProduct = (product) => {
+    addProduct = product => {
         const formData = new FormData();
         formData.append('Ean', product.Ean);
         formData.append('Name', product.Name);
@@ -133,8 +134,7 @@ class FullProduct extends Component {
         });
     }
 
-    editProduct = (product) => {
-        console.log(product);
+    editProduct = product => {
         const id = this.props.match.params.id;
 
         const formData = new FormData();
@@ -153,7 +153,6 @@ class FullProduct extends Component {
         })
         .then(res => {
             this.props.history.push('/');
-            console.log(res.data);
         })
         .catch(err => {
             this.setState({ error: err });
@@ -167,14 +166,18 @@ class FullProduct extends Component {
     errorHandler = () => {
         this.setState({ error: null });
     }
-
      
     render() {
+        const id = this.props.match.params.id;
         return(
             <Fragment>
                 <ErrorHandler 
                     error={this.state.error} 
                     onHandle={this.errorHandler} 
+                />
+                <ProductNav 
+                    id={id} 
+                    active={1}
                 />
                 <div className="card card-body bg-light mt-5">
                     <div className="text-center">
@@ -205,10 +208,10 @@ class FullProduct extends Component {
                             <label>Opis</label>
                             <textarea type="text" name="description" className="form-control" rows="4" value={this.state.product.description} onChange={this.handleChange}/>
                         </div>
-                        <div className="form-group">
+                        {/* <div className="form-group">
                             <label>Domyślna kategoria</label>
                             <input type="number" name="defaultCategoryId" className="form-control form-control-lg" value={this.state.product.defaultCategoryId} onChange={this.handleChange}/>
-                        </div>
+                        </div> */}
                         <input type="submit" className="btn btn-success" value="Zapisz"/>
                     </form>
                 </div>

@@ -11,6 +11,8 @@ import Products from './Product/Products';
 import Categories from './Category/Categories';
 import ErrorHandler from '../components/ErrorHandler/ErrorHandler';
 import FullProduct from './Product/FullProduct';
+import ProductCategory from './Product/ProductCategory';
+import FullCategory from './Category/FullCategory';
 
 
 class App extends Component {
@@ -132,12 +134,12 @@ class App extends Component {
                         <Login onLogin={this.login} />
                     )}
                 />
-                <Redirect to="/" />
+                {/* <Redirect to="/" /> */}
             </Switch>
 
         if (this.state.isAuth) {
             routes =
-                <div>
+                <Fragment>
                     <Route
                         exact path="/"
                         render={props => (
@@ -158,6 +160,16 @@ class App extends Component {
                         )}
                     />
                     <Route
+                        exact path="/product-category/:id"
+                        render={props => (
+                            <ProductCategory
+                                {...props}
+                                url={this.state.url}
+                                token={this.state.token}
+                            />
+                        )}
+                    />
+                    <Route
                         exact path="/categories"
                         render={props => (
                             <Categories
@@ -166,8 +178,18 @@ class App extends Component {
                             />
                         )}
                     />
-                    <Redirect to="/" />
-                </div>
+                    <Route
+                        exact path="/category/:id"
+                        render={props => (
+                            <FullCategory
+                                {...props}
+                                url={this.state.url}
+                                token={this.state.token}
+                            />
+                        )}
+                    />
+                    {/* <Redirect to="/" /> */}
+                </Fragment>
         }
 
         return (
