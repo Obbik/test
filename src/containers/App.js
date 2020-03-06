@@ -134,7 +134,7 @@ class App extends Component {
                         <Login onLogin={this.login} />
                     )}
                 />
-                {/* <Redirect to="/" /> */}
+                <Redirect to="/" />
             </Switch>
 
         if (this.state.isAuth) {
@@ -188,7 +188,7 @@ class App extends Component {
                             />
                         )}
                     />
-                    {/* <Redirect to="/" /> */}
+                    <Redirect to="/" />
                 </Fragment>
         }
 

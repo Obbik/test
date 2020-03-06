@@ -146,7 +146,7 @@ class FullCategory extends Component {
                 <div className="row mb-3">
                     <div className="col">
                         <Link to="/categories" className="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i>&nbsp; Wróć
+                            <i className="fas fa-arrow-left"></i>&nbsp; Wróć
                         </Link>
                     </div>
                 </div>

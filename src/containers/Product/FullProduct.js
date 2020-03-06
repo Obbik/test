@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import ProductNav from '../../components/Product/ProductNav';
@@ -11,15 +12,8 @@ class FullProduct extends Component {
             name: '',
             price: '',
             discountedPrice: '',
-            shortDescription: '',
             description: '',
-            ingredients: '',
-            useMethod: '',
-            associations: '',
-            groups: '',
-            image: '',
-            video: '',
-            defaultCategoryId: ''
+            image: ''
         },
         addProduct: false,
         error: null
@@ -107,6 +101,7 @@ class FullProduct extends Component {
     }
 
     addProduct = product => {
+        console.log(product);
         const formData = new FormData();
         formData.append('Ean', product.Ean);
         formData.append('Name', product.Name);
@@ -114,7 +109,6 @@ class FullProduct extends Component {
         formData.append('DiscountedPrice', product.DiscountedPrice);
         formData.append('Description', product.Description);
         formData.append('Image', product.Image);
-        formData.append('DefaultCategoryId', product.DefaultCategoryId);
 
         axios.post(this.props.url + 'api/product/', formData, {
             headers: {
@@ -144,7 +138,6 @@ class FullProduct extends Component {
         formData.append('DiscountedPrice', product.DiscountedPrice);
         formData.append('Description', product.Description);
         formData.append('Image', product.Image);
-        formData.append('DefaultCategoryId', product.DefaultCategoryId);
         
         axios.put(this.props.url + 'api/product/' + id, formData, {
             headers: {
@@ -175,45 +168,56 @@ class FullProduct extends Component {
                     error={this.state.error} 
                     onHandle={this.errorHandler} 
                 />
-                <ProductNav 
-                    id={id} 
-                    active={1}
-                />
-                <div className="card card-body bg-light mt-5">
-                    <div className="text-center">
-                        <h2>{this.state.addProduct ? 'Dodaj produkt' : this.state.product.name}</h2>
+                <div className="row">
+                    <div className="col">
+                        <Link to="/" className="btn btn-secondary">
+                            <i className="fas fa-arrow-left"></i>&nbsp; Wróć
+                        </Link>
                     </div>
-                    <form onSubmit={this.handleSubmit}>
-                        <div className="form-group">
-                            <label>Ean</label>
-                            <input type="number" name="ean" className="form-control form-control-lg" value={this.state.product.ean} onChange={this.handleChange} readOnly={!this.state.addProduct}/>
+                </div>
+                <div className="card mt-4">
+                    <div className="card-header">
+                        <ProductNav 
+                            id={id} 
+                            active={1}
+                        />
+                    </div>
+                    <div className="card-body">
+                        <div className="text-center">
+                            <h2>{this.state.addProduct ? 'Dodaj produkt' : this.state.product.name}</h2>
                         </div>
-                        <div className="form-group">
-                            <label>Zdjęcie</label>
-                            <input type="file" name="image" className="form-control form-control-lg" onChange={this.handleChange}/>
-                        </div>
-                        <div className="form-group">
-                            <label>Nazwa produktu</label>
-                            <input type="text" name="name" className="form-control form-control-lg" value={this.state.product.name} onChange={this.handleChange}/>
-                        </div>
-                        <div className="form-group">
-                            <label>Cena</label>
-                            <input type="number" name="price" className="form-control form-control-lg" value={this.state.product.price} onChange={this.handleChange}/>
-                        </div>
-                        <div className="form-group">
-                            <label>Cena promocyjna</label>
-                            <input type="number" name="discountedPrice" className="form-control form-control-lg" value={this.state.product.discountedPrice} onChange={this.handleChange}/>
-                        </div>
-                        <div className="form-group">
-                            <label>Opis</label>
-                            <textarea type="text" name="description" className="form-control" rows="4" value={this.state.product.description} onChange={this.handleChange}/>
-                        </div>
-                        {/* <div className="form-group">
-                            <label>Domyślna kategoria</label>
-                            <input type="number" name="defaultCategoryId" className="form-control form-control-lg" value={this.state.product.defaultCategoryId} onChange={this.handleChange}/>
-                        </div> */}
-                        <input type="submit" className="btn btn-success" value="Zapisz"/>
-                    </form>
+                        <form onSubmit={this.handleSubmit}>
+                            <div className="form-group">
+                                <label>Ean</label>
+                                <input type="number" name="ean" className="form-control form-control-lg" value={this.state.product.ean} onChange={this.handleChange} readOnly={!this.state.addProduct}/>
+                            </div>
+                            <div className="form-group">
+                                <label>Zdjęcie</label>
+                                <input type="file" name="image" className="form-control form-control-lg" onChange={this.handleChange}/>
+                            </div>
+                            <div className="form-group">
+                                <label>Nazwa produktu</label>
+                                <input type="text" name="name" className="form-control form-control-lg" value={this.state.product.name} onChange={this.handleChange}/>
+                            </div>
+                            <div className="form-group">
+                                <label>Cena</label>
+                                <input type="number" name="price" className="form-control form-control-lg" value={this.state.product.price} onChange={this.handleChange}/>
+                            </div>
+                            <div className="form-group">
+                                <label>Cena promocyjna</label>
+                                <input type="number" name="discountedPrice" className="form-control form-control-lg" value={this.state.product.discountedPrice} onChange={this.handleChange}/>
+                            </div>
+                            <div className="form-group">
+                                <label>Opis</label>
+                                <textarea type="text" name="description" className="form-control" rows="4" value={this.state.product.description} onChange={this.handleChange}/>
+                            </div>
+                            {/* <div className="form-group">
+                                <label>Domyślna kategoria</label>
+                                <input type="number" name="defaultCategoryId" className="form-control form-control-lg" value={this.state.product.defaultCategoryId} onChange={this.handleChange}/>
+                            </div> */}
+                            <input type="submit" className="btn btn-success" value="Zapisz"/>
+                        </form>
+                    </div>
                 </div>
             </Fragment>
         );

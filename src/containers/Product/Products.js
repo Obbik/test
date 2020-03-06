@@ -59,7 +59,7 @@ class Products extends Component {
     render() {
         return(
             <Fragment>
-                <ErrorHandler 
+                <ErrorHandler
                     error={this.state.error} 
                     onHandle={this.errorHandler} 
                 />
