@@ -1,14 +1,16 @@
 import React, { Component, Fragment } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 import Category from '../../components/Category/Category';
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
+import Title from '../../components/Title/Title';
+import SearchInput from '../SearchInput/SearchInput';
 
 class Categories extends Component {
     state = {
         categories: [],
-        error: null
+        error: null,
+        tableView: false
     }
 
     componentDidMount() {
@@ -22,7 +24,6 @@ class Categories extends Component {
             }
         })
         .then(res => {
-            console.log(res.data);
             this.getCategories();
         })
         .catch(err => {
@@ -41,7 +42,10 @@ class Categories extends Component {
             }
         })
         .then(res => {
-            this.setState({ categories: res.data })
+            this.setState({ 
+                categories: res.data,
+                initialCategories: res.data 
+            })
         })
         .catch(err => {
             this.setState({ error: err });
@@ -56,6 +60,36 @@ class Categories extends Component {
         this.setState({ error: null });
     }
 
+    // Method for changing the view (table or cards)
+    toggleView = () => {
+        this.setState({
+            tableView: !this.state.tableView
+        })
+    }
+
+    // Search bar
+    search = value => {
+        const suggestions = this.getSuggestions(value);
+        let filteredCategories = this.state.initialCategories;
+
+        if(value !== '') {
+            filteredCategories = suggestions;
+        }
+
+        this.setState({
+            categories: filteredCategories
+        });
+    }
+
+    getSuggestions = value => {
+        const inputValue = value.trim().toLowerCase();
+        const inputLength = inputValue.length;
+        
+        return inputLength === 0 ? [] : this.state.initialCategories.filter(category =>
+            category.Name.toLowerCase().slice(0, inputLength) === inputValue
+        );
+    };
+
     render() {
         return(
             <Fragment>
@@ -63,26 +97,21 @@ class Categories extends Component {
                     error={this.state.error} 
                     onHandle={this.errorHandler} 
                 />
-                <div className="row mb-3">
-                    <div className="col-sm">
-                        <h1>Kategorie</h1>
-                    </div>
-                    <div className="col-sm">
-                        <Link to="/category/add" className="btn btn-success float-right">
-                            <i className="fa fa-plus"></i> &nbsp; Dodaj kategorię
-                        </Link>
-                    </div>
-                </div>
-                <div className="row">
-                    {this.state.categories.map(category => 
-                        <Category 
-                            key={category.Id}
-                            url={this.props.url}
-                            category={category}
-                            onDeleteCategory = {() => this.deleteCategory(category.Id)}
-                        />
-                    )}
-                </div>
+                <Title
+                    title="Kategorie"
+                    buttonName="Dodaj kategorię"
+                />
+                <SearchInput 
+                    tableView={this.state.tableView}
+                    onSearch={this.search}
+                    onToggleView={this.toggleView}
+                />
+                <Category 
+                    url={this.props.url}
+                    categories={this.state.categories}
+                    tableView={this.state.tableView}
+                    onDeleteCategory={this.deleteCategory}
+                />
             </Fragment>
         )
     }

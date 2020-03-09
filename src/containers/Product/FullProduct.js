@@ -43,9 +43,10 @@ class FullProduct extends Component {
                         discountedPrice: res.DiscountedPrice || '',
                         description: res.Description,
                         image: res.Image,
+                        initialImage: res.Image,
                         defaultCategoryId: res.DefaultCategoryId
                     },
-                    addProduct: false
+                    addProduct: false,
                 });
             })
             .catch(err => {
@@ -101,7 +102,6 @@ class FullProduct extends Component {
     }
 
     addProduct = product => {
-        console.log(product);
         const formData = new FormData();
         formData.append('Ean', product.Ean);
         formData.append('Name', product.Name);
@@ -117,7 +117,6 @@ class FullProduct extends Component {
         })
         .then(res => {
             this.props.history.push('/');
-            console.log(res.data);
         })
         .catch(err => {
             this.setState({ error: err });
@@ -180,11 +179,13 @@ class FullProduct extends Component {
                         <ProductNav 
                             id={id} 
                             active={1}
+                            addProduct={this.state.addProduct}
                         />
                     </div>
                     <div className="card-body">
                         <div className="text-center">
                             <h2>{this.state.addProduct ? 'Dodaj produkt' : this.state.product.name}</h2>
+                            <img src={this.props.url + this.state.product.initialImage} alt={this.state.product.name} width="256" height="256"/>
                         </div>
                         <form onSubmit={this.handleSubmit}>
                             <div className="form-group">

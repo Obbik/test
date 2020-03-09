@@ -2,27 +2,60 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const product = (props) => {
-    return (
-        <div className="col-md-3 col-sm-6 mb-3">
-            <div className="card">
-                <h5 className="card-header">{props.product.Name}</h5>
-                <img src={props.url + props.product.Image} className="card-img-top mt-2" alt={props.product.Name} />
-                <div className="card-body">
-                    {/* <h4 className="card-title">{props.product.Name}</h4> */}
-                    {/* <p>{props.product.Ean}</p> */}
-                    {/* <p>{props.product.Price}</p> */}
-                    <div className="row">
-                        <div className="col-md-6 mt-1">
-                            <Link to={"/product/" + props.product.Ean} className="btn btn-secondary btn-block"><i className="fas fa-pencil-alt"></i></Link>
-                        </div>
-                        <div className="col-md-6 mt-1">
-                            <button onClick={props.onDeleteProduct} className="btn btn-danger btn-block"><i className="fa fa-trash"></i></button>
+    const view = props.tableView ? 
+        <div className="col">
+            <table className="table table-striped">
+                <thead>
+                    <tr>
+                    <th scope="col">Ean</th>
+                    <th scope="col">Nazwa</th>
+                    <th scope="col">Cena</th>
+                    <th scope="col">Cena promocyjna</th>
+                    <th scope="col">Zdjęcie</th>
+                    <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {props.products.map(product => 
+                        <tr key={product.Ean}>
+                            <th className="align-middle">{product.Ean}</th>
+                            <td className="align-middle">{product.Name}</td>
+                            <td className="align-middle">{product.Price}</td>
+                            <td className="align-middle">{product.DiscountedPrice}</td>
+                            <td className="align-middle">
+                                <img src={props.url + product.Image} alt={product.Name} width="64" height="64"/>
+                            </td>
+                            <td className="align-middle">
+                                <Link to={"/product/" + product.Ean} className="btn btn-secondary btn-block"><i className="fas fa-pencil-alt"></i></Link>
+                                <button onClick={() => props.onDeleteProduct(product.Ean)} className="btn btn-danger btn-block"><i className="fa fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        </div> : 
+        props.products.map(product =>
+            <div key={product.Ean} className="col-md-3 col-sm-6 mb-3">
+                <div className="card">
+                    <h5 className="card-header">{product.Name}</h5>
+                    <img src={props.url + product.Image} className="card-img-top mt-2" alt={product.Name} />
+                    <div className="card-body">
+                        {/* <h4 className="card-title">{props.product.Name}</h4> */}
+                        <div className="row">
+                            <div className="col-md-6 mt-1">
+                                <Link to={"/product/" + product.Ean} className="btn btn-secondary btn-block"><i className="fas fa-pencil-alt"></i></Link>
+                            </div>
+                            <div className="col-md-6 mt-1">
+                                <button onClick={() => props.onDeleteProduct(product.Ean)} className="btn btn-danger btn-block"><i className="fa fa-trash"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    )
-};
+            </div> 
+        )
+
+        return <div className="row">{view}</div>;
+
+}
 
 export default product;

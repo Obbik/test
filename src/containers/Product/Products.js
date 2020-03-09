@@ -1,14 +1,16 @@
 import React, { Component, Fragment } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 import Product from '../../components/Product/Product';
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
+import Title from '../../components/Title/Title';
+import SearchInput from '../SearchInput/SearchInput';
 
 class Products extends Component {
     state = {
         products: [],
-        error: null
+        error: null,
+        tableView: false
     }
 
     componentDidMount() {
@@ -22,7 +24,6 @@ class Products extends Component {
             }
         })
         .then(res => {
-            console.log(res.data);
             this.getProducts();
         })
         .catch(err => {
@@ -41,7 +42,10 @@ class Products extends Component {
             }
         })
         .then(res => {
-            this.setState({ products: res.data })
+            this.setState({ 
+                products: res.data,
+                initialProducts: res.data
+            })
         })
         .catch(err => {
             this.setState({ error: err });
@@ -56,6 +60,36 @@ class Products extends Component {
         this.setState({ error: null });
     }
 
+    // Method for changing the view (table or cards)
+    toggleView = () => {
+        this.setState({
+            tableView: !this.state.tableView
+        })
+    }
+
+    // Search bar
+    search = value => {
+        const suggestions = this.getSuggestions(value);
+        let filteredProducts = this.state.initialProducts;
+
+        if(value !== '') {
+            filteredProducts = suggestions;
+        }
+
+        this.setState({
+            products: filteredProducts
+        });
+    }
+
+    getSuggestions = value => {
+        const inputValue = value.trim().toLowerCase();
+        const inputLength = inputValue.length;
+        
+        return inputLength === 0 ? [] : this.state.initialProducts.filter(product =>
+            product.Name.toLowerCase().slice(0, inputLength) === inputValue
+        );
+    };
+
     render() {
         return(
             <Fragment>
@@ -63,26 +97,21 @@ class Products extends Component {
                     error={this.state.error} 
                     onHandle={this.errorHandler} 
                 />
-                <div className="row mb-3">
-                    <div className="col-sm">
-                        <h1>Produkty</h1>
-                    </div>
-                    <div className="col-sm">
-                        <Link to="/product/add" className="btn btn-success float-right">
-                            <i className="fa fa-plus"></i> &nbsp; Dodaj produkt
-                        </Link>
-                    </div>
-                </div>
-                <div className="row">
-                    {this.state.products.map(product => 
-                        <Product 
-                            key={product.Ean}
-                            url={this.props.url}
-                            product={product}
-                            onDeleteProduct = {() => this.deleteProduct(product.Ean)}
-                        />
-                    )}
-                </div>
+                <Title
+                    title="Produkty"
+                    buttonName="Dodaj produkt"
+                />
+                <SearchInput 
+                    tableView={this.state.tableView}
+                    onSearch={this.search}
+                    onToggleView={this.toggleView}
+                />
+                <Product
+                    url={this.props.url}
+                    products={this.state.products}
+                    onDeleteProduct={this.deleteProduct}
+                    tableView={this.state.tableView}
+                />
             </Fragment>
         )
     }

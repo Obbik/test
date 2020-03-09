@@ -33,7 +33,8 @@ class FullCategory extends Component {
                 this.setState({
                     category: {
                         name: res.Name,
-                        image: res.Image
+                        image: res.Image,
+                        initialImage: res.Image
                     },
                     addCategory: false
                 });
@@ -153,6 +154,7 @@ class FullCategory extends Component {
                 <div className="card card-body bg-light mt-5">
                     <div className="text-center">
                         <h2>{this.state.addCategory ? 'Dodaj kategorię' : this.state.category.name}</h2>
+                        <img src={this.props.url + this.state.category.initialImage} alt={this.state.category.name} width="256" height="256"/>
                     </div>
                     <form onSubmit={this.handleSubmit}>
                         <div className="form-group">

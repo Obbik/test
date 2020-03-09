@@ -21,7 +21,7 @@ class Navbar extends Component {
 
     render() {
         const dropdown = this.state.showDropdown ? 
-            <div className="dropdown-menu">
+            <div className="dropdown-menu dropdown-menu-right">
                 <div className="dropdown-item" href="#">test@gmail.com</div>
                 <div className="dropdown-divider"></div>
                 <div onClick={this.handleLogout} className="dropdown-item">Wyloguj się</div>
