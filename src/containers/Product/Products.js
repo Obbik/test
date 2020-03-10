@@ -5,12 +5,15 @@ import Product from '../../components/Product/Product';
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import Title from '../../components/Title/Title';
 import SearchInput from '../SearchInput/SearchInput';
+// import DeleteModal from '../../components/DeleteModal/DeleteModal';
 
 class Products extends Component {
     state = {
         products: [],
         error: null,
-        tableView: false
+        tableView: false,
+        showModal: false,
+        delete: false
     }
 
     componentDidMount() {
@@ -18,21 +21,25 @@ class Products extends Component {
     }
 
     deleteProduct = ean => {
-        axios.delete(this.props.url + 'api/product/' + ean, {
-            headers: {
-                Authorization: 'Bearer ' + this.props.token
-            }
-        })
-        .then(res => {
-            this.getProducts();
-        })
-        .catch(err => {
-            this.setState({ error: err });
+        const confirm = window.confirm('Czy na pewno chcesz usunąć produkt?');
 
-            setTimeout(() => {
-                this.setState({ error: null })
-            }, 5000);
-        });
+        if(confirm) {
+            axios.delete(this.props.url + 'api/product/' + ean, {
+                headers: {
+                    Authorization: 'Bearer ' + this.props.token
+                }
+            })
+            .then(res => {
+                this.getProducts();
+            })
+            .catch(err => {
+                this.setState({ error: err });
+    
+                setTimeout(() => {
+                    this.setState({ error: null })
+                }, 5000);
+            });
+        }
     }
 
     getProducts = () => {
@@ -90,6 +97,15 @@ class Products extends Component {
         );
     };
 
+    // Handle delete product modal
+    // showModal = () => {
+    //     this.setState({ showModal: true });
+    // }
+
+    // hideModal = () => {
+    //     this.setState({ showModal: false });
+    // }
+
     render() {
         return(
             <Fragment>
@@ -110,8 +126,14 @@ class Products extends Component {
                     url={this.props.url}
                     products={this.state.products}
                     onDeleteProduct={this.deleteProduct}
+                    onShowModal={this.showModal}
                     tableView={this.state.tableView}
                 />
+                {/* <DeleteModal 
+                    showModal={this.state.showModal}
+                    onHideModal={this.hideModal}
+                    onDeleteObject={this.deleteObject}
+                /> */}
             </Fragment>
         )
     }

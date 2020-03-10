@@ -18,21 +18,25 @@ class Categories extends Component {
     }
 
     deleteCategory = id => {
-        axios.delete(this.props.url + 'api/category/' + id, {
-            headers: {
-                Authorization: 'Bearer ' + this.props.token
-            }
-        })
-        .then(res => {
-            this.getCategories();
-        })
-        .catch(err => {
-            this.setState({ error: err });
+        const confirm = window.confirm('Czy na pewno chcesz usunąć kategorię?\nProdukty znajdujące się w tej kategori również zostaną usunięte.');
 
-            setTimeout(() => {
-                this.setState({ error: null })
-            }, 5000);
-        });
+        if(confirm) {
+            axios.delete(this.props.url + 'api/category/' + id, {
+                headers: {
+                    Authorization: 'Bearer ' + this.props.token
+                }
+            })
+            .then(res => {
+                this.getCategories();
+            })
+            .catch(err => {
+                this.setState({ error: err });
+
+                setTimeout(() => {
+                    this.setState({ error: null })
+                }, 5000);
+            });
+        }
     }
 
     getCategories = () => {
