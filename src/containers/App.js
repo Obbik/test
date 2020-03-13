@@ -131,7 +131,6 @@ class App extends Component {
     };
 
     render() {
-        console.log(this.state.loader);
         let routes = 
             <Switch>
                 <Route
