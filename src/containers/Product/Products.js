@@ -116,6 +116,7 @@ class Products extends Component {
                 <Title
                     title="Produkty"
                     buttonName="Dodaj produkt"
+                    buttonLink="/product/add"
                 />
                 <SearchInput 
                     tableView={this.state.tableView}

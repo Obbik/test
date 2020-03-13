@@ -104,6 +104,7 @@ class Categories extends Component {
                 <Title
                     title="Kategorie"
                     buttonName="Dodaj kategorię"
+                    buttonLink="/category/add"
                 />
                 <SearchInput 
                     tableView={this.state.tableView}

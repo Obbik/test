@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import axios from 'axios';
 import { Route, Switch, Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 import './App.css';
 import '../assets/fontawesome/css/all.css'
@@ -17,7 +17,8 @@ import FullCategory from './Category/FullCategory';
 
 class App extends Component {
     state = {
-        url: 'http://localhost:3000/',
+        // url: 'http://localhost:3000/',
+        url: 'https://vendim-rest-api.herokuapp.com/',
         token: null,
         userId: null,
         userName: null,
