@@ -7,16 +7,14 @@ const category = (props) => {
             <table className="table table-striped">
                 <thead>
                     <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Nazwa</th>
-                    <th scope="col">Zdjęcie</th>
-                    <th></th>
+                        <th scope="col">Nazwa</th>
+                        <th scope="col">Zdjęcie</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {props.categories.map(category => 
                         <tr key={category.Id}>
-                            <th className="align-middle">{category.Id}</th>
                             <td className="align-middle">{category.Name}</td>
                             <td className="align-middle">
                                 <img src={props.url + category.Image} alt={category.Name} width="64" height="64"/>

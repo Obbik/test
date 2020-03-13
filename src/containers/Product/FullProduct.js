@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import ProductNav from '../../components/Product/ProductNav';
+import Loader from '../../components/Loader/Loader';
 
 class FullProduct extends Component {
     state = {
@@ -16,19 +17,22 @@ class FullProduct extends Component {
             image: ''
         },
         addProduct: false,
-        error: null
+        error: null,
+        loader: false
     }
 
     componentDidMount() {
         const id = this.props.match.params.id;
 
         if(id !== 'add') {
+            this.setState({ loader: true });
             axios.get(this.props.url + 'api/product/' + id, {
                 headers: {
                     Authorization: 'Bearer ' + this.props.token
                 }
             })
             .then(res => {
+                this.setState({ loader: false });
                 if(res.status !== 200) {
                     throw new Error('Failed to fetch status.');
                 }
@@ -36,6 +40,7 @@ class FullProduct extends Component {
             })
             .then(res => {
                 this.setState({
+                    loader: false,
                     product: {
                         ean: res.Ean,
                         name: res.Name,
@@ -50,7 +55,10 @@ class FullProduct extends Component {
                 });
             })
             .catch(err => {
-                this.setState({ error: err });
+                this.setState({ 
+                    loader: false,
+                    error: err 
+                });
 
                 setTimeout(() => {
                     this.setState({ error: null })
@@ -163,6 +171,7 @@ class FullProduct extends Component {
         const id = this.props.match.params.id;
         return(
             <Fragment>
+                <Loader active={this.state.loader}/>
                 <ErrorHandler 
                     error={this.state.error} 
                     onHandle={this.errorHandler} 

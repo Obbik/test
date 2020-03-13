@@ -5,7 +5,7 @@ import Product from '../../components/Product/Product';
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import Title from '../../components/Title/Title';
 import SearchInput from '../SearchInput/SearchInput';
-// import DeleteModal from '../../components/DeleteModal/DeleteModal';
+import Loader from '../../components/Loader/Loader';
 
 class Products extends Component {
     state = {
@@ -13,7 +13,8 @@ class Products extends Component {
         error: null,
         tableView: false,
         showModal: false,
-        delete: false
+        delete: false,
+        loader: false
     }
 
     componentDidMount() {
@@ -24,15 +25,18 @@ class Products extends Component {
         const confirm = window.confirm('Czy na pewno chcesz usunąć produkt?');
 
         if(confirm) {
+            this.setState({ loader: true });
             axios.delete(this.props.url + 'api/product/' + ean, {
                 headers: {
                     Authorization: 'Bearer ' + this.props.token
                 }
             })
             .then(res => {
+                this.setState({ loader: false });
                 this.getProducts();
             })
             .catch(err => {
+                this.setState({ loader: false });
                 this.setState({ error: err });
     
                 setTimeout(() => {
@@ -43,18 +47,21 @@ class Products extends Component {
     }
 
     getProducts = () => {
+        this.setState({ loader: true });
         axios.get(this.props.url + 'api/products', {
             headers: {
                 Authorization: 'Bearer ' + this.props.token
             }
         })
         .then(res => {
+            this.setState({ loader: false });
             this.setState({ 
                 products: res.data,
                 initialProducts: res.data
             })
         })
         .catch(err => {
+            this.setState({ loader: false });
             this.setState({ error: err });
 
             setTimeout(() => {
@@ -109,6 +116,7 @@ class Products extends Component {
     render() {
         return(
             <Fragment>
+                <Loader active={this.state.loader}/>
                 <ErrorHandler
                     error={this.state.error} 
                     onHandle={this.errorHandler} 
@@ -130,11 +138,6 @@ class Products extends Component {
                     onShowModal={this.showModal}
                     tableView={this.state.tableView}
                 />
-                {/* <DeleteModal 
-                    showModal={this.state.showModal}
-                    onHideModal={this.hideModal}
-                    onDeleteObject={this.deleteObject}
-                /> */}
             </Fragment>
         )
     }

@@ -13,6 +13,7 @@ import ErrorHandler from '../components/ErrorHandler/ErrorHandler';
 import FullProduct from './Product/FullProduct';
 import ProductCategory from './Product/ProductCategory';
 import FullCategory from './Category/FullCategory';
+import Loader from '../components/Loader/Loader';
 
 
 class App extends Component {
@@ -23,7 +24,8 @@ class App extends Component {
         userId: null,
         userName: null,
         isAuth: false,
-        error: null
+        error: null,
+        loader: false
     }
 
     componentDidMount() {
@@ -54,6 +56,7 @@ class App extends Component {
     }
 
     login = (user) => {
+        this.setState({ loader: true });
         axios.put(this.state.url + 'api/auth/login', user)
         .then(res => {
             if (res.status === 422) {
@@ -88,12 +91,13 @@ class App extends Component {
             localStorage.setItem('expiryDate', expiryDate.toISOString());
 
             this.setAutoLogout(remainingMilliseconds);
-
+            this.setState({ loader: false });
         })
         .catch(err => {
             this.setState({
                 isAuth: false,
-                error: err
+                error: err,
+                loader: false
             })
 
             setTimeout(() => {
@@ -127,6 +131,7 @@ class App extends Component {
     };
 
     render() {
+        console.log(this.state.loader);
         let routes = 
             <Switch>
                 <Route
@@ -195,6 +200,7 @@ class App extends Component {
 
         return (
             <Fragment>
+                <Loader active={this.state.loader}/>
                 <Navbar onLogout={this.logout} isAuth={this.state.isAuth} />
                 <div className="container navbar-margin">
                     <ErrorHandler 
