@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
+import Loader from '../../components/Loader/Loader';
 
 class FullCategory extends Component {
     state = {
@@ -11,19 +12,22 @@ class FullCategory extends Component {
             image: ''
         },
         addCategory: false,
-        error: null
+        error: null,
+        loader: false
     }
 
     componentDidMount() {
         const id = this.props.match.params.id;
 
         if(id !== 'add') {
+            this.setState({ loader: true });
             axios.get(this.props.url + 'api/category/' + id, {
                 headers: {
                     Authorization: 'Bearer ' + this.props.token
                 }
             })
             .then(res => {
+                this.setState({ loader: false });
                 if(res.status !== 200) {
                     throw new Error('Failed to fetch status.');
                 }
@@ -36,11 +40,15 @@ class FullCategory extends Component {
                         image: res.Image,
                         initialImage: res.Image
                     },
-                    addCategory: false
+                    addCategory: false,
+                    loader: false
                 });
             })
             .catch(err => {
-                this.setState({ error: err });
+                this.setState({ 
+                    error: err,
+                    loader: false 
+                });
 
                 setTimeout(() => {
                     this.setState({ error: null })
@@ -87,6 +95,7 @@ class FullCategory extends Component {
     }
 
     addCategory = (category) => {
+        this.setState({ loader: true });
         const formData = new FormData();
         formData.append('Name', category.Name);
         formData.append('Image', category.Image);
@@ -97,10 +106,14 @@ class FullCategory extends Component {
             }
         })
         .then(res => {
+            this.setState({ loader: false });
             this.props.history.push('/categories');
         })
         .catch(err => {
-            this.setState({ error: err });
+            this.setState({ 
+                error: err,
+                loader: false
+            });
 
             setTimeout(() => {
                 this.setState({ error: null })
@@ -109,6 +122,7 @@ class FullCategory extends Component {
     }
 
     editCategory = (category) => {
+        this.setState({ loader: true });
         const id = this.props.match.params.id;
 
         const formData = new FormData();
@@ -121,13 +135,17 @@ class FullCategory extends Component {
             }
         })
         .then(res => {
+            this.setState({ loader: false });
             this.props.history.push('/categories');
         })
         .catch(err => {
             this.setState({ error: err });
 
             setTimeout(() => {
-                this.setState({ error: null })
+                this.setState({ 
+                    error: null,
+                    loader: false 
+                })
             }, 5000);
         });
     }
@@ -140,6 +158,7 @@ class FullCategory extends Component {
     render() {
         return(
             <Fragment>
+                <Loader active={this.state.loader}/>
                 <ErrorHandler 
                     error={this.state.error} 
                     onHandle={this.errorHandler} 
@@ -154,7 +173,7 @@ class FullCategory extends Component {
                 <div className="card card-body bg-light mt-5">
                     <div className="text-center">
                         <h2>{this.state.addCategory ? 'Dodaj kategorię' : this.state.category.name}</h2>
-                        <img src={this.props.url + this.state.category.initialImage} alt={this.state.category.name} width="256" height="256"/>
+                        {this.state.addCategory ? null : <img src={this.props.url + this.state.category.initialImage} alt={this.state.category.name} width="256" height="256"/>}
                     </div>
                     <form onSubmit={this.handleSubmit}>
                         <div className="form-group">

@@ -76,7 +76,8 @@ class App extends Component {
                 token: token,
                 userId: userId,
                 userName: userName,
-                isAuth: true
+                isAuth: true,
+                loader: false
             })
 
             localStorage.setItem('token', token);
@@ -91,7 +92,6 @@ class App extends Component {
             localStorage.setItem('expiryDate', expiryDate.toISOString());
 
             this.setAutoLogout(remainingMilliseconds);
-            this.setState({ loader: false });
         })
         .catch(err => {
             this.setState({

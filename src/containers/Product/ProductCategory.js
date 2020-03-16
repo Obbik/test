@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import ProductNav from '../../components/Product/ProductNav';
-
+import Loader from '../../components/Loader/Loader';
 
 class ProductCategory extends Component {
     state = {
@@ -12,10 +12,16 @@ class ProductCategory extends Component {
         productCategories: [],
         inputs: null,
         initialInputs: null,
-        error: null
+        error: null,
+        loader: false
     }
 
     componentDidMount() {
+        this.getCategories();
+    }
+
+    getCategories = () => {
+        this.setState({ loader: true });
         const id = this.props.match.params.id;
         let inputs;
         let checked = false;
@@ -30,8 +36,8 @@ class ProductCategory extends Component {
             categories.forEach(category => {
                 inputs = {
                     ...inputs,
-                    ['category' + category.Id]: {
-                        value: category.Id,
+                    ['category' + category.CategoryId]: {
+                        value: category.CategoryId,
                         checked: checked
                     }
                 }
@@ -56,7 +62,7 @@ class ProductCategory extends Component {
             categories.forEach(category => {
                 const checked = productCategories.some(productCategory => {
                     let _checked = false;
-                    if(category.Id === productCategory.CategoryId) {
+                    if(category.CategoryId === productCategory.CategoryId) {
                         _checked = true;
                     }
                     return _checked;
@@ -64,8 +70,8 @@ class ProductCategory extends Component {
 
                 inputs = {
                     ...inputs,
-                    ['category' + category.Id]: {
-                        value: category.Id,
+                    ['category' + category.CategoryId]: {
+                        value: category.CategoryId,
                         checked: checked
                     }
                 }
@@ -75,10 +81,14 @@ class ProductCategory extends Component {
                 inputs: inputs,
                 initialInputs: { ...inputs },
                 productCategories: productCategories,
+                loader: false
             })
         })
         .catch(err => {
-            this.setState({ error: err });
+            this.setState({ 
+                error: err,
+                loader: false 
+            });
 
             setTimeout(() => {
                 this.setState({ error: null })
@@ -107,8 +117,8 @@ class ProductCategory extends Component {
         e.preventDefault();
         const productId = this.props.match.params.id;
         const categories = this.state.categories;
-        const inputArray = categories.map(category => this.state.inputs['category' + category.Id]);
-        const initialInputArray = categories.map(category => this.state.initialInputs['category' + category.Id]);  
+        const inputArray = categories.map(category => this.state.inputs['category' + category.CategoryId]);
+        const initialInputArray = categories.map(category => this.state.initialInputs['category' + category.CategoryId]);  
 
         initialInputArray.forEach((input, index) => {
             // Check if inputs changed on submit
@@ -116,7 +126,7 @@ class ProductCategory extends Component {
                 const categoryId = inputArray[index].value
                 const productCategory = {
                     CategoryId: categoryId,
-                    ProductId: productId
+                    Ean: productId
                 }
 
                 // Add category product
@@ -130,6 +140,8 @@ class ProductCategory extends Component {
                 }
             }
         });
+
+        this.getCategories();
     }
 
     errorHandler = () => {
@@ -173,14 +185,15 @@ class ProductCategory extends Component {
     }
 
     getProductCategoryId = productCategory => {
-        const category = this.state.productCategories.filter(category => category.CategoryId === productCategory.CategoryId && category.ProductId === productCategory.ProductId);
-        return category[0].Id;
+        const category = this.state.productCategories.filter(category => category.CategoryId === productCategory.CategoryId && category.EAN === productCategory.Ean);
+        return category[0].CategoryProductId;
     }
 
     render() {
         const id = this.props.match.params.id;
         return(
             <Fragment>
+                <Loader active={this.state.loader}/>
                 <ErrorHandler 
                     error={this.state.error} 
                     onHandle={this.errorHandler} 
@@ -205,8 +218,8 @@ class ProductCategory extends Component {
                         </div>
                         <form onSubmit={this.handleSubmit}>
                             {this.state.categories.map(category => 
-                                <div key={category.Id} className="form-group form-check">
-                                    <input type="checkbox" name={"category" + category.Id} value={category.Id} checked={this.state.inputs["category" + category.Id].checked} onChange={this.handleChange} className="form-check-input"/>
+                                <div key={category.CategoryId} className="form-group form-check">
+                                    <input type="checkbox" name={"category" + category.CategoryId} checked={this.state.inputs["category" + category.CategoryId].checked} value={category.CategoryId} onChange={this.handleChange} className="form-check-input"/>
                                     <label className="form-check-label">{category.Name}</label>
                                 </div>
                             )}

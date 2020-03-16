@@ -5,12 +5,14 @@ import Category from '../../components/Category/Category';
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import Title from '../../components/Title/Title';
 import SearchInput from '../SearchInput/SearchInput';
+import Loader from '../../components/Loader/Loader';
 
 class Categories extends Component {
     state = {
         categories: [],
         error: null,
-        tableView: false
+        tableView: false,
+        loader: false
     }
 
     componentDidMount() {
@@ -21,6 +23,7 @@ class Categories extends Component {
         const confirm = window.confirm('Czy na pewno chcesz usunąć kategorię?\nProdukty znajdujące się w tej kategori również zostaną usunięte.');
 
         if(confirm) {
+            this.setState({ loader: true });
             axios.delete(this.props.url + 'api/category/' + id, {
                 headers: {
                     Authorization: 'Bearer ' + this.props.token
@@ -40,6 +43,7 @@ class Categories extends Component {
     }
 
     getCategories = () => {
+        this.setState({ loader: true });
         axios.get(this.props.url + 'api/categories', {
             headers: {
                 Authorization: 'Bearer ' + this.props.token
@@ -48,11 +52,15 @@ class Categories extends Component {
         .then(res => {
             this.setState({ 
                 categories: res.data,
-                initialCategories: res.data 
+                initialCategories: res.data,
+                loader: false 
             })
         })
         .catch(err => {
-            this.setState({ error: err });
+            this.setState({ 
+                error: err,
+                loader: false  
+            });
 
             setTimeout(() => {
                 this.setState({ error: null })
@@ -97,6 +105,7 @@ class Categories extends Component {
     render() {
         return(
             <Fragment>
+                <Loader active={this.state.loader}/>
                 <ErrorHandler 
                     error={this.state.error} 
                     onHandle={this.errorHandler} 

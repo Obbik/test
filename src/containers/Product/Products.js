@@ -32,12 +32,13 @@ class Products extends Component {
                 }
             })
             .then(res => {
-                this.setState({ loader: false });
                 this.getProducts();
             })
             .catch(err => {
-                this.setState({ loader: false });
-                this.setState({ error: err });
+                this.setState({ 
+                    error: err,
+                    loader: false 
+                });
     
                 setTimeout(() => {
                     this.setState({ error: null })
@@ -54,15 +55,17 @@ class Products extends Component {
             }
         })
         .then(res => {
-            this.setState({ loader: false });
             this.setState({ 
                 products: res.data,
-                initialProducts: res.data
+                initialProducts: res.data,
+                loader: false
             })
         })
         .catch(err => {
-            this.setState({ loader: false });
-            this.setState({ error: err });
+            this.setState({ 
+                error: err,
+                loader: false 
+            });
 
             setTimeout(() => {
                 this.setState({ error: null })

@@ -11,8 +11,6 @@ class FullProduct extends Component {
         product: {
             ean: '',
             name: '',
-            price: '',
-            discountedPrice: '',
             description: '',
             image: ''
         },
@@ -40,24 +38,21 @@ class FullProduct extends Component {
             })
             .then(res => {
                 this.setState({
-                    loader: false,
                     product: {
-                        ean: res.Ean,
+                        ean: res.EAN,
                         name: res.Name,
-                        price: res.Price,
-                        discountedPrice: res.DiscountedPrice || '',
                         description: res.Description,
                         image: res.Image,
-                        initialImage: res.Image,
-                        defaultCategoryId: res.DefaultCategoryId
+                        initialImage: res.Image
                     },
                     addProduct: false,
+                    loader: false
                 });
             })
             .catch(err => {
                 this.setState({ 
-                    loader: false,
-                    error: err 
+                    error: err,
+                    loader: false
                 });
 
                 setTimeout(() => {
@@ -96,10 +91,7 @@ class FullProduct extends Component {
             Ean: this.state.product.ean,
             Image: this.state.product.image,
             Name: this.state.product.name,
-            Price: this.state.product.price,
-            DiscountedPrice: this.state.product.discountedPrice === '' ? null : this.state.product.discountedPrice,
-            Description: this.state.product.description,
-            DefaultCategoryId: this.state.product.defaultCategoryId
+            Description: this.state.product.description
         };
 
         if(this.state.addProduct) {
@@ -110,11 +102,10 @@ class FullProduct extends Component {
     }
 
     addProduct = product => {
+        this.setState({ loader: true });
         const formData = new FormData();
         formData.append('Ean', product.Ean);
         formData.append('Name', product.Name);
-        formData.append('Price', product.Price);
-        formData.append('DiscountedPrice', product.DiscountedPrice);
         formData.append('Description', product.Description);
         formData.append('Image', product.Image);
 
@@ -124,10 +115,14 @@ class FullProduct extends Component {
             }
         })
         .then(res => {
+            this.setState({ loader: false });
             this.props.history.push('/');
         })
         .catch(err => {
-            this.setState({ error: err });
+            this.setState({ 
+                error: err,
+                loader: false 
+            });
 
             setTimeout(() => {
                 this.setState({ error: null })
@@ -136,13 +131,12 @@ class FullProduct extends Component {
     }
 
     editProduct = product => {
+        this.setState({ loader: true });
         const id = this.props.match.params.id;
 
         const formData = new FormData();
         formData.append('Ean', product.Ean);
         formData.append('Name', product.Name);
-        formData.append('Price', product.Price);
-        formData.append('DiscountedPrice', product.DiscountedPrice);
         formData.append('Description', product.Description);
         formData.append('Image', product.Image);
         
@@ -152,10 +146,14 @@ class FullProduct extends Component {
             }
         })
         .then(res => {
+            this.setState({ loader: false });
             this.props.history.push('/');
         })
         .catch(err => {
-            this.setState({ error: err });
+            this.setState({ 
+                error: err,
+                loader: false 
+            });
 
             setTimeout(() => {
                 this.setState({ error: null })
@@ -194,7 +192,7 @@ class FullProduct extends Component {
                     <div className="card-body">
                         <div className="text-center">
                             <h2>{this.state.addProduct ? 'Dodaj produkt' : this.state.product.name}</h2>
-                            <img src={this.props.url + this.state.product.initialImage} alt={this.state.product.name} width="256" height="256"/>
+                            {this.state.addProduct ? null : <img src={this.props.url + this.state.product.initialImage} alt={this.state.product.name} width="256" height="256"/>}
                         </div>
                         <form onSubmit={this.handleSubmit}>
                             <div className="form-group">
@@ -210,21 +208,9 @@ class FullProduct extends Component {
                                 <input type="text" name="name" className="form-control form-control-lg" value={this.state.product.name} onChange={this.handleChange}/>
                             </div>
                             <div className="form-group">
-                                <label>Cena</label>
-                                <input type="number" name="price" className="form-control form-control-lg" value={this.state.product.price} onChange={this.handleChange}/>
-                            </div>
-                            <div className="form-group">
-                                <label>Cena promocyjna</label>
-                                <input type="number" name="discountedPrice" className="form-control form-control-lg" value={this.state.product.discountedPrice} onChange={this.handleChange}/>
-                            </div>
-                            <div className="form-group">
                                 <label>Opis</label>
                                 <textarea type="text" name="description" className="form-control" rows="4" value={this.state.product.description} onChange={this.handleChange}/>
                             </div>
-                            {/* <div className="form-group">
-                                <label>Domyślna kategoria</label>
-                                <input type="number" name="defaultCategoryId" className="form-control form-control-lg" value={this.state.product.defaultCategoryId} onChange={this.handleChange}/>
-                            </div> */}
                             <input type="submit" className="btn btn-success" value="Zapisz"/>
                         </form>
                     </div>

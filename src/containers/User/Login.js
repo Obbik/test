@@ -6,14 +6,16 @@ class Login extends Component {
 	handleSubmit = e => {
         e.preventDefault();
 		const Email = e.target.elements.email.value;
-		const Password = e.target.elements.password.value;
+        const Password = e.target.elements.password.value;
+        const ClientId = e.target.elements.clientId.value;
 
 		const user = {
 			Email,
-			Password
+            Password,
+            ClientId
 		};
 
-		if (Email && Password) {
+		if (Email && Password && ClientId) {
 			this.props.onLogin(user);
 		}
 	}
@@ -35,6 +37,10 @@ class Login extends Component {
                             <div className="form-group">
                                 <label htmlFor="password">Hasło</label>
                                 <input type="password" name="password" autoComplete="current-password" className="form-control form-control-lg" required/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="password">Id klienta</label>
+                                <input type="text" name="clientId" className="form-control form-control-lg" required/>
                             </div>
                             <div className="row">
                                 <div className="col">
