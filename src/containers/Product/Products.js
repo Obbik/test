@@ -107,15 +107,6 @@ class Products extends Component {
         );
     };
 
-    // Handle delete product modal
-    // showModal = () => {
-    //     this.setState({ showModal: true });
-    // }
-
-    // hideModal = () => {
-    //     this.setState({ showModal: false });
-    // }
-
     render() {
         return(
             <Fragment>

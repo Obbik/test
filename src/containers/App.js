@@ -18,8 +18,8 @@ import Loader from '../components/Loader/Loader';
 
 class App extends Component {
     state = {
-        // url: 'http://localhost:3000/',
-        url: 'https://vendim-rest-api.herokuapp.com/',
+        url: 'http://localhost:3000/',
+        // url: 'https://vendim-rest-api.herokuapp.com/',
         token: null,
         userId: null,
         userName: null,

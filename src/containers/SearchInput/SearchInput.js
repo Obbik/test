@@ -8,9 +8,8 @@ class SearchInput extends Component {
     }
 
     render() {
-        const viewButton = this.props.tableView ? 
-            <button onClick={this.props.onToggleView} type="button" className="btn btn-light"><i className="fas fa-list"></i></button> :
-            <button onClick={this.props.onToggleView} type="button" className="btn btn-light"><i className="fas fa-border-all"></i></button>
+        const viewButton = this.props.tableView ? <button onClick={this.props.onToggleView} type="button" className="btn btn-light"><i className="fas fa-border-all"></i></button> :
+        <button onClick={this.props.onToggleView} type="button" className="btn btn-light"><i className="fas fa-list"></i></button>
 
         return(
             <div className="row mb-3">
