@@ -17,7 +17,7 @@ const category = (props) => {
                         <tr key={category.CategoryId}>
                             <td className="align-middle">{category.Name}</td>
                             <td className="align-middle">
-                                <img src={props.url + category.Image} alt={category.Name} width="64" height="64"/>
+                                <img src={props.url + category.Image  + '?n=' + new Date().getTime()} alt={category.Name} width="64" height="64"/>
                             </td>
                             <td className="align-middle">
                                 <Link to={"/category/" + category.CategoryId} className="btn btn-secondary btn-block"><i className="fas fa-pencil-alt"></i></Link>
@@ -32,7 +32,7 @@ const category = (props) => {
             <div key={category.CategoryId} className="col-lg-3 col-sm-6 mb-3">
                 <div className="card">
                     <h5 className="card-header">{category.Name}</h5>
-                    <img src={props.url + category.Image} className="card-img-top" alt={category.Name} />
+                    <img src={props.url + category.Image  + '?n=' + new Date().getTime()} className="card-img-top" alt={category.Name} />
                     <div className="card-body">
                         <div className="row">
                             <div className="col-md-6 mt-1">
