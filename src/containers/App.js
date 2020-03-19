@@ -15,6 +15,7 @@ import ProductCategory from './Product/ProductCategory';
 import FullCategory from './Category/FullCategory';
 import Loader from '../components/Loader/Loader';
 
+import allProducts from '../assets/products.json';
 
 class App extends Component {
     state = {
@@ -111,7 +112,7 @@ class App extends Component {
 
     setAutoLogout = milliseconds => {
         setTimeout(() => {
-          this.logout();
+            this.logout();
         }, milliseconds);
     };
 
@@ -129,6 +130,28 @@ class App extends Component {
     errorHandler = () => {
         this.setState({ error: null });
     };
+
+    addProducts = () => {
+        allProducts.forEach(product => {
+            axios.post(this.state.url + 'api/product', product, {
+                headers: {
+                    Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyQHZlbmRpbS5wbCIsInVzZXJJZCI6IjciLCJjbGllbnRJZCI6ImNvbnNvbGUiLCJpYXQiOjE1ODQ2MjAwNzQsImV4cCI6MTU4NDYyMzY3NCwiYXVkIjoiaHR0cDovL3ZlbmRpbS5wbCIsImlzcyI6IlZlbmRpbSIsInN1YiI6InVzZXJAdmVuZGltLnBsIn0.bkQvMYF2a8DJfhzXwtQZMoPAwDa4COCHPyD8bLnUBGy35fQAhm2IGK8ACNGqxwxbdO4tliJR1Ow631UU411UcA'
+                }
+            })
+            .then(res => {
+                if (res.status === 422) {
+                    throw new Error('Validation failed.');
+                }
+                return res.data;
+            })
+            .then(res => {
+                console.log(res.data);
+            })
+            .catch(err => {
+                console.log(err.response.data);
+            }); 
+        });
+    }
 
     render() {
         let routes = 
@@ -151,6 +174,17 @@ class App extends Component {
                             <Products
                                 url={this.state.url}
                                 token={this.state.token}
+                                sharedProducts={false}
+                            />
+                        )}
+                    />
+                    <Route
+                        exact path="/products-shared"
+                        render={props => (
+                            <Products
+                                url={this.state.url}
+                                token={this.state.token}
+                                sharedProducts={true}
                             />
                         )}
                     />

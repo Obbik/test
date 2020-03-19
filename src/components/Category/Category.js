@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const category = (props) => {
-    const view = props.tableView ? 
+    const view = props.tableView ?
         <div className="col">
             <table className="table table-striped">
                 <thead>
@@ -31,7 +31,7 @@ const category = (props) => {
         props.categories.map(category => 
             <div key={category.CategoryId} className="col-lg-3 col-sm-6 mb-3">
                 <div className="card">
-                    <h5 className="card-header">{category.Name}</h5>
+                    <h5 className="card-header text-truncate">{category.Name}</h5>
                     <img src={props.url + category.Image  + '?n=' + new Date().getTime()} className="card-img-top" alt={category.Name} />
                     <div className="card-body">
                         <div className="row">

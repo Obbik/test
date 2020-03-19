@@ -6,6 +6,7 @@ import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import Title from '../../components/Title/Title';
 import SearchInput from '../SearchInput/SearchInput';
 import Loader from '../../components/Loader/Loader';
+import Pagination from '../../components/Pagination/Pagination';
 
 class Products extends Component {
     state = {
@@ -14,7 +15,10 @@ class Products extends Component {
         tableView: false,
         showModal: false,
         delete: false,
-        loader: false
+        loader: false,
+        page: 1,
+        totalItems: 0,
+        searchedValue: ''
     }
 
     componentDidMount() {
@@ -47,17 +51,20 @@ class Products extends Component {
         }
     }
 
-    getProducts = () => {
+    getProducts = (page = 1, search = this.state.searchedValue) => {
         this.setState({ loader: true });
-        axios.get(this.props.url + 'api/products', {
+        let url = this.props.sharedProducts ? this.props.url + 'api/products-shared?search=' + search + '&page=' + page : this.props.url + 'api/products';
+
+        axios.get(url, {
             headers: {
                 Authorization: 'Bearer ' + this.props.token
             }
         })
         .then(res => {
             this.setState({ 
-                products: res.data,
-                initialProducts: res.data,
+                products: res.data.products,
+                totalItems: res.data.totalItems,
+                initialProducts: res.data.products,
                 loader: false
             })
         })
@@ -86,16 +93,20 @@ class Products extends Component {
 
     // Search bar
     search = value => {
-        const suggestions = this.getSuggestions(value);
-        let filteredProducts = this.state.initialProducts;
+        this.setState({ searchedValue: value });
+        console.log('value', value);
+        this.getProducts(1, value);
 
-        if(value !== '') {
-            filteredProducts = suggestions;
-        }
+        // const suggestions = this.getSuggestions(value);
+        // let filteredProducts = this.state.initialProducts;
 
-        this.setState({
-            products: filteredProducts
-        });
+        // if(value !== '') {
+        //     filteredProducts = suggestions;
+        // }
+
+        // this.setState({
+        //     products: filteredProducts
+        // });
     }
 
     getSuggestions = value => {
@@ -107,7 +118,21 @@ class Products extends Component {
         );
     };
 
+    // Pagination
+    switchPage = (pageNo) => {
+        this.setState({ page: pageNo });
+        this.getProducts(pageNo);
+    }
+
     render() {
+        console.log(this.state);
+        const pagination = this.props.sharedProducts ? 
+            <Pagination 
+                onSwitchPage={this.switchPage}
+                page={this.state.page}
+                totalItems={this.state.totalItems}  
+            /> : null
+
         return(
             <Fragment>
                 <Loader active={this.state.loader}/>
@@ -125,12 +150,14 @@ class Products extends Component {
                     onSearch={this.search}
                     onToggleView={this.toggleView}
                 />
+                {pagination}
                 <Product
                     url={this.props.url}
                     products={this.state.products}
                     onDeleteProduct={this.deleteProduct}
                     onShowModal={this.showModal}
                     tableView={this.state.tableView}
+                    sharedProducts={this.props.sharedProducts}
                 />
             </Fragment>
         )
