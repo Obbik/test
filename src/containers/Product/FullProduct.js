@@ -12,7 +12,8 @@ class FullProduct extends Component {
             ean: '',
             name: '',
             description: '',
-            image: ''
+            image: '',
+            initialImage: ''
         },
         addProduct: false,
         error: null,

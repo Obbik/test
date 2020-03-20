@@ -191,6 +191,8 @@ class ProductCategory extends Component {
 
     render() {
         const id = this.props.match.params.id;
+        const backLink = this.props.sharedProducts ? '/products/shared' : '/';
+
         return(
             <Fragment>
                 <Loader active={this.state.loader}/>
@@ -200,7 +202,7 @@ class ProductCategory extends Component {
                 />
                 <div className="row">
                     <div className="col">
-                        <Link to="/" className="btn btn-secondary">
+                        <Link to={backLink} className="btn btn-secondary">
                             <i className="fas fa-arrow-left"></i>&nbsp; Wróć
                         </Link>
                     </div>
@@ -210,6 +212,7 @@ class ProductCategory extends Component {
                         <ProductNav 
                             id={id} 
                             active={2}
+                            sharedProducts={this.props.sharedProducts}
                         />
                     </div>
                     <div className="card-body">

@@ -53,7 +53,7 @@ class Products extends Component {
 
     getProducts = (page = 1, search = this.state.searchedValue) => {
         this.setState({ loader: true });
-        let url = this.props.sharedProducts ? this.props.url + 'api/products-shared?search=' + search + '&page=' + page : this.props.url + 'api/products';
+        let url = this.props.sharedProducts ? this.props.url + 'api/products-shared?search=' + search + '&page=' + page : this.props.url + 'api/products?search=' + search + '&page=' + page;
 
         axios.get(url, {
             headers: {
@@ -93,8 +93,11 @@ class Products extends Component {
 
     // Search bar
     search = value => {
-        this.setState({ searchedValue: value });
-        console.log('value', value);
+        this.setState({ 
+            searchedValue: value,
+            page: 1 
+        });
+
         this.getProducts(1, value);
 
         // const suggestions = this.getSuggestions(value);
@@ -125,14 +128,7 @@ class Products extends Component {
     }
 
     render() {
-        console.log(this.state);
-        const pagination = this.props.sharedProducts ? 
-            <Pagination 
-                onSwitchPage={this.switchPage}
-                page={this.state.page}
-                totalItems={this.state.totalItems}  
-            /> : null
-
+        const enableAddButton = this.props.sharedProducts ? false : true;
         return(
             <Fragment>
                 <Loader active={this.state.loader}/>
@@ -144,13 +140,18 @@ class Products extends Component {
                     title="Produkty"
                     buttonName="Dodaj produkt"
                     buttonLink="/product/add"
+                    enableAddButton={enableAddButton}
                 />
                 <SearchInput 
                     tableView={this.state.tableView}
                     onSearch={this.search}
                     onToggleView={this.toggleView}
                 />
-                {pagination}
+                <Pagination 
+                    onSwitchPage={this.switchPage}
+                    page={this.state.page}
+                    totalItems={this.state.totalItems}  
+                /> 
                 <Product
                     url={this.props.url}
                     products={this.state.products}

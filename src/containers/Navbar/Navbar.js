@@ -61,13 +61,13 @@ class Navbar extends Component {
             <div className="dropdown-menu dropdown-menu-right">
                 {/* <div className="dropdown-item">test@gmail.com</div> */}
                 {/* <div className="dropdown-divider"></div> */}
-                <div onClick={this.handleLogout} className="btn dropdown-item">Wyloguj się</div>
+                <Link to="#" onClick={this.handleLogout} className="dropdown-item">Wyloguj się</Link>
             </div> : null
 
         const productDropdown = this.state.showProductDropdown ? 
             <div className="dropdown-menu">
                 <Link to="/" onClick={this.toggleProductDropdown} className="dropdown-item">Moje</Link>
-                <Link to="/products-shared" onClick={this.toggleProductDropdown} className="dropdown-item">Współdzielone</Link>
+                <Link to="/products/shared" onClick={this.toggleProductDropdown} className="dropdown-item">Współdzielone</Link>
             </div> : null
         const mobileNavbarClass = this.state.showMobileNavbar ? "collapse navbar-collapse show" : "collapse navbar-collapse";
 

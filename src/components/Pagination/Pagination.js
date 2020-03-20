@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 const pagination = (props) => {
     const page = props.page;
-    console.log('page', page);
     const pages = Math.ceil(props.totalItems / 24);
     let paginationBar = null;
 

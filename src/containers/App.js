@@ -11,6 +11,7 @@ import Products from './Product/Products';
 import Categories from './Category/Categories';
 import ErrorHandler from '../components/ErrorHandler/ErrorHandler';
 import FullProduct from './Product/FullProduct';
+import FullProductShared from './Product/FullProductShared';
 import ProductCategory from './Product/ProductCategory';
 import FullCategory from './Category/FullCategory';
 import Loader from '../components/Loader/Loader';
@@ -179,7 +180,7 @@ class App extends Component {
                         )}
                     />
                     <Route
-                        exact path="/products-shared"
+                        exact path="/products/shared"
                         render={props => (
                             <Products
                                 url={this.state.url}
@@ -199,12 +200,33 @@ class App extends Component {
                         )}
                     />
                     <Route
+                        exact path="/product/shared/:id"
+                        render={props => (
+                            <FullProductShared
+                                {...props}
+                                url={this.state.url}
+                                token={this.state.token}
+                            />
+                        )}
+                    />
+                    <Route
                         exact path="/product-category/:id"
                         render={props => (
                             <ProductCategory
                                 {...props}
                                 url={this.state.url}
                                 token={this.state.token}
+                            />
+                        )}
+                    />
+                    <Route
+                        exact path="/product-category/shared/:id"
+                        render={props => (
+                            <ProductCategory
+                                {...props}
+                                url={this.state.url}
+                                token={this.state.token}
+                                sharedProducts={true}
                             />
                         )}
                     />
