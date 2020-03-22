@@ -20,7 +20,7 @@ class Categories extends Component {
     }
 
     deleteCategory = id => {
-        const confirm = window.confirm('Czy na pewno chcesz usunąć kategorię?\nProdukty znajdujące się w tej kategori również zostaną usunięte.');
+        const confirm = window.confirm('Czy na pewno chcesz usunąć kategorię?');
 
         if(confirm) {
             this.setState({ loader: true });
@@ -114,6 +114,7 @@ class Categories extends Component {
                     title="Kategorie"
                     buttonName="Dodaj kategorię"
                     buttonLink="/category/add"
+                    enableAddButton={true}
                 />
                 <SearchInput 
                     tableView={this.state.tableView}

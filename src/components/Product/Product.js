@@ -20,8 +20,7 @@ const product = (props) => {
                             <th className="align-middle">{product.EAN}</th>
                             <td className="align-middle">{product.Name}</td>
                             <td className="align-middle">
-                                <img src={props.url + product.Image + '?n=' + new Date().getTime()} alt={product.Name} width="64" height="64"/>
-                                {/* onError={(e)=>{e.target.onerror = null; e.target.src=props.url + 'images/console/sample-product.svg'}} */}
+                                <img src={props.url + product.Image + '?n=' + new Date().getTime()} onError={(e)=>{e.target.src=props.url + 'images/console/sample-product.svg'}} alt={product.Name} width="64" height="64"/>
                             </td>
                             <td className="align-middle">
                                 <Link to={"/product/" + product.EAN} className="btn btn-secondary btn-block"><i className="fas fa-pencil-alt"></i></Link>
@@ -36,7 +35,7 @@ const product = (props) => {
             <div key={product.EAN} className="col-md-3 col-sm-6 mb-3">
                 <div className="card">
                     <h5 className="card-header text-truncate">{product.Name}</h5>
-                    <img src={props.url + product.Image + '?n=' + new Date().getTime()} className="card-img-top mt-2" alt={product.Name} />
+                    <img src={props.url + product.Image + '?n=' + new Date().getTime()} onError={(e)=>{e.target.onerror = null; e.target.src=props.url + 'images/console/sample-product.svg'}} className="card-img-top mt-2" alt={product.Name} />
                     <div className="card-body">
                         <p className="text-center">{product.EAN}</p>
                         <div className="row">

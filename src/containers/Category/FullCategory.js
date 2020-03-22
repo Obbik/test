@@ -139,12 +139,14 @@ class FullCategory extends Component {
             this.props.history.push('/categories');
         })
         .catch(err => {
-            this.setState({ error: err });
+            this.setState({ 
+                error: err,
+                loader: false  
+            });
 
             setTimeout(() => {
                 this.setState({ 
-                    error: null,
-                    loader: false 
+                    error: null
                 })
             }, 5000);
         });
