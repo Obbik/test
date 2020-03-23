@@ -89,7 +89,7 @@ class FullProductShared extends Component {
                     <div className="card-body">
                         <div className="text-center">
                             <h2>{this.state.addProduct ? 'Dodaj produkt' : this.state.product.name}</h2>
-                            {this.state.addProduct ? null : <img src={this.props.url + this.state.product.initialImage} alt={this.state.product.name} width="256" height="256"/>}
+                            {this.state.product.initialImage ? <img src={this.props.url + this.state.product.initialImage + '?n=' + new Date().getTime()} onError={(e)=>{e.target.src=this.props.url + 'images/console/sample-product.svg'}} alt={this.state.product.name} width="256" height="256"/> : null}
                         </div>
                         <div className="row justify-content-md-center">
                             <div className="col col-md-10">

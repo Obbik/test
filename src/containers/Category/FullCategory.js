@@ -175,7 +175,7 @@ class FullCategory extends Component {
                 <div className="card card-body bg-light mt-5">
                     <div className="text-center">
                         <h2>{this.state.addCategory ? 'Dodaj kategorię' : this.state.category.name}</h2>
-                        {this.state.addCategory ? null : <img src={this.props.url + this.state.category.initialImage} alt={this.state.category.name} width="256" height="256"/>}
+                        {this.state.category.initialImage ? <img src={this.props.url + this.state.category.initialImage + '?n=' + new Date().getTime()} onError={(e)=>{e.target.src=this.props.url + 'images/console/sample-product.svg'}} alt={this.state.category.name} width="256" height="256"/> : null}
                     </div>
                     <form onSubmit={this.handleSubmit}>
                         <div className="form-group">

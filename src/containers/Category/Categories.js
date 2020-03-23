@@ -33,7 +33,10 @@ class Categories extends Component {
                 this.getCategories();
             })
             .catch(err => {
-                this.setState({ error: err });
+                this.setState({ 
+                    error: err,
+                    loader: false 
+                });
 
                 setTimeout(() => {
                     this.setState({ error: null })
