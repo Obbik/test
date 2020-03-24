@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import { NotificationManager } from 'react-notifications';
 import axios from 'axios';
 
 import Category from '../../components/Category/Category';
@@ -30,17 +31,19 @@ class Categories extends Component {
                 }
             })
             .then(res => {
+                NotificationManager.success(res.data.message, null, 4000);
                 this.getCategories();
             })
             .catch(err => {
+                NotificationManager.error(err.response.data.message, null, 4000);
                 this.setState({ 
-                    error: err,
+                    // error: err,
                     loader: false 
                 });
 
-                setTimeout(() => {
-                    this.setState({ error: null })
-                }, 5000);
+                // setTimeout(() => {
+                //     this.setState({ error: null })
+                // }, 5000);
             });
         }
     }

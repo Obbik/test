@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 import axios from 'axios';
 
 import './App.css';
 import '../assets/fontawesome/css/all.css'
+import 'react-notifications/lib/notifications.css';
 
 import Navbar from './Navbar/Navbar';
 import Login from './User/Login';
@@ -16,7 +18,7 @@ import ProductCategory from './Product/ProductCategory';
 import FullCategory from './Category/FullCategory';
 import Loader from '../components/Loader/Loader';
 
-import allProducts from '../assets/products.json';
+// import allProducts from '../assets/products.json';
 
 class App extends Component {
     state = {
@@ -96,17 +98,18 @@ class App extends Component {
             this.setAutoLogout(remainingMilliseconds);
         })
         .catch(err => {
+            NotificationManager.error(err.response.data.message, null, 4000);
             this.setState({
                 isAuth: false,
-                error: err,
+                // error: err,
                 loader: false
             })
 
-            setTimeout(() => {
-                this.setState({
-                    error: null
-                })
-            }, 5000);
+            // setTimeout(() => {
+            //     this.setState({
+            //         error: null
+            //     })
+            // }, 5000);
 
         });
     }
@@ -132,27 +135,27 @@ class App extends Component {
         this.setState({ error: null });
     };
 
-    addProducts = () => {
-        allProducts.forEach(product => {
-            axios.post(this.state.url + 'api/product', product, {
-                headers: {
-                    Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyQHZlbmRpbS5wbCIsInVzZXJJZCI6IjciLCJjbGllbnRJZCI6ImNvbnNvbGUiLCJpYXQiOjE1ODQ2MjAwNzQsImV4cCI6MTU4NDYyMzY3NCwiYXVkIjoiaHR0cDovL3ZlbmRpbS5wbCIsImlzcyI6IlZlbmRpbSIsInN1YiI6InVzZXJAdmVuZGltLnBsIn0.bkQvMYF2a8DJfhzXwtQZMoPAwDa4COCHPyD8bLnUBGy35fQAhm2IGK8ACNGqxwxbdO4tliJR1Ow631UU411UcA'
-                }
-            })
-            .then(res => {
-                if (res.status === 422) {
-                    throw new Error('Validation failed.');
-                }
-                return res.data;
-            })
-            .then(res => {
-                console.log(res.data);
-            })
-            .catch(err => {
-                console.log(err.response.data);
-            }); 
-        });
-    }
+    // addProducts = () => {
+    //     allProducts.forEach(product => {
+    //         axios.post(this.state.url + 'api/product', product, {
+    //             headers: {
+    //                 Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyQHZlbmRpbS5wbCIsInVzZXJJZCI6IjciLCJjbGllbnRJZCI6ImNvbnNvbGUiLCJpYXQiOjE1ODQ2MjAwNzQsImV4cCI6MTU4NDYyMzY3NCwiYXVkIjoiaHR0cDovL3ZlbmRpbS5wbCIsImlzcyI6IlZlbmRpbSIsInN1YiI6InVzZXJAdmVuZGltLnBsIn0.bkQvMYF2a8DJfhzXwtQZMoPAwDa4COCHPyD8bLnUBGy35fQAhm2IGK8ACNGqxwxbdO4tliJR1Ow631UU411UcA'
+    //             }
+    //         })
+    //         .then(res => {
+    //             if (res.status === 422) {
+    //                 throw new Error('Validation failed.');
+    //             }
+    //             return res.data;
+    //         })
+    //         .then(res => {
+    //             console.log(res.data);
+    //         })
+    //         .catch(err => {
+    //             console.log(err.response.data);
+    //         }); 
+    //     });
+    // }
 
     render() {
         let routes = 
@@ -264,6 +267,7 @@ class App extends Component {
                     />
                     {routes}
                 </div>
+                <NotificationContainer/>
             </Fragment>
         );
     }
