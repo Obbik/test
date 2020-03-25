@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
+import { NotificationManager } from 'react-notifications';
 import axios from 'axios';
 
 import Product from '../../components/Product/Product';
-import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import Title from '../../components/Title/Title';
 import SearchInput from '../SearchInput/SearchInput';
 import Loader from '../../components/Loader/Loader';
@@ -36,17 +36,13 @@ class Products extends Component {
                 }
             })
             .then(res => {
+                this.setState({ loader: false });
+                NotificationManager.success(res.data.message, null, 4000);
                 this.getProducts();
             })
             .catch(err => {
-                this.setState({ 
-                    error: err,
-                    loader: false 
-                });
-    
-                setTimeout(() => {
-                    this.setState({ error: null })
-                }, 5000);
+                this.setState({ loader: false });
+                NotificationManager.error(err.response.data.message, null, 4000);
             });
         }
     }
@@ -69,19 +65,9 @@ class Products extends Component {
             })
         })
         .catch(err => {
-            this.setState({ 
-                error: err,
-                loader: false 
-            });
-
-            setTimeout(() => {
-                this.setState({ error: null })
-            }, 5000);
+            this.setState({ loader: false });
+            NotificationManager.error(err.response.data.message, null, 4000);
         });
-    }
-
-    errorHandler = () => {
-        this.setState({ error: null });
     }
 
     // Method for changing the view (table or cards)
@@ -132,10 +118,6 @@ class Products extends Component {
         return(
             <Fragment>
                 <Loader active={this.state.loader}/>
-                <ErrorHandler
-                    error={this.state.error} 
-                    onHandle={this.errorHandler} 
-                />
                 <Title
                     title="Produkty"
                     buttonName="Dodaj produkt"

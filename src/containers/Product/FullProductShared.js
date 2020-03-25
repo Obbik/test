@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
+import { NotificationManager } from 'react-notifications';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import ProductNav from '../../components/Product/ProductNav';
 import Loader from '../../components/Loader/Loader';
 
@@ -14,7 +14,6 @@ class FullProductShared extends Component {
             description: '',
             image: ''
         },
-        error: null,
         loader: false
     }
 
@@ -49,14 +48,8 @@ class FullProductShared extends Component {
             });
         })
         .catch(err => {
-            this.setState({ 
-                error: err,
-                loader: false
-            });
-
-            setTimeout(() => {
-                this.setState({ error: null });
-            }, 5000);
+            this.setState({ loader: false });
+            NotificationManager.error(err.response.data.message, null, 4000);
         });
     }
 
@@ -66,10 +59,6 @@ class FullProductShared extends Component {
         return(
             <Fragment>
                 <Loader active={this.state.loader}/>
-                <ErrorHandler 
-                    error={this.state.error} 
-                    onHandle={this.errorHandler} 
-                />
                 <div className="row">
                     <div className="col">
                         <Link to="/products/shared" className="btn btn-secondary">

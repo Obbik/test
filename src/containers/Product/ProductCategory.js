@@ -1,8 +1,8 @@
-import React, {Component, Fragment} from 'react';
+import React, { Component, Fragment } from 'react';
+import { NotificationManager } from 'react-notifications';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import ProductNav from '../../components/Product/ProductNav';
 import Loader from '../../components/Loader/Loader';
 
@@ -85,14 +85,8 @@ class ProductCategory extends Component {
             })
         })
         .catch(err => {
-            this.setState({ 
-                error: err,
-                loader: false 
-            });
-
-            setTimeout(() => {
-                this.setState({ error: null })
-            }, 5000);
+            this.setState({ loader: false });
+            NotificationManager.error(err.response.data.message, null, 4000);
         })
     }
 
@@ -155,14 +149,10 @@ class ProductCategory extends Component {
             }
         })
         .then(res => {
-            console.log(res.data);
+            NotificationManager.success(res.data.message, null, 4000);
         })
         .catch(err => {
-            this.setState({ error: err });
-
-            setTimeout(() => {
-                this.setState({ error: null })
-            }, 5000);
+            NotificationManager.error(err.response.data.message, null, 4000);
         });
     }
 
@@ -173,14 +163,10 @@ class ProductCategory extends Component {
             }
         })
         .then(res => {
-            console.log(res.data);
+            NotificationManager.success(res.data.message, null, 4000);
         })
         .catch(err => {
-            this.setState({ error: err });
-
-            setTimeout(() => {
-                this.setState({ error: null })
-            }, 5000);
+            NotificationManager.error(err.response.data.message, null, 4000);
         });
     }
 
@@ -196,10 +182,6 @@ class ProductCategory extends Component {
         return(
             <Fragment>
                 <Loader active={this.state.loader}/>
-                <ErrorHandler 
-                    error={this.state.error} 
-                    onHandle={this.errorHandler} 
-                />
                 <div className="row">
                     <div className="col">
                         <Link to={backLink} className="btn btn-secondary">

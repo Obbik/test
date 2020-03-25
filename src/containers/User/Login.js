@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-// const logo = require("../../img/logo-vendim.png");
+// const logo = require('../../assets/images/logo-vendim.png');
 
 class Login extends Component {
 	handleSubmit = e => {
@@ -27,6 +27,9 @@ class Login extends Component {
                 <div className="col-md-6 mx-auto">
                     <div className="card card-body bg-light mt-5">
                         <div className="text-center">
+                            {/* <div className="mt-2 mb-4">
+                                <img src={logo} alt="logo" height="80" />
+                            </div> */}
                             <h2>Zaloguj się</h2>
                         </div>
                         <form onSubmit={this.handleSubmit}>

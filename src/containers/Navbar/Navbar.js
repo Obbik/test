@@ -69,13 +69,16 @@ class Navbar extends Component {
                 <Link to="/" onClick={this.toggleProductDropdown} className="dropdown-item">Moje</Link>
                 <Link to="/products/shared" onClick={this.toggleProductDropdown} className="dropdown-item">Współdzielone</Link>
             </div> : null
+        const navbarClass = this.props.showSidebar ? "navbar navbar-expand-lg navbar-dark bg-dark fixed-top" : "navbar navbar-expand-lg navbar-dark navbar-full-width bg-dark fixed-top"
         const mobileNavbarClass = this.state.showMobileNavbar ? "collapse navbar-collapse show" : "collapse navbar-collapse";
 
         return (
-            <nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
-                <div className="container">
-                    <Link to="/" className="navbar-brand">
-                        <img src={logo} alt="logo" height="54" />
+            <nav className={navbarClass}>
+                {/* container fixed-top */}
+                <div className="container-fluid">
+                    <Link to="#" className="navbar-brand">
+                        {/* <img src={logo} alt="logo" height="42" /> */}
+                        <span onClick={this.props.onToggleSidebar} className="navbar-toggler-icon d-none d-lg-block"></span>
                     </Link>
                     <button ref={this.setMobileNavbarWrapperRef} onClick={this.toggleMobileNavbar} className="navbar-toggler" type="button">
                         <span className="navbar-toggler-icon"></span>
@@ -85,26 +88,24 @@ class Navbar extends Component {
 
                         </ul>
                         <ul className="navbar-nav ml-auto">
-                            {this.props.isAuth ?
-                                <Fragment>
-                                    <li ref={this.setProductDropdownWrapperRef} className="nav-item dropdown">
-                                        {/* <Link to="/" className="nav-link">Produkty</Link> */}
-                                        <Link to="#" onClick={this.toggleProductDropdown} className="nav-link dropdown-toggle">
-                                            Produkty
-                                        </Link>
-                                        {productDropdown}
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link to="/categories" className="nav-link">Kategorie</Link>
-                                    </li>
-                                    <li ref={this.setUserDropdownWrapperRef} className="nav-item dropdown">
-                                        <Link to="#" onClick={this.toggleUserDropdown} className="nav-link dropdown-toggle">
-                                            <i className="far fa-user"></i>
-                                        </Link>
-                                        {dropdown}
-                                    </li>
-                                </Fragment> : null
-                            }
+                            <Fragment>
+                                <li ref={this.setProductDropdownWrapperRef} className="nav-item dropdown">
+                                    {/* <Link to="/" className="nav-link">Produkty</Link> */}
+                                    <Link to="#" onClick={this.toggleProductDropdown} className="nav-link dropdown-toggle">
+                                        Produkty
+                                    </Link>
+                                    {productDropdown}
+                                </li>
+                                <li className="nav-item">
+                                    <Link to="/categories" className="nav-link">Kategorie</Link>
+                                </li>
+                                <li ref={this.setUserDropdownWrapperRef} className="nav-item dropdown">
+                                    <Link to="#" onClick={this.toggleUserDropdown} className="nav-link dropdown-toggle">
+                                        <i className="far fa-user"></i>
+                                    </Link>
+                                    {dropdown}
+                                </li>
+                            </Fragment>
                         </ul>
                     </div>
                 </div>

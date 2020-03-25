@@ -3,7 +3,6 @@ import { NotificationManager } from 'react-notifications';
 import axios from 'axios';
 
 import Category from '../../components/Category/Category';
-import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import Title from '../../components/Title/Title';
 import SearchInput from '../SearchInput/SearchInput';
 import Loader from '../../components/Loader/Loader';
@@ -31,19 +30,13 @@ class Categories extends Component {
                 }
             })
             .then(res => {
+                this.setState({ loader: false });
                 NotificationManager.success(res.data.message, null, 4000);
                 this.getCategories();
             })
             .catch(err => {
+                this.setState({ loader: false });
                 NotificationManager.error(err.response.data.message, null, 4000);
-                this.setState({ 
-                    // error: err,
-                    loader: false 
-                });
-
-                // setTimeout(() => {
-                //     this.setState({ error: null })
-                // }, 5000);
             });
         }
     }
@@ -63,19 +56,9 @@ class Categories extends Component {
             })
         })
         .catch(err => {
-            this.setState({ 
-                error: err,
-                loader: false  
-            });
-
-            setTimeout(() => {
-                this.setState({ error: null })
-            }, 5000);
+            this.setState({ loader: false });
+            NotificationManager.error(err.response.data.message, null, 4000);
         });
-    }
-
-    errorHandler = () => {
-        this.setState({ error: null });
     }
 
     // Method for changing the view (table or cards)
@@ -112,10 +95,6 @@ class Categories extends Component {
         return(
             <Fragment>
                 <Loader active={this.state.loader}/>
-                <ErrorHandler 
-                    error={this.state.error} 
-                    onHandle={this.errorHandler} 
-                />
                 <Title
                     title="Kategorie"
                     buttonName="Dodaj kategorię"

@@ -3,20 +3,21 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import axios from 'axios';
 
-import './App.css';
-import '../assets/fontawesome/css/all.css'
 import 'react-notifications/lib/notifications.css';
+import '../containers/Sidebar/Sidebar.css'
+import '../assets/fontawesome/css/all.css'
+import './App.css';
 
 import Navbar from './Navbar/Navbar';
 import Login from './User/Login';
 import Products from './Product/Products';
 import Categories from './Category/Categories';
-import ErrorHandler from '../components/ErrorHandler/ErrorHandler';
 import FullProduct from './Product/FullProduct';
 import FullProductShared from './Product/FullProductShared';
 import ProductCategory from './Product/ProductCategory';
 import FullCategory from './Category/FullCategory';
 import Loader from '../components/Loader/Loader';
+import Sidebar from '../containers/Sidebar/Sidebar';
 
 // import allProducts from '../assets/products.json';
 
@@ -29,7 +30,8 @@ class App extends Component {
         userName: null,
         isAuth: false,
         error: null,
-        loader: false
+        loader: false,
+        showSidebar: false
     }
 
     componentDidMount() {
@@ -98,19 +100,11 @@ class App extends Component {
             this.setAutoLogout(remainingMilliseconds);
         })
         .catch(err => {
-            NotificationManager.error(err.response.data.message, null, 4000);
             this.setState({
                 isAuth: false,
-                // error: err,
                 loader: false
-            })
-
-            // setTimeout(() => {
-            //     this.setState({
-            //         error: null
-            //     })
-            // }, 5000);
-
+            });
+            NotificationManager.error(err.response.data.message, null, 4000);
         });
     }
 
@@ -131,9 +125,8 @@ class App extends Component {
         localStorage.removeItem('userName');
     };
 
-    errorHandler = () => {
-        this.setState({ error: null });
-    };
+    // Sidebar
+    toggleSidebar = () => { this.setState({showSidebar: !this.state.showSidebar}) }
 
     // addProducts = () => {
     //     allProducts.forEach(product => {
@@ -257,17 +250,32 @@ class App extends Component {
         }
 
         return (
+            // <Fragment>
+            //     <Loader active={this.state.loader}/>
+            //     <Navbar onLogout={this.logout} isAuth={this.state.isAuth} />
+            //     <div className="container navbar-margin">
+            //         {routes}
+            //     </div>
+            //     <NotificationContainer/>
+            // </Fragment>
+
             <Fragment>
                 <Loader active={this.state.loader}/>
-                <Navbar onLogout={this.logout} isAuth={this.state.isAuth} />
-                <div className="container navbar-margin">
-                    <ErrorHandler 
-                        error={this.state.error} 
-                        onHandle={this.errorHandler} 
-                    />
-                    {routes}
-                </div>
                 <NotificationContainer/>
+                <div className="row body-row">
+                    { this.state.isAuth ? <Sidebar showSidebar={this.state.showSidebar}/> : null }
+                    <div className="col body-col">
+                        { this.state.isAuth ? <Navbar 
+                            onLogout={this.logout} 
+                            isAuth={this.state.isAuth} 
+                            onToggleSidebar={this.toggleSidebar}
+                            showSidebar={this.state.showSidebar}
+                        /> : null }
+                        <div className="container navbar-margin">
+                            {routes}
+                        </div>
+                    </div>
+                </div>
             </Fragment>
         );
     }

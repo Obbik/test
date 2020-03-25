@@ -1,0 +1,18 @@
+/* .sticky-offset {
+    top: 68px !important;
+} */
+
+.body-row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.body-col {
+    padding: 0;
+}
+
+.sidebar {
+    min-height: 100vh;
+    border-right: 1px solid #dee2e6;
+    width: 240px;
+}

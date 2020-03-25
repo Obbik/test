@@ -37,7 +37,7 @@ const product = (props) => {
                     <h5 className="card-header text-truncate">{product.Name}</h5>
                     <img src={props.url + product.Image + '?n=' + new Date().getTime()} onError={(e)=>{e.target.onerror = null; e.target.src=props.url + 'images/console/sample-product.svg'}} className="card-img-top mt-2" alt={product.Name} />
                     <div className="card-body">
-                        <p className="text-center">{product.EAN}</p>
+                        <p className="text-center text-truncate">{product.EAN}</p>
                         <div className="row">
                             <div className={props.sharedProducts ? "col-md-12 mt-1" : "col-md-6 mt-1"}>
                                 <Link to={link + product.EAN} className="btn btn-secondary btn-block"><i className="fas fa-pencil-alt"></i></Link>
