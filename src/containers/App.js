@@ -4,8 +4,8 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import axios from 'axios';
 
 import 'react-notifications/lib/notifications.css';
-import '../containers/Sidebar/Sidebar.css'
-import '../assets/fontawesome/css/all.css'
+import '../containers/Sidebar/Sidebar.css';
+import '../assets/fontawesome/css/all.css';
 import './App.css';
 
 import Navbar from './Navbar/Navbar';
@@ -23,8 +23,8 @@ import Sidebar from '../containers/Sidebar/Sidebar';
 
 class App extends Component {
     state = {
-        url: 'http://localhost:3000/',
-        // url: 'https://vendim-rest-api.herokuapp.com/',
+        // url: 'http://localhost:3000/',
+        url: 'https://vendim-rest-api.herokuapp.com/',
         token: null,
         userId: null,
         userName: null,
@@ -263,7 +263,12 @@ class App extends Component {
                 <Loader active={this.state.loader}/>
                 <NotificationContainer/>
                 <div className="row body-row">
-                    { this.state.isAuth ? <Sidebar showSidebar={this.state.showSidebar}/> : null }
+                    { this.state.isAuth ? <Sidebar 
+                            showSidebar={this.state.showSidebar}
+                            url={this.state.url}
+                            token={this.state.token}
+                            userName={this.state.userName}
+                        /> : null }
                     <div className="col body-col">
                         { this.state.isAuth ? <Navbar 
                             onLogout={this.logout} 
