@@ -13,7 +13,6 @@ import Login from './User/Login';
 import Products from './Product/Products';
 import Categories from './Category/Categories';
 import FullProduct from './Product/FullProduct';
-import FullProductShared from './Product/FullProductShared';
 import ProductCategory from './Product/ProductCategory';
 import FullCategory from './Category/FullCategory';
 import Loader from '../components/Loader/Loader';
@@ -169,6 +168,7 @@ class App extends Component {
                         exact path="/"
                         render={props => (
                             <Products
+                                {...props}
                                 url={this.state.url}
                                 token={this.state.token}
                                 sharedProducts={false}
@@ -176,6 +176,18 @@ class App extends Component {
                         )}
                     />
                     <Route
+                        exact path="/products/:categoryId"
+                        render={props => (
+                            <Products
+                                {...props}
+                                key={props.match.params.categoryId}
+                                url={this.state.url}
+                                token={this.state.token}
+                                sharedProducts={false}
+                            />
+                        )}
+                    />
+                    {/* <Route
                         exact path="/products/shared"
                         render={props => (
                             <Products
@@ -184,7 +196,7 @@ class App extends Component {
                                 sharedProducts={true}
                             />
                         )}
-                    />
+                    /> */}
                     <Route
                         exact path="/product/:id"
                         render={props => (
@@ -195,7 +207,7 @@ class App extends Component {
                             />
                         )}
                     />
-                    <Route
+                    {/* <Route
                         exact path="/product/shared/:id"
                         render={props => (
                             <FullProductShared
@@ -204,7 +216,7 @@ class App extends Component {
                                 token={this.state.token}
                             />
                         )}
-                    />
+                    /> */}
                     <Route
                         exact path="/product-category/:id"
                         render={props => (
@@ -215,7 +227,7 @@ class App extends Component {
                             />
                         )}
                     />
-                    <Route
+                    {/* <Route
                         exact path="/product-category/shared/:id"
                         render={props => (
                             <ProductCategory
@@ -225,7 +237,7 @@ class App extends Component {
                                 sharedProducts={true}
                             />
                         )}
-                    />
+                    /> */}
                     <Route
                         exact path="/categories"
                         render={props => (

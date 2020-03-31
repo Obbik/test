@@ -11,14 +11,12 @@ import Pagination from '../../components/Pagination/Pagination';
 class Products extends Component {
     state = {
         products: [],
-        error: null,
         tableView: false,
-        showModal: false,
-        delete: false,
         loader: false,
         page: 1,
         totalItems: 0,
-        searchedValue: ''
+        searchedValue: '',
+        shared: ''
     }
 
     componentDidMount() {
@@ -47,9 +45,10 @@ class Products extends Component {
         }
     }
 
-    getProducts = (page = 1, search = this.state.searchedValue) => {
+    getProducts = (page = 1, search = this.state.searchedValue, shared = this.state.shared) => {
         this.setState({ loader: true });
-        let url = this.props.sharedProducts ? this.props.url + 'api/products-shared?search=' + search + '&page=' + page : this.props.url + 'api/products?search=' + search + '&page=' + page;
+        const categoryId = this.props.match.params.categoryId || '';
+        const url = this.props.url + 'api/products?search=' + search + '&shared=' + shared + '&categoryId=' + categoryId + '&page=' + page;
 
         axios.get(url, {
             headers: {
@@ -85,17 +84,6 @@ class Products extends Component {
         });
 
         this.getProducts(1, value);
-
-        // const suggestions = this.getSuggestions(value);
-        // let filteredProducts = this.state.initialProducts;
-
-        // if(value !== '') {
-        //     filteredProducts = suggestions;
-        // }
-
-        // this.setState({
-        //     products: filteredProducts
-        // });
     }
 
     getSuggestions = value => {
@@ -113,8 +101,15 @@ class Products extends Component {
         this.getProducts(pageNo);
     }
 
+    // Handle shared input
+    handleSharedInputChange = (e) => {
+        const checked = e.target.checked;
+        const shared = checked ? '1' : '';
+        this.setState({ shared: shared });
+        this.getProducts(1, this.state.searchedValue, shared);
+    }
+
     render() {
-        const enableAddButton = this.props.sharedProducts ? false : true;
         return(
             <Fragment>
                 <Loader active={this.state.loader}/>
@@ -122,13 +117,20 @@ class Products extends Component {
                     title="Produkty"
                     buttonName="Dodaj produkt"
                     buttonLink="/product/add"
-                    enableAddButton={enableAddButton}
                 />
                 <SearchInput 
                     tableView={this.state.tableView}
                     onSearch={this.search}
                     onToggleView={this.toggleView}
                 />
+                <div className="row">
+                    <div className="col">
+                        <div className="custom-control custom-checkbox float-right">
+                            <input onChange={this.handleSharedInputChange} type="checkbox" className="custom-control-input" id="shared-checkbox"/>
+                            <label className="custom-control-label" htmlFor="shared-checkbox">Współdzielone</label>
+                        </div>
+                    </div>
+                </div>
                 <Pagination 
                     onSwitchPage={this.switchPage}
                     page={this.state.page}
@@ -138,9 +140,7 @@ class Products extends Component {
                     url={this.props.url}
                     products={this.state.products}
                     onDeleteProduct={this.deleteProduct}
-                    onShowModal={this.showModal}
                     tableView={this.state.tableView}
-                    sharedProducts={this.props.sharedProducts}
                 />
             </Fragment>
         )

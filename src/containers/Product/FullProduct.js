@@ -148,25 +148,26 @@ class FullProduct extends Component {
      
     render() {
         const id = this.props.match.params.id;
+        console.log(this.props.history);
         return(
             <Fragment>
                 <Loader active={this.state.loader}/>
-                <div className="row">
+                <div className="row mb-3">
                     <div className="col">
-                        <Link to="/" className="btn btn-secondary">
+                        <button onClick={this.props.history.goBack} className="btn btn-secondary">
                             <i className="fas fa-arrow-left"></i>&nbsp; Wróć
-                        </Link>
+                        </button>
                     </div>
                 </div>
-                <div className="card mt-4">
-                    <div className="card-header">
+                {/* <div className="card mt-4"> */}
+                    {/* <div className="card-header">
                         <ProductNav 
                             id={id} 
                             active={1}
                             addProduct={this.state.addProduct}
                         />
-                    </div>
-                    <div className="card-body">
+                    </div> */}
+                    <div className="card card-body bg-light mt-3">
                         <div className="text-center">
                             <h2>{this.state.addProduct ? 'Dodaj produkt' : this.state.product.name}</h2>
                             {this.state.product.initialImage ? <img src={this.props.url + this.state.product.initialImage + '?n=' + new Date().getTime()} onError={(e)=>{e.target.src=this.props.url + 'images/console/sample-product.svg'}} alt={this.state.product.name} width="256" height="256"/> : null}
@@ -191,7 +192,7 @@ class FullProduct extends Component {
                             <input type="submit" className="btn btn-success" value="Zapisz"/>
                         </form>
                     </div>
-                </div>
+                {/* </div> */}
             </Fragment>
         );
     }

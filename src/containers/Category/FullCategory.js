@@ -140,12 +140,12 @@ class FullCategory extends Component {
                 <Loader active={this.state.loader}/>
                 <div className="row mb-3">
                     <div className="col">
-                        <Link to="/categories" className="btn btn-secondary">
+                        <button onClick={this.props.history.goBack} className="btn btn-secondary">
                             <i className="fas fa-arrow-left"></i>&nbsp; Wróć
-                        </Link>
+                        </button>
                     </div>
                 </div>
-                <div className="card card-body bg-light mt-5">
+                <div className="card card-body bg-light mt-3">
                     <div className="text-center">
                         <h2>{this.state.addCategory ? 'Dodaj kategorię' : this.state.category.name}</h2>
                         {this.state.category.initialImage ? <img src={this.props.url + this.state.category.initialImage + '?n=' + new Date().getTime()} onError={(e)=>{e.target.src=this.props.url + 'images/console/sample-product.svg'}} alt={this.state.category.name} width="256" height="256"/> : null}

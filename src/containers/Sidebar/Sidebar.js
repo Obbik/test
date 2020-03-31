@@ -31,7 +31,6 @@ class Sidebar extends Component {
 
     render() {
         const sidebarClass = this.props.showSidebar ? "sidebar d-none d-lg-block bg-light sticky-top" : "sidebar d-none";
-        // animated fadeInLeft
         const productMenuClass = this.state.showProductMenu ? "list-group-item sidebar-list-group-item bg-light ml-3" : "list-group-item sidebar-list-group-item bg-light ml-3 d-none";
 
         return(
@@ -49,19 +48,13 @@ class Sidebar extends Component {
                         </div>
                     </li>
                     <li className="list-group-item sidebar-list-group-item bg-light">
-                        <Link to="#" onClick={this.toggleProductMenu} className="link">
+                        <Link to="/" onClick={this.toggleProductMenu} className="link">
                             <i className="far fa-list-alt"></i> &nbsp; Produkty
                         </Link>
                     </li>
-                    <li className={productMenuClass}>
-                        <Link to="/" className="link">Moje</Link>
-                    </li>
-                    <li className={productMenuClass}>
-                        <Link to="/products/shared" className="link">Współdzielone</Link>
-                    </li>
                     { this.state.categories.map(category => 
                     <li key={category.CategoryId} className={productMenuClass}>
-                            <Link to="/" className="link">{category.Name}</Link>
+                            <Link to={`/products/${category.CategoryId}`} className="link">{category.Name}</Link>
                         </li>)
                     }
                     <li className="list-group-item sidebar-list-group-item bg-light">
