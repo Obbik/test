@@ -73,6 +73,7 @@ class FullProduct extends Component {
             }
         })
         .then(res => {
+            this.setState({ loader: false });
             if(res.status !== 200) {
                 throw new Error('Failed to fetch status.');
             }
@@ -99,28 +100,16 @@ class FullProduct extends Component {
 
     addProduct = product => {
         this.setState({ loader: true });
-
         const formData = new FormData();
         formData.append('Ean', product.Ean);
         formData.append('Name', product.Name);
         formData.append('Description', product.Description);
         formData.append('Image', product.Image);
 
-        axios.get(this.props.url + 'api/product/' + product.Ean, {
+        axios.post(this.props.url + 'api/product/', formData, {
             headers: {
                 Authorization: 'Bearer ' + this.props.token
             }
-        })
-        .then(res => {
-            if(res.data) {
-                throw new Error('Product already exists.');
-            }
-
-            return axios.post(this.props.url + 'api/product/', formData, {
-                headers: {
-                    Authorization: 'Bearer ' + this.props.token
-                }
-            })
         })
         .then(res => {
             this.setState({ loader: false });
@@ -129,30 +118,8 @@ class FullProduct extends Component {
         })
         .catch(err => {
             this.setState({ loader: false });
-            let error;
-
-            if(err.response)
-                error = err.response.data.message;
-            else
-                error = err.message;
-            
-            NotificationManager.error(error, null, 4000);
+            NotificationManager.error(err.response.data.message, null, 4000);
         });
-
-        // axios.post(this.props.url + 'api/product/', formData, {
-        //     headers: {
-        //         Authorization: 'Bearer ' + this.props.token
-        //     }
-        // })
-        // .then(res => {
-        //     this.setState({ loader: false });
-        //     NotificationManager.success(res.data.message, null, 4000);
-        //     this.props.history.push('/');
-        // })
-        // .catch(err => {
-        //     this.setState({ loader: false });
-        //     NotificationManager.error(err.response.data.message, null, 4000);
-        // });
     }
 
     editProduct = product => {
