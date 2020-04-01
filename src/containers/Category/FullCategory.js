@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import { Link } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
 import axios from 'axios';
 

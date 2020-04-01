@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
+// Redirect 
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import axios from 'axios';
 
@@ -30,7 +31,7 @@ class App extends Component {
         isAuth: false,
         error: null,
         loader: false,
-        showSidebar: false
+        showSidebar: true
     }
 
     componentDidMount() {
@@ -158,7 +159,7 @@ class App extends Component {
                         <Login onLogin={this.login} />
                     )}
                 />
-                <Redirect to="/" />
+                {/* <Redirect to="/" /> */}
             </Switch>
 
         if (this.state.isAuth) {
@@ -218,7 +219,7 @@ class App extends Component {
                         )}
                     /> */}
                     <Route
-                        exact path="/product-category/:id"
+                        path="/product-category/:id"
                         render={props => (
                             <ProductCategory
                                 {...props}
@@ -257,7 +258,7 @@ class App extends Component {
                             />
                         )}
                     />
-                    <Redirect to="/" />
+                    {/* <Redirect to="/" /> */}
                 </Fragment>
         }
 
@@ -289,6 +290,7 @@ class App extends Component {
                             showSidebar={this.state.showSidebar}
                         /> : null }
                         <div className="container navbar-margin">
+                        {/* container-fluid */}
                             {routes}
                         </div>
                     </div>

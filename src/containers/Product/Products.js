@@ -7,20 +7,24 @@ import Title from '../../components/Title/Title';
 import SearchInput from '../SearchInput/SearchInput';
 import Loader from '../../components/Loader/Loader';
 import Pagination from '../../components/Pagination/Pagination';
+import ProductCategory from '../Product/ProductCategory';
 
 class Products extends Component {
     state = {
+        title: null,
         products: [],
         tableView: false,
         loader: false,
         page: 1,
         totalItems: 0,
         searchedValue: '',
-        shared: ''
+        shared: '',
+        ean: null
     }
 
     componentDidMount() {
         this.getProducts();
+        this.getTitle();
     }
 
     deleteProduct = ean => {
@@ -49,6 +53,7 @@ class Products extends Component {
         this.setState({ loader: true });
         const categoryId = this.props.match.params.categoryId || '';
         const url = this.props.url + 'api/products?search=' + search + '&shared=' + shared + '&categoryId=' + categoryId + '&page=' + page;
+        // key=' + new Date().getTime() + '&
 
         axios.get(url, {
             headers: {
@@ -67,6 +72,22 @@ class Products extends Component {
             this.setState({ loader: false });
             NotificationManager.error(err.response.data.message, null, 4000);
         });
+    }
+
+    getTitle = () => {
+        const categoryId = this.props.match.params.categoryId;
+        if(categoryId) {
+            axios.get(this.props.url + 'api/category/' + categoryId, {
+                headers: {
+                    Authorization: 'Bearer ' + this.props.token
+                }
+            })
+            .then(res => {
+                this.setState({ title: res.data.Name});
+            });
+        } else {
+            this.setState({ title: 'Wszystkie produkty'});
+        }
     }
 
     // Method for changing the view (table or cards)
@@ -109,12 +130,25 @@ class Products extends Component {
         this.getProducts(1, this.state.searchedValue, shared);
     }
 
+    // Handle product category modal
+    showProductCategoryModal = ean => {
+        this.setState({
+            showProductCategoryModal: true,
+            ean: ean
+        });
+    }
+
+    hideProductCategoryModal = () => {
+        this.setState({ showProductCategoryModal: false });
+        this.getProducts();
+    }
+
     render() {
         return(
             <Fragment>
                 <Loader active={this.state.loader}/>
                 <Title
-                    title="Produkty"
+                    title={this.state.title}
                     buttonName="Dodaj produkt"
                     buttonLink="/product/add"
                 />
@@ -138,9 +172,19 @@ class Products extends Component {
                 /> 
                 <Product
                     url={this.props.url}
+                    token={this.props.token}
                     products={this.state.products}
                     onDeleteProduct={this.deleteProduct}
                     tableView={this.state.tableView}
+                    onShowProductCategoryModal={this.showProductCategoryModal} 
+                />
+                <ProductCategory
+                    key={this.state.ean}
+                    ean={this.state.ean}
+                    url={this.props.url}
+                    token={this.props.token}
+                    showProductCategoryModal={this.state.showProductCategoryModal}
+                    onHideProductCategoryModal={this.hideProductCategoryModal}
                 />
             </Fragment>
         )

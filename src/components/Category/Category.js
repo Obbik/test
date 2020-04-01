@@ -33,7 +33,7 @@ const category = (props) => {
         props.categories.map(category => 
             <div key={category.CategoryId} className="col-lg-3 col-sm-6 mb-3">
                 <div className="card">
-                    <h5 className="card-header text-truncate">{category.Name}</h5>
+                    <h6 className="card-header text-truncate">{category.Name}</h6>
                     <img src={props.url + category.Image  + '?n=' + new Date().getTime()} onError={(e)=>{e.preventDefault(); e.target.src = sampleProduct}} className="card-img-top" alt={category.Name} />
                     <div className="card-body">
                         <div className="row">

@@ -10,7 +10,7 @@ body {
     color: #555;
     font-family: 'Lato', 'Arial', sans-serif;
     font-weight: 300;
-    /* font-size: 20px; */
+    font-size: 16px;
     text-rendering: optimizeLegibility;
     margin: 0;
     padding: 0;
@@ -71,3 +71,45 @@ body {
     text-decoration: none;
     color: rgb(56, 56, 56);
 }
+
+/* COLUMN */
+.col-custom-padding {
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+/* DROPDOWN */
+.dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu-center {
+    right: auto;
+    left: 50%;
+    -webkit-transform: translate(-50%, 0);
+    -o-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+    max-height: 100px;
+    overflow-x: hidden;
+}
+
+/* CARD */
+.card-product-category {
+    position: absolute;
+    top: 0;
+    left: 0;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    /* min-height: 1px; */
+    height: 100px;
+    padding: 1.25rem;
+    /* overflow-y: hidden; */
+    z-index: -1;
+
+}
+
+/* .card-img-top {
+    width: 100%;
+    max-height: 20vw;
+    object-fit: cover;
+} */

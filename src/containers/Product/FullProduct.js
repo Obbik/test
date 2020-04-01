@@ -1,9 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { NotificationManager } from 'react-notifications';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 
-import ProductNav from '../../components/Product/ProductNav';
 import Loader from '../../components/Loader/Loader';
 
 class FullProduct extends Component {
@@ -24,36 +22,7 @@ class FullProduct extends Component {
         const id = this.props.match.params.id;
 
         if(id !== 'add') {
-            this.setState({ loader: true });
-            axios.get(this.props.url + 'api/product/' + id, {
-                headers: {
-                    Authorization: 'Bearer ' + this.props.token
-                }
-            })
-            .then(res => {
-                this.setState({ loader: false });
-                if(res.status !== 200) {
-                    throw new Error('Failed to fetch status.');
-                }
-                return res.data;
-            })
-            .then(res => {
-                this.setState({
-                    product: {
-                        ean: res.EAN,
-                        name: res.Name,
-                        description: res.Description,
-                        image: res.Image,
-                        initialImage: res.Image
-                    },
-                    addProduct: false,
-                    loader: false
-                });
-            })
-            .catch(err => {
-                this.setState({ loader: false });
-                NotificationManager.error(err.response.data.message, null, 4000);
-            });
+            this.getProduct(id);
         } else {
             this.setState({
                 addProduct: true
@@ -96,18 +65,62 @@ class FullProduct extends Component {
         }
     }
 
+    getProduct = (id) => {
+        this.setState({ loader: true });
+        axios.get(this.props.url + 'api/product/' + id, {
+            headers: {
+                Authorization: 'Bearer ' + this.props.token
+            }
+        })
+        .then(res => {
+            if(res.status !== 200) {
+                throw new Error('Failed to fetch status.');
+            }
+            return res.data;
+        })
+        .then(res => {
+            this.setState({
+                product: {
+                    ean: res.EAN,
+                    name: res.Name,
+                    description: res.Description,
+                    image: res.Image,
+                    initialImage: res.Image
+                },
+                addProduct: false,
+                loader: false
+            });
+        })
+        .catch(err => {
+            this.setState({ loader: false });
+            NotificationManager.error(err.response.data.message, null, 4000);
+        });
+    }
+
     addProduct = product => {
         this.setState({ loader: true });
+
         const formData = new FormData();
         formData.append('Ean', product.Ean);
         formData.append('Name', product.Name);
         formData.append('Description', product.Description);
         formData.append('Image', product.Image);
 
-        axios.post(this.props.url + 'api/product/', formData, {
+        axios.get(this.props.url + 'api/product/' + product.Ean, {
             headers: {
                 Authorization: 'Bearer ' + this.props.token
             }
+        })
+        .then(res => {
+            if(res.data) {
+                throw new Error('Product already exists.');
+            }
+
+            return axios.post(this.props.url + 'api/product/', formData, {
+                headers: {
+                    Authorization: 'Bearer ' + this.props.token
+                }
+            })
         })
         .then(res => {
             this.setState({ loader: false });
@@ -116,8 +129,30 @@ class FullProduct extends Component {
         })
         .catch(err => {
             this.setState({ loader: false });
-            NotificationManager.error(err.response.data.message, null, 4000);
+            let error;
+
+            if(err.response)
+                error = err.response.data.message;
+            else
+                error = err.message;
+            
+            NotificationManager.error(error, null, 4000);
         });
+
+        // axios.post(this.props.url + 'api/product/', formData, {
+        //     headers: {
+        //         Authorization: 'Bearer ' + this.props.token
+        //     }
+        // })
+        // .then(res => {
+        //     this.setState({ loader: false });
+        //     NotificationManager.success(res.data.message, null, 4000);
+        //     this.props.history.push('/');
+        // })
+        // .catch(err => {
+        //     this.setState({ loader: false });
+        //     NotificationManager.error(err.response.data.message, null, 4000);
+        // });
     }
 
     editProduct = product => {
@@ -147,8 +182,6 @@ class FullProduct extends Component {
     }
      
     render() {
-        const id = this.props.match.params.id;
-        console.log(this.props.history);
         return(
             <Fragment>
                 <Loader active={this.state.loader}/>

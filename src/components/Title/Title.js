@@ -6,13 +6,12 @@ const title = props => {
     return (
         <div className="row mb-3">
             <div className="col-sm">
-                <h1>{props.title}</h1>
+                <h2>{props.title}</h2>
             </div>
             <div className="col-sm">
-                {props.enableAddButton ? 
-                    <Link to={props.buttonLink} className="btn btn-success float-right">
-                        <i className="fa fa-plus"></i> &nbsp; {props.buttonName}
-                    </Link> : null}
+                <Link to={props.buttonLink} className="btn btn-success btn-sm float-right">
+                    <i className="fa fa-plus"></i> &nbsp; {props.buttonName}
+                </Link>
             </div>
         </div>
     )

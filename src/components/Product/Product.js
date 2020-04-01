@@ -32,28 +32,48 @@ const product = (props) => {
                 </tbody>
             </table>
         </div> : 
-        props.products.map(product =>
-            <div key={product.EAN} className="col-md-3 col-sm-6 mb-3">
-                <div className="card">
-                    <h5 className="card-header text-truncate">{product.Name}</h5>
-                    <img src={props.url + product.Image + '?n=' + new Date().getTime()} onError={(e)=>{e.preventDefault(); e.target.src = sampleProduct}} className="card-img-top mt-2" alt={product.Name} />
-                    <div className="card-body">
-                        <p className="text-center text-truncate">{product.EAN}</p>
-                        <div className="row">
-                            <div className="col-md-4 mt-1">
-                                <Link to={"/product/" + product.EAN} className={`btn btn-secondary btn-block ${product.IsShared ? 'disabled' : ''}`}><i className="fas fa-pencil-alt"></i></Link>
-                            </div>
-                            <div className="col-md-4 mt-1">
-                                <button /* onClick={() => props.onDeleteProduct(product.EAN)} */ className="btn btn-secondary btn-block"><i className="fas fa-th-large"></i></button>
-                            </div>
-                            <div className="col-md-4 mt-1">
-                                <button onClick={() => props.onDeleteProduct(product.EAN)} className={`btn btn-danger btn-block ${product.IsShared ? 'disabled' : ''}`}><i className="fa fa-trash"></i></button>
+        props.products.map(product => 
+                <div key={product.EAN} className="col-md-3 col-sm-6 mb-3">
+                {/* col-lg-2  */}
+                    <div className="card">
+                        <h6 className="card-header text-truncate">{product.Name}</h6>
+                        <div className="card-body">
+                            <img src={props.url + product.Image + '?n=' + new Date().getTime()} onError={(e)=>{e.preventDefault(); e.target.src = sampleProduct}} className="card-img-top" alt={product.Name} />
+                            <p className="text-center text-truncate">{product.EAN}</p>
+                            {/* <div className="card-product-category">
+                                <ProductCategory
+                                    ean={product.EAN}
+                                    url={props.url}
+                                    token={props.token}
+                                />
+                            </div> */}
+                            <div className="row">
+                                <div className="col-lg-4 col-md-6 col-custom-padding mt-1">
+                                    <Link to={"/product/" + product.EAN} className={`btn btn-secondary btn-sm btn-block ${product.IsShared ? 'disabled' : ''}`}><i className="fas fa-pencil-alt"></i></Link>
+                                </div>
+                                <div className="col-lg-4 col-md-6 col-custom-padding mt-1">
+                                    <button onClick={() => props.onShowProductCategoryModal(product.EAN)} className="btn btn-secondary btn-sm btn-block"><i className="fas fa-th-large"></i></button>
+                                    {/* <div className="dropdown">
+                                        <button className="btn btn-secondary btn-sm btn-block" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i className="fas fa-th-large"></i>
+                                        </button>
+                                        <div className="dropdown-menu dropdown-menu-center" aria-labelledby="dropdownMenuButton">
+                                            <ProductCategory
+                                                ean={product.EAN}
+                                                url={props.url}
+                                                token={props.token}
+                                            />
+                                        </div>
+                                    </div> */}
+                                </div>
+                                <div className="col-lg-4 col-md-12 col-custom-padding mt-1">
+                                    <button onClick={() => props.onDeleteProduct(product.EAN)} className={`btn btn-danger btn-sm btn-block ${product.IsShared ? 'disabled' : ''}`}><i className="fa fa-trash"></i></button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div> 
-        )
+                </div> 
+            )
 
         return <div className="row">{view}</div>;
 

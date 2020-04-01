@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-import ProductNav from '../../components/Product/ProductNav';
+// import ProductNav from '../../components/Product/ProductNav';
 import Loader from '../../components/Loader/Loader';
 
 class ProductCategory extends Component {
@@ -21,73 +21,78 @@ class ProductCategory extends Component {
     }
 
     getCategories = () => {
-        this.setState({ loader: true });
-        const id = this.props.match.params.id;
-        let inputs;
-        let checked = false;
+        // const id = this.props.match.params.id;
+        const id = this.props.ean;
 
-        axios.get(this.props.url + 'api/categories', {
-            headers: {
-                Authorization: 'Bearer ' + this.props.token
-            }
-        })
-        .then(res => {
-            const categories = res.data;
-            categories.forEach(category => {
-                inputs = {
-                    ...inputs,
-                    ['category' + category.CategoryId]: {
-                        value: category.CategoryId,
-                        checked: checked
-                    }
-                }
-            });
+        
+        if(id) {
+            this.setState({ loader: true });
+            let inputs;
+            let checked = false;
 
-            this.setState({ 
-                categories: categories,
-                inputs: inputs,
-                initialInputs: { ...inputs }
-            });
-
-            return axios.get(this.props.url + 'api/category-product/' + id, {
+            axios.get(this.props.url + 'api/categories', {
                 headers: {
                     Authorization: 'Bearer ' + this.props.token
                 }
             })
-        })
-        .then(res => {
-            const categories = this.state.categories;
-            const productCategories = res.data;
-
-            categories.forEach(category => {
-                const checked = productCategories.some(productCategory => {
-                    let _checked = false;
-                    if(category.CategoryId === productCategory.CategoryId) {
-                        _checked = true;
+            .then(res => {
+                const categories = res.data;
+                categories.forEach(category => {
+                    inputs = {
+                        ...inputs,
+                        ['category' + category.CategoryId]: {
+                            value: category.CategoryId,
+                            checked: checked
+                        }
                     }
-                    return _checked;
+                });
+    
+                this.setState({ 
+                    categories: categories,
+                    inputs: inputs,
+                    initialInputs: { ...inputs }
+                });
+    
+                return axios.get(this.props.url + 'api/category-product/' + id, {
+                    headers: {
+                        Authorization: 'Bearer ' + this.props.token
+                    }
                 })
-
-                inputs = {
-                    ...inputs,
-                    ['category' + category.CategoryId]: {
-                        value: category.CategoryId,
-                        checked: checked
-                    }
-                }
-            });
-
-            this.setState({ 
-                inputs: inputs,
-                initialInputs: { ...inputs },
-                productCategories: productCategories,
-                loader: false
             })
-        })
-        .catch(err => {
-            this.setState({ loader: false });
-            NotificationManager.error(err.response.data.message, null, 4000);
-        })
+            .then(res => {
+                const categories = this.state.categories;
+                const productCategories = res.data;
+    
+                categories.forEach(category => {
+                    const checked = productCategories.some(productCategory => {
+                        let _checked = false;
+                        if(category.CategoryId === productCategory.CategoryId) {
+                            _checked = true;
+                        }
+                        return _checked;
+                    })
+    
+                    inputs = {
+                        ...inputs,
+                        ['category' + category.CategoryId]: {
+                            value: category.CategoryId,
+                            checked: checked
+                        }
+                    }
+                });
+    
+                this.setState({ 
+                    inputs: inputs,
+                    initialInputs: { ...inputs },
+                    productCategories: productCategories,
+                    loader: false
+                })
+            })
+            .catch(err => {
+                this.setState({ loader: false });
+                // NotificationManager.error(err.response.data.message, null, 4000);
+            })
+        }
     }
 
     handleChange = e => {
@@ -109,7 +114,9 @@ class ProductCategory extends Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        const productId = this.props.match.params.id;
+        // const productId = this.props.match.params.id;
+        const productId = this.props.ean;
+
         const categories = this.state.categories;
         const inputArray = categories.map(category => this.state.inputs['category' + category.CategoryId]);
         const initialInputArray = categories.map(category => this.state.initialInputs['category' + category.CategoryId]);  
@@ -136,6 +143,7 @@ class ProductCategory extends Component {
         });
 
         this.getCategories();
+        this.props.onHideProductCategoryModal();
     }
 
     errorHandler = () => {
@@ -176,40 +184,34 @@ class ProductCategory extends Component {
     }
 
     render() {
-        const id = this.props.match.params.id;
-        const backLink = this.props.sharedProducts ? '/products/shared' : '/';
-
+        const modalClass = this.props.showProductCategoryModal ? "modal fade show d-block" : "modal fade";
         return(
             <Fragment>
                 <Loader active={this.state.loader}/>
-                <div className="row">
-                    <div className="col">
-                        <Link to={backLink} className="btn btn-secondary">
-                            <i className="fas fa-arrow-left"></i>&nbsp; Wróć
-                        </Link>
-                    </div>
-                </div>
-                <div className="card mt-4">
-                    <div className="card-header">
-                        <ProductNav 
-                            id={id} 
-                            active={2}
-                            sharedProducts={this.props.sharedProducts}
-                        />
-                    </div>
-                    <div className="card-body">
-                        <div className="text-center">
-                            <h2>Kategorie produktu</h2>
+                <div className={modalClass} id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h6 className="modal-title" id="exampleModalLabel">Kategorie produktu</h6>
+                                <button onClick={this.props.onHideProductCategoryModal} type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        <div className="modal-body">
+                            <form id="category-form" onSubmit={this.handleSubmit}>
+                                {this.state.categories.map(category => 
+                                    <div key={category.CategoryId} className="form-group form-check">
+                                        <input type="checkbox" name={"category" + category.CategoryId} checked={this.state.inputs["category" + category.CategoryId].checked} value={category.CategoryId} onChange={this.handleChange} className="form-check-input"/>
+                                        <label className="form-check-label">{category.Name}</label>
+                                    </div>
+                                )}
+                                {/* <input type="submit" className="btn btn-success" value="Zapisz"/> */}
+                            </form>
                         </div>
-                        <form onSubmit={this.handleSubmit}>
-                            {this.state.categories.map(category => 
-                                <div key={category.CategoryId} className="form-group form-check">
-                                    <input type="checkbox" name={"category" + category.CategoryId} checked={this.state.inputs["category" + category.CategoryId].checked} value={category.CategoryId} onChange={this.handleChange} className="form-check-input"/>
-                                    <label className="form-check-label">{category.Name}</label>
-                                </div>
-                            )}
-                            <input type="submit" className="btn btn-success" value="Zapisz"/>
-                        </form>
+                            <div className="modal-footer">
+                                <input type="submit" className="btn btn-success" value="Zapisz" form="category-form"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </Fragment>
