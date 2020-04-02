@@ -22,8 +22,8 @@ const category = (props) => {
                                 <img src={props.url + category.Image  + '?n=' + new Date().getTime()} onError={(e)=>{e.preventDefault(); e.target.src = sampleProduct}} alt={category.Name} width="64" height="64"/>
                             </td>
                             <td className="align-middle">
-                                <Link to={"/category/" + category.CategoryId} className="btn btn-secondary btn-block"><i className="fas fa-pencil-alt"></i></Link>
-                                <button onClick={() => props.onDeleteCategory(category.CategoryId)} className="btn btn-danger btn-block"><i className="fa fa-trash"></i></button>
+                                <Link to={"/category/" + category.CategoryId} className="btn btn-secondary btn-sm btn-block"><i className="fas fa-pencil-alt"></i></Link>
+                                <button onClick={() => props.onDeleteCategory(category.CategoryId)} className="btn btn-danger btn-sm btn-block"><i className="fa fa-trash"></i></button>
                             </td>
                         </tr>
                     )}
@@ -37,11 +37,11 @@ const category = (props) => {
                     <img src={props.url + category.Image  + '?n=' + new Date().getTime()} onError={(e)=>{e.preventDefault(); e.target.src = sampleProduct}} className="card-img-top" alt={category.Name} />
                     <div className="card-body">
                         <div className="row">
-                            <div className="col-md-6 mt-1">
-                                <Link to={"/category/" + category.CategoryId} className="btn btn-secondary btn-block"><i className="fas fa-pencil-alt"></i></Link>
+                            <div className="col-md-6 col-custom-padding mt-1">
+                                <Link to={"/category/" + category.CategoryId} className="btn btn-secondary btn-sm btn-block"><i className="fas fa-pencil-alt"></i></Link>
                             </div>
-                            <div className="col-md-6 mt-1">
-                                <button onClick={() => props.onDeleteCategory(category.CategoryId)} className="btn btn-danger btn-block"><i className="fa fa-trash"></i></button>
+                            <div className="col-md-6 col-custom-padding mt-1">
+                                <button onClick={() => props.onDeleteCategory(category.CategoryId)} className="btn btn-danger btn-sm btn-block"><i className="fa fa-trash"></i></button>
                             </div>
                         </div>
                     </div>

@@ -53,7 +53,6 @@ class Products extends Component {
         this.setState({ loader: true });
         const categoryId = this.props.match.params.categoryId || '';
         const url = this.props.url + 'api/products?search=' + search + '&shared=' + shared + '&categoryId=' + categoryId + '&page=' + page;
-        // key=' + new Date().getTime() + '&
 
         axios.get(url, {
             headers: {
@@ -106,15 +105,6 @@ class Products extends Component {
 
         this.getProducts(1, value);
     }
-
-    getSuggestions = value => {
-        const inputValue = value.trim().toLowerCase();
-        const inputLength = inputValue.length;
-        
-        return inputLength === 0 ? [] : this.state.initialProducts.filter(product =>
-            product.Name.toLowerCase().slice(0, inputLength) === inputValue
-        );
-    };
 
     // Pagination
     switchPage = (pageNo) => {

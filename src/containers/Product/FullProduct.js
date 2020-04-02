@@ -118,6 +118,7 @@ class FullProduct extends Component {
         })
         .catch(err => {
             this.setState({ loader: false });
+            console.log('ERROR', err);
             NotificationManager.error(err.response.data.message, null, 4000);
         });
     }

@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Route, Switch } from 'react-router-dom';
-// Redirect 
+import { Route, Switch, Redirect } from 'react-router-dom';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import axios from 'axios';
 
@@ -23,8 +22,8 @@ import Sidebar from '../containers/Sidebar/Sidebar';
 
 class App extends Component {
     state = {
-        // url: 'http://localhost:3000/',
-        url: 'https://vendim-rest-api.herokuapp.com/',
+        url: 'http://localhost:3000/',
+        // url: 'https://vendim-rest-api.herokuapp.com/',
         token: null,
         userId: null,
         userName: null,
@@ -159,7 +158,7 @@ class App extends Component {
                         <Login onLogin={this.login} />
                     )}
                 />
-                {/* <Redirect to="/" /> */}
+                <Redirect to="/" />
             </Switch>
 
         if (this.state.isAuth) {

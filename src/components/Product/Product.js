@@ -24,8 +24,9 @@ const product = (props) => {
                                 <img src={props.url + product.Image + '?n=' + new Date().getTime()} onError={(e)=>{e.preventDefault(); e.target.src = sampleProduct}} alt={product.Name} width="64" height="64"/>
                             </td>
                             <td className="align-middle">
-                                <Link to={"/product/" + product.EAN} className={`btn btn-secondary btn-block ${product.IsShared ? 'disabled' : ''}`}><i className="fas fa-pencil-alt"></i></Link>
-                                <button onClick={() => props.onDeleteProduct(product.EAN)} className={`btn btn-danger btn-block ${product.IsShared ? 'disabled' : ''}`}><i className="fa fa-trash"></i></button>
+                                <Link to={"/product/" + product.EAN} className={`btn btn-secondary btn-sm btn-block ${product.IsShared ? 'disabled' : ''}`}><i className="fas fa-pencil-alt"></i></Link>
+                                <button onClick={() => props.onShowProductCategoryModal(product.EAN)} className="btn btn-secondary btn-sm btn-block"><i className="fas fa-th-large"></i></button>
+                                <button onClick={() => props.onDeleteProduct(product.EAN)} className={`btn btn-danger btn-sm btn-block ${product.IsShared ? 'disabled' : ''}`}><i className="fa fa-trash"></i></button>
                             </td>
                         </tr>
                     )}
@@ -40,31 +41,12 @@ const product = (props) => {
                         <div className="card-body">
                             <img src={props.url + product.Image + '?n=' + new Date().getTime()} onError={(e)=>{e.preventDefault(); e.target.src = sampleProduct}} className="card-img-top" alt={product.Name} />
                             <p className="text-center text-truncate">{product.EAN}</p>
-                            {/* <div className="card-product-category">
-                                <ProductCategory
-                                    ean={product.EAN}
-                                    url={props.url}
-                                    token={props.token}
-                                />
-                            </div> */}
                             <div className="row">
                                 <div className="col-lg-4 col-md-6 col-custom-padding mt-1">
                                     <Link to={"/product/" + product.EAN} className={`btn btn-secondary btn-sm btn-block ${product.IsShared ? 'disabled' : ''}`}><i className="fas fa-pencil-alt"></i></Link>
                                 </div>
                                 <div className="col-lg-4 col-md-6 col-custom-padding mt-1">
                                     <button onClick={() => props.onShowProductCategoryModal(product.EAN)} className="btn btn-secondary btn-sm btn-block"><i className="fas fa-th-large"></i></button>
-                                    {/* <div className="dropdown">
-                                        <button className="btn btn-secondary btn-sm btn-block" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i className="fas fa-th-large"></i>
-                                        </button>
-                                        <div className="dropdown-menu dropdown-menu-center" aria-labelledby="dropdownMenuButton">
-                                            <ProductCategory
-                                                ean={product.EAN}
-                                                url={props.url}
-                                                token={props.token}
-                                            />
-                                        </div>
-                                    </div> */}
                                 </div>
                                 <div className="col-lg-4 col-md-12 col-custom-padding mt-1">
                                     <button onClick={() => props.onDeleteProduct(product.EAN)} className={`btn btn-danger btn-sm btn-block ${product.IsShared ? 'disabled' : ''}`}><i className="fa fa-trash"></i></button>

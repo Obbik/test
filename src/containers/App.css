@@ -113,3 +113,8 @@ body {
     max-height: 20vw;
     object-fit: cover;
 } */
+
+/* MODAL */
+.modal {
+    background-color: rgba(0,0,0,0.6);
+}
