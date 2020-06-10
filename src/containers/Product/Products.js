@@ -147,14 +147,14 @@ class Products extends Component {
                     onSearch={this.search}
                     onToggleView={this.toggleView}
                 />
-                <div className="row">
+                {/* <div className="row">
                     <div className="col">
                         <div className="custom-control custom-checkbox float-right">
                             <input onChange={this.handleSharedInputChange} type="checkbox" className="custom-control-input" id="shared-checkbox"/>
                             <label className="custom-control-label" htmlFor="shared-checkbox">Współdzielone</label>
                         </div>
                     </div>
-                </div>
+                </div> */}
                 <Pagination 
                     onSwitchPage={this.switchPage}
                     page={this.state.page}

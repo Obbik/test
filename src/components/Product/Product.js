@@ -21,7 +21,8 @@ const product = (props) => {
                             <th className="align-middle">{product.EAN}</th>
                             <td className="align-middle">{product.Name}</td>
                             <td className="align-middle">
-                                <img src={props.url + product.Image + '?n=' + new Date().getTime()} onError={(e)=>{e.preventDefault(); e.target.src = sampleProduct}} alt={product.Name} width="64" height="64"/>
+                                <img src={props.url + product.Image} onError={(e)=>{e.preventDefault(); e.target.src = sampleProduct}} alt={product.Name} width="64" height="64"/>
+                                {/* + '?n=' + new Date().getTime() */}
                             </td>
                             <td className="align-middle">
                                 <Link to={"/product/" + product.EAN} className={`btn btn-secondary btn-sm btn-block ${product.IsShared ? 'disabled' : ''}`}><i className="fas fa-pencil-alt"></i></Link>
@@ -39,7 +40,8 @@ const product = (props) => {
                     <div className="card">
                         <h6 className="card-header text-truncate">{product.Name}</h6>
                         <div className="card-body">
-                            <img src={props.url + product.Image + '?n=' + new Date().getTime()} onError={(e)=>{e.preventDefault(); e.target.src = sampleProduct}} className="card-img-top" alt={product.Name} />
+                            <img src={props.url + product.Image} onError={(e)=>{e.preventDefault(); e.target.src = sampleProduct}} className="card-img-top" alt={product.Name} />
+                            {/* + '?n=' + new Date().getTime() */}
                             <p className="text-center text-truncate">{product.EAN}</p>
                             <div className="row">
                                 <div className="col-lg-4 col-md-6 col-custom-padding mt-1">

@@ -4,6 +4,8 @@ import axios from 'axios';
 
 import Loader from '../../components/Loader/Loader';
 
+const sampleProduct = require('../../assets/images/sample-product.svg');
+
 class FullProduct extends Component {
     state = {
         product: {
@@ -171,7 +173,8 @@ class FullProduct extends Component {
                     <div className="card card-body bg-light mt-3">
                         <div className="text-center">
                             <h2>{this.state.addProduct ? 'Dodaj produkt' : this.state.product.name}</h2>
-                            {this.state.product.initialImage ? <img src={this.props.url + this.state.product.initialImage + '?n=' + new Date().getTime()} onError={(e)=>{e.target.src=this.props.url + 'images/console/sample-product.svg'}} alt={this.state.product.name} width="256" height="256"/> : null}
+                            {this.state.product.initialImage ? <img src={this.props.url + this.state.product.initialImage} onError={(e)=>{e.target.src=sampleProduct}} alt={this.state.product.name} width="256" height="256"/> : null}
+                            {/* + '?n=' + new Date().getTime() */}
                         </div>
                         <form onSubmit={this.handleSubmit}>
                             <div className="form-group">

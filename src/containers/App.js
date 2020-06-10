@@ -23,6 +23,7 @@ import Sidebar from '../containers/Sidebar/Sidebar';
 class App extends Component {
     state = {
         url: 'http://localhost:3000/',
+        // url: 'http://46.41.150.192/vendim-rest-api/',
         // url: 'https://vendim-rest-api.herokuapp.com/',
         token: null,
         userId: null,
