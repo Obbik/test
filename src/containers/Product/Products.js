@@ -19,7 +19,8 @@ class Products extends Component {
         totalItems: 0,
         searchedValue: '',
         shared: '',
-        ean: null
+        ean: null,
+        typeTimeout: 0 
     }
 
     componentDidMount() {
@@ -98,12 +99,18 @@ class Products extends Component {
 
     // Search bar
     search = value => {
+        const { typeTimeout } = this.state;
+
+        if (typeTimeout)
+            clearTimeout(typeTimeout);
+
         this.setState({ 
             searchedValue: value,
-            page: 1 
+            page: 1,
+            typeTimeout: setTimeout(() => {
+                this.getProducts(1, value);
+            }, 1000)
         });
-
-        this.getProducts(1, value);
     }
 
     // Pagination

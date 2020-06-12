@@ -124,11 +124,11 @@ class ProductCategory extends Component {
         initialInputArray.forEach((input, index) => {
             // Check if inputs changed on submit
             if(input.checked !== inputArray[index].checked) {
-                const categoryId = inputArray[index].value
+                const categoryId = inputArray[index].value;
                 const productCategory = {
                     CategoryId: categoryId,
                     Ean: productId
-                }
+                };
 
                 // Add category product
                 if(!input.checked) {
@@ -179,7 +179,7 @@ class ProductCategory extends Component {
     }
 
     getProductCategoryId = productCategory => {
-        const category = this.state.productCategories.filter(category => category.CategoryId === productCategory.CategoryId && category.EAN === productCategory.Ean);
+        const category = this.state.productCategories.filter(category => category.CategoryId == productCategory.CategoryId && category.EAN === productCategory.Ean);
         return category[0].CategoryProductId;
     }
 

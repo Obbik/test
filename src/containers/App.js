@@ -17,8 +17,7 @@ import ProductCategory from './Product/ProductCategory';
 import FullCategory from './Category/FullCategory';
 import Loader from '../components/Loader/Loader';
 import Sidebar from '../containers/Sidebar/Sidebar';
-
-// import allProducts from '../assets/products.json';
+import MachineProductsView from './MachineProduct/MachineProductsView';
 
 class App extends Component {
     state = {
@@ -128,28 +127,6 @@ class App extends Component {
     // Sidebar
     toggleSidebar = () => { this.setState({showSidebar: !this.state.showSidebar}) }
 
-    // addProducts = () => {
-    //     allProducts.forEach(product => {
-    //         axios.post(this.state.url + 'api/product', product, {
-    //             headers: {
-    //                 Authorization: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyQHZlbmRpbS5wbCIsInVzZXJJZCI6IjciLCJjbGllbnRJZCI6ImNvbnNvbGUiLCJpYXQiOjE1ODQ2MjAwNzQsImV4cCI6MTU4NDYyMzY3NCwiYXVkIjoiaHR0cDovL3ZlbmRpbS5wbCIsImlzcyI6IlZlbmRpbSIsInN1YiI6InVzZXJAdmVuZGltLnBsIn0.bkQvMYF2a8DJfhzXwtQZMoPAwDa4COCHPyD8bLnUBGy35fQAhm2IGK8ACNGqxwxbdO4tliJR1Ow631UU411UcA'
-    //             }
-    //         })
-    //         .then(res => {
-    //             if (res.status === 422) {
-    //                 throw new Error('Validation failed.');
-    //             }
-    //             return res.data;
-    //         })
-    //         .then(res => {
-    //             console.log(res.data);
-    //         })
-    //         .catch(err => {
-    //             console.log(err.response.data);
-    //         }); 
-    //     });
-    // }
-
     render() {
         let routes = 
             <Switch>
@@ -188,16 +165,6 @@ class App extends Component {
                             />
                         )}
                     />
-                    {/* <Route
-                        exact path="/products/shared"
-                        render={props => (
-                            <Products
-                                url={this.state.url}
-                                token={this.state.token}
-                                sharedProducts={true}
-                            />
-                        )}
-                    /> */}
                     <Route
                         exact path="/product/:id"
                         render={props => (
@@ -208,16 +175,6 @@ class App extends Component {
                             />
                         )}
                     />
-                    {/* <Route
-                        exact path="/product/shared/:id"
-                        render={props => (
-                            <FullProductShared
-                                {...props}
-                                url={this.state.url}
-                                token={this.state.token}
-                            />
-                        )}
-                    /> */}
                     <Route
                         path="/product-category/:id"
                         render={props => (
@@ -228,17 +185,6 @@ class App extends Component {
                             />
                         )}
                     />
-                    {/* <Route
-                        exact path="/product-category/shared/:id"
-                        render={props => (
-                            <ProductCategory
-                                {...props}
-                                url={this.state.url}
-                                token={this.state.token}
-                                sharedProducts={true}
-                            />
-                        )}
-                    /> */}
                     <Route
                         exact path="/categories"
                         render={props => (
@@ -252,6 +198,16 @@ class App extends Component {
                         exact path="/category/:id"
                         render={props => (
                             <FullCategory
+                                {...props}
+                                url={this.state.url}
+                                token={this.state.token}
+                            />
+                        )}
+                    />
+                    <Route
+                        exact path="/machine-products"
+                        render={props => (
+                            <MachineProductsView
                                 {...props}
                                 url={this.state.url}
                                 token={this.state.token}

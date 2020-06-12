@@ -78,6 +78,9 @@ class Navbar extends Component {
                                 <li className="nav-item">
                                     <Link to="/categories" className="nav-link">Kategorie</Link>
                                 </li>
+                                <li className="nav-item">
+                                    <Link to="/machine-products" className="nav-link">Konfiguracja</Link>
+                                </li>
                                 <li ref={this.setUserDropdownWrapperRef} className="nav-item dropdown">
                                     <Link to="#" onClick={this.toggleUserDropdown} className="nav-link dropdown-toggle">
                                         <i className="far fa-user"></i>
