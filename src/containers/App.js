@@ -18,6 +18,7 @@ import FullCategory from './Category/FullCategory';
 import Loader from '../components/Loader/Loader';
 import Sidebar from '../containers/Sidebar/Sidebar';
 import MachineProductsView from './MachineProduct/MachineProductsView';
+import FullMachineProduct from './MachineProduct/FullMachineProduct';
 
 class App extends Component {
     state = {
@@ -208,6 +209,16 @@ class App extends Component {
                         exact path="/machine-products"
                         render={props => (
                             <MachineProductsView
+                                {...props}
+                                url={this.state.url}
+                                token={this.state.token}
+                            />
+                        )}
+                    />
+                    <Route
+                        exact path="/machine-product/:id"
+                        render={props => (
+                            <FullMachineProduct
                                 {...props}
                                 url={this.state.url}
                                 token={this.state.token}
