@@ -9,7 +9,7 @@ import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
     <BrowserRouter 
-        basename="vendim-dashboard"
+        basename="dashboard"
     >
         <App/>
     </BrowserRouter>, 

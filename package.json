@@ -2,7 +2,7 @@
   "name": "vendim-dashboard",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://localhost:3000/vendim-dashboard",
+  "homepage": "http://localhost:3000/dashboard",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",

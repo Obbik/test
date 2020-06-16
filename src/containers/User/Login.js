@@ -18,13 +18,18 @@ class Login extends Component {
 		if (Email && Password && ClientId) {
 			this.props.onLogin(user);
 		}
-	}
+    }
+    
+    returnToShop = () => {
+        window.location.href = 'http://localhost:8080/shop';
+    }
 
 	render() {
 		return (
             <div className="row">
                 {/* d-flex align-items-center min-vh-100 */}
                 <div className="col-md-6 mx-auto">
+                    <button onClick={this.returnToShop} className="btn btn-secondary"><i className="fas fa-arrow-left"></i> Wróć do sklepu</button>
                     <div className="card card-body bg-light mt-5">
                         <div className="text-center">
                             {/* <div className="mt-2 mb-4">
