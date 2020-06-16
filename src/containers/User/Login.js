@@ -40,11 +40,11 @@ class Login extends Component {
                         <form onSubmit={this.handleSubmit}>
                             <div className="form-group">
                                 <label htmlFor="email">Email</label>
-                                <input type="email" name="email" autoComplete="username" className="form-control form-control-lg" required/>
+                                <input type="email" name="email" autoComplete="off" className="form-control form-control-lg" required/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">Hasło</label>
-                                <input type="password" name="password" autoComplete="current-password" className="form-control form-control-lg" required/>
+                                <input type="password" name="password" autoComplete="off" className="form-control form-control-lg" required/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">Id klienta</label>
