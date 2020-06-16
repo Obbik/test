@@ -179,19 +179,19 @@ class FullProduct extends Component {
                         <form onSubmit={this.handleSubmit}>
                             <div className="form-group">
                                 <label>Ean</label>
-                                <input type="number" name="ean" className="form-control form-control-lg" value={this.state.product.ean} onChange={this.handleChange} readOnly={!this.state.addProduct}/>
+                                <input type="number" name="ean" className="form-control form-control-lg" value={this.state.product.ean} onChange={this.handleChange} onKeyUp={this.handleChange} readOnly={!this.state.addProduct}/>
                             </div>
                             <div className="form-group">
                                 <label>Zdjęcie</label>
-                                <input type="file" name="image" className="form-control form-control-lg" onChange={this.handleChange}/>
+                                <input type="file" name="image" className="form-control form-control-lg" onChange={this.handleChange} onKeyUp={this.handleChange}/>
                             </div>
                             <div className="form-group">
                                 <label>Nazwa produktu</label>
-                                <input type="text" name="name" className="form-control form-control-lg" value={this.state.product.name} onChange={this.handleChange}/>
+                                <input type="text" name="name" className="form-control form-control-lg" value={this.state.product.name} onChange={this.handleChange} onKeyUp={this.handleChange}/>
                             </div>
                             <div className="form-group">
                                 <label>Opis</label>
-                                <textarea type="text" name="description" className="form-control" rows="4" value={this.state.product.description} onChange={this.handleChange}/>
+                                <textarea type="text" name="description" className="form-control" rows="4" value={this.state.product.description} onChange={this.handleChange} onKeyUp={this.handleChange}/>
                             </div>
                             <input type="submit" className="btn btn-success" value="Zapisz"/>
                         </form>

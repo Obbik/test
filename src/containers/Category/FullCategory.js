@@ -154,11 +154,11 @@ class FullCategory extends Component {
                     <form onSubmit={this.handleSubmit}>
                         <div className="form-group">
                             <label>Zdjęcie</label>
-                            <input type="file" name="image" className="form-control form-control-lg" onChange={this.handleChange}/>
+                            <input type="file" name="image" className="form-control form-control-lg" onChange={this.handleChange} onKeyUp={this.handleChange}/>
                         </div>
                         <div className="form-group">
                             <label>Nazwa kategorii</label>
-                            <input type="text" name="name" className="form-control form-control-lg" value={this.state.category.name} onChange={this.handleChange}/>
+                            <input type="text" name="name" className="form-control form-control-lg" value={this.state.category.name} onChange={this.handleChange} onKeyUp={this.handleChange}/>
                         </div>
                         <input type="submit" className="btn btn-success" value="Zapisz"/>
                     </form>

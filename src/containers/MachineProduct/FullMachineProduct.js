@@ -218,11 +218,11 @@ class FullMachiineProduct extends Component {
                     <form onSubmit={this.handleSubmit}>
                         <div className="form-group">
                             <label>Sprężyna</label>
-                            <input type="text" name="machineFeederNo" className="form-control form-control-lg" value={this.state.machineProduct.machineFeederNo} onChange={this.handleChange} />
+                            <input type="text" name="machineFeederNo" className="form-control form-control-lg" value={this.state.machineProduct.machineFeederNo} onChange={this.handleChange} onKeyUp={this.handleChange} />
                         </div>
                         <div className="form-group">
                             <label>Nazwa produktu</label>
-                            <input type="text" autoComplete="off" name="name" className="form-control form-control-lg" value={this.state.machineProduct.name} onChange={this.handleChange} />
+                            <input type="text" autoComplete="off" name="name" className="form-control form-control-lg" value={this.state.machineProduct.name} onChange={this.handleChange} onKeyUp={this.handleChange} />
                         </div>
                         <div className="form-group">
                             <div className={suggestionClass}>
@@ -238,19 +238,19 @@ class FullMachiineProduct extends Component {
                         </div>
                         <div className="form-group">
                             <label>Cena</label>
-                            <input type="number" name="price" className="form-control form-control-lg" value={this.state.machineProduct.price} onChange={this.handleChange} min={0} step={0.01} />
+                            <input type="number" name="price" className="form-control form-control-lg" value={this.state.machineProduct.price} onChange={this.handleChange} onKeyUp={this.handleChange} min={0} step={0.01} />
                         </div>
                         <div className="form-group">
                             <label>Cena promocyjna</label>
-                            <input type="number" name="discountedPrice" className="form-control form-control-lg" value={this.state.machineProduct.discountedPrice} onChange={this.handleChange} min={0} step={0.01} />
+                            <input type="number" name="discountedPrice" className="form-control form-control-lg" value={this.state.machineProduct.discountedPrice} onChange={this.handleChange} onKeyUp={this.handleChange} min={0} step={0.01} />
                         </div>
                         <div className="form-group">
                             <label>Ilość</label>
-                            <input type="number" name="quantity" className="form-control form-control-lg" value={this.state.machineProduct.quantity} onChange={this.handleChange} min={0} max={this.state.machineProduct.maxItemCount} />
+                            <input type="number" name="quantity" className="form-control form-control-lg" value={this.state.machineProduct.quantity} onChange={this.handleChange} onKeyUp={this.handleChange} min={0} max={this.state.machineProduct.maxItemCount} />
                         </div>
                         <div className="form-group">
                             <label>Pojemność</label>
-                            <input type="number" name="maxItemCount" className="form-control form-control-lg" value={this.state.machineProduct.maxItemCount} onChange={this.handleChange} min={0} max={40} />
+                            <input type="number" name="maxItemCount" className="form-control form-control-lg" value={this.state.machineProduct.maxItemCount} onChange={this.handleChange} onKeyUp={this.handleChange} min={0} max={40} />
                         </div>
                         <input type="submit" className="btn btn-success" value="Zapisz" />
                     </form>
