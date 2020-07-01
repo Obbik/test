@@ -40,7 +40,7 @@ class Login extends Component {
                         <form onSubmit={this.handleSubmit}>
                             <div className="form-group">
                                 <label htmlFor="email">Email</label>
-                                <input type="email" name="email" autoComplete="off" className="form-control form-control-lg" required/>
+                                <input type="email" name="email" className="form-control form-control-lg" required/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">Hasło</label>
@@ -48,7 +48,7 @@ class Login extends Component {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">Id klienta</label>
-                                <input type="text" name="clientId" className="form-control form-control-lg" required/>
+                                <input type="text" name="clientId" className="form-control form-control-lg" defaultValue="multivend" required/>
                             </div>
                             <div className="row">
                                 <div className="col">
