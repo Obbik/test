@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { NotificationManager } from 'react-notifications';
 import axios from 'axios';
 
-import Loader from '../../components/Loader/Loader';
+import Loader from '../../../components/Loader/Loader';
 
 class FullMachiineProduct extends Component {
     state = {

@@ -8,6 +8,7 @@ class SearchInput extends Component {
     }
 
     render() {
+        console.log(this.props.tableView);
         const viewButton = this.props.tableView ? <button onClick={this.props.onToggleView} type="button" className="btn btn-light"><i className="fas fa-border-all"></i></button> :
         <button onClick={this.props.onToggleView} type="button" className="btn btn-light"><i className="fas fa-list"></i></button>
 
@@ -22,9 +23,9 @@ class SearchInput extends Component {
                     </div>
                 </div>
                 <div className="col-2">
-                    <div className="btn-group float-right" role="group">
+                    {this.props.tableView !== null ? <div className="btn-group float-right" role="group">
                         {viewButton}
-                    </div> 
+                    </div>  : null}
                 </div>
             </div>
         )

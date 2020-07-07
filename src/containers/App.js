@@ -17,8 +17,9 @@ import ProductCategory from './Product/ProductCategory';
 import FullCategory from './Category/FullCategory';
 import Loader from '../components/Loader/Loader';
 import Sidebar from '../containers/Sidebar/Sidebar';
-import MachineProductsView from './MachineProduct/MachineProductsView';
-import FullMachineProduct from './MachineProduct/FullMachineProduct';
+import MachineProductsView from './Machine/MachineProduct/MachineProductsView';
+import FullMachineProduct from './Machine/MachineProduct/FullMachineProduct';
+import MachineProductBoostView from './Machine/MachineProductBoost/MachineProductsBoostView';
 
 class App extends Component {
     state = {
@@ -209,6 +210,16 @@ class App extends Component {
                         exact path="/machine-products"
                         render={props => (
                             <MachineProductsView
+                                {...props}
+                                url={this.state.url}
+                                token={this.state.token}
+                            />
+                        )}
+                    />
+                    <Route
+                        exact path="/machine-boost"
+                        render={props => (
+                            <MachineProductBoostView
                                 {...props}
                                 url={this.state.url}
                                 token={this.state.token}

@@ -9,9 +9,9 @@ const title = props => {
                 <h2>{props.title}</h2>
             </div>
             <div className="col-sm">
-                <Link to={props.buttonLink} className="btn btn-success btn-sm float-right">
+                {props.buttonName ? <Link to={props.buttonLink} className="btn btn-success btn-sm float-right">
                     <i className="fa fa-plus"></i> &nbsp; {props.buttonName}
-                </Link>
+                </Link> : null}
             </div>
         </div>
     )
