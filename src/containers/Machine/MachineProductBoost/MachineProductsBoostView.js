@@ -47,6 +47,9 @@ class MachineProductBoostView extends Component {
         this.setState({ loader: true });
         api(url, 'GET', headers, null, res => {
             if (res.status < 400) {
+				if (res.data.map(product => product.MachineFeederNo).every(No => !isNaN(No)))
+					res.data.sort((a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo))
+
                 this.setState({
                     machineProducts: res.data,
                     initialMachineProducts: res.data,
