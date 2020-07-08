@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Title from '../../../components/Title/Title'
-import SearchInput from '../../SearchInput/SearchInput'
+import SearchInput from '../../SearchInput/SearchInput_alt'
 import MachineProducts from './MachineProducts'
 
 import { api } from '../../../helpers/helpers'

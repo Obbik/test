@@ -4,9 +4,9 @@ import axios from 'axios'
 
 import Product from '../../components/Product/Product_alt'
 import Title from '../../components/Title/Title_alt'
-import SearchInput from '../SearchInput/SearchInput'
+import SearchInput from '../SearchInput/SearchInput_alt'
 import Pagination from '../../components/Pagination/Pagination_alt'
-import ProductCategory from '../Product/ProductCategory'
+import ProductCategory from '../Product/ProductCategory_alt'
 
 export default ({
   url,
@@ -48,7 +48,7 @@ export default ({
         })
         .catch(err => {
           setLoader(false)
-          NotificationError(err.toString())
+          NotificationError(err)
         })
     }
   }
@@ -78,7 +78,7 @@ export default ({
       })
       .catch(err => {
         setLoader(false)
-        NotificationError(err.toString())
+        NotificationError(err)
       })
   }
 

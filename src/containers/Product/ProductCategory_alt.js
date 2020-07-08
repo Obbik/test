@@ -92,7 +92,7 @@ export default ({
         })
         .catch(err => {
           setLoader(false)
-          NotificationError(err.toString())
+          NotificationError(err)
         })
     }
   }
@@ -161,7 +161,7 @@ export default ({
         NotificationSuccess(res.data.message)
       })
       .catch(err => {
-        NotificationError(err.toString())
+        NotificationError(err)
       })
   }
 
@@ -176,7 +176,7 @@ export default ({
         NotificationSuccess(res.data.message)
       })
       .catch(err => {
-        NotificationError(err.toString())
+        NotificationError(err)
       })
   }
 

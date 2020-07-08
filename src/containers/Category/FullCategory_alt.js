@@ -49,7 +49,7 @@ export default ({
       })
       .catch(err => {
         setLoader(false)
-        NotificationError(err.toString())
+        NotificationError(err)
       })
   }
 
@@ -102,7 +102,7 @@ export default ({
       })
       .catch(err => {
         setLoader(false)
-        NotificationError(err.toString())
+        NotificationError(err)
       })
   }
 
@@ -126,7 +126,7 @@ export default ({
       })
       .catch(err => {
         setLoader(false)
-        NotificationError(err.toString())
+        NotificationError(err)
       })
   }
 
@@ -143,7 +143,7 @@ export default ({
     <>
       <div className="row mb-3">
         <div className="col">
-          <button onClick={history.goBack()} className="btn btn-secondary">
+          <button onClick={history.goBack} className="btn btn-secondary">
             <i className="fas fa-arrow-left"></i>&nbsp; Wróć
           </button>
         </div>

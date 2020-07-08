@@ -36,7 +36,7 @@ export default ({
         })
         .catch(err => {
           setLoader(false)
-          NotificationError(err.toString())
+          NotificationError(err)
         })
     }
   }
@@ -58,7 +58,7 @@ export default ({
       })
       .catch(err => {
         setLoader(false)
-        NotificationError(err.toString())
+        NotificationError(err)
       })
   }
 

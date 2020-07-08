@@ -83,7 +83,7 @@ export default ({
       })
       .catch(err => {
         setLoader(false)
-        NotificationError(err.toString())
+        NotificationError(err)
       })
   }
 
@@ -108,7 +108,7 @@ export default ({
       })
       .catch(err => {
         setLoader(false)
-        NotificationError(err.toString())
+        NotificationError(err)
       })
   }
 
@@ -134,7 +134,7 @@ export default ({
       })
       .catch(err => {
         setLoader(false)
-        NotificationError(err.toString())
+        NotificationError(err)
       })
   }
 
@@ -151,19 +151,11 @@ export default ({
     <>
       <div className="row mb-3">
         <div className="col">
-          <button onClick={history.goBack()} className="btn btn-secondary">
+          <button onClick={history.goBack} className="btn btn-secondary">
             <i className="fas fa-arrow-left"></i>&nbsp; Wróć
           </button>
         </div>
       </div>
-      {/* <div className="card mt-4"> */}
-      {/* <div className="card-header">
-        <ProductNav 
-                      id={id} 
-                      active={1}
-                      addProduct={this.state.addProduct}
-                  />
-              </div> */}
       <div className="card card-body bg-light mt-3">
         <div className="text-center">
           <h2>{state.addProduct ? 'Dodaj produkt' : state.product.name}</h2>
@@ -178,7 +170,6 @@ export default ({
               height="256"
             />
           ) : null}
-          {/* + '?n=' + new Date().getTime() */}
         </div>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -229,7 +220,6 @@ export default ({
           <input type="submit" className="btn btn-success" value="Zapisz" />
         </form>
       </div>
-      {/* </div> */}
     </>
   )
 }
