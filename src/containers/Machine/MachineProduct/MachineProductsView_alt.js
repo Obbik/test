@@ -3,15 +3,9 @@ import Title from '../../../components/Title/Title'
 import SearchInput from '../../SearchInput/SearchInput_alt'
 import MachineProducts from './MachineProducts'
 
-import { api } from '../../../helpers/helpers'
+import fetchApi from '../../../helpers/fetchApi'
 
-export default ({
-  url,
-  token,
-  setLoader,
-  NotificationError,
-  NotificationSuccess
-}) => {
+export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
   const [state, setState] = useState({
     title: 'Konfiguracja maszyny',
     machineProducts: [],
@@ -19,32 +13,35 @@ export default ({
   })
 
   const getMachineProducts = () => {
-    const reqUrl = `${url}api/machine-products`
-    const headers = {
-      Authorization: `Bearer ${token}`
-    }
-
     setLoader(true)
-    api(reqUrl, 'GET', headers, null, res => {
-      if (res.status < 400)
-        setState({
-          machineProducts: res.data,
-          initialMachineProducts: res.data
-        })
-      else NotificationError(res.data.message)
 
+    fetchApi({ path: 'machine-products' }, res => {
       setLoader(false)
+
+      if (res.status !== 200) throw new Error('Failed to fetch status.')
+
+      if (
+        res.data.map(product => product.MachineFeederNo).every(No => !isNaN(No))
+      )
+        res.data.sort(
+          (a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo)
+        )
+
+      setState(prev => ({
+        ...prev,
+        machineProducts: res.data,
+        initialMachineProducts: res.data
+      }))
     })
   }
 
   const getMachine = () => {
-    const headers = {
-      Authorization: `Bearer ${token}`
-    }
+    setLoader(true)
 
-    api(`${url}api/machines`, 'GET', headers, null, res => {
-      if (res.status < 400)
-        setState(prev => ({ ...prev, machineType: res.data[0].Type }))
+    fetchApi({ path: 'machines' }, res => {
+      if (res.status !== 200) throw new Error('Failed to fetch status.')
+
+      setState(prev => ({ ...prev, machineType: res.data[0].Type }))
     })
   }
 
@@ -54,17 +51,13 @@ export default ({
     if (confirm) {
       setLoader(true)
 
-      const headers = {
-        Authorization: `Bearer ${token}`
-      }
+      fetchApi({ path: `machine-product/${id}`, method: 'DELETE' }, res => {
+        setLoader(false)
 
-      api(`${url}api/machine-product/${id}`, 'DELETE', headers, null, res => {
-        if (res.status < 400) {
+        if (res.status && res.status < 400) {
           NotificationSuccess(res.data.message)
           getMachineProducts()
-        } else NotificationError(res.data.message.toString())
-
-        setLoader(false)
+        } else NotificationError(res)
       })
     }
   }
@@ -104,7 +97,7 @@ export default ({
         buttonName="Dodaj sprężynę"
         buttonLink="/machine-product/add"
       />
-      <SearchInput onSearch={search} />
+      <SearchInput onSearch={search} tableView={null} />
       <MachineProducts
         machineProducts={state.machineProducts}
         onDeleteMachineProduct={deleteMachineProduct}

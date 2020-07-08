@@ -42,7 +42,7 @@ export default ({ onLogin }) => {
               <input
                 type="email"
                 name="email"
-                value="test@gmail.com"
+                defaultValue="test@gmail.com"
                 className="form-control form-control-lg"
                 required
               />
@@ -52,7 +52,7 @@ export default ({ onLogin }) => {
               <input
                 type="password"
                 name="password"
-                value="123456!@#$%^"
+                defaultValue="123456!@#$%^"
                 autoComplete="off"
                 className="form-control form-control-lg"
                 required

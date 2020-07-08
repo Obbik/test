@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import axios from 'axios'
+
+import fetchApi from '../../helpers/fetchApi'
 
 const sampleProduct = require('../../assets/images/sample-product.svg')
 
-export default ({
-  url,
-  token,
-  setLoader,
-  NotificationError,
-  NotificationSuccess
-}) => {
+export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
   const { id } = useParams()
   const history = useHistory()
 
@@ -24,33 +19,21 @@ export default ({
 
   const getCategory = id => {
     setLoader(true)
-    axios
-      .get(`${url}api/category/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+
+    fetchApi({ path: `category/${id}` }, res => {
+      setLoader(false)
+
+      if (res.status !== 200) throw new Error('Failed to fetch status.')
+
+      setState({
+        category: {
+          name: res.Name,
+          image: res.Image,
+          initialImage: res.Image
+        },
+        addCategory: false
       })
-      .then(res => {
-        setLoader(false)
-        if (res.status !== 200) {
-          throw new Error('Failed to fetch status.')
-        }
-        return res.data
-      })
-      .then(res => {
-        setState({
-          category: {
-            name: res.Name,
-            image: res.Image,
-            initialImage: res.Image
-          },
-          addCategory: false
-        })
-      })
-      .catch(err => {
-        setLoader(false)
-        NotificationError(err)
-      })
+    })
   }
 
   const handleChange = e => {
@@ -85,25 +68,19 @@ export default ({
 
   const addCategory = category => {
     setLoader(true)
+
     const formData = new FormData()
     formData.append('Name', category.Name)
     formData.append('Image', category.Image)
 
-    axios
-      .post(`${url}api/category/`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(res => {
-        setLoader(false)
+    fetchApi({ path: 'category', method: 'POST', data: formData }, res => {
+      setLoader(false)
+
+      if (res.status && res.status < 400) {
         NotificationSuccess(res.data.message)
         history.push('/categories')
-      })
-      .catch(err => {
-        setLoader(false)
-        NotificationError(err)
-      })
+      } else NotificationError(res)
+    })
   }
 
   const editCategory = category => {
@@ -113,21 +90,14 @@ export default ({
     formData.append('Name', category.Name)
     formData.append('Image', category.Image)
 
-    axios
-      .put(`${url}api/category/${id}`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(res => {
-        setLoader(false)
+    fetchApi({ path: `category/${id}`, method: 'PUT', data: formData }, res => {
+      setLoader(false)
+
+      if (res.status && res.status < 400) {
         NotificationSuccess(res.data.message)
         history.push('/categories')
-      })
-      .catch(err => {
-        setLoader(false)
-        NotificationError(err)
-      })
+      } else NotificationError(res)
+    })
   }
 
   useEffect(() => {

@@ -9,7 +9,7 @@ export default ({ onSearch, tableView, onToggleView }) => {
 
   return (
     <div className="row mb-3">
-      <div className="col-10">
+      <div className="col">
         <div className="input-group">
           <div className="input-group-prepend">
             <span className="input-group-text border-0">
@@ -25,17 +25,21 @@ export default ({ onSearch, tableView, onToggleView }) => {
           />
         </div>
       </div>
-      <div className="col-2">
-        <div className="btn-group float-right" role="group">
-          <button
-            onClick={onToggleView}
-            type="button"
-            className="btn btn-light"
-          >
-            <i className={tableView ? 'fas fa-border-all' : 'fas fa-list'}></i>
-          </button>
+      {tableView !== null && (
+        <div className="col-auto">
+          <div className="btn-group float-right" role="group">
+            <button
+              onClick={onToggleView}
+              type="button"
+              className="btn btn-light"
+            >
+              <i
+                className={tableView ? 'fas fa-border-all' : 'fas fa-list'}
+              ></i>
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

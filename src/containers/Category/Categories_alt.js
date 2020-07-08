@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 
 import Category from '../../components/Category/Category_alt'
 import Title from '../../components/Title/Title_alt'
 import SearchInput from '../SearchInput/SearchInput_alt'
 
-export default ({
-  url,
-  token,
-  setLoader,
-  NotificationError,
-  NotificationSuccess
-}) => {
+import fetchApi from '../../helpers/fetchApi'
+
+export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
   const [state, setState] = useState({
     categories: [],
     initialCategories: []
@@ -23,43 +18,31 @@ export default ({
 
     if (confirm) {
       setLoader(true)
-      axios
-        .delete(`${url}api/category/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        .then(res => {
-          setLoader(false)
+
+      fetchApi({ path: `category/${id}`, method: 'DELETE' }, res => {
+        setLoader(false)
+
+        if (res.status && res.status < 400) {
           NotificationSuccess(res.data.message)
           getCategories()
-        })
-        .catch(err => {
-          setLoader(false)
-          NotificationError(err)
-        })
+        } else NotificationError(res)
+      })
     }
   }
 
   const getCategories = () => {
     setLoader(true)
-    axios
-      .get(`${url}api/categories`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+
+    fetchApi({ path: 'categories' }, res => {
+      setLoader(false)
+
+      if (res.status !== 200) throw new Error('Failed to fetch status.')
+
+      setState({
+        categories: res.data,
+        initialCategories: res.data
       })
-      .then(res => {
-        setState({
-          categories: res.data,
-          initialCategories: res.data
-        })
-        setLoader(false)
-      })
-      .catch(err => {
-        setLoader(false)
-        NotificationError(err)
-      })
+    })
   }
 
   // Method for changing the view (table or cards)

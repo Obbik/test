@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import axios from 'axios'
+
+import fetchApi from '../../helpers/fetchApi'
 
 import Product from '../../components/Product/Product_alt'
 import Title from '../../components/Title/Title_alt'
 import SearchInput from '../SearchInput/SearchInput_alt'
 import Pagination from '../../components/Pagination/Pagination_alt'
-import ProductCategory from '../Product/ProductCategory_alt'
+import ProductCategory from './ProductCategory_alt'
 
-export default ({
-  url,
-  token,
-  setLoader,
-  NotificationError,
-  NotificationSuccess
-}) => {
+export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
   const { categoryId = '' } = useParams()
 
   const [state, setState] = useState({
@@ -35,21 +30,15 @@ export default ({
 
     if (confirm) {
       setLoader(true)
-      axios
-        .delete(`${url}api/product/${ean}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        .then(res => {
-          setLoader(false)
+
+      fetchApi({ path: `product/${ean}`, method: 'DELETE' }, res => {
+        setLoader(false)
+
+        if (res.status && res.status < 400) {
           NotificationSuccess(res.data.message)
           getProducts()
-        })
-        .catch(err => {
-          setLoader(false)
-          NotificationError(err)
-        })
+        } else NotificationError(res)
+      })
     }
   }
 
@@ -59,41 +48,29 @@ export default ({
     shared = state.shared
   ) => {
     setLoader(true)
-    const reqUrl = `${url}api/products?search=${search}&shared=${shared}&categoryId=${categoryId}&page=${page}`
 
-    axios
-      .get(reqUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(res => {
-        setState(prev => ({
-          ...prev,
-          products: res.data.products,
-          totalItems: res.data.totalItems,
-          initialProducts: res.data.products
-        }))
-        setLoader(false)
-      })
-      .catch(err => {
-        setLoader(false)
-        NotificationError(err)
-      })
+    const params = `search=${search}&shared=${shared}&categoryId=${categoryId}&page=${page}`
+
+    fetchApi({ path: `products?${params}` }, res => {
+      setLoader(false)
+
+      if (res.status !== 200) throw new Error('Failed to fetch status.')
+
+      setState(prev => ({
+        ...prev,
+        products: res.data.products,
+        totalItems: res.data.totalItems,
+        initialProducts: res.data.products
+      }))
+    })
   }
 
   const getTitle = () => {
-    if (categoryId) {
-      axios
-        .get(`${url}api/category/${categoryId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        .then(res => {
-          setState(prev => ({ ...prev, title: res.data.Name }))
-        })
-    } else setState(prev => ({ ...prev, title: 'Wszystkie produkty' }))
+    if (categoryId)
+      fetchApi({ path: `category/${categoryId}` }, res => {
+        setState(prev => ({ ...prev, title: res.data.Name }))
+      })
+    else setState(prev => ({ ...prev, title: 'Wszystkie produkty' }))
   }
 
   // Method for changing the view (table or cards)
@@ -122,14 +99,6 @@ export default ({
     setState(prev => ({ ...prev, page: pageNo }))
     getProducts(pageNo)
   }
-
-  // Handle shared input
-  // const handleSharedInputChange = e => {
-  //   const checked = e.target.checked
-  //   const shared = checked ? '1' : ''
-  //   setState(prev => ({ ...prev, shared: shared }))
-  //   getProducts(1, searchedValue, shared)
-  // }
 
   // Handle product category modal
   const showProductCategoryModal = ean => {
@@ -162,14 +131,6 @@ export default ({
         onSearch={search}
         onToggleView={toggleView}
       />
-      {/* <div className="row">
-                  <div className="col">
-                      <div className="custom-control custom-checkbox float-right">
-                          <input onChange={this.handleSharedInputChange} type="checkbox" className="custom-control-input" id="shared-checkbox"/>
-                          <label className="custom-control-label" htmlFor="shared-checkbox">Współdzielone</label>
-                      </div>
-                  </div>
-              </div> */}
       <Pagination
         onSwitchPage={switchPage}
         page={state.page}
@@ -182,14 +143,17 @@ export default ({
         tableView={tableView}
         onShowProductCategoryModal={showProductCategoryModal}
       />
-      <ProductCategory
-        key={state.ean}
-        ean={state.ean}
-        url={url}
-        token={token}
-        showProductCategoryModal={state.showProductCategoryModal}
-        onHideProductCategoryModal={hideProductCategoryModal}
-      />
+      {state.ean && (
+        <ProductCategory
+          url={url}
+          ean={state.ean}
+          setLoader={setLoader}
+          NotificationError={NotificationError}
+          NotificationSuccess={NotificationSuccess}
+          showProductCategoryModal={state.showProductCategoryModal}
+          onHideProductCategoryModal={hideProductCategoryModal}
+        />
+      )}
     </>
   )
 }

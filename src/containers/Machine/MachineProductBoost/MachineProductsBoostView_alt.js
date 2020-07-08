@@ -4,52 +4,49 @@ import Title from '../../../components/Title/Title_alt'
 import SearchInput from '../../SearchInput/SearchInput_alt'
 import MachineProductsBoost from './MachineProductsBoost'
 
-import axios from 'axios'
-import { api } from '../../../helpers/helpers'
+import fetchApi from '../../../helpers/fetchApi'
 
-export default ({
-  url,
-  token,
-  setLoader,
-  NotificationError,
-  NotificationSuccess
-}) => {
+export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
   const [state, setState] = useState({
     machineType: null,
     machineProducts: []
   })
 
   const getMachine = () => {
-    const headers = {
-      Authorization: `Bearer ${token}`
-    }
+    setLoader(true)
 
-    api(`${url}api/machines`, 'GET', headers, null, res => {
-      if (res.status < 400) {
-        setState(prev => ({
-          ...prev,
-          machineType: res.data[0].Type
-        }))
-      }
+    fetchApi({ path: 'machines' }, res => {
+      setLoader(false)
+
+      if (res.status !== 200) throw new Error('Failed to fetch status.')
+
+      setState(prev => ({
+        ...prev,
+        machineType: res.data[0].Type
+      }))
     })
   }
 
   const getMachineProducts = () => {
-    const headers = {
-      Authorization: `Bearer ${token}`
-    }
-
     setLoader(true)
-    api(`${url}api/machine-products`, 'GET', headers, null, res => {
-      if (res.status < 400)
-        setState(prev => ({
-          ...prev,
-          machineProducts: res.data,
-          initialMachineProducts: res.data
-        }))
-      else NotificationError(res.data.message)
 
+    fetchApi({ path: 'machine-products' }, res => {
       setLoader(false)
+
+      if (res.status !== 200) throw new Error('Failed to fetch status.')
+
+      if (
+        res.data.map(product => product.MachineFeederNo).every(No => !isNaN(No))
+      )
+        res.data.sort(
+          (a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo)
+        )
+
+      setState(prev => ({
+        ...prev,
+        machineProducts: res.data,
+        initialMachineProducts: res.data
+      }))
     })
   }
 
@@ -81,11 +78,13 @@ export default ({
   }
 
   const openAll = () => {
-    api(`${url}api/vend-all`, 'GET', null, null, res => {
-      if (res.status < 400) NotificationSuccess(res.data.message)
-      else NotificationError(res.data.message)
+    setLoader(true)
 
+    fetchApi({ path: 'vend-all' }, res => {
       setLoader(false)
+
+      if (res.status < 400) NotificationSuccess(res.data.message)
+      else NotificationError(res)
     })
   }
 
@@ -95,35 +94,34 @@ export default ({
 
     filledMachineProducts.forEach((product, i) => {
       if (product.Quantity !== product.MaxItemCount) {
-        setLoader(true)
         product.Quantity = product.MaxItemCount
+        const dataBody = {
+          Ean: product.EAN,
+          MachineFeederNo: product.MachineFeederNo,
+          Price: product.Price,
+          DiscountedPrice: product.DiscountedPrice,
+          Quantity: product.Quantity,
+          MaxItemCount: product.MaxItemCount
+        }
+        setLoader(true)
 
-        axios
-          .put(
-            `${url}api/machine-product/${product.MachineProductId}`,
-            {
-              Ean: product.EAN,
-              MachineFeederNo: product.MachineFeederNo,
-              Price: product.Price,
-              DiscountedPrice: product.DiscountedPrice,
-              Quantity: product.Quantity,
-              MaxItemCount: product.MaxItemCount
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
+        fetchApi(
+          {
+            path: `machine-product/${product.MachineProductId}`,
+            method: 'PUT',
+            data: dataBody
+          },
+          res => {
+            setLoader(false)
+
+            if (res.status && res.status < 400) {
+              if (i === filledMachineProducts.length - 1)
+                NotificationSuccess(res.data.message)
+            } else {
+              if (i === filledMachineProducts.length - 1) NotificationError(res)
             }
-          )
-          .then(res => {
-            setLoader(false)
-            if (i === filledMachineProducts.length - 1)
-              NotificationSuccess(res.data.message)
-          })
-          .catch(err => {
-            setLoader(false)
-            if (i === filledMachineProducts.length - 1) NotificationError(err)
-          })
+          }
+        )
       }
     })
   }
@@ -134,35 +132,34 @@ export default ({
 
     filledMachineProducts.forEach((product, i) => {
       if (product.Quantity !== 0) {
-        setLoader(true)
         product.Quantity = 0
+        const dataBody = {
+          Ean: product.EAN,
+          MachineFeederNo: product.MachineFeederNo,
+          Price: product.Price,
+          DiscountedPrice: product.DiscountedPrice,
+          Quantity: product.Quantity,
+          MaxItemCount: product.MaxItemCount
+        }
+        setLoader(true)
 
-        axios
-          .put(
-            `${url}api/machine-product/${product.MachineProductId}`,
-            {
-              Ean: product.EAN,
-              MachineFeederNo: product.MachineFeederNo,
-              Price: product.Price,
-              DiscountedPrice: product.DiscountedPrice,
-              Quantity: product.Quantity,
-              MaxItemCount: product.MaxItemCount
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
+        fetchApi(
+          {
+            path: `machine-product/${product.MachineProductId}`,
+            method: 'PUT',
+            data: dataBody
+          },
+          res => {
+            setLoader(false)
+
+            if (res.status && res.status < 400) {
+              if (i === filledMachineProducts.length - 1)
+                NotificationSuccess(res.data.message)
+            } else {
+              if (i === filledMachineProducts.length - 1) NotificationError(res)
             }
-          )
-          .then(res => {
-            setLoader(false)
-            if (i === filledMachineProducts.length - 1)
-              NotificationSuccess(res.data.message)
-          })
-          .catch(err => {
-            setLoader(false)
-            if (i === filledMachineProducts.length - 1) NotificationError(err)
-          })
+          }
+        )
       }
     })
   }
@@ -179,26 +176,23 @@ export default ({
       }
 
       newMachineProduct.Quantity = newMachineProduct.MaxItemCount
+      setLoader(true)
 
-      axios
-        .put(
-          `${url}api/machine-product/${machineProduct.MachineProductId}`,
-          newMachineProduct,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        )
-        .then(res => {
+      fetchApi(
+        {
+          path: `machine-product/${machineProduct.MachineProductId}`,
+          method: 'PUT',
+          data: newMachineProduct
+        },
+        res => {
           setLoader(false)
-          NotificationSuccess(res.data.message)
-          getMachineProducts()
-        })
-        .catch(err => {
-          setLoader(false)
-          NotificationError(err)
-        })
+
+          if (res.status && res.status < 400) {
+            NotificationSuccess(res.data.message)
+            getMachineProducts()
+          } else NotificationError(res)
+        }
+      )
     }
   }
 
@@ -215,25 +209,23 @@ export default ({
 
       newMachineProduct.Quantity = 0
 
-      axios
-        .put(
-          `${url}api/machine-product/${machineProduct.MachineProductId}`,
-          newMachineProduct,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
-        )
-        .then(res => {
+      setLoader(true)
+
+      fetchApi(
+        {
+          path: `machine-product/${machineProduct.MachineProductId}`,
+          method: 'PUT',
+          data: newMachineProduct
+        },
+        res => {
           setLoader(false)
-          NotificationSuccess(res.data.message)
-          getMachineProducts()
-        })
-        .catch(err => {
-          setLoader(false)
-          NotificationError(err)
-        })
+
+          if (res.status && res.status < 400) {
+            NotificationSuccess(res.data.message)
+            getMachineProducts()
+          } else NotificationError(res)
+        }
+      )
     }
   }
 
@@ -246,7 +238,7 @@ export default ({
     <>
       <Title title="Doładowanie" />
       <SearchInput onSearch={search} tableView={null} />
-      <div className="row mb-2">
+      <div className="row mb-3">
         <div className="col">
           <button
             onClick={fillAllFeeders}
@@ -263,15 +255,23 @@ export default ({
             <i className="fas fa-arrow-down"></i>
           </button>
         </div>
-        <div className="col">
-          {state.machineType === 'LOCKER' ? (
+        {state.machineType === 'LOCKER' && (
+          <div className="col">
             <button
               onClick={openAll}
               className="btn btn-secondary btn-lg btn-block"
             >
               Otwórz
             </button>
-          ) : null}
+          </div>
+        )}
+        <div className="col">
+          <button
+            onClick={() => {}}
+            className="btn btn-secondary btn-lg btn-block"
+          >
+            Zapisz
+          </button>
         </div>
       </div>
       <MachineProductsBoost

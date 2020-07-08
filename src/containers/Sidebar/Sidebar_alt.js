@@ -1,29 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+
+import fetchApi from '../../helpers/fetchApi'
 
 const logo = require('../../assets/images/logo-vendim.png')
 const profile = require('../../assets/images/blank-profile.png')
 
-export default ({ url, token, userName, showSidebar }) => {
+export default ({ showSidebar }) => {
+  const userName = localStorage.getItem('userName')
+
   const [state, setState] = useState({
     categories: [],
     showProductMenu: false
   })
 
   useEffect(() => {
-    axios
-      .get(`${url}api/categories`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(res => {
-        setState(prev => ({ ...prev, categories: res.data }))
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    fetchApi({ path: 'categories' }, res => {
+      if (res.status !== 200) console.log(res)
+
+      setState(prev => ({ ...prev, categories: res.data }))
+    })
   }, [])
 
   const toggleProductMenu = () => {

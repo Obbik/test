@@ -13,7 +13,6 @@ import Login from './User/Login_alt'
 import Products from './Product/Products_alt'
 import Categories from './Category/Categories_alt'
 import FullProduct from './Product/FullProduct_alt'
-import ProductCategory from './Product/ProductCategory_alt'
 import FullCategory from './Category/FullCategory_alt'
 import Loader from '../components/Loader/Loader_alt'
 import Sidebar from '../containers/Sidebar/Sidebar_alt'
@@ -22,70 +21,43 @@ import FullMachineProduct from './Machine/MachineProduct/FullMachineProduct_alt'
 import MachineProductBoostView from './Machine/MachineProductBoost/MachineProductsBoostView_alt'
 import Settings from './Settings/Settings_alt'
 
-export default () => {
-  const url = 'http://localhost:3000/'
-  // http://46.41.150.192/vendim-rest-api/
-  // https://vendim-rest-api.herokuapp.com/
+import url from '../helpers/url'
 
+export default () => {
   const [loader, setLoader] = useState(false)
 
   const setAutoLogout = useCallback(milliseconds => {
-    setTimeout(() => {
-      logout()
-    }, milliseconds)
+    setTimeout(() => logout(), milliseconds)
   }, [])
 
   const logout = () => {
-    setState({
-      token: null,
-      isAuth: false
-    })
+    setIsAuth(false)
 
     localStorage.removeItem('token')
-    localStorage.removeItem('userId')
     localStorage.removeItem('userName')
   }
 
-  const [state, setState] = useState(() => {
-    const token = localStorage.getItem('token'),
-      userId = localStorage.getItem('userId'),
-      userName = localStorage.getItem('userName'),
-      expiryDate = localStorage.getItem('expiryDate')
+  const [isAuth, setIsAuth] = useState(() => {
+    const token = localStorage.getItem('token')
+    const expiryDate = localStorage.getItem('expiryDate')
 
-    if (!token || !expiryDate)
-      return {
-        token: null,
-        userId: null,
-        isAuth: false
-      }
+    if (!token || !expiryDate) return false
 
-    if (new Date(expiryDate) <= new Date()) {
-      return {
-        token: null,
-        isAuth: false
-      }
-    }
+    if (new Date(expiryDate) <= new Date()) return false
 
     const remainingMilliseconds =
       new Date(expiryDate).getTime() - new Date().getTime()
 
     setAutoLogout(remainingMilliseconds)
 
-    return {
-      token,
-      userId,
-      userName,
-      isAuth: true
-    }
+    return true
   })
 
-  const NotificationError = message => {
+  const NotificationError = message =>
     NotificationManager.error(message.toString(), null, 4000)
-  }
 
-  const NotificationSuccess = message => {
+  const NotificationSuccess = message =>
     NotificationManager.success(message, null, 4000)
-  }
 
   const [sidebar, setSidebar] = useState(true)
 
@@ -95,6 +67,7 @@ export default () => {
     axios
       .put(`${url}api/auth/login`, user)
       .then(res => {
+        setLoader(false)
         if (res.status === 422) throw new Error('Validation failed.')
 
         if (res.status !== 200 && res.status !== 201)
@@ -103,20 +76,9 @@ export default () => {
         return res.data
       })
       .then(res => {
-        const token = res.token
-        const userId = res.userId
-        const userName = res.userName
-
-        setState({
-          token,
-          userId,
-          userName,
-          isAuth: true
-        })
-        setLoader(false)
+        const { token, userName } = res
 
         localStorage.setItem('token', token)
-        localStorage.setItem('userId', userId)
         localStorage.setItem('userName', userName)
 
         const remainingMilliseconds = 60 * 60 * 1000
@@ -126,40 +88,29 @@ export default () => {
 
         localStorage.setItem('expiryDate', expiryDate.toISOString())
 
+        setIsAuth(true)
         setAutoLogout(remainingMilliseconds)
       })
       .catch(err => {
-        setState({
-          isAuth: false
-        })
         setLoader(false)
-        NotificationManager.error(err.toString(), null, 4000)
+        setIsAuth(false)
+        NotificationError(err)
       })
   }
 
   // Sidebar
-  const toggleSidebar = () => {
-    setSidebar(prev => !prev)
-  }
+  const toggleSidebar = () => setSidebar(prev => !prev)
 
-  let routes
-  if (!state.isAuth)
-    routes = (
-      <Switch>
-        <Route exact path="/" render={() => <Login onLogin={login} />} />
-        <Redirect to="/" />
-      </Switch>
-    )
-  else {
+  let content
+  if (isAuth) {
     const payload = {
       url,
-      token: state.token,
       setLoader,
       NotificationError,
       NotificationSuccess
     }
 
-    const routes_obj = [
+    const routes = [
       {
         path: ['/', '/products/:categoryId'],
         render: () => <Products {...payload} sharedProducts={false} />
@@ -167,10 +118,6 @@ export default () => {
       {
         path: '/product/:id',
         render: () => <FullProduct {...payload} />
-      },
-      {
-        path: '/product-category/:id',
-        render: () => <ProductCategory {...payload} />
       },
       {
         path: '/categories',
@@ -198,13 +145,43 @@ export default () => {
       }
     ]
 
-    routes = (
-      <Switch>
-        {routes_obj.map((route, idx) => (
-          <Route key={idx} exact {...route} />
-        ))}
-        <Redirect to="/" />
-      </Switch>
+    content = (
+      <>
+        <Sidebar showSidebar={sidebar} />
+        <div className="col body-col">
+          <Navbar
+            onLogout={logout}
+            onToggleSidebar={toggleSidebar}
+            showSidebar={sidebar}
+          />
+          <div className="container navbar-margin">
+            <Switch>
+              {routes.map((route, idx) => (
+                <Route key={idx} exact {...route} />
+              ))}
+              <Redirect to="/" />
+            </Switch>
+          </div>
+        </div>
+      </>
+    )
+  } else {
+    content = (
+      <div className="col body-col">
+        {isAuth && (
+          <Navbar
+            onLogout={logout}
+            onToggleSidebar={toggleSidebar}
+            showSidebar={sidebar}
+          />
+        )}
+        <div className="container navbar-margin">
+          <Switch>
+            <Route exact path="/" render={() => <Login onLogin={login} />} />
+            <Redirect to="/" />
+          </Switch>
+        </div>
+      </div>
     )
   }
 
@@ -212,29 +189,7 @@ export default () => {
     <>
       <Loader active={loader} />
       <NotificationContainer />
-      <div className="row body-row">
-        {state.isAuth ? (
-          <Sidebar
-            showSidebar={sidebar}
-            url={url}
-            token={state.token}
-            userName={state.userName}
-          />
-        ) : null}
-        <div className="col body-col">
-          {state.isAuth ? (
-            <Navbar
-              onLogout={logout}
-              onToggleSidebar={toggleSidebar}
-              showSidebar={sidebar}
-            />
-          ) : null}
-          <div className="container navbar-margin">
-            {/* container-fluid */}
-            {routes}
-          </div>
-        </div>
-      </div>
+      <div className="row body-row">{content}</div>
     </>
   )
 }

@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import axios from 'axios'
+
+import fetchApi from '../../helpers/fetchApi'
 
 const sampleProduct = require('../../assets/images/sample-product.svg')
 
-export default ({
-  url,
-  token,
-  setLoader,
-  NotificationError,
-  NotificationSuccess
-}) => {
+export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
   const { id } = useParams()
   const history = useHistory()
 
@@ -57,59 +52,44 @@ export default ({
 
   const getProduct = id => {
     setLoader(true)
-    axios
-      .get(`${url}api/product/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(res => {
-        setLoader(false)
-        if (res.status !== 200) throw new Error('Failed to fetch status.')
 
-        return res.data
+    fetchApi({ path: `product/${id}` }, res => {
+      setLoader(false)
+
+      if (res.status !== 200) throw new Error('Failed to fetch status.')
+
+      const { EAN, Name, Description, Image } = res.data
+
+      setState({
+        product: {
+          ean: EAN,
+          name: Name,
+          description: Description,
+          image: Image,
+          initialImage: Image
+        },
+        addProduct: false
       })
-      .then(res => {
-        setState({
-          product: {
-            ean: res.EAN,
-            name: res.Name,
-            description: res.Description,
-            image: res.Image,
-            initialImage: res.Image
-          },
-          addProduct: false
-        })
-      })
-      .catch(err => {
-        setLoader(false)
-        NotificationError(err)
-      })
+    })
   }
 
   const addProduct = product => {
     setLoader(true)
+
     const formData = new FormData()
     formData.append('Ean', product.Ean)
     formData.append('Name', product.Name)
     formData.append('Description', product.Description)
     formData.append('Image', product.Image)
 
-    axios
-      .post(`${url}api/product/`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(res => {
-        setLoader(false)
+    fetchApi({ path: 'product', method: 'POST', data: formData }, res => {
+      setLoader(false)
+
+      if (res.status && res.status < 400) {
         NotificationSuccess(res.data.message)
         history.push('/')
-      })
-      .catch(err => {
-        setLoader(false)
-        NotificationError(err)
-      })
+      } else NotificationError(res)
+    })
   }
 
   const editProduct = product => {
@@ -121,21 +101,14 @@ export default ({
     formData.append('Description', product.Description)
     formData.append('Image', product.Image)
 
-    axios
-      .put(`${url}api/product/${id}`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(res => {
-        setLoader(false)
+    fetchApi({ path: `product/${id}`, data: formData }, res => {
+      setLoader(false)
+
+      if (res.status && res.status < 400) {
         NotificationSuccess(res.data.message)
         history.push('/')
-      })
-      .catch(err => {
-        setLoader(false)
-        NotificationError(err)
-      })
+      } else NotificationError(res)
+    })
   }
 
   useEffect(() => {

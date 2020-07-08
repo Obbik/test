@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import axios from 'axios'
 
-export default ({
-  url,
-  token,
-  setLoader,
-  NotificationError,
-  NotificationSuccess
-}) => {
+import fetchApi from '../../../helpers/fetchApi'
+
+export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
   const { id } = useParams()
   const history = useHistory()
 
@@ -25,6 +20,44 @@ export default ({
     addMachineProduct: false,
     suggestions: []
   })
+
+  const getMachineProduct = id => {
+    setLoader(true)
+
+    fetchApi({ path: `machine-product/${id}` }, res => {
+      setLoader(false)
+
+      if (res.status !== 200) throw new Error('Failed to fetch status.')
+
+      const {
+        DiscountedPrice,
+        MachineFeederNo,
+        Name,
+        Price,
+        Quantity,
+        MaxItemCount
+      } = res.data
+
+      setState(prev => ({
+        ...prev,
+        machineProduct: {
+          machineFeederNo: MachineFeederNo,
+          name: Name,
+          price: Price.toFixed(2),
+          discountedPrice: DiscountedPrice ? DiscountedPrice.toFixed(2) : '',
+          quantity: Quantity,
+          maxItemCount: MaxItemCount
+        },
+        addMachineProduct: false
+      }))
+    })
+
+    fetchApi({ path: 'all-products' }, res => {
+      if (res.status !== 200) throw new Error('Failed to fetch status.')
+
+      setState(prev => ({ ...prev, products: res.data }))
+    })
+  }
 
   const handleChange = e => {
     e.preventDefault()
@@ -77,41 +110,33 @@ export default ({
   const addMachineProduct = machineProduct => {
     setLoader(true)
 
-    axios
-      .post(`${url}api/machine-product/`, machineProduct, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(res => {
+    fetchApi(
+      { path: 'machine-product', method: 'POST', data: machineProduct },
+      res => {
         setLoader(false)
-        NotificationSuccess(res.data.message)
-        history.push('/machine-products')
-      })
-      .catch(err => {
-        setLoader(false)
-        NotificationError(err)
-      })
+
+        if (res.status && res.status < 400) {
+          NotificationSuccess(res.data.message)
+          history.push('/machine-products')
+        } else NotificationError(res)
+      }
+    )
   }
 
   const editMachineProduct = machineProduct => {
     setLoader(true)
 
-    axios
-      .put(`${url}api/machine-product/${id}`, machineProduct, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(res => {
+    fetchApi(
+      { path: `machine-product/${id}`, method: 'PUT', data: machineProduct },
+      res => {
         setLoader(false)
-        NotificationSuccess(res.data.message)
-        history.push('/machine-products')
-      })
-      .catch(err => {
-        setLoader(false)
-        NotificationError(err)
-      })
+
+        if (res.status && res.status < 400) {
+          NotificationSuccess(res.data.message)
+          history.push('/machine-products')
+        } else NotificationError(res)
+      }
+    )
   }
 
   const getEanByName = name => {
@@ -139,71 +164,15 @@ export default ({
   }
 
   useEffect(() => {
-    if (id !== 'add') {
-      setLoader(true)
-      axios
-        .get(`${url}api/machine-product/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        .then(res => {
-          setLoader(false)
-          if (res.status !== 200) {
-            throw new Error('Failed to fetch status.')
-          }
-          return res.data
-        })
-        .then(res => {
-          const discountedPrice = res.DiscountedPrice
-            ? res.DiscountedPrice.toFixed(2)
-            : ''
-          setState(prev => ({
-            ...prev,
-            machineProduct: {
-              machineFeederNo: res.MachineFeederNo,
-              name: res.Name,
-              price: res.Price.toFixed(2),
-              discountedPrice: discountedPrice,
-              quantity: res.Quantity,
-              maxItemCount: res.MaxItemCount
-            },
-            addMachineProduct: false
-          }))
-          setLoader(false)
-
-          return axios.get(`${url}api/all-products`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          })
-        })
-        .then(res => {
-          setState(prev => ({ ...prev, products: res.data }))
-        })
-        .catch(err => {
-          setLoader(false)
-          NotificationError(err)
-        })
-    } else {
-      axios
-        .get(`${url}api/all-products`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        .then(res => {
-          setState(prev => ({
-            ...prev,
-            addMachineProduct: true,
-            products: res.data
-          }))
-        })
-        .catch(err => {
-          setLoader(false)
-          NotificationError(err)
-        })
-    }
+    if (id !== 'add') getMachineProduct(id)
+    else
+      fetchApi({ path: 'all-products' }, res => {
+        setState(prev => ({
+          ...prev,
+          addMachineProduct: true,
+          products: res.data
+        }))
+      })
   }, [])
 
   const suggestionClass = state.isSuggestionVisible
