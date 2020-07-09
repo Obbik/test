@@ -264,8 +264,12 @@ class MachineProductBoostView extends Component {
   saveFeeders = () => {
     const url = this.props.url + 'api/visit'
 
+    const headers = {
+      Authorization: 'Bearer ' + this.props.token
+    }
+
     this.setState({ loader: true })
-    api(url, 'GET', null, null, res => {
+    api(url, 'GET', headers, null, res => {
       this.setState({ loader: false })
       if (res.status < 400)
         NotificationManager.success(res.data.message, null, 4000)
