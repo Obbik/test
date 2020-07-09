@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 import './index.css'
 
-import App from './containers/App_alt'
+import App from './containers/App'
 // ./containers/App_alt for build on hooks
 import * as serviceWorker from './serviceWorker'
 

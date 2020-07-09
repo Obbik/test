@@ -20,20 +20,24 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
   const getCategory = id => {
     setLoader(true)
 
-    fetchApi({ path: `category/${id}` }, res => {
-      setLoader(false)
+    fetchApi(`category/${id}`)
+      .then(res => {
+        if (res.status !== 200) throw new Error()
 
-      if (res.status !== 200) throw new Error('Failed to fetch status.')
-
-      setState({
-        category: {
-          name: res.Name,
-          image: res.Image,
-          initialImage: res.Image
-        },
-        addCategory: false
+        setLoader(false)
+        setState({
+          category: {
+            name: res.Name,
+            image: res.Image,
+            initialImage: res.Image
+          },
+          addCategory: false
+        })
       })
-    })
+      .catch(() => {
+        setLoader(false)
+        new Error('Failed to fetch status.')
+      })
   }
 
   const handleChange = e => {
@@ -73,14 +77,18 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
     formData.append('Name', category.Name)
     formData.append('Image', category.Image)
 
-    fetchApi({ path: 'category', method: 'POST', data: formData }, res => {
-      setLoader(false)
-
-      if (res.status && res.status < 400) {
-        NotificationSuccess(res.data.message)
-        history.push('/categories')
-      } else NotificationError(res)
-    })
+    fetchApi('category', { method: 'POST', data: formData })
+      .then(res => {
+        if (res.status && res.status < 400) {
+          setLoader(false)
+          NotificationSuccess(res.data.message)
+          history.push('/categories')
+        } else throw new Error(res)
+      })
+      .catch(err => {
+        setLoader(false)
+        NotificationError(err)
+      })
   }
 
   const editCategory = category => {
@@ -90,14 +98,18 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
     formData.append('Name', category.Name)
     formData.append('Image', category.Image)
 
-    fetchApi({ path: `category/${id}`, method: 'PUT', data: formData }, res => {
-      setLoader(false)
-
-      if (res.status && res.status < 400) {
-        NotificationSuccess(res.data.message)
-        history.push('/categories')
-      } else NotificationError(res)
-    })
+    fetchApi(`category/${id}`, { method: 'PUT', data: formData })
+      .then(res => {
+        if (res.status && res.status < 400) {
+          setLoader(false)
+          NotificationSuccess(res.data.message)
+          history.push('/categories')
+        } else throw new Error(res)
+      })
+      .catch(err => {
+        setLoader(false)
+        NotificationError(err)
+      })
   }
 
   useEffect(() => {

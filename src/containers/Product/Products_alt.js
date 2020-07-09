@@ -31,14 +31,18 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
     if (confirm) {
       setLoader(true)
 
-      fetchApi({ path: `product/${ean}`, method: 'DELETE' }, res => {
-        setLoader(false)
-
-        if (res.status && res.status < 400) {
-          NotificationSuccess(res.data.message)
-          getProducts()
-        } else NotificationError(res)
-      })
+      fetchApi(`product/${ean}`, { method: 'DELETE' })
+        .then(res => {
+          if (res.status && res.status < 400) {
+            setLoader(false)
+            NotificationSuccess(res.data.message)
+            getProducts()
+          } else throw new Error(res)
+        })
+        .catch(err => {
+          setLoader(false)
+          NotificationError(err)
+        })
     }
   }
 
@@ -51,25 +55,37 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
 
     const params = `search=${search}&shared=${shared}&categoryId=${categoryId}&page=${page}`
 
-    fetchApi({ path: `products?${params}` }, res => {
-      setLoader(false)
+    fetchApi(`products?${params}`)
+      .then(res => {
+        if (res.status !== 200) throw new Error()
 
-      if (res.status !== 200) throw new Error('Failed to fetch status.')
-
-      setState(prev => ({
-        ...prev,
-        products: res.data.products,
-        totalItems: res.data.totalItems,
-        initialProducts: res.data.products
-      }))
-    })
+        setLoader(false)
+        setState(prev => ({
+          ...prev,
+          products: res.data.products,
+          totalItems: res.data.totalItems,
+          initialProducts: res.data.products
+        }))
+      })
+      .catch(() => {
+        setLoader(false)
+        throw new Error('Failed to fetch status.')
+      })
   }
 
   const getTitle = () => {
     if (categoryId)
-      fetchApi({ path: `category/${categoryId}` }, res => {
-        setState(prev => ({ ...prev, title: res.data.Name }))
-      })
+      fetchApi(`category/${categoryId}`)
+        .then(res => {
+          if (res.status !== 200) throw new Error()
+
+          setLoader(false)
+          setState(prev => ({ ...prev, title: res.data.Name }))
+        })
+        .catch(() => {
+          setLoader(false)
+          throw new Error('Failed to fetch status.')
+        })
     else setState(prev => ({ ...prev, title: 'Wszystkie produkty' }))
   }
 

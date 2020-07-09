@@ -53,24 +53,29 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
   const getProduct = id => {
     setLoader(true)
 
-    fetchApi({ path: `product/${id}` }, res => {
-      setLoader(false)
+    fetchApi(`product/${id}`)
+      .then(res => {
+        if (res.status !== 200) throw new Error()
 
-      if (res.status !== 200) throw new Error('Failed to fetch status.')
+        setLoader(false)
 
-      const { EAN, Name, Description, Image } = res.data
+        const { EAN, Name, Description, Image } = res.data
 
-      setState({
-        product: {
-          ean: EAN,
-          name: Name,
-          description: Description,
-          image: Image,
-          initialImage: Image
-        },
-        addProduct: false
+        setState({
+          product: {
+            ean: EAN,
+            name: Name,
+            description: Description,
+            image: Image,
+            initialImage: Image
+          },
+          addProduct: false
+        })
       })
-    })
+      .catch(() => {
+        setLoader(false)
+        throw new Error('Failed to fetch status.')
+      })
   }
 
   const addProduct = product => {
@@ -82,14 +87,18 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
     formData.append('Description', product.Description)
     formData.append('Image', product.Image)
 
-    fetchApi({ path: 'product', method: 'POST', data: formData }, res => {
-      setLoader(false)
-
-      if (res.status && res.status < 400) {
-        NotificationSuccess(res.data.message)
-        history.push('/')
-      } else NotificationError(res)
-    })
+    fetchApi('product', { method: 'POST', data: formData })
+      .then(res => {
+        if (res.status && res.status < 400) {
+          setLoader(false)
+          NotificationSuccess(res.data.message)
+          history.push('/')
+        } else throw new Error(res)
+      })
+      .catch(err => {
+        setLoader(false)
+        NotificationError(err)
+      })
   }
 
   const editProduct = product => {
@@ -101,14 +110,18 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
     formData.append('Description', product.Description)
     formData.append('Image', product.Image)
 
-    fetchApi({ path: `product/${id}`, data: formData }, res => {
-      setLoader(false)
-
-      if (res.status && res.status < 400) {
-        NotificationSuccess(res.data.message)
-        history.push('/')
-      } else NotificationError(res)
-    })
+    fetchApi(`product/${id}`, { method: 'PUT', data: formData })
+      .then(res => {
+        if (res.status && res.status < 400) {
+          setLoader(false)
+          NotificationSuccess(res.data.message)
+          history.push('/')
+        } else throw new Error(res)
+      })
+      .catch(err => {
+        setLoader(false)
+        NotificationError(err)
+      })
   }
 
   useEffect(() => {

@@ -35,6 +35,7 @@ export default () => {
 
     localStorage.removeItem('token')
     localStorage.removeItem('userName')
+    localStorage.removeItem('expiryDate')
   }
 
   const [isAuth, setIsAuth] = useState(() => {

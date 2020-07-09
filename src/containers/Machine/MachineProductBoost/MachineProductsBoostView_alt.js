@@ -6,86 +6,71 @@ import MachineProductsBoost from './MachineProductsBoost'
 
 import fetchApi from '../../../helpers/fetchApi'
 
-export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
+export default ({ setLoader, NotificationError, NotificationSuccess }) => {
   const [state, setState] = useState({
     machineType: null,
     machineProducts: []
   })
 
-  const getMachine = () => {
-    setLoader(true)
-
-    fetchApi({ path: 'machines' }, res => {
-      setLoader(false)
-
-      if (res.status !== 200) throw new Error('Failed to fetch status.')
-
-      setState(prev => ({
-        ...prev,
-        machineType: res.data[0].Type
-      }))
-    })
-  }
-
   const getMachineProducts = () => {
     setLoader(true)
 
-    fetchApi({ path: 'machine-products' }, res => {
-      setLoader(false)
+    fetchApi('machine-products')
+      .then(res => {
+        if (res.status && res.status < 400) {
+          setLoader(false)
+          if (
+            res.data
+              .map(product => product.MachineFeederNo)
+              .every(No => !isNaN(No))
+          )
+            res.data.sort(
+              (a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo)
+            )
 
-      if (res.status !== 200) throw new Error('Failed to fetch status.')
-
-      if (
-        res.data.map(product => product.MachineFeederNo).every(No => !isNaN(No))
-      )
-        res.data.sort(
-          (a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo)
-        )
-
-      setState(prev => ({
-        ...prev,
-        machineProducts: res.data,
-        initialMachineProducts: res.data
-      }))
-    })
+          setState(prev => ({
+            ...prev,
+            machineProducts: res.data,
+            initialMachineProducts: res.data
+          }))
+        } else throw new Error(res)
+      })
+      .catch(() => {
+        setLoader(false)
+        throw new Error('Failed to fetch status.')
+      })
   }
 
-  const search = value => {
-    const suggestions = getSuggestions(value)
-    let filtered = state.initialMachineProducts
+  const getMachine = () => {
+    setLoader(true)
 
-    if (value !== '') {
-      filtered = suggestions
-    }
+    fetchApi('machines')
+      .then(res => {
+        if (res.status !== 200) throw new Error()
 
-    setState(prev => ({
-      ...prev,
-      machineProducts: filtered
-    }))
-  }
-
-  const getSuggestions = value => {
-    const inputValue = value.trim().toLowerCase()
-    const inputLength = inputValue.length
-
-    return inputLength === 0
-      ? []
-      : state.initialMachineProducts.filter(
-          machineProduct =>
-            machineProduct.Name.toLowerCase().slice(0, inputLength) ===
-            inputValue
-        )
+        setLoader(false)
+        setState(prev => ({ ...prev, machineType: res.data[0].Type }))
+      })
+      .catch(() => {
+        setLoader(false)
+        throw new Error('Failed to fetch status.')
+      })
   }
 
   const openAll = () => {
     setLoader(true)
 
-    fetchApi({ path: 'vend-all' }, res => {
-      setLoader(false)
-
-      if (res.status < 400) NotificationSuccess(res.data.message)
-      else NotificationError(res)
-    })
+    fetchApi('vend-all')
+      .then(res => {
+        if (res.status && res.status < 400) {
+          setLoader(false)
+          NotificationSuccess(res.data.message)
+        } else throw new Error(res)
+      })
+      .catch(err => {
+        setLoader(false)
+        NotificationError(err)
+      })
   }
 
   const fillAllFeeders = () => {
@@ -229,6 +214,23 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
     }
   }
 
+  const saveFeeders = () => {
+    setLoader(true)
+
+    fetchApi(
+      {
+        path: `visit`
+      },
+      res => {
+        setLoader(false)
+
+        if (res.status && res.status < 400)
+          NotificationSuccess(res.data.message)
+        else NotificationError(res)
+      }
+    )
+  }
+
   useEffect(() => {
     getMachineProducts()
     getMachine()
@@ -267,7 +269,7 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
         )}
         <div className="col">
           <button
-            onClick={() => {}}
+            onClick={saveFeeders}
             className="btn btn-secondary btn-lg btn-block"
           >
             Zapisz

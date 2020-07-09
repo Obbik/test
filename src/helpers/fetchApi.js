@@ -3,8 +3,9 @@ import url from './url'
 
 const token = localStorage.getItem('token')
 
-export default ({ path, method = 'GET', data = null }, cb) =>
-  axios({
+export default (path, { method = 'GET', data = null } = {}) => {
+  //console.log(token)
+  return axios({
     method,
     url: `${url}api/${path}`,
     headers: {
@@ -12,9 +13,4 @@ export default ({ path, method = 'GET', data = null }, cb) =>
     },
     data
   })
-    .then(res => {
-      cb(res)
-    })
-    .catch(err => {
-      cb(err)
-    })
+}

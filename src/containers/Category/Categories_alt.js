@@ -19,30 +19,38 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
     if (confirm) {
       setLoader(true)
 
-      fetchApi({ path: `category/${id}`, method: 'DELETE' }, res => {
-        setLoader(false)
-
-        if (res.status && res.status < 400) {
-          NotificationSuccess(res.data.message)
-          getCategories()
-        } else NotificationError(res)
-      })
+      fetchApi(`category/${id}`, { method: 'DELETE' })
+        .then(res => {
+          if (res.status && res.status < 400) {
+            setLoader(false)
+            NotificationSuccess(res.data.message)
+            getCategories()
+          } else throw new Error(res)
+        })
+        .catch(err => {
+          setLoader(false)
+          NotificationError(err)
+        })
     }
   }
 
   const getCategories = () => {
     setLoader(true)
 
-    fetchApi({ path: 'categories' }, res => {
-      setLoader(false)
+    fetchApi('categories')
+      .then(res => {
+        if (res.status !== 200) throw new Error()
 
-      if (res.status !== 200) throw new Error('Failed to fetch status.')
-
-      setState({
-        categories: res.data,
-        initialCategories: res.data
+        setLoader(false)
+        setState({
+          categories: res.data,
+          initialCategories: res.data
+        })
       })
-    })
+      .catch(() => {
+        setLoader(false)
+        throw new Error('Failed to fetch status.')
+      })
   }
 
   // Method for changing the view (table or cards)

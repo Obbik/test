@@ -5,9 +5,8 @@ import MachineProducts from './MachineProducts'
 
 import fetchApi from '../../../helpers/fetchApi'
 
-export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
+export default ({ setLoader, NotificationError, NotificationSuccess }) => {
   const [state, setState] = useState({
-    title: 'Konfiguracja maszyny',
     machineProducts: [],
     machineType: null
   })
@@ -15,34 +14,46 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
   const getMachineProducts = () => {
     setLoader(true)
 
-    fetchApi({ path: 'machine-products' }, res => {
-      setLoader(false)
+    fetchApi('machine-products')
+      .then(res => {
+        if (res.status && res.status < 400) {
+          setLoader(false)
+          if (
+            res.data
+              .map(product => product.MachineFeederNo)
+              .every(No => !isNaN(No))
+          )
+            res.data.sort(
+              (a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo)
+            )
 
-      if (res.status !== 200) throw new Error('Failed to fetch status.')
-
-      if (
-        res.data.map(product => product.MachineFeederNo).every(No => !isNaN(No))
-      )
-        res.data.sort(
-          (a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo)
-        )
-
-      setState(prev => ({
-        ...prev,
-        machineProducts: res.data,
-        initialMachineProducts: res.data
-      }))
-    })
+          setState(prev => ({
+            ...prev,
+            machineProducts: res.data,
+            initialMachineProducts: res.data
+          }))
+        } else throw new Error(res)
+      })
+      .catch(() => {
+        setLoader(false)
+        throw new Error('Failed to fetch status.')
+      })
   }
 
   const getMachine = () => {
     setLoader(true)
 
-    fetchApi({ path: 'machines' }, res => {
-      if (res.status !== 200) throw new Error('Failed to fetch status.')
+    fetchApi('machines')
+      .then(res => {
+        if (res.status !== 200) throw new Error()
 
-      setState(prev => ({ ...prev, machineType: res.data[0].Type }))
-    })
+        setLoader(false)
+        setState(prev => ({ ...prev, machineType: res.data[0].Type }))
+      })
+      .catch(() => {
+        setLoader(false)
+        throw new Error('Failed to fetch status.')
+      })
   }
 
   const deleteMachineProduct = id => {
@@ -51,14 +62,18 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
     if (confirm) {
       setLoader(true)
 
-      fetchApi({ path: `machine-product/${id}`, method: 'DELETE' }, res => {
-        setLoader(false)
-
-        if (res.status && res.status < 400) {
-          NotificationSuccess(res.data.message)
-          getMachineProducts()
-        } else NotificationError(res)
-      })
+      fetchApi(`machine-product/${id}`, { method: 'DELETE' })
+        .then(res => {
+          if (res.status && res.status < 400) {
+            setLoader(false)
+            NotificationSuccess(res.data.message)
+            getMachineProducts()
+          } else throw new Error(res)
+        })
+        .catch(err => {
+          setLoader(false)
+          NotificationError(res)
+        })
     }
   }
 
@@ -93,7 +108,7 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
   return (
     <>
       <Title
-        title={state.title}
+        title="Konfiguracja maszyny"
         buttonName="Dodaj sprężynę"
         buttonLink="/machine-product/add"
       />

@@ -16,16 +16,8 @@ export default ({ onLogout, onToggleSidebar, showSidebar }) => {
   const closeMachineDropdown = () => setTimeout(setMachineDropdown(false), 75)
   onClickAway(machineDropdownRef, closeMachineDropdown)
 
-  const [mobileNavbar, setMobileNavbar] = useState(true)
-  const mobileNavbarRef = useRef(null)
+  const [mobileNavbar, setMobileNavbar] = useState(false)
   const toggleMobileNavbar = () => setMobileNavbar(prev => !prev)
-  // const closeMobileNavbar = () => setMobileNavbar(false)
-  // onClickAway(mobileNavbarRef, () => {
-  //   console.log(mobileNavbar)
-  //   if (mobileNavbar) {
-  //     closeMobileNavbar()
-  //   }
-  // })
 
   const navbarClass = showSidebar
     ? 'navbar navbar-expand-lg navbar-dark bg-dark fixed-top'
@@ -36,7 +28,7 @@ export default ({ onLogout, onToggleSidebar, showSidebar }) => {
 
   return (
     <nav className={navbarClass}>
-      <div ref={mobileNavbarRef} className="container-fluid">
+      <div className="container-fluid">
         <button onClick={onToggleSidebar} className="btn btn-dark">
           <span className="navbar-toggler-icon d-none d-lg-block"></span>
         </button>

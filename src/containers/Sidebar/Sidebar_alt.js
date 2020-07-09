@@ -15,11 +15,13 @@ export default ({ showSidebar }) => {
   })
 
   useEffect(() => {
-    fetchApi({ path: 'categories' }, res => {
-      if (res.status !== 200) console.log(res)
+    fetchApi('categories')
+      .then(res => {
+        if (res.status !== 200) throw new Error(res)
 
-      setState(prev => ({ ...prev, categories: res.data }))
-    })
+        setState(prev => ({ ...prev, categories: res.data }))
+      })
+      .catch(err => console.log(err))
   }, [])
 
   const toggleProductMenu = () => {
