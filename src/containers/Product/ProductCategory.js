@@ -161,15 +161,6 @@ export default ({
       })
   }
 
-  const getProductCategoryId = productCategory => {
-    const category = state.productCategories.filter(
-      category =>
-        category.CategoryId === productCategory.CategoryId &&
-        category.EAN === productCategory.Ean
-    )
-    return category[0].CategoryProductId
-  }
-
   useEffect(() => {
     getCategories()
   }, [])

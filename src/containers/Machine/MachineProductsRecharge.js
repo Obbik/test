@@ -285,8 +285,8 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
       </div>
       <MachineProductsRecharge
         machineProducts={state.machineProducts}
-        onFillSingleFeeder={fillSingleFeeder}
-        onEmptySingleFeeder={emptySingleFeeder}
+        onFillFeeder={fillSingleFeeder}
+        onEmptyFeeder={emptySingleFeeder}
       />
     </>
   )
