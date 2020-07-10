@@ -1,205 +1,220 @@
-import React, { Component, Fragment } from 'react';
-import { NotificationManager } from 'react-notifications';
-import axios from 'axios';
+import React, { useState, useEffect, useContext } from 'react'
+import { LangContext } from '../../context/lang-context'
+import { useParams, useHistory } from 'react-router-dom'
 
-import Loader from '../../components/Loader/Loader';
+import fetchApi from '../../util/fetchApi'
 
-const sampleProduct = require('../../assets/images/sample-product.svg');
+const sampleProduct = require('../../assets/images/sample-product.svg')
 
-class FullProduct extends Component {
-    state = {
-        product: {
-            ean: '',
-            name: '',
-            description: '',
-            image: '',
-            initialImage: ''
-        },
-        addProduct: false,
-        error: null,
-        loader: false
+export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
+  const {
+    languagePack: { buttons, products }
+  } = useContext(LangContext)
+
+  const { id } = useParams()
+  const history = useHistory()
+
+  const [state, setState] = useState({
+    product: {
+      ean: '',
+      name: '',
+      description: '',
+      image: '',
+      initialImage: ''
+    },
+    addProduct: false
+  })
+
+  const handleChange = e => {
+    e.preventDefault()
+    const { name: inputName } = e.target
+    let inputValue = e.target.value
+
+    if (inputName === 'image') inputValue = e.target.files[0]
+
+    setState(prev => ({
+      ...prev,
+      product: {
+        ...prev.product,
+        [inputName]: inputValue
+      }
+    }))
+  }
+
+  const handleSubmit = e => {
+    e.preventDefault()
+
+    const product = {
+      Ean: state.product.ean,
+      Image: state.product.image,
+      Name: state.product.name,
+      Description: state.product.description
     }
 
-    componentDidMount() {
-        const id = this.props.match.params.id;
+    if (state.addProduct) addProduct(product)
+    else editProduct(product)
+  }
 
-        if(id !== 'add') {
-            this.getProduct(id);
-        } else {
-            this.setState({
-                addProduct: true
-            })
-        }
-    }
+  const getProduct = id => {
+    setLoader(true)
 
-    handleChange = e => {
-        e.preventDefault();
-		const inputName = e.target.name;
-        let inputValue = e.target.value;
+    fetchApi(`product/${id}`)
+      .then(res => {
+        if (res.status !== 200) throw new Error()
 
-        if(inputName === 'image') {
-            inputValue = e.target.files[0];
-        }
-        
-        this.setState(prevState => ({
-			...prevState,
-			product: {
-				...prevState.product,
-				[inputName]: inputValue
-			},
-        }));
-    }
+        setLoader(false)
 
-    handleSubmit = e => {
-        e.preventDefault();
+        const { EAN, Name, Description, Image } = res.data
 
-        const product = {
-            Ean: this.state.product.ean,
-            Image: this.state.product.image,
-            Name: this.state.product.name,
-            Description: this.state.product.description
-        };
-
-        if(this.state.addProduct) {
-            this.addProduct(product);
-        } else {
-            this.editProduct(product);
-        }
-    }
-
-    getProduct = (id) => {
-        this.setState({ loader: true });
-        axios.get(this.props.url + 'api/product/' + id, {
-            headers: {
-                Authorization: 'Bearer ' + this.props.token
-            }
+        setState({
+          product: {
+            ean: EAN,
+            name: Name,
+            description: Description,
+            image: Image,
+            initialImage: Image
+          },
+          addProduct: false
         })
-        .then(res => {
-            this.setState({ loader: false });
-            if(res.status !== 200) {
-                throw new Error('Failed to fetch status.');
-            }
-            return res.data;
-        })
-        .then(res => {
-            this.setState({
-                product: {
-                    ean: res.EAN,
-                    name: res.Name,
-                    description: res.Description,
-                    image: res.Image,
-                    initialImage: res.Image
-                },
-                addProduct: false,
-                loader: false
-            });
-        })
-        .catch(err => {
-            this.setState({ loader: false });
-            NotificationManager.error(err.response.data.message, null, 4000);
-        });
-    }
+      })
+      .catch(() => {
+        setLoader(false)
+        throw new Error('Failed to fetch status.')
+      })
+  }
 
-    addProduct = product => {
-        this.setState({ loader: true });
-        const formData = new FormData();
-        formData.append('Ean', product.Ean);
-        formData.append('Name', product.Name);
-        formData.append('Description', product.Description);
-        formData.append('Image', product.Image);
+  const addProduct = product => {
+    setLoader(true)
 
-        axios.post(this.props.url + 'api/product/', formData, {
-            headers: {
-                Authorization: 'Bearer ' + this.props.token
-            }
-        })
-        .then(res => {
-            this.setState({ loader: false });
-            NotificationManager.success(res.data.message, null, 4000);
-            this.props.history.push('/');
-        })
-        .catch(err => {
-            this.setState({ loader: false });
-            console.log('ERROR', err);
-            NotificationManager.error(err.response.data.message, null, 4000);
-        });
-    }
+    const formData = new FormData()
+    formData.append('Ean', product.Ean)
+    formData.append('Name', product.Name)
+    formData.append('Description', product.Description)
+    formData.append('Image', product.Image)
 
-    editProduct = product => {
-        this.setState({ loader: true });
-        const id = this.props.match.params.id;
+    fetchApi('product', { method: 'POST', data: formData })
+      .then(res => {
+        if (res.status && res.status < 400) {
+          setLoader(false)
+          NotificationSuccess(res.data.message)
+          history.push('/')
+        } else throw new Error(res)
+      })
+      .catch(err => {
+        setLoader(false)
+        NotificationError(err)
+      })
+  }
 
-        const formData = new FormData();
-        formData.append('Ean', product.Ean);
-        formData.append('Name', product.Name);
-        formData.append('Description', product.Description);
-        formData.append('Image', product.Image);
-        
-        axios.put(this.props.url + 'api/product/' + id, formData, {
-            headers: {
-                Authorization: 'Bearer ' + this.props.token
-            }
-        })
-        .then(res => {
-            this.setState({ loader: false });
-            NotificationManager.success(res.data.message, null, 4000);
-            this.props.history.push('/');
-        })
-        .catch(err => {
-            this.setState({ loader: false });
-            NotificationManager.error(err.response.data.message, null, 4000);
-        });
-    }
-     
-    render() {
-        return(
-            <Fragment>
-                <Loader active={this.state.loader}/>
-                <div className="row mb-3">
-                    <div className="col">
-                        <button onClick={this.props.history.goBack} className="btn btn-secondary">
-                            <i className="fas fa-arrow-left"></i>&nbsp; Wróć
-                        </button>
-                    </div>
-                </div>
-                {/* <div className="card mt-4"> */}
-                    {/* <div className="card-header">
-                        <ProductNav 
-                            id={id} 
-                            active={1}
-                            addProduct={this.state.addProduct}
-                        />
-                    </div> */}
-                    <div className="card card-body bg-light mt-3">
-                        <div className="text-center">
-                            <h2>{this.state.addProduct ? 'Dodaj produkt' : this.state.product.name}</h2>
-                            {this.state.product.initialImage ? <img src={this.props.url + this.state.product.initialImage} onError={(e)=>{e.target.src=sampleProduct}} alt={this.state.product.name} width="256" height="256"/> : null}
-                            {/* + '?n=' + new Date().getTime() */}
-                        </div>
-                        <form onSubmit={this.handleSubmit}>
-                            <div className="form-group">
-                                <label>Ean</label>
-                                <input type="number" name="ean" className="form-control form-control-lg" value={this.state.product.ean} onChange={this.handleChange} onKeyUp={this.handleChange} readOnly={!this.state.addProduct}/>
-                            </div>
-                            <div className="form-group">
-                                <label>Zdjęcie</label>
-                                <input type="file" name="image" className="form-control form-control-lg" onChange={this.handleChange} onKeyUp={this.handleChange}/>
-                            </div>
-                            <div className="form-group">
-                                <label>Nazwa produktu</label>
-                                <input type="text" name="name" className="form-control form-control-lg" value={this.state.product.name} onChange={this.handleChange} onKeyUp={this.handleChange}/>
-                            </div>
-                            <div className="form-group">
-                                <label>Opis</label>
-                                <textarea type="text" name="description" className="form-control" rows="4" value={this.state.product.description} onChange={this.handleChange} onKeyUp={this.handleChange}/>
-                            </div>
-                            <input type="submit" className="btn btn-success" value="Zapisz"/>
-                        </form>
-                    </div>
-                {/* </div> */}
-            </Fragment>
-        );
-    }
+  const editProduct = product => {
+    setLoader(true)
+
+    const formData = new FormData()
+    formData.append('Ean', product.Ean)
+    formData.append('Name', product.Name)
+    formData.append('Description', product.Description)
+    formData.append('Image', product.Image)
+
+    fetchApi(`product/${id}`, { method: 'PUT', data: formData })
+      .then(res => {
+        if (res.status && res.status < 400) {
+          setLoader(false)
+          NotificationSuccess(res.data.message)
+          history.push('/')
+        } else throw new Error(res)
+      })
+      .catch(err => {
+        setLoader(false)
+        NotificationError(err)
+      })
+  }
+
+  useEffect(() => {
+    if (id !== 'add') getProduct(id)
+    else
+      setState(prev => ({
+        ...prev,
+        addProduct: true
+      }))
+  }, [])
+
+  return (
+    <>
+      <div className="row mb-3">
+        <div className="col">
+          <button onClick={history.goBack} className="btn btn-secondary">
+            <i className="fas fa-arrow-left"></i>&nbsp; {buttons.return}
+          </button>
+        </div>
+      </div>
+      <div className="card card-body bg-light mt-3">
+        <div className="text-center">
+          <h2>
+            {state.addProduct ? products.newProductHeader : products.editProductHeader}
+          </h2>
+          {state.product.initialImage ? (
+            <img
+              src={url + state.product.initialImage}
+              onError={e => {
+                e.target.src = sampleProduct
+              }}
+              alt={state.product.name}
+              width="256"
+              height="256"
+            />
+          ) : null}
+        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>{products.properties.ean}</label>
+            <input
+              type="number"
+              name="ean"
+              className="form-control form-control-lg"
+              value={state.product.ean}
+              onChange={handleChange}
+              onKeyUp={handleChange}
+              readOnly={!state.addProduct}
+            />
+          </div>
+          <div className="form-group">
+            <label>{products.properties.image}</label>
+            <input
+              type="file"
+              name="image"
+              className="form-control form-control-lg"
+              onChange={handleChange}
+              onKeyUp={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>{products.properties.productName}</label>
+            <input
+              type="text"
+              name="name"
+              className="form-control form-control-lg"
+              value={state.product.name}
+              onChange={handleChange}
+              onKeyUp={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>{products.properties.description}</label>
+            <textarea
+              type="text"
+              name="description"
+              className="form-control"
+              rows="4"
+              value={state.product.description}
+              onChange={handleChange}
+              onKeyUp={handleChange}
+            />
+          </div>
+          <button type="submit" className="btn btn-success">
+            {buttons.save}
+          </button>
+        </form>
+      </div>
+    </>
+  )
 }
-
-export default FullProduct;

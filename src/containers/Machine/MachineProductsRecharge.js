@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { LangContext } from '../../context/lang-context'
+import Title from '../../components/Title/Title'
+import SearchInput from '../SearchInput/SearchInput'
+import MachineProductsRecharge from '../../components/Machine/MachineProductsRecharge'
 
-import Title from '../../../components/Title/Title_alt'
-import SearchInput from '../../SearchInput/SearchInput_alt'
-import MachineProductsBoost from './MachineProductsBoost'
-
-import fetchApi from '../../../helpers/fetchApi'
+import fetchApi from '../../util/fetchApi'
 
 export default ({ setLoader, NotificationError, NotificationSuccess }) => {
+  const {
+    languagePack: { buttons, shelves }
+  } = useContext(LangContext)
+
   const [state, setState] = useState({
     machineType: null,
     machineProducts: []
@@ -19,14 +23,8 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
       .then(res => {
         if (res.status && res.status < 400) {
           setLoader(false)
-          if (
-            res.data
-              .map(product => product.MachineFeederNo)
-              .every(No => !isNaN(No))
-          )
-            res.data.sort(
-              (a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo)
-            )
+          if (res.data.map(product => product.MachineFeederNo).every(No => !isNaN(No)))
+            res.data.sort((a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo))
 
           setState(prev => ({
             ...prev,
@@ -55,6 +53,32 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
         setLoader(false)
         throw new Error('Failed to fetch status.')
       })
+  }
+
+  const search = value => {
+    const suggestions = getSuggestions(value)
+    let filtered = state.initialMachineProducts
+
+    if (value !== '') {
+      filtered = suggestions
+    }
+
+    setState(prev => ({
+      ...prev,
+      machineProducts: filtered
+    }))
+  }
+
+  const getSuggestions = value => {
+    const inputValue = value.trim().toLowerCase()
+    const inputLength = inputValue.length
+
+    return inputLength === 0
+      ? []
+      : state.initialMachineProducts.filter(
+          machineProduct =>
+            machineProduct.Name.toLowerCase().slice(0, inputLength) === inputValue
+        )
   }
 
   const openAll = () => {
@@ -90,23 +114,21 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
         }
         setLoader(true)
 
-        fetchApi(
-          {
-            path: `machine-product/${product.MachineProductId}`,
-            method: 'PUT',
-            data: dataBody
-          },
-          res => {
-            setLoader(false)
-
+        fetchApi(`machine-product/${product.MachineProductId}`, {
+          method: 'PUT',
+          data: dataBody
+        })
+          .then(res => {
             if (res.status && res.status < 400) {
+              setLoader(false)
               if (i === filledMachineProducts.length - 1)
                 NotificationSuccess(res.data.message)
-            } else {
-              if (i === filledMachineProducts.length - 1) NotificationError(res)
-            }
-          }
-        )
+            } else throw new Error(res)
+          })
+          .catch(err => {
+            setLoader(false)
+            if (i === filledMachineProducts.length - 1) NotificationError(err)
+          })
       }
     })
   }
@@ -128,23 +150,21 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
         }
         setLoader(true)
 
-        fetchApi(
-          {
-            path: `machine-product/${product.MachineProductId}`,
-            method: 'PUT',
-            data: dataBody
-          },
-          res => {
-            setLoader(false)
-
+        fetchApi(`machine-product/${product.MachineProductId}`, {
+          method: 'PUT',
+          data: dataBody
+        })
+          .then(res => {
             if (res.status && res.status < 400) {
+              setLoader(false)
               if (i === filledMachineProducts.length - 1)
                 NotificationSuccess(res.data.message)
-            } else {
-              if (i === filledMachineProducts.length - 1) NotificationError(res)
-            }
-          }
-        )
+            } else throw new Error(res)
+          })
+          .catch(err => {
+            setLoader(false)
+            if (i === filledMachineProducts.length - 1) NotificationError(err)
+          })
       }
     })
   }
@@ -163,21 +183,21 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
       newMachineProduct.Quantity = newMachineProduct.MaxItemCount
       setLoader(true)
 
-      fetchApi(
-        {
-          path: `machine-product/${machineProduct.MachineProductId}`,
-          method: 'PUT',
-          data: newMachineProduct
-        },
-        res => {
-          setLoader(false)
-
+      fetchApi(`machine-product/${machineProduct.MachineProductId}`, {
+        method: 'PUT',
+        data: newMachineProduct
+      })
+        .then(res => {
           if (res.status && res.status < 400) {
+            setLoader(false)
             NotificationSuccess(res.data.message)
             getMachineProducts()
-          } else NotificationError(res)
-        }
-      )
+          } else throw new Error(res)
+        })
+        .catch(err => {
+          setLoader(false)
+          NotificationError(err)
+        })
     }
   }
 
@@ -196,39 +216,38 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
 
       setLoader(true)
 
-      fetchApi(
-        {
-          path: `machine-product/${machineProduct.MachineProductId}`,
-          method: 'PUT',
-          data: newMachineProduct
-        },
-        res => {
-          setLoader(false)
-
+      fetchApi(`machine-product/${machineProduct.MachineProductId}`, {
+        method: 'PUT',
+        data: newMachineProduct
+      })
+        .then(res => {
           if (res.status && res.status < 400) {
+            setLoader(false)
             NotificationSuccess(res.data.message)
             getMachineProducts()
-          } else NotificationError(res)
-        }
-      )
+          } else throw new Error(res)
+        })
+        .catch(err => {
+          setLoader(false)
+          NotificationError(err)
+        })
     }
   }
 
   const saveFeeders = () => {
     setLoader(true)
 
-    fetchApi(
-      {
-        path: `visit`
-      },
-      res => {
-        setLoader(false)
-
-        if (res.status && res.status < 400)
+    fetchApi('visit')
+      .then(res => {
+        if (res.status && res.status < 400) {
+          setLoader(false)
           NotificationSuccess(res.data.message)
-        else NotificationError(res)
-      }
-    )
+        } else throw new Error(res)
+      })
+      .catch(err => {
+        setLoader(false)
+        NotificationError(err)
+      })
   }
 
   useEffect(() => {
@@ -238,45 +257,33 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
 
   return (
     <>
-      <Title title="Doładowanie" />
+      <Title title={shelves.rechargeHeader} />
       <SearchInput onSearch={search} tableView={null} />
       <div className="row mb-3">
         <div className="col">
-          <button
-            onClick={fillAllFeeders}
-            className="btn btn-success btn-lg btn-block"
-          >
+          <button onClick={fillAllFeeders} className="btn btn-success btn-lg btn-block">
             <i className="fas fa-arrow-up"></i>
           </button>
         </div>
         <div className="col">
-          <button
-            onClick={emptyAllFeeders}
-            className="btn btn-danger btn-lg btn-block"
-          >
+          <button onClick={emptyAllFeeders} className="btn btn-danger btn-lg btn-block">
             <i className="fas fa-arrow-down"></i>
           </button>
         </div>
         {state.machineType === 'LOCKER' && (
           <div className="col">
-            <button
-              onClick={openAll}
-              className="btn btn-secondary btn-lg btn-block"
-            >
-              Otwórz
+            <button onClick={openAll} className="btn btn-secondary btn-lg btn-block">
+              {buttons.open}
             </button>
           </div>
         )}
         <div className="col">
-          <button
-            onClick={saveFeeders}
-            className="btn btn-secondary btn-lg btn-block"
-          >
-            Zapisz
+          <button onClick={saveFeeders} className="btn btn-secondary btn-lg btn-block">
+            {buttons.saveVisit}
           </button>
         </div>
       </div>
-      <MachineProductsBoost
+      <MachineProductsRecharge
         machineProducts={state.machineProducts}
         onFillSingleFeeder={fillSingleFeeder}
         onEmptySingleFeeder={emptySingleFeeder}

@@ -1,0 +1,66 @@
+{
+  "buttons": {
+    "save": "",
+    "return": "",
+    "goToShop": "",
+    "login": "",
+    "open": "",
+    "saveVisit": ""
+  },
+  "auth": {
+    "email": "",
+    "password": "",
+    "clientId": ""
+  },
+  "navbar": {
+    "products": "",
+    "categories": "",
+    "machine": "",
+    "config": "",
+    "recharge": "",
+    "settings": "",
+    "logout": ""
+  },
+  "searchbarPlaceholder": "",
+  "products": {
+    "defaultHeader": "",
+    "addProductButton": "",
+    "productCategoryHeader": "",
+    "confirmDeletion": "",
+    "newProductHeader": "",
+    "editProductHeader": "",
+    "properties": {
+      "ean": "",
+      "image": "",
+      "productName": "",
+      "description": ""
+    }
+  },
+  "categories": {
+    "header": "",
+    "addCategoryButton": "",
+    "confirmDeletion": "",
+    "newCategoryHeader": "",
+    "editCategoryHeader": "",
+    "properties": {
+      "image": "",
+      "categoryName": ""
+    }
+  },
+  "shelves": {
+    "configHeader": "",
+    "rechargeHeader": "",
+    "addShelfButton": "",
+    "confirmDeletion": "",
+    "newShelfHeader": "",
+    "editShelfHeader": "",
+    "properties": {
+      "shelf": "",
+      "productName": "",
+      "price": "",
+      "discountedPrice": "",
+      "quantity": "",
+      "capacity": ""
+    }
+  }
+}

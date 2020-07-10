@@ -1,222 +1,218 @@
-import React, { Component, Fragment } from 'react';
-import { NotificationManager } from 'react-notifications';
-// import { Link } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect, useContext } from 'react'
+import { LangContext } from '../../context/lang-context'
+import fetchApi from '../../util/fetchApi'
 
-// import ProductNav from '../../components/Product/ProductNav';
-import Loader from '../../components/Loader/Loader';
+export default ({
+  ean,
+  setLoader,
+  NotificationError,
+  NotificationSuccess,
+  onHideProductCategoryModal,
+  showProductCategoryModal
+}) => {
+  const {
+    languagePack: { buttons, products }
+  } = useContext(LangContext)
 
-class ProductCategory extends Component {
-    state = {
-        categories: [],
-        productCategories: [],
-        inputs: null,
-        initialInputs: null,
-        error: null,
-        loader: false
-    }
+  const [state, setState] = useState({
+    categories: [],
+    inputs: {},
+    initialCategories: [],
+    productCategories: []
+  })
 
-    componentDidMount() {
-        this.getCategories();
-    }
+  const getCategories = async () => {
+    setLoader(true)
 
-    getCategories = () => {
-        // const id = this.props.match.params.id;
-        const id = this.props.ean;
+    await fetchApi(`category-product/${ean}`)
+      .then(res => {
+        if (res.status !== 200) throw new Error()
 
-        
-        if(id) {
-            this.setState({ loader: true });
-            let inputs;
-            let checked = false;
+        setLoader(false)
+        const initialCategories = []
 
-            axios.get(this.props.url + 'api/categories', {
-                headers: {
-                    Authorization: 'Bearer ' + this.props.token
+        const categories = res.data
+
+        categories.forEach(({ CategoryId }) => {
+          initialCategories.push(`category${CategoryId}`)
+        })
+
+        setState(prev => ({
+          ...prev,
+          initialCategories,
+          productCategories: categories
+        }))
+      })
+      .catch(err => {
+        setLoader(false)
+        throw new Error('Failed to fetch status.')
+      })
+
+    setLoader(true)
+
+    fetchApi('categories')
+      .then(res => {
+        if (res.status !== 200) throw new Error()
+
+        setLoader(false)
+
+        const categories = res.data
+        setState(prev => {
+          let inputs = prev.inputs
+          categories.forEach(({ CategoryId }) => {
+            if (prev.initialCategories.includes(`category${CategoryId}`))
+              inputs = {
+                ...inputs,
+                [`category${CategoryId}`]: {
+                  value: CategoryId,
+                  checked: true
                 }
-            })
-            .then(res => {
-                const categories = res.data;
-                categories.forEach(category => {
-                    inputs = {
-                        ...inputs,
-                        ['category' + category.CategoryId]: {
-                            value: category.CategoryId,
-                            checked: checked
-                        }
-                    }
-                });
-    
-                this.setState({ 
-                    categories: categories,
-                    inputs: inputs,
-                    initialInputs: { ...inputs }
-                });
-    
-                return axios.get(this.props.url + 'api/category-product/' + id, {
-                    headers: {
-                        Authorization: 'Bearer ' + this.props.token
-                    }
-                })
-            })
-            .then(res => {
-                const categories = this.state.categories;
-                const productCategories = res.data;
-    
-                categories.forEach(category => {
-                    const checked = productCategories.some(productCategory => {
-                        let _checked = false;
-                        if(category.CategoryId === productCategory.CategoryId) {
-                            _checked = true;
-                        }
-                        return _checked;
-                    })
-    
-                    inputs = {
-                        ...inputs,
-                        ['category' + category.CategoryId]: {
-                            value: category.CategoryId,
-                            checked: checked
-                        }
-                    }
-                });
-    
-                this.setState({ 
-                    inputs: inputs,
-                    initialInputs: { ...inputs },
-                    productCategories: productCategories,
-                    loader: false
-                })
-            })
-            .catch(err => {
-                this.setState({ loader: false });
-                // NotificationManager.error(err.response.data.message, null, 4000);
-            })
+              }
+            else
+              inputs = {
+                ...inputs,
+                [`category${CategoryId}`]: {
+                  value: CategoryId,
+                  checked: false
+                }
+              }
+          })
+
+          return {
+            ...prev,
+            categories,
+            inputs
+          }
+        })
+      })
+      .catch(err => {
+        setLoader(false)
+        throw new Error('Failed to fetch status.')
+      })
+  }
+
+  const handleChange = e => {
+    const { name, value, checked } = e.target
+
+    setState(prev => ({
+      ...prev,
+      inputs: {
+        ...prev.inputs,
+        [name]: {
+          value,
+          checked
         }
-    }
+      }
+    }))
+  }
 
-    handleChange = e => {
-        const inputName = e.target.name;
-        const inputValue = e.target.value;
-        const checked = e.target.checked;
+  const handleSubmit = e => {
+    e.preventDefault()
 
-        this.setState(prevState => ({
-			...prevState,
-			inputs: {
-				...prevState.inputs,
-                [inputName]: {
-                    value: inputValue,
-                    checked
-                }
-			},
-        }));
-    }
+    Object.keys(state.inputs).forEach(category => {
+      if (state.inputs[category].checked && !state.initialCategories.includes(category)) {
+        const categoryId = state.inputs[category].value
+        const productCategory = {
+          CategoryId: categoryId,
+          Ean: ean
+        }
+        addProductCategory(productCategory)
+      } else if (
+        !state.inputs[category].checked &&
+        state.initialCategories.includes(category)
+      ) {
+        const productCategories = state.productCategories.find(
+          p => p.CategoryId === Number(state.inputs[category].value)
+        )
 
-    handleSubmit = e => {
-        e.preventDefault();
-        // const productId = this.props.match.params.id;
-        const productId = this.props.ean;
+        deleteProductCategory(productCategories.CategoryProductId)
+      }
+    })
 
-        const categories = this.state.categories;
-        const inputArray = categories.map(category => this.state.inputs['category' + category.CategoryId]);
-        const initialInputArray = categories.map(category => this.state.initialInputs['category' + category.CategoryId]);  
+    getCategories()
+    onHideProductCategoryModal()
+  }
 
-        initialInputArray.forEach((input, index) => {
-            // Check if inputs changed on submit
-            if(input.checked !== inputArray[index].checked) {
-                const categoryId = inputArray[index].value;
-                const productCategory = {
-                    CategoryId: categoryId,
-                    Ean: productId
-                };
+  const addProductCategory = productCategory => {
+    fetchApi('category-product', { method: 'POST', data: productCategory })
+      .then(res => {
+        if (res.status && res.status < 400) {
+          setLoader(false)
+          NotificationSuccess(res.data.message)
+        } else throw new Error(res)
+      })
+      .catch(err => {
+        setLoader(false)
+        NotificationError(err)
+      })
+  }
 
-                // Add category product
-                if(!input.checked) {
-                    this.addProductCategory(productCategory);
-                } 
-                // Delete category product
-                else {
-                    const id = this.getProductCategoryId(productCategory);
-                    this.deleteProductCategory(id);
-                }
-            }
-        });
+  const deleteProductCategory = id => {
+    fetchApi(`category-product/${id}`, { method: 'DELETE' })
+      .then(res => {
+        if (res.status && res.status < 400) {
+          setLoader(false)
+          NotificationSuccess(res.data.message)
+        } else throw new Error(res)
+      })
+      .catch(err => {
+        setLoader(false)
+        NotificationError(err)
+      })
+  }
 
-        this.getCategories();
-        this.props.onHideProductCategoryModal();
-    }
+  const getProductCategoryId = productCategory => {
+    const category = state.productCategories.filter(
+      category =>
+        category.CategoryId === productCategory.CategoryId &&
+        category.EAN === productCategory.Ean
+    )
+    return category[0].CategoryProductId
+  }
 
-    errorHandler = () => {
-        this.setState({ error: null });
-    }
+  useEffect(() => {
+    getCategories()
+  }, [])
 
-    addProductCategory = productCategory => {
-        axios.post(this.props.url + 'api/category-product', productCategory, {
-            headers: {
-                Authorization: 'Bearer ' + this.props.token
-            }
-        })
-        .then(res => {
-            NotificationManager.success(res.data.message, null, 4000);
-        })
-        .catch(err => {
-            NotificationManager.error(err.response.data.message, null, 4000);
-        });
-    }
+  if (Object.keys(state.inputs).length === 0) return <></>
 
-    deleteProductCategory = id => {
-        axios.delete(this.props.url + 'api/category-product/' + id, {
-            headers: {
-                Authorization: 'Bearer ' + this.props.token
-            }
-        })
-        .then(res => {
-            NotificationManager.success(res.data.message, null, 4000);
-        })
-        .catch(err => {
-            NotificationManager.error(err.response.data.message, null, 4000);
-        });
-    }
-
-    getProductCategoryId = productCategory => {
-        const category = this.state.productCategories.filter(category => category.CategoryId == productCategory.CategoryId && category.EAN === productCategory.Ean);
-        return category[0].CategoryProductId;
-    }
-
-    render() {
-        const modalClass = this.props.showProductCategoryModal ? "modal fade show d-block" : "modal fade";
-        return(
-            <Fragment>
-                <Loader active={this.state.loader}/>
-                <div className={modalClass} id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog modal-dialog-centered" role="document">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h6 className="modal-title" id="exampleModalLabel">Kategorie produktu</h6>
-                                <button onClick={this.props.onHideProductCategoryModal} type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                        <div className="modal-body">
-                            <form id="category-form" onSubmit={this.handleSubmit}>
-                                {this.state.categories.map(category => 
-                                    <div key={category.CategoryId} className="form-group form-check">
-                                        <input type="checkbox" name={"category" + category.CategoryId} checked={this.state.inputs["category" + category.CategoryId].checked} value={category.CategoryId} onChange={this.handleChange} className="form-check-input"/>
-                                        <label className="form-check-label">{category.Name}</label>
-                                    </div>
-                                )}
-                                {/* <input type="submit" className="btn btn-success" value="Zapisz"/> */}
-                            </form>
-                        </div>
-                            <div className="modal-footer">
-                                <input type="submit" className="btn btn-success" value="Zapisz" form="category-form"/>
-                            </div>
-                        </div>
-                    </div>
+  return (
+    <div
+      className={`modal fade ${showProductCategoryModal && 'show d-block'}`}
+      tabIndex="-1"
+    >
+      <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h6 className="modal-title">{products.productCategoryHeader}</h6>
+            <button onClick={onHideProductCategoryModal} type="button" className="close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div className="modal-body">
+            <form id="category-form" onSubmit={handleSubmit}>
+              {state.categories.map((category, idx) => (
+                <div key={idx} className="form-group form-check">
+                  <input
+                    type="checkbox"
+                    name={'category' + category.CategoryId}
+                    checked={state.inputs[`category${category.CategoryId}`].checked}
+                    value={category.CategoryId}
+                    onChange={handleChange}
+                    className="form-check-input"
+                  />
+                  <label className="form-check-label">{category.Name}</label>
                 </div>
-            </Fragment>
-        );
-    }
+              ))}
+            </form>
+          </div>
+          <div className="modal-footer">
+            <button type="submit" className="btn btn-success" form="category-form">
+              {buttons.save}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
-
-export default ProductCategory;

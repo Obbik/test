@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { LangContext } from '../../context/lang-context'
 import { useParams, useHistory } from 'react-router-dom'
 
-import fetchApi from '../../../helpers/fetchApi'
+import fetchApi from '../../util/fetchApi'
 
-export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
+export default ({ setLoader, NotificationError, NotificationSuccess }) => {
+  const {
+    languagePack: { buttons, shelves }
+  } = useContext(LangContext)
+
   const { id } = useParams()
   const history = useHistory()
 
@@ -213,12 +218,12 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
       <div className="card card-body bg-light mt-3">
         <div className="text-center">
           <h2>
-            {state.addMachineProduct ? 'Dodaj sprężynę' : 'Edytuj sprężynę'}
+            {state.addMachineProduct ? shelves.newShelfHeader : shelves.editShelfHeader}
           </h2>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Sprężyna</label>
+            <label>{shelves.properties.shelf}</label>
             <input
               type="text"
               name="machineFeederNo"
@@ -229,7 +234,7 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
             />
           </div>
           <div className="form-group">
-            <label>Nazwa produktu</label>
+            <label>{shelves.properties.productName}</label>
             <input
               type="text"
               autoComplete="off"
@@ -242,18 +247,15 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
           </div>
           <div className="form-group">
             <div className={suggestionClass}>
-              {state.suggestions.map(suggestion => (
-                <div
-                  key={suggestion.EAN}
-                  onClick={() => changeNameInput(suggestion.Name)}
-                >
+              {state.suggestions.map((suggestion, idx) => (
+                <div key={idx} onClick={() => changeNameInput(suggestion.Name)}>
                   {suggestion.Name}
                 </div>
               ))}
             </div>
           </div>
           <div className="form-group">
-            <label>Cena</label>
+            <label>{shelves.properties.price}</label>
             <input
               type="number"
               name="price"
@@ -266,7 +268,7 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
             />
           </div>
           <div className="form-group">
-            <label>Cena promocyjna</label>
+            <label>{shelves.properties.discountedPrice}</label>
             <input
               type="number"
               name="discountedPrice"
@@ -279,7 +281,7 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
             />
           </div>
           <div className="form-group">
-            <label>Ilość</label>
+            <label>{shelves.properties.quantity}</label>
             <input
               type="number"
               name="quantity"
@@ -292,7 +294,7 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
             />
           </div>
           <div className="form-group">
-            <label>Pojemność</label>
+            <label>{shelves.properties.capacity}</label>
             <input
               type="number"
               name="maxItemCount"
@@ -304,7 +306,9 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
               max={40}
             />
           </div>
-          <input type="submit" className="btn btn-success" value="Zapisz" />
+          <button type="submit" className="btn btn-success">
+            {buttons.save}
+          </button>
         </form>
       </div>
     </>

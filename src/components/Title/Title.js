@@ -1,20 +1,17 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react'
+import { Link } from 'react-router-dom'
 
-const title = props => {
-    // console.log(props.enableAddButton);
-    return (
-        <div className="row mb-3">
-            <div className="col-sm">
-                <h2>{props.title}</h2>
-            </div>
-            <div className="col-sm">
-                {props.buttonName ? <Link to={props.buttonLink} className="btn btn-success btn-sm float-right">
-                    <i className="fa fa-plus"></i> &nbsp; {props.buttonName}
-                </Link> : null}
-            </div>
-        </div>
-    )
-}
-
-export default title;
+export default ({ title, buttonName, buttonLink }) => (
+  <div className="row mb-3">
+    <div className="col-sm">
+      <h2>{title}</h2>
+    </div>
+    <div className="col-sm">
+      {buttonLink && (
+        <Link to={buttonLink} className="btn btn-success btn-sm float-right">
+          <i className="fa fa-plus"></i> &nbsp; {buttonName}
+        </Link>
+      )}
+    </div>
+  </div>
+)

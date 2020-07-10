@@ -1,171 +1,186 @@
-import React, { Component, Fragment } from 'react';
-import { NotificationManager } from 'react-notifications';
-import axios from 'axios';
+import React, { useState, useEffect, useContext } from 'react'
+import { LangContext } from '../../context/lang-context'
+import { useParams, useHistory } from 'react-router-dom'
 
-import Loader from '../../components/Loader/Loader';
+import fetchApi from '../../util/fetchApi'
 
-const sampleProduct = require('../../assets/images/sample-product.svg');
+const sampleProduct = require('../../assets/images/sample-product.svg')
 
-class FullCategory extends Component {
-    state = {
-        category: {
-            name: '',
-            image: ''
-        },
-        addCategory: false,
-        error: null,
-        loader: false
-    }
+export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
+  const {
+    languagePack: { buttons, categories }
+  } = useContext(LangContext)
 
-    componentDidMount() {
-        const id = this.props.match.params.id;
+  const { id } = useParams()
+  const history = useHistory()
 
-        if(id !== 'add') {
-            this.setState({ loader: true });
-            axios.get(this.props.url + 'api/category/' + id, {
-                headers: {
-                    Authorization: 'Bearer ' + this.props.token
-                }
-            })
-            .then(res => {
-                this.setState({ loader: false });
-                if(res.status !== 200) {
-                    throw new Error('Failed to fetch status.');
-                }
-                return res.data;
-            })
-            .then(res => {
-                this.setState({
-                    category: {
-                        name: res.Name,
-                        image: res.Image,
-                        initialImage: res.Image
-                    },
-                    addCategory: false,
-                    loader: false
-                });
-            })
-            .catch(err => {
-                this.setState({ loader: false });
-                NotificationManager.error(err.response.data.message, null, 4000);
-            });
-        } else {
-            this.setState({
-                addCategory: true
-            })
-        }
-    }
+  const [state, setState] = useState({
+    category: {
+      name: '',
+      image: ''
+    },
+    addCategory: false
+  })
 
-    handleChange = (e) => {
-        e.preventDefault();
-		const inputName = e.target.name;
-        let inputValue = e.target.value;
+  const getCategory = id => {
+    setLoader(true)
 
-        if(inputName === 'image') {
-            inputValue = e.target.files[0];
-        }
-        
-        this.setState(prevState => ({
-			...prevState,
-			category: {
-				...prevState.category,
-				[inputName]: inputValue
-			},
-        }));
-    }
+    fetchApi(`category/${id}`)
+      .then(res => {
+        if (res.status !== 200) throw new Error()
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-
-        const category = {
-            Name: this.state.category.name,
-            Image: this.state.category.image
-        };
-
-        if(this.state.addCategory) {
-            this.addCategory(category);
-        } else {
-            this.editCategory(category);
-        }
-    }
-
-    addCategory = (category) => {
-        this.setState({ loader: true });
-        const formData = new FormData();
-        formData.append('Name', category.Name);
-        formData.append('Image', category.Image);
-
-        axios.post(this.props.url + 'api/category/', formData, {
-            headers: {
-                Authorization: 'Bearer ' + this.props.token
-            }
+        setLoader(false)
+        setState({
+          category: {
+            name: res.data.Name,
+            image: res.data.Image,
+            initialImage: res.data.Image
+          },
+          addCategory: false
         })
-        .then(res => {
-            this.setState({ loader: false });
-            NotificationManager.success(res.data.message, null, 4000);
-            this.props.history.push('/categories');
-        })
-        .catch(err => {
-            this.setState({ loader: false });
-            NotificationManager.error(err.response.data.message, null, 4000);
-        });
+      })
+      .catch(() => {
+        setLoader(false)
+        new Error('Failed to fetch status.')
+      })
+  }
+
+  const handleChange = e => {
+    e.preventDefault()
+    const inputName = e.target.name
+    let inputValue = e.target.value
+
+    if (inputName === 'image') {
+      inputValue = e.target.files[0]
     }
 
-    editCategory = (category) => {
-        this.setState({ loader: true });
-        const id = this.props.match.params.id;
+    setState(prev => ({
+      ...prev,
+      category: {
+        ...prev.category,
+        [inputName]: inputValue
+      }
+    }))
+  }
 
-        const formData = new FormData();
-        formData.append('Name', category.Name);
-        formData.append('Image', category.Image);
-        
-        axios.put(this.props.url + 'api/category/' + id, formData, {
-            headers: {
-                Authorization: 'Bearer ' + this.props.token
-            }
-        })
-        .then(res => {
-            this.setState({ loader: false });
-            NotificationManager.success(res.data.message, null, 4000);
-            this.props.history.push('/categories');
-        })
-        .catch(err => {
-            this.setState({ loader: false });
-            NotificationManager.error(err.response.data.message, null, 4000);
-        });
+  const handleSubmit = e => {
+    e.preventDefault()
+
+    const category = {
+      Name: state.category.name,
+      Image: state.category.image
     }
-     
-    render() {
-        return(
-            <Fragment>
-                <Loader active={this.state.loader}/>
-                <div className="row mb-3">
-                    <div className="col">
-                        <button onClick={this.props.history.goBack} className="btn btn-secondary">
-                            <i className="fas fa-arrow-left"></i>&nbsp; Wróć
-                        </button>
-                    </div>
-                </div>
-                <div className="card card-body bg-light mt-3">
-                    <div className="text-center">
-                        <h2>{this.state.addCategory ? 'Dodaj kategorię' : this.state.category.name}</h2>
-                        {this.state.category.initialImage ? <img src={this.props.url + this.state.category.initialImage} onError={(e)=>{e.target.src=sampleProduct}} alt={this.state.category.name} width="256" height="256"/> : null}
-                    </div>
-                    <form onSubmit={this.handleSubmit}>
-                        <div className="form-group">
-                            <label>Zdjęcie</label>
-                            <input type="file" name="image" className="form-control form-control-lg" onChange={this.handleChange} onKeyUp={this.handleChange}/>
-                        </div>
-                        <div className="form-group">
-                            <label>Nazwa kategorii</label>
-                            <input type="text" name="name" className="form-control form-control-lg" value={this.state.category.name} onChange={this.handleChange} onKeyUp={this.handleChange}/>
-                        </div>
-                        <input type="submit" className="btn btn-success" value="Zapisz"/>
-                    </form>
-                </div>
-            </Fragment>
-        );
-    }
+
+    if (state.addCategory) addCategory(category)
+    else editCategory(category)
+  }
+
+  const addCategory = category => {
+    setLoader(true)
+
+    const formData = new FormData()
+    formData.append('Name', category.Name)
+    formData.append('Image', category.Image)
+
+    fetchApi('category', { method: 'POST', data: formData })
+      .then(res => {
+        if (res.status && res.status < 400) {
+          setLoader(false)
+          NotificationSuccess(res.data.message)
+          history.push('/categories')
+        } else throw new Error(res)
+      })
+      .catch(err => {
+        setLoader(false)
+        NotificationError(err)
+      })
+  }
+
+  const editCategory = category => {
+    setLoader(true)
+
+    const formData = new FormData()
+    formData.append('Name', category.Name)
+    formData.append('Image', category.Image)
+
+    fetchApi(`category/${id}`, { method: 'PUT', data: formData })
+      .then(res => {
+        if (res.status && res.status < 400) {
+          setLoader(false)
+          NotificationSuccess(res.data.message)
+          history.push('/categories')
+        } else throw new Error(res)
+      })
+      .catch(err => {
+        setLoader(false)
+        NotificationError(err)
+      })
+  }
+
+  useEffect(() => {
+    if (id !== 'add') getCategory(id)
+    else
+      setState(prev => ({
+        ...prev,
+        addCategory: true
+      }))
+  }, [])
+
+  return (
+    <>
+      <div className="row mb-3">
+        <div className="col">
+          <button onClick={history.goBack} className="btn btn-secondary">
+            <i className="fas fa-arrow-left"></i>&nbsp; {buttons.return}
+          </button>
+        </div>
+      </div>
+      <div className="card card-body bg-light mt-3">
+        <div className="text-center">
+          <h2>
+            {state.addCategory
+              ? categories.newCategoryHeader
+              : categories.editCategoryHeader}
+          </h2>
+          {state.category.initialImage ? (
+            <img
+              src={url + state.category.initialImage}
+              onError={e => {
+                e.target.src = sampleProduct
+              }}
+              alt={state.category.name}
+              width="256"
+              height="256"
+            />
+          ) : null}
+        </div>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>{categories.properties.image}</label>
+            <input
+              type="file"
+              name="image"
+              className="form-control form-control-lg"
+              onChange={handleChange}
+              onKeyUp={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>{categories.properties.categoryName}</label>
+            <input
+              type="text"
+              name="name"
+              className="form-control form-control-lg"
+              value={state.category.name}
+              onChange={handleChange}
+              onKeyUp={handleChange}
+            />
+          </div>
+          <button type="submit" className="btn btn-success">
+            {buttons.save}
+          </button>
+        </form>
+      </div>
+    </>
+  )
 }
-
-export default FullCategory;

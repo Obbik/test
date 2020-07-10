@@ -1,11 +1,4 @@
-import React from 'react';
-import './Loader.css';
+import React from 'react'
+import './Loader.css'
 
-const loader = props => {
-    const loaderClass = props.active ? "loading" : "";
-    return (
-        <div className={loaderClass}></div>
-    )
-}
-
-export default loader;
+export default () => <div className="loading" />

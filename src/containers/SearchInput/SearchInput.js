@@ -1,35 +1,44 @@
-import React, { Component } from 'react';
+import React, { useContext } from 'react'
+import { LangContext } from '../../context/lang-context'
 
-class SearchInput extends Component {
-    handleChange = e => {
-        e.preventDefault();
-        const inputValue = e.target.value;
-        this.props.onSearch(inputValue);
-    }
+export default ({ onSearch, tableView, onToggleView }) => {
+  const {
+    languagePack: { searchbarPlaceholder }
+  } = useContext(LangContext)
 
-    render() {
-        console.log(this.props.tableView);
-        const viewButton = this.props.tableView ? <button onClick={this.props.onToggleView} type="button" className="btn btn-light"><i className="fas fa-border-all"></i></button> :
-        <button onClick={this.props.onToggleView} type="button" className="btn btn-light"><i className="fas fa-list"></i></button>
+  const handleChange = e => {
+    e.preventDefault()
+    const inputValue = e.target.value
+    onSearch(inputValue)
+  }
 
-        return(
-            <div className="row mb-3">
-                <div className="col-10">
-                    <div className="input-group">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text border-0"><i className="fas fa-search"></i></span>
-                        </div>
-                        <input onChange={this.handleChange} name="search" type="text" className="form-control border-top-0 border-left-0 border-right-0 rounded-0 shadow-none" placeholder="Szukaj..."/>
-                    </div>
-                </div>
-                <div className="col-2">
-                    {this.props.tableView !== null ? <div className="btn-group float-right" role="group">
-                        {viewButton}
-                    </div>  : null}
-                </div>
-            </div>
-        )
-    }
+  return (
+    <div className="row mb-3">
+      <div className="col">
+        <div className="input-group">
+          <div className="input-group-prepend">
+            <span className="input-group-text border-0">
+              <i className="fas fa-search"></i>
+            </span>
+          </div>
+          <input
+            onChange={handleChange}
+            name="search"
+            type="text"
+            className="form-control border-top-0 border-left-0 border-right-0 rounded-0 shadow-none"
+            placeholder={searchbarPlaceholder}
+          />
+        </div>
+      </div>
+      {tableView !== null && (
+        <div className="col-auto">
+          <div className="btn-group float-right" role="group">
+            <button onClick={onToggleView} type="button" className="btn btn-light">
+              <i className={tableView ? 'fas fa-border-all' : 'fas fa-list'}></i>
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }
-
-export default SearchInput;

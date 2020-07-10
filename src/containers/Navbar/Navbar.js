@@ -1,122 +1,123 @@
-import React, { Component, Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef, useContext } from 'react'
+import { LangContext } from '../../context/lang-context'
+import { Link } from 'react-router-dom'
 
-class Navbar extends Component {
-    state = {
-        showDropdown: false,
-        showDropdownMachine: false,
-        showMobileNavbar: false
-    }
+import onClickAway from '../../util/onClickAway'
 
-    componentDidMount() { 
-        document.addEventListener('mousedown', this.handleClickOutside); 
-    }
+export default ({ onLogout, onToggleSidebar, showSidebar }) => {
+  const {
+    languagePack: { navbar }
+  } = useContext(LangContext)
 
-    componentWillUnmount() { 
-        document.removeEventListener('mousedown', this.handleClickOutside); 
-    }
+  const [mobileNavbar, setMobileNavbar] = useState(false)
+  const toggleMobileNavbar = () => setMobileNavbar(prev => !prev)
+  const closeMobileNavbar = () => setMobileNavbar(false)
 
-    // Handle mobile navbar
-    toggleMobileNavbar = () => this.setState({ showMobileNavbar: !this.state.showMobileNavbar });
+  const [userDropdown, setUserDropdown] = useState(false)
+  const userDropdownRef = useRef(null)
+  const toggleUserDropdown = () => setUserDropdown(prev => !prev)
+  const closeUserDropdown = () => setTimeout(setUserDropdown(false), 75)
 
-    hideMobileNavbar = () => this.setState({ showMobileNavbar: false });
+  onClickAway(userDropdownRef, closeUserDropdown)
 
-    // setMobileNavbarWrapperRef = node => this.mobileNavbarWrapper = node;
+  const [machineDropdown, setMachineDropdown] = useState(false)
+  const machineDropdownRef = useRef(null)
+  const toggleMachineDropdown = () => setMachineDropdown(prev => !prev)
+  const closeMachineDropdown = () => setTimeout(setMachineDropdown(false), 75)
 
-    // Handle user dropdown
-    toggleUserDropdown = () => this.setState({ showDropdown: !this.state.showDropdown });
+  onClickAway(machineDropdownRef, closeMachineDropdown)
 
-    hideUserDropdown = () => this.setState({ showDropdown: false });
+  const navbarClass = showSidebar
+    ? 'navbar navbar-expand-lg navbar-dark bg-dark fixed-top'
+    : 'navbar navbar-expand-lg navbar-dark navbar-full-width bg-dark fixed-top'
+  const mobileNavbarClass = mobileNavbar
+    ? 'collapse navbar-collapse show'
+    : 'collapse navbar-collapse'
 
-    setUserDropdownWrapperRef = node => this.userDropdownWrapper = node;
-
-    // Handle machine dropdown
-    toggleMachineDropdown = () => this.setState({ showDropdownMachine: !this.state.showDropdownMachine });
-
-    hideMachineDropdown = () => this.setState({ showDropdownMachine: false });
-
-    setMachineDropdownWrapperRef = node => this.machineDropdownWrapper = node;
-
-    // Handle logout
-    handleLogout = () => {
-        this.hideUserDropdown();
-        this.props.onLogout();
-    }
-
-    // Handle clicking outside specific div
-    handleClickOutside = e => {
-        if (this.userDropdownWrapper && !this.userDropdownWrapper.contains(e.target)) {
-            this.hideUserDropdown();
-        }
-
-        // if (this.mobileNavbarWrapper && !this.mobileNavbarWrapper.contains(e.target)) {
-        //     this.hideMobileNavbar();
-        // }
-
-        if (this.machineDropdownWrapper && !this.machineDropdownWrapper.contains(e.target)) {
-            this.hideMachineDropdown();
-        }
-    }
-
-    render() {
-        const { showDropdownMachine } = this.state;
-
-        const dropdown = this.state.showDropdown ? 
-            <div className="dropdown-menu dropdown-menu-right">
-                <Link to="#" onClick={this.handleLogout} className="dropdown-item">Wyloguj się</Link>
-            </div> : null
-
-        const dropdownMachine = showDropdownMachine ? 
-            <div className="dropdown-menu dropdown-menu-right">
-                <Link to="/machine-products" onClick={this.toggleMachineDropdown} className="dropdown-item">Konfiguracja</Link>
-                <Link to="/machine-boost" onClick={this.toggleMachineDropdown} className="dropdown-item">Doładowanie</Link>
-            </div> : null
-
-        const navbarClass = this.props.showSidebar ? "navbar navbar-expand-lg navbar-dark bg-dark fixed-top" : "navbar navbar-expand-lg navbar-dark navbar-full-width bg-dark fixed-top"
-        const mobileNavbarClass = this.state.showMobileNavbar ? "collapse navbar-collapse show" : "collapse navbar-collapse";
-
-        return (
-            <nav className={navbarClass}>
-                <div className="container-fluid">
-                    <button onClick={this.props.onToggleSidebar} className="btn btn-dark">
-                        <span className="navbar-toggler-icon d-none d-lg-block"></span>
-                    </button>
-                    <button ref={this.setMobileNavbarWrapperRef} onClick={this.toggleMobileNavbar} className="navbar-toggler" type="button">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div ref={this.setMobileNavbarWrapperRef} className={mobileNavbarClass} id="navbarNav">
-                        <ul className="navbar-nav mr-auto">
-
-                        </ul>
-                        <ul className="navbar-nav ml-auto">
-                            <Fragment>
-                                <li className="nav-item">
-                                    <Link to="/" className="nav-link">
-                                        Produkty
-                                    </Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link to="/categories" className="nav-link">Kategorie</Link>
-                                </li>
-                                <li ref={this.setMachineDropdownWrapperRef} className="nav-item dropdown">
-                                    <Link to="#" onClick={this.toggleMachineDropdown} className="nav-link dropdown-toggle">
-                                        Maszyna
-                                    </Link>
-                                    {dropdownMachine}
-                                </li>
-                                <li ref={this.setUserDropdownWrapperRef} className="nav-item dropdown">
-                                    <Link to="#" onClick={this.toggleUserDropdown} className="nav-link dropdown-toggle">
-                                        <i className="far fa-user"></i>
-                                    </Link>
-                                    {dropdown}
-                                </li>
-                            </Fragment>
-                        </ul>
-                    </div>
+  return (
+    <nav className={navbarClass}>
+      <div className="container-fluid">
+        <button onClick={onToggleSidebar} className="btn btn-dark">
+          <span className="navbar-toggler-icon d-none d-lg-block"></span>
+        </button>
+        <button onClick={toggleMobileNavbar} className="navbar-toggler" type="button">
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className={mobileNavbarClass} id="navbarNav">
+          <ul className="navbar-nav mr-auto"></ul>
+          <ul className="navbar-nav ml-auto">
+            <li className="nav-item mx-1">
+              <Link to="/" onClick={closeMobileNavbar} className="nav-link">
+                {navbar.products}
+              </Link>
+            </li>
+            <li className="nav-item mx-1">
+              <Link to="/categories" onClick={closeMobileNavbar} className="nav-link">
+                {navbar.categories}
+              </Link>
+            </li>
+            <li ref={machineDropdownRef} className="nav-item dropdown mx-1">
+              <Link
+                to="#"
+                onClick={toggleMachineDropdown}
+                className="nav-link dropdown-toggle"
+              >
+                {navbar.machine}
+              </Link>
+              {machineDropdown && (
+                <div className="dropdown-menu">
+                  <Link
+                    to="/machine-products"
+                    className="dropdown-item"
+                    onClick={() => {
+                      closeMobileNavbar()
+                      closeMachineDropdown()
+                    }}
+                  >
+                    {navbar.config}
+                  </Link>
+                  <Link
+                    to="/machine-boost"
+                    className="dropdown-item"
+                    onClick={() => {
+                      closeMobileNavbar()
+                      closeMachineDropdown()
+                    }}
+                  >
+                    {navbar.recharge}
+                  </Link>
                 </div>
-            </nav>
-      );
-    }
+              )}
+            </li>
+            <li ref={userDropdownRef} className="nav-item dropdown mx-1">
+              <Link
+                to="#"
+                onClick={toggleUserDropdown}
+                className="nav-link dropdown-toggle"
+              >
+                <i className="far fa-user"></i>
+              </Link>
+              {userDropdown && (
+                <div className="dropdown-menu dropdown-menu-right">
+                  {/* <Link
+                    to="/settings"
+                    className="dropdown-item"
+                    onClick={() => {
+                      closeMobileNavbar()
+                      closeUserDropdown()
+                    }}
+                  >
+                    {navbar.settings}
+                  </Link> */}
+                  <Link to="#" onClick={onLogout} className="dropdown-item">
+                    {navbar.logout}
+                  </Link>
+                </div>
+              )}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  )
 }
-
-export default Navbar;

@@ -1,281 +1,187 @@
-import React, { Component, Fragment } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
-import axios from 'axios';
+import React, { useState, useCallback } from 'react'
+import LangProvider from '../context/lang-context'
+import { Route, Switch, Redirect } from 'react-router-dom'
+import { NotificationContainer, NotificationManager } from 'react-notifications'
 
-import 'react-notifications/lib/notifications.css';
-import '../containers/Sidebar/Sidebar.css';
-import '../assets/fontawesome/css/all.css';
-import './App.css';
+import 'react-notifications/lib/notifications.css'
+import '../containers/Sidebar/Sidebar.css'
+import '../assets/fontawesome/css/all.css'
+import './App.css'
 
-import Navbar from './Navbar/Navbar';
-import Login from './User/Login';
-import Products from './Product/Products';
-import Categories from './Category/Categories';
-import FullProduct from './Product/FullProduct';
-import ProductCategory from './Product/ProductCategory';
-import FullCategory from './Category/FullCategory';
-import Loader from '../components/Loader/Loader';
-import Sidebar from '../containers/Sidebar/Sidebar';
-import MachineProductsView from './Machine/MachineProduct/MachineProductsView';
-import FullMachineProduct from './Machine/MachineProduct/FullMachineProduct';
-import MachineProductBoostView from './Machine/MachineProductBoost/MachineProductsBoostView';
+import Navbar from './Navbar/Navbar'
+import Auth from './User/Auth'
+import Products from './Product/Products'
+import Categories from './Category/Categories'
+import FullProduct from './Product/FullProduct'
+import FullCategory from './Category/FullCategory'
+import Loader from '../components/Loader/Loader'
+import Sidebar from './Sidebar/Sidebar'
+import MachineProducts from './Machine/MachineProducts'
+import FullMachineProduct from './Machine/FullMachineProduct'
+import MachineProductBoostView from './Machine/MachineProductsRecharge'
+import Settings from './Settings/Settings'
 
-class App extends Component {
-    state = {
-        url: 'http://localhost:3000/',
-        // url: 'http://46.41.150.192/vendim-rest-api/',
-        // url: 'https://vendim-rest-api.herokuapp.com/',
-        token: null,
-        userId: null,
-        userName: null,
-        isAuth: false,
-        error: null,
-        loader: false,
-        showSidebar: true
+import url from '../util/url'
+
+export default () => {
+  const [loader, setLoader] = useState(false)
+
+  const setAutoLogout = useCallback(milliseconds => {
+    setTimeout(() => logout(), milliseconds)
+  }, [])
+
+  const logout = () => {
+    setIsAuth(false)
+    localStorage.removeItem('token')
+    localStorage.removeItem('userName')
+    localStorage.removeItem('expirationDate')
+  }
+
+  const [isAuth, setIsAuth] = useState(() => {
+    const token = localStorage.getItem('token')
+    const expirationDate = localStorage.getItem('expirationDate')
+
+    if (!token || !expirationDate) return false
+
+    if (new Date(expirationDate) <= new Date()) {
+      localStorage.removeItem('token')
+      localStorage.removeItem('userName')
+      localStorage.removeItem('expirationDate')
+
+      return false
     }
 
-    componentDidMount() {
-        const token = localStorage.getItem('token');
-        const userId = localStorage.getItem('userId');
-        const userName = localStorage.getItem('userName');
-        const expiryDate = localStorage.getItem('expiryDate');
+    const remainingMilliseconds =
+      new Date(expirationDate).getTime() - new Date().getTime()
 
-        if (!token || !expiryDate) {
-            return;
-        }
+    setAutoLogout(remainingMilliseconds)
 
-        if (new Date(expiryDate) <= new Date()) {
-            this.logout();
-            return;
-        }
+    return true
+  })
 
-        const remainingMilliseconds = new Date(expiryDate).getTime() - new Date().getTime();
+  const login = (userName, token) => {
+    localStorage.setItem('token', token)
+    localStorage.setItem('userName', userName)
 
-        this.setState({
-            token: token, 
-            userId: userId,
-            userName: userName,
-            isAuth: true
-        });
+    const newExpirationDate = new Date(new Date().getTime() + 1000 * 60 * 60)
 
-        this.setAutoLogout(remainingMilliseconds);
+    localStorage.setItem('expirationDate', newExpirationDate.toISOString())
+    setAutoLogout(newExpirationDate)
+
+    setIsAuth(true)
+  }
+
+  const NotificationError = message =>
+    NotificationManager.error(message.toString(), null, 4000)
+
+  const NotificationSuccess = message => NotificationManager.success(message, null, 4000)
+
+  const [sidebar, setSidebar] = useState(true)
+  const toggleSidebar = () => setSidebar(prev => !prev)
+
+  let content
+  if (isAuth) {
+    const payload = {
+      url,
+      setLoader,
+      NotificationError,
+      NotificationSuccess
     }
 
-    login = (user) => {
-        this.setState({ loader: true });
-        axios.put(this.state.url + 'api/auth/login', user)
-        .then(res => {
-            if (res.status === 422) {
-                throw new Error('Validation failed.');
-            }
-            if (res.status !== 200 && res.status !== 201) {
-                throw new Error('Could not authenticate.');
-            }
-            return res.data;
-        })
-        .then(res => {
-            const token = res.token;
-            const userId = res.userId;
-            const userName = res.userName;
+    const routes = [
+      {
+        path: '/',
+        render: () => <Products {...payload} sharedProducts={false} />
+      },
+      {
+        path: '/products/:categoryId',
+        render: () => <Products {...payload} sharedProducts={false} />
+      },
+      {
+        path: '/product/:id',
+        render: () => <FullProduct {...payload} />
+      },
+      {
+        path: '/categories',
+        render: () => <Categories {...payload} />
+      },
+      {
+        path: '/category/:id',
+        render: () => <FullCategory {...payload} />
+      },
+      {
+        path: '/machine-products',
+        render: () => <MachineProducts {...payload} />
+      },
+      {
+        path: '/machine-product/:id',
+        render: () => <FullMachineProduct {...payload} />
+      },
+      {
+        path: '/machine-boost',
+        render: () => <MachineProductBoostView {...payload} />
+      },
+      {
+        path: '/settings',
+        render: () => <Settings {...payload} />
+      }
+    ]
 
-            this.setState({
-                token: token,
-                userId: userId,
-                userName: userName,
-                isAuth: true,
-                loader: false
-            })
-
-            localStorage.setItem('token', token);
-            localStorage.setItem('userId', userId);
-            localStorage.setItem('userName', userName);
-
-            const remainingMilliseconds = 60 * 60 * 1000;
-            const expiryDate = new Date(
-                new Date().getTime() + remainingMilliseconds
-            );
-
-            localStorage.setItem('expiryDate', expiryDate.toISOString());
-
-            this.setAutoLogout(remainingMilliseconds);
-        })
-        .catch(err => {
-            this.setState({
-                isAuth: false,
-                loader: false
-            });
-            NotificationManager.error(err.response.data.message, null, 4000);
-        });
-    }
-
-    setAutoLogout = milliseconds => {
-        setTimeout(() => {
-            this.logout();
-        }, milliseconds);
-    };
-
-    logout = () => {
-        this.setState({ 
-            token: null,
-            isAuth: false
-        });
-
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('userName');
-    };
-
-    // Sidebar
-    toggleSidebar = () => { this.setState({showSidebar: !this.state.showSidebar}) }
-
-    render() {
-        let routes = 
+    content = (
+      <>
+        <Sidebar showSidebar={sidebar} />
+        <div className="col body-col">
+          <Navbar
+            onLogout={logout}
+            onToggleSidebar={toggleSidebar}
+            showSidebar={sidebar}
+          />
+          <div className="container navbar-margin">
             <Switch>
-                <Route
-                    exact path="/"
-                    render={() => (
-                        <Login onLogin={this.login} />
-                    )}
-                />
-                <Redirect to="/" />
+              {routes.map((route, idx) => (
+                <Route key={idx} exact {...route} />
+              ))}
+              <Redirect to="/" />
             </Switch>
+          </div>
+        </div>
+      </>
+    )
+  } else {
+    content = (
+      <div className="col body-col">
+        {isAuth && (
+          <Navbar
+            onLogout={logout}
+            onToggleSidebar={toggleSidebar}
+            showSidebar={sidebar}
+          />
+        )}
+        <div className="container navbar-margin">
+          <Switch>
+            <Route
+              exact
+              path="/"
+              render={() => (
+                <Auth
+                  login={login}
+                  setLoader={setLoader}
+                  NotificationError={NotificationError}
+                />
+              )}
+            />
+            <Redirect to="/" />
+          </Switch>
+        </div>
+      </div>
+    )
+  }
 
-        if (this.state.isAuth) {
-            routes =
-                <Fragment>
-                    <Route
-                        exact path="/"
-                        render={props => (
-                            <Products
-                                {...props}
-                                url={this.state.url}
-                                token={this.state.token}
-                                sharedProducts={false}
-                            />
-                        )}
-                    />
-                    <Route
-                        exact path="/products/:categoryId"
-                        render={props => (
-                            <Products
-                                {...props}
-                                key={props.match.params.categoryId}
-                                url={this.state.url}
-                                token={this.state.token}
-                                sharedProducts={false}
-                            />
-                        )}
-                    />
-                    <Route
-                        exact path="/product/:id"
-                        render={props => (
-                            <FullProduct
-                                {...props}
-                                url={this.state.url}
-                                token={this.state.token}
-                            />
-                        )}
-                    />
-                    <Route
-                        path="/product-category/:id"
-                        render={props => (
-                            <ProductCategory
-                                {...props}
-                                url={this.state.url}
-                                token={this.state.token}
-                            />
-                        )}
-                    />
-                    <Route
-                        exact path="/categories"
-                        render={props => (
-                            <Categories
-                                url={this.state.url}
-                                token={this.state.token}
-                            />
-                        )}
-                    />
-                    <Route
-                        exact path="/category/:id"
-                        render={props => (
-                            <FullCategory
-                                {...props}
-                                url={this.state.url}
-                                token={this.state.token}
-                            />
-                        )}
-                    />
-                    <Route
-                        exact path="/machine-products"
-                        render={props => (
-                            <MachineProductsView
-                                {...props}
-                                url={this.state.url}
-                                token={this.state.token}
-                            />
-                        )}
-                    />
-                    <Route
-                        exact path="/machine-boost"
-                        render={props => (
-                            <MachineProductBoostView
-                                {...props}
-                                url={this.state.url}
-                                token={this.state.token}
-                            />
-                        )}
-                    />
-                    <Route
-                        exact path="/machine-product/:id"
-                        render={props => (
-                            <FullMachineProduct
-                                {...props}
-                                url={this.state.url}
-                                token={this.state.token}
-                            />
-                        )}
-                    />
-                    {/* <Redirect to="/" /> */}
-                </Fragment>
-        }
-
-        return (
-            // <Fragment>
-            //     <Loader active={this.state.loader}/>
-            //     <Navbar onLogout={this.logout} isAuth={this.state.isAuth} />
-            //     <div className="container navbar-margin">
-            //         {routes}
-            //     </div>
-            //     <NotificationContainer/>
-            // </Fragment>
-
-            <Fragment>
-                <Loader active={this.state.loader}/>
-                <NotificationContainer/>
-                <div className="row body-row">
-                    { this.state.isAuth ? <Sidebar 
-                            showSidebar={this.state.showSidebar}
-                            url={this.state.url}
-                            token={this.state.token}
-                            userName={this.state.userName}
-                        /> : null }
-                    <div className="col body-col">
-                        { this.state.isAuth ? <Navbar 
-                            onLogout={this.logout} 
-                            isAuth={this.state.isAuth} 
-                            onToggleSidebar={this.toggleSidebar}
-                            showSidebar={this.state.showSidebar}
-                        /> : null }
-                        <div className="container navbar-margin">
-                        {/* container-fluid */}
-                            {routes}
-                        </div>
-                    </div>
-                </div>
-            </Fragment>
-        );
-    }
+  return (
+    <LangProvider>
+      {loader && <Loader />}
+      <NotificationContainer />
+      <div className="row body-row">{content}</div>
+    </LangProvider>
+  )
 }
-
-export default App;

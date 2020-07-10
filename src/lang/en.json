@@ -1,0 +1,66 @@
+{
+  "buttons": {
+    "save": "Save",
+    "return": "Return",
+    "goToShop": "Return to shop",
+    "login": "Log in",
+    "open": "Open",
+    "saveVisit": "Save visit"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "clientId": "Client ID"
+  },
+  "navbar": {
+    "products": "Products",
+    "categories": "Categories",
+    "machine": "Machine",
+    "config": "Config",
+    "recharge": "Recharge",
+    "settings": "Settings",
+    "logout": "Log out"
+  },
+  "searchbarPlaceholder": "Search...",
+  "products": {
+    "defaultHeader": "All products",
+    "addProductButton": "Add product",
+    "productCategoryHeader": "Product categories",
+    "confirmDeletion": "Confirm product deletion",
+    "newProductHeader": "New product",
+    "editProductHeader": "Edit product",
+    "properties": {
+      "ean": "Ean",
+      "image": "Image",
+      "productName": "Product name",
+      "description": "Description"
+    }
+  },
+  "categories": {
+    "header": "Categories",
+    "addCategoryButton": "Add category",
+    "confirmDeletion": "Confirm category deletion",
+    "newCategoryHeader": "New category",
+    "editCategoryHeader": "Edit category",
+    "properties": {
+      "image": "Image",
+      "categoryName": "Category name"
+    }
+  },
+  "shelves": {
+    "configHeader": "Machine config",
+    "rechargeHeader": "Machine recharge",
+    "addShelfButton": "Add shelf",
+    "confirmDeletion": "Confirm category shelf",
+    "newShelfHeader": "New shelf",
+    "editShelfHeader": "Add shelf",
+    "properties": {
+      "shelf": "Shelf",
+      "productName": "Product name",
+      "price": "Price",
+      "discountedPrice": "Discounted price",
+      "quantity": "Quantity",
+      "capacity": "Capacity"
+    }
+  }
+}

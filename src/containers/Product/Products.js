@@ -1,191 +1,173 @@
-import React, { Component, Fragment } from 'react';
-import { NotificationManager } from 'react-notifications';
-import axios from 'axios';
+import React, { useState, useEffect, useContext } from 'react'
+import { useParams } from 'react-router-dom'
+import { LangContext } from '../../context/lang-context'
 
-import Product from '../../components/Product/Product';
-import Title from '../../components/Title/Title';
-import SearchInput from '../SearchInput/SearchInput';
-import Loader from '../../components/Loader/Loader';
-import Pagination from '../../components/Pagination/Pagination';
-import ProductCategory from '../Product/ProductCategory';
+import fetchApi from '../../util/fetchApi'
 
-class Products extends Component {
-    state = {
-        title: null,
-        products: [],
-        tableView: false,
-        loader: false,
-        page: 1,
-        totalItems: 0,
-        searchedValue: '',
-        shared: '',
-        ean: null,
-        typeTimeout: 0 
-    }
+import Product from '../../components/Product/Product'
+import Title from '../../components/Title/Title'
+import SearchInput from '../SearchInput/SearchInput'
+import Pagination from '../../components/Pagination/Pagination'
+import ProductCategory from './ProductCategory'
 
-    componentDidMount() {
-        this.getProducts();
-        this.getTitle();
-    }
+export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
+  const {
+    languagePack: { products }
+  } = useContext(LangContext)
+  const { categoryId } = useParams()
 
-    deleteProduct = ean => {
-        const confirm = window.confirm('Czy na pewno chcesz usunąć produkt?');
+  const [state, setState] = useState({
+    title: null,
+    products: [],
+    page: 1,
+    totalItems: 0,
+    shared: '',
+    ean: null,
+    typeTimeout: 0
+  })
 
-        if(confirm) {
-            this.setState({ loader: true });
-            axios.delete(this.props.url + 'api/product/' + ean, {
-                headers: {
-                    Authorization: 'Bearer ' + this.props.token
-                }
-            })
-            .then(res => {
-                this.setState({ loader: false });
-                NotificationManager.success(res.data.message, null, 4000);
-                this.getProducts();
-            })
-            .catch(err => {
-                this.setState({ loader: false });
-                NotificationManager.error(err.response.data.message, null, 4000);
-            });
-        }
-    }
+  const [searchedValue, setSearchedValue] = useState('')
+  const [tableView, setTableView] = useState(false)
 
-    getProducts = (page = 1, search = this.state.searchedValue, shared = this.state.shared) => {
-        this.setState({ loader: true });
-        const categoryId = this.props.match.params.categoryId || '';
-        const url = this.props.url + 'api/products?search=' + search + '&shared=' + shared + '&categoryId=' + categoryId + '&page=' + page;
+  const deleteProduct = ean => {
+    const confirm = window.confirm(products.confirmDeletion)
 
-        axios.get(url, {
-            headers: {
-                Authorization: 'Bearer ' + this.props.token
-            }
-        })
+    if (confirm) {
+      setLoader(true)
+
+      fetchApi(`product/${ean}`, { method: 'DELETE' })
         .then(res => {
-            this.setState({ 
-                products: res.data.products,
-                totalItems: res.data.totalItems,
-                initialProducts: res.data.products,
-                loader: false
-            })
+          if (res.status && res.status < 400) {
+            setLoader(false)
+            NotificationSuccess(res.data.message)
+            getProducts()
+          } else throw new Error(res)
         })
         .catch(err => {
-            this.setState({ loader: false });
-            NotificationManager.error(err.response.data.message, null, 4000);
-        });
-    }
-
-    getTitle = () => {
-        const categoryId = this.props.match.params.categoryId;
-        if(categoryId) {
-            axios.get(this.props.url + 'api/category/' + categoryId, {
-                headers: {
-                    Authorization: 'Bearer ' + this.props.token
-                }
-            })
-            .then(res => {
-                this.setState({ title: res.data.Name});
-            });
-        } else {
-            this.setState({ title: 'Wszystkie produkty'});
-        }
-    }
-
-    // Method for changing the view (table or cards)
-    toggleView = () => {
-        this.setState({
-            tableView: !this.state.tableView
+          setLoader(false)
+          NotificationError(err)
         })
     }
+  }
 
-    // Search bar
-    search = value => {
-        const { typeTimeout } = this.state;
+  const getProducts = (page = 1, search = searchedValue, shared = state.shared) => {
+    setLoader(true)
 
-        if (typeTimeout)
-            clearTimeout(typeTimeout);
+    const params = `search=${search}&shared=${shared}&categoryId=${
+      categoryId || ''
+    }&page=${page}`
 
-        this.setState({ 
-            searchedValue: value,
-            page: 1,
-            typeTimeout: setTimeout(() => {
-                this.getProducts(1, value);
-            }, 1000)
-        });
-    }
+    fetchApi(`products?${params}`)
+      .then(res => {
+        if (res.status !== 200) throw new Error()
 
-    // Pagination
-    switchPage = (pageNo) => {
-        this.setState({ page: pageNo });
-        this.getProducts(pageNo);
-    }
+        setLoader(false)
+        setState(prev => ({
+          ...prev,
+          products: res.data.products,
+          totalItems: res.data.totalItems,
+          initialProducts: res.data.products
+        }))
+      })
+      .catch(() => {
+        setLoader(false)
+        throw new Error('Failed to fetch status.')
+      })
+  }
 
-    // Handle shared input
-    handleSharedInputChange = (e) => {
-        const checked = e.target.checked;
-        const shared = checked ? '1' : '';
-        this.setState({ shared: shared });
-        this.getProducts(1, this.state.searchedValue, shared);
-    }
+  const getTitle = () => {
+    if (categoryId)
+      fetchApi(`category/${categoryId}`)
+        .then(res => {
+          if (res.status !== 200) throw new Error()
 
-    // Handle product category modal
-    showProductCategoryModal = ean => {
-        this.setState({
-            showProductCategoryModal: true,
-            ean: ean
-        });
-    }
+          setLoader(false)
+          setState(prev => ({ ...prev, title: res.data.Name }))
+        })
+        .catch(() => {
+          setLoader(false)
+          throw new Error('Failed to fetch status.')
+        })
+    else setState(prev => ({ ...prev, title: null }))
+  }
 
-    hideProductCategoryModal = () => {
-        this.setState({ showProductCategoryModal: false });
-        this.getProducts();
-    }
+  // Method for changing the view (table or cards)
+  const toggleView = () => {
+    setTableView(prev => !prev)
+  }
 
-    render() {
-        return(
-            <Fragment>
-                <Loader active={this.state.loader}/>
-                <Title
-                    title={this.state.title}
-                    buttonName="Dodaj produkt"
-                    buttonLink="/product/add"
-                />
-                <SearchInput 
-                    tableView={this.state.tableView}
-                    onSearch={this.search}
-                    onToggleView={this.toggleView}
-                />
-                {/* <div className="row">
-                    <div className="col">
-                        <div className="custom-control custom-checkbox float-right">
-                            <input onChange={this.handleSharedInputChange} type="checkbox" className="custom-control-input" id="shared-checkbox"/>
-                            <label className="custom-control-label" htmlFor="shared-checkbox">Współdzielone</label>
-                        </div>
-                    </div>
-                </div> */}
-                <Pagination 
-                    onSwitchPage={this.switchPage}
-                    page={this.state.page}
-                    totalItems={this.state.totalItems}  
-                /> 
-                <Product
-                    url={this.props.url}
-                    token={this.props.token}
-                    products={this.state.products}
-                    onDeleteProduct={this.deleteProduct}
-                    tableView={this.state.tableView}
-                    onShowProductCategoryModal={this.showProductCategoryModal} 
-                />
-                <ProductCategory
-                    key={this.state.ean}
-                    ean={this.state.ean}
-                    url={this.props.url}
-                    token={this.props.token}
-                    showProductCategoryModal={this.state.showProductCategoryModal}
-                    onHideProductCategoryModal={this.hideProductCategoryModal}
-                />
-            </Fragment>
-        )
-    }
+  // Search bar
+  const search = value => {
+    const { typeTimeout } = state
+
+    if (typeTimeout) clearTimeout(typeTimeout)
+
+    setSearchedValue(value)
+    setState(prev => ({
+      ...prev,
+      page: 1,
+      typeTimeout: setTimeout(() => {
+        getProducts(1, value)
+      }, 1000)
+    }))
+  }
+
+  // Pagination
+  const switchPage = pageNo => {
+    setState(prev => ({ ...prev, page: pageNo }))
+    getProducts(pageNo)
+  }
+
+  // Handle product category modal
+  const showProductCategoryModal = ean => {
+    setState(prev => ({
+      ...prev,
+      showProductCategoryModal: true,
+      ean
+    }))
+  }
+
+  const hideProductCategoryModal = () => {
+    setState(prev => ({ ...prev, ean: null, showProductCategoryModal: false }))
+    getProducts()
+  }
+
+  useEffect(() => {
+    getProducts()
+    getTitle()
+  }, [categoryId])
+
+  return (
+    <>
+      <Title
+        title={state.title || products.defaultHeader}
+        buttonName={products.addProductButton}
+        buttonLink="/product/add"
+      />
+      <SearchInput tableView={tableView} onSearch={search} onToggleView={toggleView} />
+      <Pagination
+        onSwitchPage={switchPage}
+        page={state.page}
+        totalItems={state.totalItems}
+      />
+      <Product
+        url={url}
+        productItems={state.products}
+        onDeleteProduct={deleteProduct}
+        tableView={tableView}
+        onShowProductCategoryModal={showProductCategoryModal}
+      />
+      {state.ean && (
+        <ProductCategory
+          url={url}
+          ean={state.ean}
+          setLoader={setLoader}
+          NotificationError={NotificationError}
+          NotificationSuccess={NotificationSuccess}
+          showProductCategoryModal={state.showProductCategoryModal}
+          onHideProductCategoryModal={hideProductCategoryModal}
+        />
+      )}
+    </>
+  )
 }
-
-export default Products;

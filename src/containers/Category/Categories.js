@@ -1,120 +1,110 @@
-import React, { Component, Fragment } from 'react';
-import { NotificationManager } from 'react-notifications';
-import axios from 'axios';
+import React, { useState, useEffect, useContext } from 'react'
+import { LangContext } from '../../context/lang-context'
 
-import Category from '../../components/Category/Category';
-import Title from '../../components/Title/Title';
-import SearchInput from '../SearchInput/SearchInput';
-import Loader from '../../components/Loader/Loader';
+import Category from '../../components/Category/Category'
+import Title from '../../components/Title/Title'
+import SearchInput from '../SearchInput/SearchInput'
 
-class Categories extends Component {
-    state = {
-        categories: [],
-        error: null,
-        tableView: false,
-        loader: false
-    }
+import fetchApi from '../../util/fetchApi'
 
-    componentDidMount() {
-        this.getCategories();
-    }
+export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
+  const {
+    languagePack: { categories }
+  } = useContext(LangContext)
 
-    deleteCategory = id => {
-        const confirm = window.confirm('Czy na pewno chcesz usunąć kategorię?');
+  const [state, setState] = useState({
+    categories: [],
+    initialCategories: []
+  })
+  const [tableView, setTableView] = useState(false)
 
-        if(confirm) {
-            this.setState({ loader: true });
-            axios.delete(this.props.url + 'api/category/' + id, {
-                headers: {
-                    Authorization: 'Bearer ' + this.props.token
-                }
-            })
-            .then(res => {
-                this.setState({ loader: false });
-                NotificationManager.success(res.data.message, null, 4000);
-                this.getCategories();
-            })
-            .catch(err => {
-                this.setState({ loader: false });
-                NotificationManager.error(err.response.data.message, null, 4000);
-            });
-        }
-    }
+  const deleteCategory = id => {
+    const confirm = window.confirm('Czy na pewno chcesz usunąć kategorię?')
 
-    getCategories = () => {
-        this.setState({ loader: true });
-        axios.get(this.props.url + 'api/categories', {
-            headers: {
-                Authorization: 'Bearer ' + this.props.token
-            }
-        })
+    if (confirm) {
+      setLoader(true)
+
+      fetchApi(`category/${id}`, { method: 'DELETE' })
         .then(res => {
-            this.setState({ 
-                categories: res.data,
-                initialCategories: res.data,
-                loader: false 
-            })
+          if (res.status && res.status < 400) {
+            setLoader(false)
+            NotificationSuccess(res.data.message)
+            getCategories()
+          } else throw new Error(res)
         })
         .catch(err => {
-            this.setState({ loader: false });
-            NotificationManager.error(err.response.data.message, null, 4000);
-        });
-    }
-
-    // Method for changing the view (table or cards)
-    toggleView = () => {
-        this.setState({
-            tableView: !this.state.tableView
+          setLoader(false)
+          NotificationError(err)
         })
     }
+  }
 
-    // Search bar
-    search = value => {
-        const suggestions = this.getSuggestions(value);
-        let filteredCategories = this.state.initialCategories;
+  const getCategories = () => {
+    setLoader(true)
 
-        if(value !== '') {
-            filteredCategories = suggestions;
-        }
+    fetchApi('categories')
+      .then(res => {
+        if (res.status !== 200) throw new Error()
 
-        this.setState({
-            categories: filteredCategories
-        });
+        setLoader(false)
+        setState({
+          categories: res.data,
+          initialCategories: res.data
+        })
+      })
+      .catch(() => {
+        setLoader(false)
+        throw new Error('Failed to fetch status.')
+      })
+  }
+
+  // Method for changing the view (table or cards)
+  const toggleView = () => {
+    setTableView(prev => !prev)
+  }
+
+  // Search bar
+  const search = value => {
+    const suggestions = getSuggestions(value)
+    let filteredCategories = state.initialCategories
+
+    if (value !== '') {
+      filteredCategories = suggestions
     }
 
-    getSuggestions = value => {
-        const inputValue = value.trim().toLowerCase();
-        const inputLength = inputValue.length;
-        
-        return inputLength === 0 ? [] : this.state.initialCategories.filter(category =>
-            category.Name.toLowerCase().slice(0, inputLength) === inputValue
-        );
-    };
+    setState(prev => ({ ...prev, categories: filteredCategories }))
+  }
 
-    render() {
-        return(
-            <Fragment>
-                <Loader active={this.state.loader}/>
-                <Title
-                    title="Kategorie"
-                    buttonName="Dodaj kategorię"
-                    buttonLink="/category/add"
-                    enableAddButton={true}
-                />
-                <SearchInput 
-                    tableView={this.state.tableView}
-                    onSearch={this.search}
-                    onToggleView={this.toggleView}
-                />
-                <Category 
-                    url={this.props.url}
-                    categories={this.state.categories}
-                    tableView={this.state.tableView}
-                    onDeleteCategory={this.deleteCategory}
-                />
-            </Fragment>
+  const getSuggestions = value => {
+    const inputValue = value.trim().toLowerCase()
+    const inputLength = inputValue.length
+
+    return inputLength === 0
+      ? []
+      : state.initialCategories.filter(
+          category => category.Name.toLowerCase().slice(0, inputLength) === inputValue
         )
-    }
-}
+  }
 
-export default Categories;
+  useEffect(() => {
+    getCategories()
+  }, [])
+
+  return (
+    <>
+      <Title
+        title={categories.header}
+        buttonName={categories.addCategoryButton}
+        buttonLink="/category/add"
+        enableAddButton={true}
+      />
+      <SearchInput tableView={tableView} onSearch={search} onToggleView={toggleView} />
+      <Category
+        url={url}
+        categoryItems={state.categories}
+        tableView={tableView}
+        onDeleteCategory={deleteCategory}
+      />
+    </>
+  )
+}

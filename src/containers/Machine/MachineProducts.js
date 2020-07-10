@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from 'react'
-import Title from '../../../components/Title/Title'
-import SearchInput from '../../SearchInput/SearchInput_alt'
-import MachineProducts from './MachineProducts'
+import React, { useState, useEffect, useContext } from 'react'
+import { LangContext } from '../../context/lang-context'
+import Title from '../../components/Title/Title'
+import SearchInput from '../SearchInput/SearchInput'
+import MachineProducts from '../../components/Machine/MachineProducts'
 
-import fetchApi from '../../../helpers/fetchApi'
+import fetchApi from '../../util/fetchApi'
 
 export default ({ setLoader, NotificationError, NotificationSuccess }) => {
+  const {
+    languagePack: { shelves }
+  } = useContext(LangContext)
+
   const [state, setState] = useState({
     machineProducts: [],
     machineType: null
@@ -18,14 +23,8 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
       .then(res => {
         if (res.status && res.status < 400) {
           setLoader(false)
-          if (
-            res.data
-              .map(product => product.MachineFeederNo)
-              .every(No => !isNaN(No))
-          )
-            res.data.sort(
-              (a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo)
-            )
+          if (res.data.map(product => product.MachineFeederNo).every(No => !isNaN(No)))
+            res.data.sort((a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo))
 
           setState(prev => ({
             ...prev,
@@ -57,7 +56,7 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
   }
 
   const deleteMachineProduct = id => {
-    const confirm = window.confirm('Czy na pewno chcesz usunąć sprężynę?')
+    const confirm = window.confirm(shelves.confirmDeletion)
 
     if (confirm) {
       setLoader(true)
@@ -72,7 +71,7 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
         })
         .catch(err => {
           setLoader(false)
-          NotificationError(res)
+          NotificationError(err)
         })
     }
   }
@@ -95,8 +94,7 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
       ? []
       : state.initialMachineProducts.filter(
           machineProduct =>
-            machineProduct.Name.toLowerCase().slice(0, inputLength) ===
-            inputValue
+            machineProduct.Name.toLowerCase().slice(0, inputLength) === inputValue
         )
   }
 
@@ -108,8 +106,8 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
   return (
     <>
       <Title
-        title="Konfiguracja maszyny"
-        buttonName="Dodaj sprężynę"
+        title={shelves.configHeader}
+        buttonName={shelves.addShelfButton}
         buttonLink="/machine-product/add"
       />
       <SearchInput onSearch={search} tableView={null} />

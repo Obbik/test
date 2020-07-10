@@ -1,0 +1,66 @@
+{
+  "buttons": {
+    "save": "Zapisz",
+    "return": "Wróć",
+    "goToShop": "Wróć do sklepu",
+    "login": "Zaloguj się",
+    "open": "Otwórz",
+    "saveVisit": "Zapisz wizytę"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Hasło",
+    "clientId": "ID klienta"
+  },
+  "navbar": {
+    "products": "Produkty",
+    "categories": "Kategorie",
+    "machine": "Maszyna",
+    "config": "Konfiguracja",
+    "recharge": "Doładowanie",
+    "settings": "Ustawienia",
+    "logout": "Wyloguj się"
+  },
+  "searchbarPlaceholder": "Szukaj...",
+  "products": {
+    "defaultHeader": "Wszystkie produkty",
+    "addProductButton": "Dodaj produkt",
+    "productCategoryHeader": "Kategorie produktu",
+    "confirmDeletion": "Czy na pewno chcesz usunąć produkt?",
+    "newProductHeader": "Dodaj produkt",
+    "editProductHeader": "Edytuj produkt",
+    "properties": {
+      "ean": "Ean",
+      "image": "Zdjęcie",
+      "productName": "Nazwa produktu",
+      "description": "Opis"
+    }
+  },
+  "categories": {
+    "header": "Kategorie",
+    "addCategoryButton": "Dodaj kategorie",
+    "confirmDeletion": "Czy na pewno chcesz usunąć kategorie?",
+    "newCategoryHeader": "Dodaj kategorie",
+    "editCategoryHeader": "Edytuj kategorie",
+    "properties": {
+      "image": "Zdjęcie",
+      "categoryName": "Nazwa kategorii"
+    }
+  },
+  "shelves": {
+    "configHeader": "Konfiguracja maszyny",
+    "rechargeHeader": "Doładowanie",
+    "addShelfButton": "Dodaj sprężynę",
+    "confirmDeletion": "Czy na pewno chcesz usunąć sprężyne?",
+    "newShelfHeader": "Dodaj sprężyne",
+    "editShelfHeader": "Edytuj sprężyne",
+    "properties": {
+      "shelf": "Sprężyna",
+      "productName": "Nazwa produktu",
+      "price": "Cena",
+      "discountedPrice": "Cena promocyjna",
+      "quantity": "Ilość",
+      "capacity": "Pojemność"
+    }
+  }
+}
