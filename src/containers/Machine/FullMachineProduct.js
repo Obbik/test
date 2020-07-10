@@ -158,10 +158,9 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
   }
 
   const getEanByName = name => {
-    const { products } = state
-    const product = products.filter(product => product.Name === name)
+    const product = state.products.find(product => product.Name === name)
 
-    return product[0].EAN
+    return product.EAN
   }
 
   const handleSuggestionBox = inputValue => {
