@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import LangProvider from '../context/lang-context'
+import { useHistory } from 'react-router-dom'
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { NotificationContainer, NotificationManager } from 'react-notifications'
 
@@ -24,6 +25,8 @@ import Settings from './Settings/Settings'
 import url from '../util/url'
 
 export default () => {
+  const history = useHistory()
+  
   const [loader, setLoader] = useState(false)
 
   const setAutoLogout = useCallback(milliseconds => {
@@ -69,6 +72,7 @@ export default () => {
     setAutoLogout(newExpirationDate)
 
     setIsAuth(true)
+    history.push('/machine-boost')
   }
 
   const NotificationError = message =>
