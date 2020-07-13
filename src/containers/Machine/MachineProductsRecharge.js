@@ -241,7 +241,11 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
       .then(res => {
         if (res.status && res.status < 400) {
           setLoader(false)
-          NotificationSuccess(res.data.message)
+          localStorage.removeItem('token')
+          localStorage.removeItem('userName')
+          localStorage.removeItem('expirationDate')
+
+          window.location.href = 'http://localhost:8080/shop'
         } else throw new Error(res)
       })
       .catch(err => {
