@@ -63,7 +63,7 @@ export default ({ login, setLoader, NotificationError }) => {
             <input
               type="email"
               name="email"
-              //defaultValue="service@gmail.com"
+              defaultValue="service@gmail.com"
               className="form-control form-control-lg"
               required
             />
