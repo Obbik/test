@@ -63,7 +63,7 @@ export default ({ login, setLoader, NotificationError }) => {
             <input
               type="email"
               name="email"
-              defaultValue="service@gmail.com"
+              //defaultValue="service@gmail.com"
               className="form-control form-control-lg"
               required
             />
@@ -73,7 +73,7 @@ export default ({ login, setLoader, NotificationError }) => {
             <input
               type="password"
               name="password"
-              defaultValue="123456"
+              //defaultValue="123456"
               autoComplete="off"
               className="form-control form-control-lg"
               required
