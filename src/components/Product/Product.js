@@ -2,10 +2,11 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { LangContext } from '../../context/lang-context'
 
+import { API_URL } from '../../config/config'
+
 const sampleProduct = require('../../assets/images/sample-product.svg')
 
 export default ({
-  url,
   productItems,
   onDeleteProduct,
   tableView,
@@ -32,7 +33,7 @@ export default ({
               <td className="align-middle">{product.Name}</td>
               <td className="align-middle">
                 <img
-                  src={url + product.Image}
+                  src={API_URL + product.Image}
                   onError={e => {
                     e.preventDefault()
                     e.target.src = sampleProduct
@@ -80,7 +81,7 @@ export default ({
           <h6 className="card-header text-truncate">{product.Name}</h6>
           <div className="card-body">
             <img
-              src={url + product.Image}
+              src={API_URL + product.Image}
               onError={e => {
                 e.preventDefault()
                 e.target.src = sampleProduct

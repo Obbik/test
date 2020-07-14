@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { LangContext } from '../../context/lang-context'
 import Title from '../../components/Title/Title'
-import SearchInput from '../SearchInput/SearchInput'
-import MachineProducts from '../../components/Machine/MachineProducts'
+import SearchInput from '../../components/SearchInput/SearchInput'
+import MachineProducts from '../../components/SelectedMachine/MachineProducts'
 
 import fetchApi from '../../util/fetchApi'
 

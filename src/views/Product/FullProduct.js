@@ -4,9 +4,11 @@ import { useParams, useHistory } from 'react-router-dom'
 
 import fetchApi from '../../util/fetchApi'
 
-const sampleProduct = require('../../assets/images/sample-product.svg')
+import { API_URL } from '../../config/config'
 
-export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
+import sampleProduct from '../../assets/images/sample-product.svg'
+
+export default ({ setLoader, NotificationError, NotificationSuccess }) => {
   const {
     languagePack: { buttons, products }
   } = useContext(LangContext)
@@ -154,7 +156,7 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
           </h2>
           {state.product.initialImage ? (
             <img
-              src={url + state.product.initialImage}
+              src={API_URL + state.product.initialImage}
               onError={e => {
                 e.target.src = sampleProduct
               }}

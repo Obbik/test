@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { LangContext } from '../../context/lang-context'
 import Title from '../../components/Title/Title'
-import SearchInput from '../SearchInput/SearchInput'
-import MachineProductsRecharge from '../../components/Machine/MachineProductsRecharge'
+import SearchInput from '../../components/SearchInput/SearchInput'
+import MachineProductsRecharge from '../../components/SelectedMachine/MachineProductsRecharge'
 
 import fetchApi from '../../util/fetchApi'
 
@@ -241,7 +241,12 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
       .then(res => {
         if (res.status && res.status < 400) {
           setLoader(false)
-          NotificationSuccess(res.data.message)
+
+          localStorage.removeItem('token')
+          localStorage.removeItem('userName')
+          localStorage.removeItem('expirationDate')
+
+          window.location.href = 'http://localhost:8080/shop'
         } else throw new Error(res)
       })
       .catch(err => {

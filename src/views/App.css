@@ -150,3 +150,7 @@ body {
 .active {
   display: block;
 }
+
+#map {
+  height: 500px;
+}

@@ -13,7 +13,7 @@ export default ({ onSearch, tableView, onToggleView }) => {
   }
 
   return (
-    <div className="row mb-3">
+    <div className="row mb-4">
       <div className="col">
         <div className="input-group">
           <div className="input-group-prepend">
@@ -27,6 +27,7 @@ export default ({ onSearch, tableView, onToggleView }) => {
             type="text"
             className="form-control border-top-0 border-left-0 border-right-0 rounded-0 shadow-none"
             placeholder={searchbarPlaceholder}
+            autoComplete="off"
           />
         </div>
       </div>

@@ -3,11 +3,11 @@ import { LangContext } from '../../context/lang-context'
 
 import Category from '../../components/Category/Category'
 import Title from '../../components/Title/Title'
-import SearchInput from '../SearchInput/SearchInput'
+import SearchInput from '../../components/SearchInput/SearchInput'
 
 import fetchApi from '../../util/fetchApi'
 
-export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
+export default ({ setLoader, NotificationError, NotificationSuccess }) => {
   const {
     languagePack: { categories }
   } = useContext(LangContext)
@@ -100,7 +100,6 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
       />
       <SearchInput tableView={tableView} onSearch={search} onToggleView={toggleView} />
       <Category
-        url={url}
         categoryItems={state.categories}
         tableView={tableView}
         onDeleteCategory={deleteCategory}

@@ -47,7 +47,7 @@ export default ({ page, totalItems, onSwitchPage }) => {
   }
 
   return (
-    <nav>
+    <nav className="mb-4">
       <ul className="pagination justify-content-center">{paginationBar}</ul>
     </nav>
   )

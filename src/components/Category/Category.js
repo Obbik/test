@@ -2,9 +2,12 @@ import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { LangContext } from '../../context/lang-context'
 
-const sampleProduct = require('../../assets/images/sample-product.svg')
+import sampleProduct from '../../assets/images/sample-product.svg'
 
-export default ({ tableView, categoryItems, url, onDeleteCategory }) => {
+import { API_URL } from '../../config/config'
+
+export default ({ tableView, categoryItems, onDeleteCategory }) => {
+  console.log(categoryItems)
   const {
     languagePack: { categories }
   } = useContext(LangContext)
@@ -23,16 +26,18 @@ export default ({ tableView, categoryItems, url, onDeleteCategory }) => {
             <tr key={category.CategoryId}>
               <td className="align-middle">{category.Name}</td>
               <td className="align-middle">
-                <img
-                  src={url + category.Image}
-                  onError={e => {
-                    e.preventDefault()
-                    e.target.src = sampleProduct
-                  }}
-                  alt={category.Name}
-                  width="64"
-                  height="64"
-                />
+                <Link to={`products/${category.CategoryId}`}>
+                  <img
+                    src={API_URL + category.Image}
+                    onError={e => {
+                      e.preventDefault()
+                      e.target.src = sampleProduct
+                    }}
+                    alt={category.Name}
+                    width="64"
+                    height="64"
+                  />
+                </Link>
               </td>
               <td className="align-middle">
                 <Link
@@ -54,20 +59,22 @@ export default ({ tableView, categoryItems, url, onDeleteCategory }) => {
       </table>
     </div>
   ) : (
-    categoryItems.map(category => (
-      <div key={category.CategoryId} className="col-lg-3 col-sm-6 mb-3">
+    categoryItems.map((category, idx) => (
+      <div key={idx} className="col-md-3 col-sm-6 mb-3">
         <div className="card">
           <h6 className="card-header text-truncate">{category.Name}</h6>
-          <img
-            src={url + category.Image}
-            onError={e => {
-              e.preventDefault()
-              e.target.src = sampleProduct
-            }}
-            className="card-img-top"
-            alt={category.Name}
-          />
-          <div className="card-body">
+          <Link to={`products/${category.CategoryId}`}>
+            <img
+              src={API_URL + category.Image}
+              onError={e => {
+                e.preventDefault()
+                e.target.src = sampleProduct
+              }}
+              className="card-img-top"
+              alt={category.Name}
+            />
+          </Link>
+          <div className="card-body py-2">
             <div className="row">
               <div className="col-md-6 col-custom-padding mt-1">
                 <Link

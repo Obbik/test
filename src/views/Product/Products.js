@@ -6,11 +6,11 @@ import fetchApi from '../../util/fetchApi'
 
 import Product from '../../components/Product/Product'
 import Title from '../../components/Title/Title'
-import SearchInput from '../SearchInput/SearchInput'
+import SearchInput from '../../components/SearchInput/SearchInput'
 import Pagination from '../../components/Pagination/Pagination'
 import ProductCategory from './ProductCategory'
 
-export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
+export default ({ setLoader, NotificationError, NotificationSuccess }) => {
   const {
     languagePack: { products }
   } = useContext(LangContext)
@@ -21,7 +21,6 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
     products: [],
     page: 1,
     totalItems: 0,
-    shared: '',
     ean: null,
     typeTimeout: 0
   })
@@ -50,12 +49,10 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
     }
   }
 
-  const getProducts = (page = 1, search = searchedValue, shared = state.shared) => {
+  const getProducts = (page = 1, search = searchedValue) => {
     setLoader(true)
 
-    const params = `search=${search}&shared=${shared}&categoryId=${
-      categoryId || ''
-    }&page=${page}`
+    const params = `search=${search}&categoryId=${categoryId || ''}&page=${page}`
 
     fetchApi(`products?${params}`)
       .then(res => {
@@ -151,7 +148,6 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
         totalItems={state.totalItems}
       />
       <Product
-        url={url}
         productItems={state.products}
         onDeleteProduct={deleteProduct}
         tableView={tableView}
@@ -159,7 +155,6 @@ export default ({ url, setLoader, NotificationError, NotificationSuccess }) => {
       />
       {state.ean && (
         <ProductCategory
-          url={url}
           ean={state.ean}
           setLoader={setLoader}
           NotificationError={NotificationError}
