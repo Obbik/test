@@ -8,7 +8,7 @@ import Product from '../../components/Product/Product'
 import Title from '../../components/Title/Title'
 import SearchInput from '../../components/SearchInput/SearchInput'
 import Pagination from '../../components/Pagination/Pagination'
-import ProductCategory from './ProductCategory'
+import ProductCategory from '../../components/Product/ProductCategory'
 
 export default ({ setLoader, NotificationError, NotificationSuccess }) => {
   const {

@@ -32,10 +32,10 @@ export default ({ logout }) => {
           <ListItem icon="fas fa-th-large" text={navbar.categories} link="/categories" />
         )}
         {permissions.includes('{3}') && (
-          <ListItem icon="fas fa-cog" text="Config" link="/config" />
+          <ListItem icon="fas fa-cog" text={navbar.config} link="/config" />
         )}
         {permissions.includes('{4}') && (
-          <ListItem icon="fas fa-plus" text="Supply" link="/supply" />
+          <ListItem icon="fas fa-plus" text={navbar.recharge} link="/supply" />
         )}
         <li className="h6 my-2 list-group-item sidebar-list-group-item bg-light">
           <Link to="/" className="link" onClick={logout}>
