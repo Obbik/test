@@ -241,7 +241,6 @@ export default ({ setLoader, NotificationError, NotificationSuccess }) => {
       .then(res => {
         if (res.status && res.status < 400) {
           setLoader(false)
-
           localStorage.removeItem('token')
           localStorage.removeItem('userName')
           localStorage.removeItem('expirationDate')
