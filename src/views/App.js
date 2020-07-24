@@ -32,7 +32,7 @@ export default () => {
   const [loader, setLoader] = useState(false)
 
   const setAutoLogout = useCallback(milliseconds => {
-    setTimeout(() => logout(), milliseconds)
+    setTimeout(() => logout, milliseconds)
   }, [])
 
   const logout = () => {
