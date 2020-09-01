@@ -15,24 +15,24 @@
   "navbar": {
     "products": "Products",
     "categories": "Categories",
-    "machine": "Machine",
+    "machines": "Monitoring",
     "config": "Config",
-    "recharge": "Recharge",
-    "settings": "Settings",
+    "supply": "Supply",
+    "status": "Status",
     "logout": "Log out"
   },
   "searchbarPlaceholder": "Search...",
   "products": {
-    "defaultHeader": "All products",
+    "defaultHeader": "Products",
     "addProductButton": "Add product",
     "productCategoryHeader": "Product categories",
     "confirmDeletion": "Confirm product deletion",
     "newProductHeader": "New product",
     "editProductHeader": "Edit product",
-    "properties": {
+    "props": {
       "ean": "Ean",
       "image": "Image",
-      "productName": "Product name",
+      "productName": "Name",
       "description": "Description"
     }
   },
@@ -42,9 +42,9 @@
     "confirmDeletion": "Confirm category deletion",
     "newCategoryHeader": "New category",
     "editCategoryHeader": "Edit category",
-    "properties": {
+    "props": {
       "image": "Image",
-      "categoryName": "Category name"
+      "categoryName": "Name"
     }
   },
   "shelves": {
@@ -53,14 +53,45 @@
     "addShelfButton": "Add shelf",
     "confirmDeletion": "Confirm category shelf",
     "newShelfHeader": "New shelf",
-    "editShelfHeader": "Add shelf",
-    "properties": {
-      "shelf": "Shelf",
-      "productName": "Product name",
+    "editShelfHeader": "Edit shelf",
+    "props": {
+      "shelf": "#",
+      "productName": "Product",
       "price": "Price",
       "discountedPrice": "Discounted price",
       "quantity": "Quantity",
       "capacity": "Capacity"
     }
+  },
+  "status": {
+    "header": "Monitoring",
+    "serialNo": "Serial No",
+    "machine": "Machine",
+    "ipAddress": "IP Address",
+    "softVersion": "Software version",
+    "transactions": "Transactions",
+    "notifications": "Notifications",
+    "info": "Info"
+  },
+  "info": {
+    "machineName": "Machine name",
+    "operator": "Operator",
+    "serialNo": "Serial No",
+    "ipAddress": "IP Address",
+    "totalTransactions": "Total transactions",
+    "softwareVersion": "Software version"
+  },
+  "notifications": {
+    "level": "Level",
+    "type": "Type",
+    "date": "Date"
+  },
+  "transactions": {
+    "status": "Status",
+    "payment": "Payment",
+    "cost": "Cost",
+    "date": "Date",
+    "shelf": "Shelf",
+    "ean": "EAN"
   }
 }

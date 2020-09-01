@@ -9,16 +9,15 @@
   },
   "auth": {
     "email": "",
-    "password": "",
-    "clientId": ""
+    "password": ""
   },
   "navbar": {
     "products": "",
     "categories": "",
-    "machine": "",
+    "machines": "",
     "config": "",
-    "recharge": "",
-    "settings": "",
+    "supply": "",
+    "status": "",
     "logout": ""
   },
   "searchbarPlaceholder": "",
@@ -29,7 +28,7 @@
     "confirmDeletion": "",
     "newProductHeader": "",
     "editProductHeader": "",
-    "properties": {
+    "props": {
       "ean": "",
       "image": "",
       "productName": "",
@@ -42,7 +41,7 @@
     "confirmDeletion": "",
     "newCategoryHeader": "",
     "editCategoryHeader": "",
-    "properties": {
+    "props": {
       "image": "",
       "categoryName": ""
     }
@@ -54,7 +53,7 @@
     "confirmDeletion": "",
     "newShelfHeader": "",
     "editShelfHeader": "",
-    "properties": {
+    "props": {
       "shelf": "",
       "productName": "",
       "price": "",
@@ -62,5 +61,36 @@
       "quantity": "",
       "capacity": ""
     }
+  },
+  "status": {
+    "header": "",
+    "serialNo": "",
+    "machine": "",
+    "ipAddress": "",
+    "softVersion": "",
+    "transactions": "",
+    "notifications": "",
+    "info": ""
+  },
+  "info": {
+    "machineName": "",
+    "operator": "",
+    "serialNo": "",
+    "ipAddress": "",
+    "totalTransactions": "",
+    "softwareVersion": ""
+  },
+  "notifications": {
+    "level": "",
+    "type": "",
+    "date": ""
+  },
+  "transactions": {
+    "status": "",
+    "payment": "",
+    "cost": "",
+    "date": "",
+    "shelf": "",
+    "ean": ""
   }
 }

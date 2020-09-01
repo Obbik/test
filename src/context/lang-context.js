@@ -25,7 +25,7 @@ export default ({ children }) => {
       languagePack = en
       break
     default:
-      languagePack = en
+      languagePack = pl
       break
   }
 

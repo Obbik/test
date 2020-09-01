@@ -15,21 +15,21 @@
   "navbar": {
     "products": "Produkty",
     "categories": "Kategorie",
-    "machine": "Maszyna",
+    "machines": "Monitoring",
     "config": "Konfiguracja",
-    "recharge": "Doładowanie",
-    "settings": "Ustawienia",
+    "supply": "Doładowanie",
+    "status": "Status",
     "logout": "Wyloguj się"
   },
   "searchbarPlaceholder": "Szukaj...",
   "products": {
-    "defaultHeader": "Wszystkie produkty",
+    "defaultHeader": "Produkty",
     "addProductButton": "Dodaj produkt",
     "productCategoryHeader": "Kategorie produktu",
     "confirmDeletion": "Czy na pewno chcesz usunąć produkt?",
     "newProductHeader": "Dodaj produkt",
     "editProductHeader": "Edytuj produkt",
-    "properties": {
+    "props": {
       "ean": "Ean",
       "image": "Zdjęcie",
       "productName": "Nazwa produktu",
@@ -42,7 +42,7 @@
     "confirmDeletion": "Czy na pewno chcesz usunąć kategorie?",
     "newCategoryHeader": "Dodaj kategorie",
     "editCategoryHeader": "Edytuj kategorie",
-    "properties": {
+    "props": {
       "image": "Zdjęcie",
       "categoryName": "Nazwa kategorii"
     }
@@ -54,13 +54,44 @@
     "confirmDeletion": "Czy na pewno chcesz usunąć sprężyne?",
     "newShelfHeader": "Dodaj sprężyne",
     "editShelfHeader": "Edytuj sprężyne",
-    "properties": {
-      "shelf": "Sprężyna",
+    "props": {
+      "shelf": "#",
       "productName": "Nazwa produktu",
       "price": "Cena",
       "discountedPrice": "Cena promocyjna",
       "quantity": "Ilość",
       "capacity": "Pojemność"
     }
+  },
+  "status": {
+    "header": "Monitoring",
+    "serialNo": "Nr seryjny",
+    "machine": "Maszyna",
+    "ipAddress": "Adres IP",
+    "softVersion": "Wersja oprogramowania",
+    "transactions": "Transakcje",
+    "notifications": "Powiadomienia",
+    "info": "Informacje"
+  },
+  "info": {
+    "machineName": "Nazwa maszyny",
+    "operator": "Operator",
+    "serialNo": "Nr seryjny",
+    "ipAddress": "Adres IP",
+    "totalTransactions": "Wszystkie transakcje",
+    "softwareVersion": "Wersja oprogramowania"
+  },
+  "notifications": {
+    "level": "Poziom",
+    "type": "Typ",
+    "date": "Data"
+  },
+  "transactions": {
+    "status": "Status",
+    "payment": "Płatność",
+    "cost": "Koszt",
+    "date": "Data",
+    "shelf": "Nr sprężyny",
+    "ean": "Ean"
   }
 }

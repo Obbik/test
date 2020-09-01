@@ -1,109 +1,82 @@
 import React, { useState, useEffect, useContext } from 'react'
+import { NavigationContext } from '../../context/navigation-context'
 import { LangContext } from '../../context/lang-context'
 
-import Category from '../../components/Category/Category'
-import Title from '../../components/Title/Title'
+import CategoryForm from '../../components//Modals/CategoryForm'
+
+import CategoriesTable from '../../components/Category/CategoriesTable'
+import CategoriesCards from '../../components/Category/CategoriesCards'
+import Fab from '../../components/FloatingActionButton/Fab'
 import SearchInput from '../../components/SearchInput/SearchInput'
 
-import fetchApi from '../../util/fetchApi'
+import useFetch from '../../hooks/fetch-hook'
 
-export default ({ setLoader, NotificationError, NotificationSuccess }) => {
+export default () => {
+  const { fetchApi } = useFetch()
+
+  const { setHeaderData } = useContext(NavigationContext)
   const {
-    languagePack: { categories }
+    languagePack: { categories: categoriesTRL }
   } = useContext(LangContext)
 
-  const [state, setState] = useState({
-    categories: [],
-    initialCategories: []
-  })
+  const [search, setSearch] = useState('')
+  const [categories, setCategories] = useState([])
   const [tableView, setTableView] = useState(false)
+
+  const [categoryFormModal, setCategoryFormModal] = useState(null)
 
   const deleteCategory = id => {
     const confirm = window.confirm('Czy na pewno chcesz usunąć kategorię?')
 
     if (confirm) {
-      setLoader(true)
-
-      fetchApi(`category/${id}`, { method: 'DELETE' })
-        .then(res => {
-          if (res.status && res.status < 400) {
-            setLoader(false)
-            NotificationSuccess(res.data.message)
-            getCategories()
-          } else throw new Error(res)
-        })
-        .catch(err => {
-          setLoader(false)
-          NotificationError(err)
-        })
+      fetchApi(`category/${id}`, { method: 'DELETE' }, getCategories)
     }
   }
 
   const getCategories = () => {
-    setLoader(true)
-
-    fetchApi('categories')
-      .then(res => {
-        if (res.status !== 200) throw new Error()
-
-        setLoader(false)
-        setState({
-          categories: res.data,
-          initialCategories: res.data
-        })
-      })
-      .catch(() => {
-        setLoader(false)
-        throw new Error('Failed to fetch status.')
-      })
+    fetchApi('categories', {}, data => setCategories(data))
   }
 
-  // Method for changing the view (table or cards)
-  const toggleView = () => {
-    setTableView(prev => !prev)
-  }
+  const toggleView = () => setTableView(prev => !prev)
 
-  // Search bar
-  const search = value => {
-    const suggestions = getSuggestions(value)
-    let filteredCategories = state.initialCategories
-
-    if (value !== '') {
-      filteredCategories = suggestions
-    }
-
-    setState(prev => ({ ...prev, categories: filteredCategories }))
-  }
-
-  const getSuggestions = value => {
-    const inputValue = value.trim().toLowerCase()
-    const inputLength = inputValue.length
-
-    return inputLength === 0
-      ? []
-      : state.initialCategories.filter(
-          category => category.Name.toLowerCase().slice(0, inputLength) === inputValue
-        )
-  }
+  const handleSearch = value => setSearch(value)
 
   useEffect(() => {
     getCategories()
+    setHeaderData({ text: categoriesTRL.header })
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const listProps = {
+    categoryItems: categories.filter(c =>
+      c.Name.toLowerCase().includes(search.toLowerCase())
+    ),
+    setModal: setCategoryFormModal,
+    handleDeleteCategory: deleteCategory
+  }
 
   return (
     <>
-      <Title
-        title={categories.header}
-        buttonName={categories.addCategoryButton}
-        buttonLink="/category/add"
-        enableAddButton={true}
-      />
-      <SearchInput tableView={tableView} onSearch={search} onToggleView={toggleView} />
-      <Category
-        categoryItems={state.categories}
+      <Fab action={() => setCategoryFormModal('add')} />
+      <SearchInput
         tableView={tableView}
-        onDeleteCategory={deleteCategory}
+        onSearch={handleSearch}
+        onToggleView={toggleView}
       />
+
+      {tableView ? (
+        <CategoriesTable {...listProps} />
+      ) : (
+        <CategoriesCards {...listProps} />
+      )}
+      {categoryFormModal && (
+        <CategoryForm
+          categoryId={categoryFormModal}
+          closeModal={() => setCategoryFormModal(null)}
+          getCategories={getCategories}
+        />
+      )}
     </>
   )
 }

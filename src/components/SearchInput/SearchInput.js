@@ -6,40 +6,34 @@ export default ({ onSearch, tableView, onToggleView }) => {
     languagePack: { searchbarPlaceholder }
   } = useContext(LangContext)
 
-  const handleChange = e => {
-    e.preventDefault()
-    const inputValue = e.target.value
-    onSearch(inputValue)
-  }
-
   return (
     <div className="row mb-4">
-      <div className="col">
+      <div className="d-flex offset-sm-1 offset-md-2 offset-lg-3 col col-sm-10 col-md-8 col-lg-6">
         <div className="input-group">
-          <div className="input-group-prepend">
-            <span className="input-group-text border-0">
-              <i className="fas fa-search"></i>
-            </span>
-          </div>
           <input
-            onChange={handleChange}
-            name="search"
-            type="text"
-            className="form-control border-top-0 border-left-0 border-right-0 rounded-0 shadow-none"
+            onChange={evt => onSearch(evt.target.value)}
+            onKeyUp={evt => onSearch(evt.target.value)}
+            type="search"
+            className="searchbar form-control rounded-left border-right-0"
             placeholder={searchbarPlaceholder}
             autoComplete="off"
           />
-        </div>
-      </div>
-      {tableView !== null && (
-        <div className="col-auto">
-          <div className="btn-group float-right" role="group">
-            <button onClick={onToggleView} type="button" className="btn btn-light">
-              <i className={tableView ? 'fas fa-border-all' : 'fas fa-list'}></i>
-            </button>
+          <div className="input-group-append">
+            <span className="input-group-text bg-white border-left-0">
+              <i className="fas fa-search"></i>
+            </span>
           </div>
         </div>
-      )}
+        {tableView !== undefined && (
+          <div className="pl-3">
+            <div className="btn-group float-right h-100">
+              <button onClick={onToggleView} className="btn border">
+                <i className={`fas ${tableView ? 'fa-border-all' : 'fa-list'}`}></i>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
