@@ -1,27 +1,24 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
-import LangProvider from './context/lang-context'
-import ErrorProvider from './context/error-context'
-import LoaderProvider from './context/loader-context'
-import NotificationProvider from './context/notification-context'
+import JavascriptTimeAgo from 'javascript-time-ago'
 
-import './assets/bootstrap.min.css'
+import en from 'javascript-time-ago/locale/en'
+import pl from 'javascript-time-ago/locale/pl'
 
-import App from './app/App'
+import ServerApp from './server_env/app/App'
+import MachineApp from './machine_env/app/App'
 import * as serviceWorker from './serviceWorker'
+import { ENV } from './config'
+
+JavascriptTimeAgo.addLocale(en)
+JavascriptTimeAgo.addLocale(pl)
+
+console.log(`Environment: ${ENV}`)
 
 render(
   <BrowserRouter basename="dashboard">
-    <LangProvider>
-      <ErrorProvider>
-        <NotificationProvider>
-          <LoaderProvider>
-            <App />
-          </LoaderProvider>
-        </NotificationProvider>
-      </ErrorProvider>
-    </LangProvider>
+    {ENV === 'SERVER' ? <ServerApp /> : <MachineApp />}
   </BrowserRouter>,
   document.getElementById('root')
 )
