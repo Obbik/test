@@ -27,7 +27,11 @@ export default ({ onSearch, tableView, onToggleView }) => {
         {tableView !== undefined && (
           <div className="pl-3">
             <div className="btn-group float-right h-100">
-              <button onClick={onToggleView} className="btn border">
+              <button
+                onClick={onToggleView}
+                className="btn border"
+                style={{ backgroundColor: 'white' }}
+              >
                 <i className={`fas ${tableView ? 'fa-border-all' : 'fa-list'}`}></i>
               </button>
             </div>

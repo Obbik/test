@@ -5,12 +5,7 @@ import { API_URL } from '../../config/config'
 
 import sampleProduct from '../../assets/images/sample-product.svg'
 
-export default ({
-  productItems,
-  setProductModal,
-  setProductCategoriesModal,
-  handleDeleteProduct
-}) => {
+export default ({ productItems, openForm, handleDeleteProduct }) => {
   const {
     languagePack: { products }
   } = useContext(LangContext)
@@ -25,7 +20,7 @@ export default ({
             </th>
             <th>{products.props.productName}</th>
             <th className="text-center">{products.props.image}</th>
-            <th style={{ width: '1%' }} colSpan={3} />
+            <th style={{ width: '1%' }} colSpan={2} />
           </tr>
         </thead>
         <tbody>
@@ -42,34 +37,28 @@ export default ({
                   height="48"
                 />
               </td>
-              <td>
-                <button
-                  onClick={() => setProductModal(product.EAN)}
-                  className={`btn btn-secondary btn-sm btn-block ${
-                    product.IsShared && 'disabled'
-                  }`}
-                >
-                  <i className="fas fa-pencil-alt" />
-                </button>
-              </td>
-              <td>
-                <button
-                  onClick={() => setProductCategoriesModal(product.EAN)}
-                  className="btn btn-secondary btn-sm btn-block"
-                >
-                  <i className="fas fa-th-large" />
-                </button>
-              </td>
-              <td>
-                <button
-                  onClick={() => handleDeleteProduct(product.EAN)}
-                  className={`btn btn-danger btn-sm btn-block ${
-                    product.IsShared && 'disabled'
-                  }`}
-                >
-                  <i className="fa fa-trash" />
-                </button>
-              </td>
+              {product.IsShared ? (
+                <td colSpan={2} />
+              ) : (
+                <>
+                  <td>
+                    <button
+                      onClick={openForm(product.EAN)}
+                      className="btn btn-secondary btn-sm btn-block icon-button"
+                    >
+                      <i className="fas fa-pencil-alt icon-large" />
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      onClick={handleDeleteProduct(product.EAN)}
+                      className="btn btn-danger btn-sm btn-block icon-button"
+                    >
+                      <i className="fa fa-trash icon-large" />
+                    </button>
+                  </td>
+                </>
+              )}
             </tr>
           ))}
         </tbody>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { LangContext } from '../../context/lang-context'
 
 import sampleProduct from '../../assets/images/sample-product.svg'
@@ -6,58 +6,43 @@ import sampleProduct from '../../assets/images/sample-product.svg'
 import useFetch from '../../hooks/fetch-hook'
 
 import { API_URL } from '../../config/config'
+import FormSkel from './FormSkel'
 
-export default ({ categoryId, getCategories, closeModal }) => {
+export default ({ categoryData, getCategories, closeModal }) => {
   const { fetchApi } = useFetch()
 
   const {
-    languagePack: { buttons, categories }
+    languagePack: { categories }
   } = useContext(LangContext)
 
-  const [category, setCategory] = useState({
-    name: '',
-    image: ''
-  })
+  const [image, setImage] = useState(null)
 
-  const getCategory = () => {
-    fetchApi(`category/${categoryId}`, {}, data => {
-      const { Name, Image } = data
-
-      setCategory({
-        name: Name,
-        image: Image,
-        initialImage: Image
-      })
-    })
-  }
-
-  const handleChange = evt => {
+  const handleChangeImage = evt => {
     evt.preventDefault()
 
-    const { name } = evt.target
-    let { value } = evt.target
-
-    if (name === 'image') value = evt.target.files[0]
-
-    setCategory(prev => ({
-      ...prev,
-      [name]: value
-    }))
+    if (evt.target.files[0]) {
+      const reader = new FileReader()
+      reader.readAsDataURL(evt.target.files[0])
+      reader.onloadend = () => setImage(reader.result)
+    } else setImage(null)
   }
 
   const handleSubmit = evt => {
     evt.preventDefault()
 
+    const { name, image } = evt.target.elements
+
     const formData = new FormData()
-    formData.append('Name', category.name)
-    formData.append('Image', category.image)
+    formData.append('Name', name.value)
+
+    if (image.files[0]) formData.append('Image', image.files[0])
 
     let path, method
-    if (categoryId === 'add') {
+    if (!categoryData) {
       path = 'category'
       method = 'POST'
     } else {
-      path = `category/${categoryId}`
+      path = `category/${categoryData.CategoryId}`
       method = 'PUT'
     }
 
@@ -67,88 +52,52 @@ export default ({ categoryId, getCategories, closeModal }) => {
     })
   }
 
-  useEffect(() => {
-    if (categoryId !== 'add') getCategory(categoryId)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   return (
-    <div className="modal fade show d-block" tabIndex="-1">
-      <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div className="modal-content">
-          <div className="modal-header bg-light align-items-center">
-            <h6 className="modal-title">
-              {categoryId === 'add'
-                ? categories.newCategoryHeader
-                : categories.editCategoryHeader}
-            </h6>
-            <button
-              onClick={closeModal}
-              className="btn text-secondary px-2 py-0"
-              style={{ cursor: 'pointer' }}
-            >
-              <i className="fas fa-times" />
-            </button>
-          </div>
-          <div className="modal-body">
-            <div className="text-center">
-              {category.initialImage && (
-                <img
-                  src={API_URL + category.initialImage}
-                  onError={e => {
-                    e.target.src = sampleProduct
-                  }}
-                  alt={category.name}
-                  width="256"
-                  height="256"
-                />
-              )}
+    <FormSkel
+      headerText={
+        categoryData ? categories.editCategoryHeader : categories.newCategoryHeader
+      }
+      handleClose={closeModal}
+    >
+      <div className="text-center">
+        {(categoryData || image) && (
+          <img
+            src={image || API_URL + categoryData.Image}
+            onError={evt => (evt.target.src = sampleProduct)}
+            width="256"
+            height="256"
+          />
+        )}
+      </div>
+      <form onSubmit={handleSubmit} id="modal-form" autoComplete="off">
+        <div className="form-group">
+          <label className="h6">{categories.props.image}</label>
+          <div className="input-group">
+            <div className="custom-file">
+              <input
+                type="file"
+                className="custom-file-input"
+                name="image"
+                onChange={handleChangeImage}
+                accept="image/x-png,image/svg+xml"
+                id="image-upload"
+              />
+              <label className="custom-file-label" htmlFor="image-upload">
+                Choose file
+              </label>
             </div>
-            <form onSubmit={handleSubmit} id="category-form">
-              <div className="form-group">
-                <label>{categories.props.image}</label>
-                <div className="input-group">
-                  {category.image && category.image !== category.initialImage && (
-                    <div className="input-group-prepend">
-                      <span className="input-group-text" style={{ maxWidth: 125 }}>
-                        {category.image.name}
-                      </span>
-                    </div>
-                  )}
-                  <div className="custom-file">
-                    <input
-                      type="file"
-                      className="custom-file-input"
-                      name="image"
-                      onChange={handleChange}
-                      id="image-upload"
-                    />
-                    <label className="custom-file-label" htmlFor="image-upload">
-                      Choose file
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <label>{categories.props.categoryName}</label>
-                <input
-                  name="name"
-                  className="form-control"
-                  value={category.name}
-                  onChange={handleChange}
-                  autoComplete="off"
-                />
-              </div>
-            </form>
-          </div>
-          <div className="modal-footer bg-light">
-            <button type="submit" className="btn btn-success btn-sm" form="category-form">
-              {buttons.save}
-            </button>
           </div>
         </div>
-      </div>
-    </div>
+        <div>
+          <label className="h6">{categories.props.categoryName}</label>
+          <input
+            name="name"
+            className="form-control"
+            defaultValue={categoryData && categoryData.Name}
+            required
+          />
+        </div>
+      </form>
+    </FormSkel>
   )
 }

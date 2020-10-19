@@ -5,12 +5,10 @@ import { Link } from 'react-router-dom'
 import logo from '../../assets/images/logo-vendim.png'
 import logoSm from '../../assets/images/logo-vendim-sm.png'
 
-export default ({ fullWidth }) => {
+export default ({ fullWidth, navLinks }) => {
   const {
     languagePack: { navbar }
   } = useContext(LangContext)
-
-  const permissions = sessionStorage.getItem('permissions')
 
   const ListItem = ({ icon, text, path }) => (
     <>
@@ -60,19 +58,9 @@ export default ({ fullWidth }) => {
         )}
       </div>
       <ul className="list-group list-group-flush pt-4 list-unstyled">
-        {permissions.includes('{1}') && (
-          <ListItem icon="far fa-list-alt" text={navbar.products} path="/products" />
-        )}
-        {permissions.includes('{2}') && (
-          <ListItem icon="fas fa-th-large" text={navbar.categories} path="/categories" />
-        )}
-        {permissions.includes('{3}') && (
-          <ListItem icon="fas fa-cog" text={navbar.config} path="/config" />
-        )}
-        {permissions.includes('{4}') && (
-          <ListItem icon="fas fa-cart-plus" text={navbar.supply} path="/supply" />
-        )}
-        <ListItem icon="fas fa-sign-out-alt" text={navbar.logout} path="/logout" />
+        {navLinks.map((navLink, idx) => (
+          <ListItem key={idx} {...navLink} />
+        ))}
       </ul>
     </div>
   )

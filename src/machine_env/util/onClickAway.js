@@ -1,13 +1,15 @@
-import { useEffect } from 'react'
-
 export default (ref, handleClickAway) => {
-  useEffect(() => {
-    const eventWrapper = evt => {
-      if (ref.current && !ref.current.contains(evt.target)) handleClickAway()
+  const eventWrapper = evt => {
+    if (ref.current && !ref.current.contains(evt.target)) {
+      // console.log('clicked away')
+      handleClickAway()
+      document.removeEventListener('mousedown', eventWrapper)
+    } else {
+      // console.log('clicked inside', evt.target)
+      document.removeEventListener('mousedown', eventWrapper)
+      document.addEventListener('mousedown', eventWrapper, { once: true })
     }
+  }
 
-    document.addEventListener('mousedown', eventWrapper)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ref, handleClickAway])
+  document.addEventListener('mousedown', eventWrapper, { once: true })
 }

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { LangContext } from '../../context/lang-context'
 
-export default ({ setModal, machineProducts, handleDeleteMachineProduct }) => {
+export default ({ openForm, machineProducts, handleDeleteMachineProduct }) => {
   const {
     languagePack: { shelves }
   } = useContext(LangContext)
@@ -36,18 +36,18 @@ export default ({ setModal, machineProducts, handleDeleteMachineProduct }) => {
               </td> */}
               <td>
                 <button
-                  className="btn btn-secondary btn-sm btn-block"
-                  onClick={() => setModal(product.MachineProductId)}
+                  className="btn btn-secondary btn-sm btn-block icon-button"
+                  onClick={openForm(product.MachineProductId)}
                 >
-                  <i className="fas fa-pencil-alt" />
+                  <i className="fas fa-pencil-alt icon-large" />
                 </button>
               </td>
               <td>
                 <button
-                  onClick={() => handleDeleteMachineProduct(product.MachineProductId)}
-                  className="btn btn-danger btn-sm btn-block"
+                  onClick={handleDeleteMachineProduct(product.MachineProductId)}
+                  className="btn btn-danger btn-sm btn-block icon-button"
                 >
-                  <i className="fa fa-trash" />
+                  <i className="fa fa-trash icon-large" />
                 </button>
               </td>
             </tr>

@@ -1,26 +1,27 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { NavigationContext } from '../../context/navigation-context'
 import { LangContext } from '../../context/lang-context'
-import Fab from '../../components/FloatingActionButton/Fab'
 import SearchInput from '../../components/SearchInput/SearchInput'
 import MachineProducts from '../../components/Machine/Feeders'
 
 import FeederForm from '../../components/Modals/FeederForm'
 
 import useFetch from '../../hooks/fetch-hook'
+import useForm from '../../hooks/form-hook'
 
 export default () => {
   const { fetchApi } = useFetch()
+  const { form, openForm, closeForm } = useForm()
 
   const { setHeaderData } = useContext(NavigationContext)
   const {
     languagePack: { shelves }
   } = useContext(LangContext)
 
-  const [searchValue, setSearchValue] = useState('')
-  const [machineProducts, setMachineProducts] = useState([])
+  const [searchedValue, setSearchedValue] = useState('')
+  const handleSearch = value => setSearchedValue(value)
 
-  const [feederFormModal, setFeederFormModal] = useState(null)
+  const [machineProducts, setMachineProducts] = useState([])
 
   const getMachineProducts = () => {
     fetchApi('machine-products', {}, data => {
@@ -31,16 +32,14 @@ export default () => {
     })
   }
 
-  const deleteMachineProduct = id => {
+  const deleteMachineProduct = id => () => {
     if (window.confirm(shelves.confirmDeletion))
       fetchApi(`machine-product/${id}`, { method: 'DELETE' }, getMachineProducts)
   }
 
   const filteredMachines = machineProducts.filter(machineProduct =>
-    machineProduct.Name.toLowerCase().includes(searchValue.toLowerCase())
+    machineProduct.Name.toLowerCase().includes(searchedValue.toLowerCase())
   )
-
-  const handleSearch = value => setSearchValue(value)
 
   useEffect(() => {
     getMachineProducts()
@@ -51,17 +50,28 @@ export default () => {
 
   return (
     <>
-      <Fab action={() => setFeederFormModal('add')} />
       <SearchInput onSearch={handleSearch} />
+      <div>
+        <button
+          className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+          onClick={openForm()}
+        >
+          <i className="fas fa-plus mr-2" /> Dodaj wybór
+        </button>
+      </div>
       <MachineProducts
-        setModal={setFeederFormModal}
+        openForm={openForm}
         machineProducts={filteredMachines}
         handleDeleteMachineProduct={deleteMachineProduct}
       />
-      {feederFormModal && (
+      {form && (
         <FeederForm
-          feederNo={feederFormModal}
-          closeModal={() => setFeederFormModal(null)}
+          feederData={
+            form !== 'new'
+              ? machineProducts.find(mp => mp.MachineProductId === form)
+              : null
+          }
+          closeModal={closeForm}
           getMachineProducts={getMachineProducts}
         />
       )}

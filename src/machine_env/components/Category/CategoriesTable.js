@@ -6,7 +6,7 @@ import sampleProduct from '../../assets/images/sample-product.svg'
 
 import { API_URL } from '../../config/config'
 
-export default ({ categoryItems, setModal, onDeleteCategory }) => {
+export default ({ categoryItems, openForm, handleDeleteCategory }) => {
   const {
     languagePack: { categories }
   } = useContext(LangContext)
@@ -42,18 +42,18 @@ export default ({ categoryItems, setModal, onDeleteCategory }) => {
               </td>
               <td>
                 <button
-                  className="btn btn-secondary btn-sm btn-block"
-                  onClick={() => setModal(category.CategoryId)}
+                  className="btn btn-secondary btn-sm btn-block icon-button"
+                  onClick={openForm(category.CategoryId)}
                 >
-                  <i className="fas fa-pencil-alt" />
+                  <i className="fas fa-pencil-alt icon-large" />
                 </button>
               </td>
               <td>
                 <button
-                  onClick={() => onDeleteCategory(category.CategoryId)}
-                  className="btn btn-danger btn-sm btn-block"
+                  onClick={handleDeleteCategory(category.CategoryId)}
+                  className="btn btn-danger btn-sm btn-block icon-button"
                 >
-                  <i className="fa fa-trash" />
+                  <i className="fa fa-trash icon-large" />
                 </button>
               </td>
             </tr>

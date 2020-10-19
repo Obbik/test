@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { LangContext } from '../../context/lang-context'
 import { Link } from 'react-router-dom'
 
-export default () => {
+export default ({ navLinks }) => {
   const {
     languagePack: { navbar }
   } = useContext(LangContext)
@@ -32,23 +32,9 @@ export default () => {
         }}
       >
         <ul className="list-group list-group-flush list-unstyled list-group-horizontal justify-content-around align-items-center py-2">
-          {permissions.includes('{1}') && (
-            <ListItem icon="far fa-list-alt" text={navbar.products} path="/products" />
-          )}
-          {permissions.includes('{2}') && (
-            <ListItem
-              icon="fas fa-th-large"
-              text={navbar.categories}
-              path="/categories"
-            />
-          )}
-          {permissions.includes('{3}') && (
-            <ListItem icon="fas fa-cog" text={navbar.config} path="/config" />
-          )}
-          {permissions.includes('{4}') && (
-            <ListItem icon="fas fa-cart-plus" text={navbar.supply} path="/supply" />
-          )}
-          <ListItem icon="fas fa-sign-out-alt" text={navbar.logout} path="/logout" />
+          {navLinks.map((navLink, idx) => (
+            <ListItem key={idx} {...navLink} />
+          ))}
         </ul>
       </div>
     </>

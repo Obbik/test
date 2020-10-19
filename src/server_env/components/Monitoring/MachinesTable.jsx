@@ -21,6 +21,9 @@ export default ({ machines, handleSelectMachine }) => {
                 {TRL_Pack.monitoring.technicalData}
               </th>
               <th>{TRL_Pack.monitoring.transactions}</th>
+              {localStorage.getItem('zeroTier') === 'true' && (
+                <th style={{ width: '1%' }}></th>
+              )}
               <th style={{ width: '1%' }} colSpan="2" />
             </tr>
           </thead>
@@ -61,7 +64,7 @@ export default ({ machines, handleSelectMachine }) => {
                     </td>
                     {/* <td className="d-none d-md-table-cell">{machine.serialNo}</td> */}
                     <td className="d-none d-md-table-cell">
-                      <a
+                      {/* <a
                         href={`http://${machine.ip}:8080`}
                         className="text-decoration-none small"
                         target="_blank"
@@ -69,7 +72,7 @@ export default ({ machines, handleSelectMachine }) => {
                       >
                         {machine.ip}
                       </a>
-                      <br />
+                      <br /> */}
                       <span className="small">{machine.serialNo}</span>
                       <br />
                       <span className="small">{machine.terminal}</span>
@@ -77,6 +80,19 @@ export default ({ machines, handleSelectMachine }) => {
                       <span className="small">{machine.terminal}</span> */}
                     </td>
                     <td>{machine.trx_count}</td>
+                    {localStorage.getItem('zeroTier') === 'true' && (
+                      <td>
+                        <a
+                          href={`http://${machine.ip}:8080`}
+                          className="btn btn-link link-icon text-decoration-none small"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title={machine.ip}
+                        >
+                          <i className="fas fa-globe-europe" />
+                        </a>
+                      </td>
+                    )}
                     <td className="align-middle">
                       <div className="d-flex">
                         {/* <i
@@ -130,7 +146,7 @@ export default ({ machines, handleSelectMachine }) => {
                       <i className="fa fa-cart-plus" />
                     </Link> */}
                       <button
-                        className="p-1 btn btn-link text-decoration-none"
+                        className="btn btn-link text-decoration-none link-icon"
                         onClick={handleSelectMachine(idx)}
                       >
                         <i className="fa fa-info-circle" />

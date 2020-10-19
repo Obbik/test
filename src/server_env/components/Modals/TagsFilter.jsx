@@ -2,10 +2,15 @@ import React, { useState, useContext } from 'react'
 import { LangContext } from '../../context/lang-context'
 import FormSkel from './FormSkel'
 
-export default ({ tags, setTags, handleClose, multitag }) => {
+export default ({ tags, setTags, handleClose, multitag, setFilter }) => {
   const { TRL_Pack } = useContext(LangContext)
 
   const [activeLabel, setActiveLabel] = useState(null)
+
+  const addTagToFilter = tagId => {
+    setFilter(prev => ({ ...prev, activeTags: prev.activateTags.concat(tagId) }))
+  }
+
   const handleChange = labelIdx => () => {
     if (labelIdx === activeLabel) {
       setActiveLabel(null)

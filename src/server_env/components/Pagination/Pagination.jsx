@@ -69,11 +69,13 @@ export default ({
   }
 
   return (
-    totalItems > rowsPerPage && (
+    <>
       <nav className="mb-4 d-flex justify-content-center">
-        <ul className="pagination mb-0">
-          <PaginationBar />
-        </ul>
+        {totalItems > rowsPerPage && (
+          <ul className="pagination mb-0">
+            <PaginationBar />
+          </ul>
+        )}
         {toggleFilter && (
           <button className="btn ml-2 my-auto" onClick={toggleFilter}>
             <i
@@ -84,6 +86,6 @@ export default ({
           </button>
         )}
       </nav>
-    )
+    </>
   )
 }

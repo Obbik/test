@@ -13,13 +13,12 @@ export default () => {
   const { setHeaderData } = useContext(NavigationContext)
 
   const [tags, setTags] = useState([])
-
   const [machines, setMachines] = useState([])
 
   const handleSwitchPage = pageNo => () => setFilter(prev => ({ ...prev, page: pageNo }))
   const resetPage = () => setFilter(prev => ({ ...prev, page: 1 }))
 
-  const [filter, setFilter] = useState({
+  const defaultFilter = {
     showIndexes: true,
     page: 1,
     rowsPerPage: 25,
@@ -27,6 +26,7 @@ export default () => {
     visible: false,
     sortByColumns: true,
     sortBy: '3 | asc | text',
+    activeTags: [],
     columns: [
       {
         id: 1,
@@ -70,9 +70,16 @@ export default () => {
         type: 'text'
       }
     ]
+  }
+
+  const [filter, setFilter] = useState(() => {
+    if (localStorage.getItem('machinesFilter')) {
+      return JSON.parse(localStorage.getItem('machinesFilter'))
+    } else return defaultFilter
   })
 
   const toggleFilter = () => setFilter(prev => ({ ...prev, visible: !prev.visible }))
+  const resetFilter = () => setFilter(defaultFilter)
 
   const getMachines = () => {
     fetchMssqlApi('machines', {}, machines => setMachines(machines))
@@ -90,7 +97,9 @@ export default () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() => console.log(tags), [tags])
+  useEffect(() => localStorage.setItem('machinesFilter', JSON.stringify(filter)), [
+    filter
+  ])
 
   const sortRows = (a, b) => {
     const [id, order, type] = filter.sortBy.split(' | ')
@@ -125,16 +134,30 @@ export default () => {
           .includes(col.searchbar.toLowerCase())
       )
 
-  const tagFilter = machine =>
-    tags
-      .filter(tag => tag.isActive)
-      .map(tag => tag.tagId)
-      .every(tag => machine.MachineTags.split(', ').includes(tag)) &&
-    tags
-      .filter(tag => !tag.tagId)
-      .filter(tag => tag.options.find(opt => opt.isActive))
-      .map(tag => tag.options.filter(opt => opt.isActive).map(tag => tag.tagId))
-      .every(label => label.some(opt => machine.MachineTags.split(', ').includes(opt)))
+  // tags.every(label => label.some(opt => row.MachineTags.split(', ').includes(opt)))
+
+  const tagFilter = machine => {
+    return (
+      tags
+        .filter(tag => tag.options.length === 0 && filter.activeTags.includes(tag.tagId))
+        .map(tag => tag.tagId)
+        .every(tag => machine.MachineTags.split(', ').includes(tag)) &&
+      tags
+        .filter(
+          label =>
+            label.options.length > 0 &&
+            label.options
+              .map(tag => tag.tagId)
+              .some(tag => filter.activeTags.includes(tag))
+        )
+        .map(label =>
+          label.options
+            .map(opt => opt.tagId)
+            .filter(tagId => filter.activeTags.includes(tagId))
+        )
+        .every(label => label.some(opt => machine.MachineTags.split(', ').includes(opt)))
+    )
+  }
 
   return (
     <>
@@ -145,6 +168,7 @@ export default () => {
           handleSwitchPage,
           rowsPerPage: filter.rowsPerPage,
           toggleFilter,
+          resetFilter,
           filterVisibility: filter.visible
         }}
       />
@@ -158,7 +182,7 @@ export default () => {
               data: machines,
               resetPage,
               tags,
-              setTags
+              resetFilter
             }}
           />
         </>

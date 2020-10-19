@@ -8,17 +8,17 @@ import MachineSupply from '../../components/Machine/Supply'
 import NewQuantityForm from '../../components/Modals/NewQuantityForm'
 
 import useFetch from '../../hooks/fetch-hook'
+import useForm from '../../hooks/form-hook'
 
 export default ({ logout }) => {
   const { fetchApi } = useFetch()
+  const { form, openForm, closeForm } = useForm()
 
-  // const { ErrorNotification, SuccessNofication } = useContext(NotificationContext)
   const { setHeaderData } = useContext(NavigationContext)
   const {
     languagePack: { buttons, shelves }
   } = useContext(LangContext)
 
-  const [newQuantityModal, setNewQuantityModal] = useState(null)
   const [machineType, setMachineType] = useState(null)
   const [machineProducts, setMachineProducts] = useState([])
 
@@ -63,9 +63,7 @@ export default ({ logout }) => {
     )
   }
 
-  const saveFeeders = () => {
-    fetchApi('visit', {}, logout)
-  }
+  const saveFeeders = () => fetchApi('visit', {}, logout)
 
   const [searchValue, setSearchValue] = useState('')
   const handleSearch = value => setSearchValue(value)
@@ -93,7 +91,7 @@ export default ({ logout }) => {
               machineProduct => machineProduct.Quantity === machineProduct.MaxItemCount
             )}
           >
-            <i className="fas fa-arrow-up" />
+            Zapełnij wszystko
           </button>
         </div>
         <div className="col">
@@ -104,7 +102,7 @@ export default ({ logout }) => {
               machineProduct => machineProduct.Quantity === 0
             )}
           >
-            <i className="fas fa-arrow-down" />
+            Opróżnij wszystko
           </button>
         </div>
         {machineType === 'LOCKER' && (
@@ -127,15 +125,15 @@ export default ({ logout }) => {
         </div>
       </div>
       <MachineSupply
-        setModal={setNewQuantityModal}
+        openForm={openForm}
         machineProducts={filteredMachines}
         onFillFeeder={fillSingleFeeder}
         onEmptyFeeder={emptySingleFeeder}
       />
-      {newQuantityModal && (
+      {form && (
         <NewQuantityForm
-          machineProduct={newQuantityModal}
-          closeModal={() => setNewQuantityModal(null)}
+          machineProduct={form}
+          closeModal={closeForm}
           getMachineProducts={getMachineProducts}
         />
       )}

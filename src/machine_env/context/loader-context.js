@@ -8,8 +8,6 @@ export default ({ children }) => {
   const showLoader = () => setLoader(true)
   const hideLoader = () => setLoader(false)
 
-  console.log('es')
-
   return (
     <LoaderContext.Provider
       value={{

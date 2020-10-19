@@ -1,9 +1,9 @@
-import React, { Fragment, useContext } from 'react'
+import React, { useState, Fragment, useContext } from 'react'
 import { LangContext } from '../../context/lang-context'
 import useForm from '../../hooks/form-hook'
-import TagsFilter from '../Modals/TagsFilter'
+import FormSkel from '../Modals/FormSkel'
 
-export default ({ filter, setFilter, columns, data, resetPage, tags, setTags }) => {
+export default ({ filter, setFilter, columns, data, resetPage, tags, resetFilter }) => {
   const { TRL_Pack } = useContext(LangContext)
   const handleChange = evt => {
     const { name, value, type, checked } = evt.target
@@ -42,6 +42,8 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, setTags }) 
   const handleChangeSearchbar = evt => {
     const { name, value } = evt.target
 
+    resetPage()
+
     setFilter(prev => ({
       ...prev,
       columns: prev.columns.map(col => {
@@ -54,9 +56,38 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, setTags }) 
 
   const { form, openForm, closeForm } = useForm()
 
+  const [activeLabel, setActiveLabel] = useState(null)
+
+  const handleChangeLabel = labelIdx => () => {
+    if (labelIdx === activeLabel) {
+      setActiveLabel(null)
+    } else if (tags[labelIdx].options.length > 0) {
+      setActiveLabel(labelIdx)
+    } else {
+      toggleTag(tags[labelIdx].tagId)()
+      setActiveLabel(null)
+    }
+  }
+
+  const toggleTag = tagId => () => {
+    if (filter.activeTags.includes(tagId))
+      setFilter(prev => ({
+        ...prev,
+        activeTags: prev.activeTags.filter(tag => tag !== tagId)
+      }))
+    else setFilter(prev => ({ ...prev, activeTags: prev.activeTags.concat(tagId) }))
+  }
+
   return (
     <div className="mb-4 rounded border bg-fade p-3 user-select-none">
-      <div className="row justify-content-center">
+      <button
+        className="d-block mx-auto btn btn-secondary badge badge-pill px-2 py-1 mb-1"
+        onClick={resetFilter}
+      >
+        Reset Filter
+      </button>
+      <hr className="my-2" />
+      <div className="row justify-content-center mb-n3">
         {filter.rowsPerPageOptions && (
           <div className="col-12 col-md-6 col-lg-4 mb-3 d-flex align-items-center justify-content-center">
             <h6 className="mb-0">{TRL_Pack.filter.rowsPerPage}</h6>
@@ -158,6 +189,7 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, setTags }) 
                   <input
                     className="mt-2 form-control form-control-sm"
                     placeholder={TRL_Pack.searchbarPlaceholder}
+                    defaultValue={col.searchbar}
                     list={col.name}
                     name={col.name}
                     onChange={handleChangeSearchbar}
@@ -177,15 +209,15 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, setTags }) 
       {tags && (
         <>
           <hr className="my-2" />
-          <div>
+          <div className="mb-n1">
             {tags.map(tag =>
-              tag.isActive ? (
+              filter.activeTags.includes(tag.tagId) ? (
                 <button className="btn btn-info badge badge-pill px-2 py-1 mx-2 mb-1">
                   {tag.label}
                 </button>
               ) : (
                 tag.options
-                  .filter(opt => opt.isActive)
+                  .filter(opt => filter.activeTags.includes(opt.tagId))
                   .map(opt => (
                     <button className="btn btn-info badge badge-pill px-2 py-1 mx-2 mb-1">
                       {`${tag.label} - ${opt.name}`}
@@ -194,14 +226,54 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, setTags }) 
               )
             )}
             <button
-              className="btn btn-info badge badge-pill px-2 py-1"
+              className="btn btn-info badge badge-pill px-2 py-1 mx-2 mb-1"
               onClick={openForm()}
             >
               <i className="fas fa-pen" />
             </button>
           </div>
           {form && (
-            <TagsFilter tags={tags} handleClose={closeForm} setTags={setTags} multitag />
+            <FormSkel
+              headerText="Tagi"
+              noFooter
+              handleClose={closeForm}
+              classes="d-flex p-0"
+            >
+              <div className="w-50 overflow-auto" style={{ maxHeight: 250 }}>
+                {tags.map((tag, idx) => (
+                  <div
+                    key={idx}
+                    className={`font-weight-bolder list-group-item cursor-pointer ${
+                      idx === activeLabel
+                        ? 'active'
+                        : filter.activeTags.includes(tag.tagId)
+                        ? 'list-group-item-success'
+                        : ''
+                    }`}
+                    onClick={handleChangeLabel(idx)}
+                  >
+                    {tag.label}
+                  </div>
+                ))}
+              </div>
+              {activeLabel !== null && (
+                <div className="w-50 overflow-auto" style={{ maxHeight: 250 }}>
+                  {tags[activeLabel].options.map((opt, idx) => (
+                    <div
+                      key={idx}
+                      className={`font-weight-bolder list-group-item cursor-pointer ${
+                        filter.activeTags.includes(opt.tagId)
+                          ? 'list-group-item-success'
+                          : ''
+                      }`}
+                      onClick={toggleTag(opt.tagId)}
+                    >
+                      {opt.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </FormSkel>
           )}
         </>
       )}

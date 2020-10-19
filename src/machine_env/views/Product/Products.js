@@ -1,28 +1,31 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { NavigationContext } from '../../context/navigation-context'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router'
 import { LangContext } from '../../context/lang-context'
 
 import ReturnLink from '../../components/Return/ReturnLink'
 import ProductForm from '../../components/Modals/ProductForm'
-import ProductCategoriesForm from '../../components/Modals/ProductCategoriesForm'
 
 import useFetch from '../../hooks/fetch-hook'
+import useForm from '../../hooks/form-hook'
 
 import ProductsTable from '../../components/Product/ProductsTable'
 import ProductsCards from '../../components/Product/ProductsCards'
-import Fab from '../../components/FloatingActionButton/Fab'
 import SearchInput from '../../components/SearchInput/SearchInput'
 import Pagination from '../../components/Pagination/Pagination'
 
 export default () => {
   const { fetchApi } = useFetch()
+  const { form, openForm, closeForm } = useForm()
 
   const { setHeaderData } = useContext(NavigationContext)
   const {
     languagePack: { products }
   } = useContext(LangContext)
   const { categoryId } = useParams()
+  const history = useHistory()
+
+  const [categories, setCategories] = useState([])
 
   const [state, setState] = useState({
     products: [],
@@ -34,15 +37,25 @@ export default () => {
   const [searchedValue, setSearchedValue] = useState('')
   const [tableView, setTableView] = useState(false)
 
-  const [productFormModal, setProductFormModal] = useState(null)
-  const [productCategoriesFormModal, setProductCategoriesFormModal] = useState(null)
-
-  const deleteProduct = ean => {
-    const confirm = window.confirm(products.confirmDeletion)
-
-    if (confirm) {
+  const deleteProduct = ean => () => {
+    if (window.confirm(products.confirmDeletion)) {
       fetchApi(`product/${ean}`, { method: 'DELETE' }, getProducts)
     }
+  }
+
+  const getCategories = () => {
+    fetchApi('categories', {}, categories => {
+      setCategories(categories)
+      if (categoryId) {
+        const currentCategory = categories.find(c => c.CategoryId == categoryId)
+        if (currentCategory)
+          setHeaderData({
+            text: products.defaultHeader,
+            subtext: currentCategory.Name
+          })
+        else history.replace('/products')
+      }
+    })
   }
 
   const getProducts = (page = 1, search = searchedValue) => {
@@ -52,21 +65,9 @@ export default () => {
       setState(prev => ({
         ...prev,
         products: data.products,
-        totalItems: data.totalItems,
-        initialProducts: data.products
+        totalItems: data.totalItems
       }))
     })
-  }
-
-  const getTitle = () => {
-    if (categoryId)
-      fetchApi(`category/${categoryId}`, {}, data =>
-        setHeaderData(prev => ({
-          text: products.defaultHeader,
-          subtext: data.Name
-        }))
-      )
-    else setHeaderData({ text: products.defaultHeader })
   }
 
   const toggleView = () => setTableView(prev => !prev)
@@ -92,40 +93,45 @@ export default () => {
   }
 
   useEffect(() => {
+    setHeaderData({ text: products.defaultHeader })
+
     getProducts()
-    getTitle()
+    getCategories()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId])
 
   const listProps = {
     productItems: state.products,
-    setProductModal: setProductFormModal,
-    setProductCategoriesModal: setProductCategoriesFormModal,
+    openForm,
     handleDeleteProduct: deleteProduct
   }
 
   return (
     <>
       {categoryId && <ReturnLink path="/categories" />}
-      <Fab action={() => setProductFormModal('add')} />
       <SearchInput tableView={tableView} onSearch={search} onToggleView={toggleView} />
       <Pagination
         handleSwitchPage={switchPage}
         page={state.page}
         totalItems={state.totalItems}
       />
+      <div>
+        <button
+          className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+          onClick={openForm()}
+        >
+          <i className="fas fa-plus mr-2" /> Dodaj produkt
+        </button>
+      </div>
       {tableView ? <ProductsTable {...listProps} /> : <ProductsCards {...listProps} />}
-      {productCategoriesFormModal && (
-        <ProductCategoriesForm
-          productEAN={productCategoriesFormModal}
-          closeModal={() => setProductCategoriesFormModal(null)}
-        />
-      )}
-      {productFormModal && (
+      {form && (
         <ProductForm
-          productEAN={productFormModal}
-          closeModal={() => setProductFormModal(null)}
+          productData={
+            form !== 'new' ? state.products.find(product => product.EAN === form) : null
+          }
+          categories={categories}
+          closeModal={closeForm}
           getProducts={getProducts}
         />
       )}

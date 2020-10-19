@@ -142,12 +142,17 @@ body {
   cursor: pointer;
 }
 
-.table i {
-  font-size: 1.5em;
+.icon {
+  font-size: 1.25em !important;
 }
 
 .icon-large {
-  font-size: 1.25em;
+  font-size: 1.5em !important;
+}
+
+.icon-button {
+  width: 48px;
+  height: 48px;
 }
 
 .machine-tabs li {
@@ -197,12 +202,12 @@ table a i {
 }
 
 @media (max-width: 991.98px) {
-  header > div {
+  header {
     min-height: 60px;
     padding: 0.5rem 1rem;
   }
 
-  header p {
+  header b {
     font-size: 1.2rem;
   }
 
@@ -213,12 +218,12 @@ table a i {
 }
 
 @media (min-width: 992px) {
-  header > div {
+  header {
     min-height: 75px;
     padding: 1rem;
   }
 
-  header p {
+  header b {
     font-size: 1.4rem;
   }
 

@@ -6,40 +6,37 @@ import CategoryForm from '../../components//Modals/CategoryForm'
 
 import CategoriesTable from '../../components/Category/CategoriesTable'
 import CategoriesCards from '../../components/Category/CategoriesCards'
-import Fab from '../../components/FloatingActionButton/Fab'
 import SearchInput from '../../components/SearchInput/SearchInput'
 
 import useFetch from '../../hooks/fetch-hook'
+import useForm from '../../hooks/form-hook'
 
 export default () => {
   const { fetchApi } = useFetch()
+  const { form, openForm, closeForm } = useForm()
 
   const { setHeaderData } = useContext(NavigationContext)
   const {
     languagePack: { categories: categoriesTRL }
   } = useContext(LangContext)
 
-  const [search, setSearch] = useState('')
+  const [searchedValue, setSearchedValue] = useState('')
+  const handleSearch = value => setSearchedValue(value)
+
   const [categories, setCategories] = useState([])
   const [tableView, setTableView] = useState(false)
 
-  const [categoryFormModal, setCategoryFormModal] = useState(null)
-
-  const deleteCategory = id => {
-    const confirm = window.confirm('Czy na pewno chcesz usunąć kategorię?')
-
-    if (confirm) {
+  const deleteCategory = id => () => {
+    if (window.confirm('Czy na pewno chcesz usunąć kategorię?')) {
       fetchApi(`category/${id}`, { method: 'DELETE' }, getCategories)
     }
   }
 
   const getCategories = () => {
-    fetchApi('categories', {}, data => setCategories(data))
+    fetchApi('categories', {}, categories => setCategories(categories))
   }
 
   const toggleView = () => setTableView(prev => !prev)
-
-  const handleSearch = value => setSearch(value)
 
   useEffect(() => {
     getCategories()
@@ -50,30 +47,40 @@ export default () => {
 
   const listProps = {
     categoryItems: categories.filter(c =>
-      c.Name.toLowerCase().includes(search.toLowerCase())
+      c.Name.toLowerCase().includes(searchedValue.toLowerCase())
     ),
-    setModal: setCategoryFormModal,
+    openForm,
     handleDeleteCategory: deleteCategory
   }
 
   return (
     <>
-      <Fab action={() => setCategoryFormModal('add')} />
       <SearchInput
         tableView={tableView}
         onSearch={handleSearch}
         onToggleView={toggleView}
       />
-
+      <div>
+        <button
+          className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+          onClick={openForm()}
+        >
+          <i className="fas fa-plus mr-2" /> Dodaj kategorie
+        </button>
+      </div>
       {tableView ? (
         <CategoriesTable {...listProps} />
       ) : (
         <CategoriesCards {...listProps} />
       )}
-      {categoryFormModal && (
+      {form && (
         <CategoryForm
-          categoryId={categoryFormModal}
-          closeModal={() => setCategoryFormModal(null)}
+          categoryData={
+            form !== 'new'
+              ? categories.find(category => category.CategoryId === form)
+              : null
+          }
+          closeModal={closeForm}
           getCategories={getCategories}
         />
       )}

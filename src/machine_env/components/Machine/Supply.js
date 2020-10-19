@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { LangContext } from '../../context/lang-context'
 
-export default ({ setModal, machineProducts, onFillFeeder, onEmptyFeeder }) => {
+export default ({ openForm, machineProducts, onFillFeeder, onEmptyFeeder }) => {
   const {
     languagePack: { shelves }
   } = useContext(LangContext)
@@ -27,7 +27,7 @@ export default ({ setModal, machineProducts, onFillFeeder, onEmptyFeeder }) => {
               </td>
               <td>
                 <button
-                  onClick={() => setModal(machineProduct)}
+                  onClick={openForm(machineProduct)}
                   className="btn btn-link text-decoration-none text-reset p-1"
                   style={{ height: 'unset', width: 'auto' }}
                 >
@@ -38,19 +38,19 @@ export default ({ setModal, machineProducts, onFillFeeder, onEmptyFeeder }) => {
               <td>
                 <button
                   onClick={onFillFeeder(machineProduct.MachineProductId)}
-                  className="btn btn-success btn-sm btn-block"
+                  className="btn btn-success btn-sm btn-block icon-button"
                   disabled={machineProduct.Quantity === machineProduct.MaxItemCount}
                 >
-                  <i className="fas fa-arrow-up" />
+                  <i className="fas fa-arrow-up icon-large" />
                 </button>
               </td>
               <td>
                 <button
                   onClick={onEmptyFeeder(machineProduct.MachineProductId)}
-                  className="btn btn-danger btn-sm btn-block"
+                  className="btn btn-danger btn-sm btn-block icon-button"
                   disabled={machineProduct.Quantity === 0}
                 >
-                  <i className="fa fa-arrow-down" />
+                  <i className="fa fa-arrow-down icon-large" />
                 </button>
               </td>
             </tr>

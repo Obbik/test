@@ -17,12 +17,14 @@ export default () => {
   const [page, setPage] = useState(1)
   const resetPage = () => setPage(1)
 
-  const [filter, setFilter] = useState({
+  const defaultFilter = {
     showIndexes: true,
     rowsPerPage: 25,
     rowsPerPageOptions: [10, 25, 50, 100],
     visible: false
-  })
+  }
+
+  const [filter, setFilter] = useState(defaultFilter)
 
   const [tags, setTags] = useState([])
   const getTags = () => {
@@ -30,6 +32,18 @@ export default () => {
   }
 
   const toggleFilter = () => setFilter(prev => ({ ...prev, visible: !prev.visible }))
+  const resetFilter = () => {
+    const currentReportConfig = defaultReports.find(
+      report => report.id === currentReport.id
+    )
+    setFilter({
+      ...defaultFilter,
+      sortBy: currentReportConfig.defaultSorting,
+      sortByColumns: currentReportConfig.sortByColumns,
+      columns: currentReportConfig.columns,
+      activeTags: []
+    })
+  }
 
   useEffect(
     () => {
@@ -254,7 +268,8 @@ export default () => {
         ...prev,
         sortBy: report.defaultSorting,
         sortByColumns: report.sortByColumns,
-        columns: report.columns
+        columns: report.columns,
+        activeTags: []
       }))
       setCurrentReport(report)
     })
@@ -267,11 +282,19 @@ export default () => {
         return newFilterData
       }),
       tags: [
-        ...tags.filter(tag => tag.isActive).map(tag => [tag.tagId]),
         ...tags
-          .filter(tag => !tag.tagId)
-          .filter(tag => tag.options.find(opt => opt.isActive))
-          .map(tag => tag.options.filter(opt => opt.isActive).map(tag => tag.tagId))
+          .filter(tag => filter.activeTags.includes(tag.tagId))
+          .map(tag => [tag.tagId]),
+        ...tags
+          .filter(label => label.options.length > 0)
+          .filter(label =>
+            label.options.find(opt => filter.activeTags.includes(opt.tagId))
+          )
+          .map(tag =>
+            tag.options
+              .filter(opt => filter.activeTags.includes(opt.tagId))
+              .map(opt => opt.tagId)
+          )
       ]
     }
 
@@ -326,16 +349,39 @@ export default () => {
             .includes(col.searchbar.toLowerCase())
       )
 
-  const tagFilter = machine =>
-    tags
-      .filter(tag => tag.isActive)
-      .map(tag => tag.tagId)
-      .every(tag => machine.MachineTags.split(', ').includes(tag)) &&
-    tags
-      .filter(tag => !tag.tagId)
-      .filter(tag => tag.options.find(opt => opt.isActive))
-      .map(tag => tag.options.filter(opt => opt.isActive).map(tag => tag.tagId))
-      .every(label => label.some(opt => machine.MachineTags.split(', ').includes(opt)))
+  const tagFilter = machine => {
+    return (
+      tags
+        .filter(tag => tag.options.length === 0 && filter.activeTags.includes(tag.tagId))
+        .map(tag => tag.tagId)
+        .every(tag => machine.MachineTags.split(', ').includes(tag)) &&
+      tags
+        .filter(
+          label =>
+            label.options.length > 0 &&
+            label.options
+              .map(tag => tag.tagId)
+              .some(tag => filter.activeTags.includes(tag))
+        )
+        .map(label =>
+          label.options
+            .map(opt => opt.tagId)
+            .filter(tagId => filter.activeTags.includes(tagId))
+        )
+        .every(label => label.some(opt => machine.MachineTags.split(', ').includes(opt)))
+    )
+  }
+
+  // const tagFilter = machine =>
+  //   tags
+  //     .filter(tag => tag.isActive)
+  //     .map(tag => tag.tagId)
+  //     .every(tag => machine.MachineTags.split(', ').includes(tag)) &&
+  //   tags
+  //     .filter(tag => !tag.tagId)
+  //     .filter(tag => tag.options.find(opt => opt.isActive))
+  //     .map(tag => tag.options.filter(opt => opt.isActive).map(tag => tag.tagId))
+  //     .every(label => label.some(opt => machine.MachineTags.split(', ').includes(opt)))
 
   const formatValue = (col_idx, value) => {
     if (value === null) return value
@@ -373,7 +419,7 @@ export default () => {
                 data: currentReport.data,
                 resetPage,
                 tags,
-                setTags
+                resetFilter
               }}
             />
           )}

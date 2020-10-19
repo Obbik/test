@@ -13,7 +13,7 @@ export default ({ productData, categories, handleSubmit, handleClose }) => {
   const [categoriesSection, setCategoriesSection] = useState(false)
   const toggleCategoriesSection = () => setCategoriesSection(prev => !prev)
 
-  const [productsCategories, setProductCategories] = useState({
+  const [productCategories, setProductCategories] = useState({
     initial: productData?.ProductCategories
       ? productData.ProductCategories.split(' , ')
       : [],
@@ -60,11 +60,7 @@ export default ({ productData, categories, handleSubmit, handleClose }) => {
           />
         </div>
       )}
-      <form
-        onSubmit={handleSubmit(productsCategories)}
-        id="modal-form"
-        autoComplete="off"
-      >
+      <form onSubmit={handleSubmit(productCategories)} id="modal-form" autoComplete="off">
         <div className="form-group">
           <label className="h6">{TRL_Pack.products.properties.ean}</label>
           <input
@@ -129,9 +125,9 @@ export default ({ productData, categories, handleSubmit, handleClose }) => {
               <div
                 key={idx}
                 className={`col-6 pl-3 font-weight-bolder list-group-item ${
-                  productsCategories.added.includes(category.CategoryId) ||
-                  (productsCategories.initial.includes(category.CategoryId) &&
-                    !productsCategories.deleted.includes(category.CategoryId))
+                  productCategories.added.includes(category.CategoryId) ||
+                  (productCategories.initial.includes(category.CategoryId) &&
+                    !productCategories.deleted.includes(category.CategoryId))
                     ? 'list-group-item-success'
                     : ''
                 }`}
@@ -139,15 +135,6 @@ export default ({ productData, categories, handleSubmit, handleClose }) => {
               >
                 {category.Name}
               </div>
-              // <label className="form-check-label">
-              //   <input
-              //     type="checkbox"
-              //     // checked={productCategoriesData.includes(category.CategoryId)}
-              //     // onChange={handleChange(category.CategoryId)}
-              //     className="form-check-input mr-2"
-              //   />
-              //   <h6 className="mb-0">{category.Name}</h6>
-              // </label>
             ))}
           </div>
         )}
