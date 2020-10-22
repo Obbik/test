@@ -1,80 +1,59 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { NavigationContext } from '../../context/navigation-context'
 import { LangContext } from '../../context/lang-context'
-import SearchInput from '../../components/SearchInput/SearchInput'
-import MachineProducts from '../../components/Machine/Feeders'
 
-import FeederForm from '../../components/Modals/FeederForm'
-
-import useFetch from '../../hooks/fetch-hook'
-import useForm from '../../hooks/form-hook'
+import MachineProducts from './MachineProducts'
+import Temperature from './Temperature'
+import Lift from './Lift'
 
 export default () => {
-  const { fetchApi } = useFetch()
-  const { form, openForm, closeForm } = useForm()
-
   const { setHeaderData } = useContext(NavigationContext)
   const {
     languagePack: { shelves }
   } = useContext(LangContext)
 
-  const [searchedValue, setSearchedValue] = useState('')
-  const handleSearch = value => setSearchedValue(value)
-
-  const [machineProducts, setMachineProducts] = useState([])
-
-  const getMachineProducts = () => {
-    fetchApi('machine-products', {}, data => {
-      if (data.map(product => product.MachineFeederNo).every(No => !isNaN(No)))
-        data.sort((a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo))
-
-      setMachineProducts(data)
-    })
-  }
-
-  const deleteMachineProduct = id => () => {
-    if (window.confirm(shelves.confirmDeletion))
-      fetchApi(`machine-product/${id}`, { method: 'DELETE' }, getMachineProducts)
-  }
-
-  const filteredMachines = machineProducts.filter(machineProduct =>
-    machineProduct.Name.toLowerCase().includes(searchedValue.toLowerCase())
-  )
+  const [currentMachineSection, setCurrentMachineSection] = useState(0)
+  const changeSection = id => () => setCurrentMachineSection(id)
 
   useEffect(() => {
-    getMachineProducts()
-
     setHeaderData({ text: shelves.configHeader })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <>
-      <SearchInput onSearch={handleSearch} />
-      <div>
-        <button
-          className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
-          onClick={openForm()}
-        >
-          <i className="fas fa-plus mr-2" /> Dodaj wybór
-        </button>
-      </div>
-      <MachineProducts
-        openForm={openForm}
-        machineProducts={filteredMachines}
-        handleDeleteMachineProduct={deleteMachineProduct}
-      />
-      {form && (
-        <FeederForm
-          feederData={
-            form !== 'new'
-              ? machineProducts.find(mp => mp.MachineProductId === form)
-              : null
-          }
-          closeModal={closeForm}
-          getMachineProducts={getMachineProducts}
-        />
-      )}
+      <ul className="nav nav-tabs machine-tabs mb-3">
+        <li className="nav-item">
+          <button
+            className={`nav-link btn ${currentMachineSection === 0 && 'active'}`}
+            onClick={changeSection(0)}
+            tabIndex="0"
+          >
+            Wybory
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link btn ${currentMachineSection === 1 ? 'active' : ''}`}
+            onClick={changeSection(1)}
+            tabIndex="0"
+          >
+            Temperatura
+          </button>
+        </li>
+        <li className="nav-item">
+          <button
+            className={`nav-link btn ${currentMachineSection === 2 && 'active'}`}
+            onClick={changeSection(2)}
+            tabIndex="0"
+          >
+            Winda
+          </button>
+        </li>
+      </ul>
+      {currentMachineSection === 0 && <MachineProducts />}
+      {currentMachineSection === 1 && <Temperature />}
+      {currentMachineSection === 2 && <Lift />}
     </>
   )
 }

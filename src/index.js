@@ -2,7 +2,6 @@ import React from 'react'
 import { render } from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import JavascriptTimeAgo from 'javascript-time-ago'
-
 import en from 'javascript-time-ago/locale/en'
 import pl from 'javascript-time-ago/locale/pl'
 
@@ -10,6 +9,8 @@ import ServerApp from './server_env/app/App'
 import MachineApp from './machine_env/app/App'
 import * as serviceWorker from './serviceWorker'
 import { ENV } from './config'
+
+import 'react-notifications/lib/notifications.css'
 
 JavascriptTimeAgo.addLocale(en)
 JavascriptTimeAgo.addLocale(pl)

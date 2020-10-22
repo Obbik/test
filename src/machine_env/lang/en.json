@@ -15,10 +15,9 @@
   "navbar": {
     "products": "Products",
     "categories": "Categories",
-    "machines": "Monitoring",
+    "settings": "Settings",
     "config": "Config",
     "supply": "Supply",
-    "status": "Status",
     "logout": "Log out"
   },
   "searchbarPlaceholder": "Search...",
@@ -62,36 +61,5 @@
       "quantity": "Quantity",
       "capacity": "Capacity"
     }
-  },
-  "status": {
-    "header": "Monitoring",
-    "serialNo": "Serial No",
-    "machine": "Machine",
-    "ipAddress": "IP Address",
-    "softVersion": "Software version",
-    "transactions": "Transactions",
-    "notifications": "Notifications",
-    "info": "Info"
-  },
-  "info": {
-    "machineName": "Machine name",
-    "operator": "Operator",
-    "serialNo": "Serial No",
-    "ipAddress": "IP Address",
-    "totalTransactions": "Total transactions",
-    "softwareVersion": "Software version"
-  },
-  "notifications": {
-    "level": "Level",
-    "type": "Type",
-    "date": "Date"
-  },
-  "transactions": {
-    "status": "Status",
-    "payment": "Payment",
-    "cost": "Cost",
-    "date": "Date",
-    "shelf": "Shelf",
-    "ean": "EAN"
   }
 }

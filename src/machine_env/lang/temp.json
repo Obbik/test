@@ -14,10 +14,9 @@
   "navbar": {
     "products": "",
     "categories": "",
-    "machines": "",
+    "settings": "",
     "config": "",
     "supply": "",
-    "status": "",
     "logout": ""
   },
   "searchbarPlaceholder": "",
@@ -61,36 +60,5 @@
       "quantity": "",
       "capacity": ""
     }
-  },
-  "status": {
-    "header": "",
-    "serialNo": "",
-    "machine": "",
-    "ipAddress": "",
-    "softVersion": "",
-    "transactions": "",
-    "notifications": "",
-    "info": ""
-  },
-  "info": {
-    "machineName": "",
-    "operator": "",
-    "serialNo": "",
-    "ipAddress": "",
-    "totalTransactions": "",
-    "softwareVersion": ""
-  },
-  "notifications": {
-    "level": "",
-    "type": "",
-    "date": ""
-  },
-  "transactions": {
-    "status": "",
-    "payment": "",
-    "cost": "",
-    "date": "",
-    "shelf": "",
-    "ean": ""
   }
 }

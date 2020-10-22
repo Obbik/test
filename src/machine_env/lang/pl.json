@@ -15,10 +15,9 @@
   "navbar": {
     "products": "Produkty",
     "categories": "Kategorie",
-    "machines": "Monitoring",
+    "settings": "Ustawienia",
     "config": "Konfiguracja",
     "supply": "Doładowanie",
-    "status": "Status",
     "logout": "Wyloguj się"
   },
   "searchbarPlaceholder": "Szukaj...",
@@ -62,36 +61,5 @@
       "quantity": "Ilość",
       "capacity": "Pojemność"
     }
-  },
-  "status": {
-    "header": "Monitoring",
-    "serialNo": "Nr seryjny",
-    "machine": "Maszyna",
-    "ipAddress": "Adres IP",
-    "softVersion": "Wersja oprogramowania",
-    "transactions": "Transakcje",
-    "notifications": "Powiadomienia",
-    "info": "Informacje"
-  },
-  "info": {
-    "machineName": "Nazwa maszyny",
-    "operator": "Operator",
-    "serialNo": "Nr seryjny",
-    "ipAddress": "Adres IP",
-    "totalTransactions": "Wszystkie transakcje",
-    "softwareVersion": "Wersja oprogramowania"
-  },
-  "notifications": {
-    "level": "Poziom",
-    "type": "Typ",
-    "date": "Data"
-  },
-  "transactions": {
-    "status": "Status",
-    "payment": "Płatność",
-    "cost": "Koszt",
-    "date": "Data",
-    "shelf": "Nr sprężyny",
-    "ean": "Ean"
   }
 }

@@ -8,7 +8,7 @@ export default ({ children }) => {
   const lang = localStorage.getItem('lang')
 
   const [currentLanguage, setLanguage] = useState(lang)
-  const changeLanguage = newLanguage => {
+  const changeLanguage = newLanguage => () => {
     if (newLanguage !== currentLanguage) {
       localStorage.setItem('lang', newLanguage)
       setLanguage(newLanguage)

@@ -241,3 +241,8 @@ table a i {
 .invalid-input {
   box-shadow: 0 0 0 0.2rem rgb(228 16 55 / 75%) !important;
 }
+
+.notification .message {
+  font-weight: bolder;
+  word-break: break-word;
+}

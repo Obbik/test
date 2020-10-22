@@ -28,7 +28,7 @@ export default ({ toggleSidebar, navlinks, headerData: { text, subtext } = {} })
   return (
     <header
       ref={navbarRef}
-      className="shadow d-flex flex-column justify-content-center"
+      className="shadow d-flex flex-column justify-content-center p-0"
       style={{
         backgroundColor: 'rgba(0, 0, 0, 0.05)'
       }}

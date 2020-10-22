@@ -13,12 +13,11 @@ import '../assets/fontawesome/css/all.css'
 import '../assets/bootstrap.min.css'
 import './App.css'
 
-// import ScrollToTop from '../components/ScrollToTopButton/ScrollToTop'
-
 import Login from '../views/Auth/Login'
 import Logout from '../views/Auth/Logout'
 import Products from '../views/Product/Products'
 import Categories from '../views/Category/Categories'
+// import Settings from '../views/Settings/Settings'
 import Config from '../views/Config/Config'
 import Supply from '../views/Supply/Supply'
 
@@ -38,7 +37,10 @@ export default () => {
     if (permissions.includes('{2}'))
       authRoutes.push({ path: '/categories', component: Categories })
     if (permissions.includes('{3}'))
-      authRoutes.push({ path: '/config', component: Config })
+      authRoutes.push(
+        // { path: '/settings', component: Settings },
+        { path: '/config', component: Config }
+      )
     if (permissions.includes('{4}'))
       authRoutes.push({ path: '/supply', render: () => <Supply logout={logout} /> })
   }
@@ -57,7 +59,6 @@ export default () => {
                     ))}
                     <Redirect to="/supply" />
                   </Switch>
-                  {/* <ScrollToTop /> */}
                 </NavigationProvider>
               ) : (
                 <Switch>

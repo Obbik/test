@@ -43,7 +43,13 @@ export default ({ children }) => {
       text: navbar.categories,
       path: '/categories'
     },
-    { permission: '{3}', icon: 'fas fa-cog', text: navbar.config, path: '/config' },
+    // { permission: '{3}', icon: 'fas fa-cog', text: navbar.settings, path: '/settings' },
+    {
+      permission: '{3}',
+      icon: 'fas fa-cog',
+      text: navbar.config,
+      path: '/config'
+    },
     { permission: '{4}', icon: 'fas fa-cart-plus', text: navbar.supply, path: '/supply' },
     { icon: 'fas fa-sign-out-alt', text: navbar.logout, path: '/logout' }
   ]

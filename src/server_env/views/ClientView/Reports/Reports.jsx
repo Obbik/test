@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { LangContext } from '../../../context/lang-context'
 import { NavigationContext } from '../../../context/navigation-context'
-import ReturnLink from '../../../components/Return/ReturnLink'
 import useFetch from '../../../hooks/fetch-hook'
 import Pagination from '../../../components/Pagination/Pagination'
 import Filter from '../../../components/Filter/Filter'
-import Fab from '../../../components/FloatingActionButton/Fab'
 import { API_URL } from '../../../config/config'
 
 export default () => {
@@ -13,6 +11,7 @@ export default () => {
   const { fetchMssqlApi } = useFetch()
   const { setHeaderData } = useContext(NavigationContext)
   const [currentReport, setCurrentReport] = useState(null)
+  const [isDateRangeDisabled, setIsDateRangeDisabled] = useState(true)
 
   const [page, setPage] = useState(1)
   const resetPage = () => setPage(1)
@@ -95,6 +94,10 @@ export default () => {
           name: TRL_Pack.reports.lastVisits.cols[4],
           sortable: true,
           type: 'date'
+        },
+        {
+          id: 6,
+          disabled: true
         }
       ]
     },
@@ -103,6 +106,7 @@ export default () => {
       label: TRL_Pack.reports.lastCoinInventories.title,
       apiPath: 'last-coin-inventories',
       sortByColumns: true,
+      dateRange: true,
       defaultSorting: '5 | asc | date',
       columns: [
         {
@@ -173,6 +177,10 @@ export default () => {
           name: TRL_Pack.reports.lastCoinInventories.cols[10],
           sortable: true,
           type: 'money'
+        },
+        {
+          id: 12,
+          disabled: true
         }
       ]
     },
@@ -181,6 +189,7 @@ export default () => {
       label: TRL_Pack.reports.lastCoinInventoriesSum.title,
       apiPath: 'last-coin-inventories-sum',
       sortByColumns: true,
+      dateRange: true,
       defaultSorting: '1 | asc | text',
       columns: [
         {
@@ -252,18 +261,35 @@ export default () => {
           sortable: true,
           searchable: true,
           type: 'text'
+        },
+        {
+          id: 11,
+          disabled: true
         }
       ]
     }
   ]
 
-  const handleChange = id => {
-    const report = defaultReports.find(r => r.id === id)
+  const handleChangeReport = evt => {
+    setIsDateRangeDisabled(
+      !defaultReports.find(report => report.id === parseInt(evt.target.value)).dateRange
+    )
+  }
 
-    setHeaderData({ text: TRL_Pack.reports.header, subtext: report.label })
+  const getReport = evt => {
+    evt.preventDefault()
 
-    fetchMssqlApi(report.apiPath, {}, data => {
+    const { reportId, dateFrom, dateTo } = evt.target.elements
+
+    const report = defaultReports.find(r => r.id === parseInt(reportId.value))
+
+    const reportDateRange = !isDateRangeDisabled
+      ? `?dateFrom=${dateFrom.value}&dateTo=${dateTo.value}`
+      : ''
+
+    fetchMssqlApi(report.apiPath + reportDateRange, {}, data => {
       report.data = data
+      setHeaderData({ text: TRL_Pack.reports.header, subtext: report.label })
       setFilter(prev => ({
         ...prev,
         sortBy: report.defaultSorting,
@@ -271,7 +297,7 @@ export default () => {
         columns: report.columns,
         activeTags: []
       }))
-      setCurrentReport(report)
+      setCurrentReport({ ...report, dateFrom: dateFrom.value, dateTo: dateTo.value })
     })
   }
 
@@ -298,16 +324,15 @@ export default () => {
       ]
     }
 
+    const reportDateRange = !isDateRangeDisabled
+      ? `?dateFrom=${currentReport.dateFrom}&dateTo=${currentReport.dateTo}`
+      : ''
+
     fetchMssqlApi(
-      currentReport.apiPath,
+      currentReport.apiPath + reportDateRange,
       { method: 'POST', data, hideNotification: true },
       path => window.open(`${API_URL}/${path}`, '_blank')
     )
-  }
-
-  const resetReport = () => {
-    setHeaderData({ text: 'Reports' })
-    setCurrentReport(null)
   }
 
   const handleSwitchPage = pageNo => () => setPage(pageNo)
@@ -324,8 +349,8 @@ export default () => {
     let valueA, valueB
 
     if (type === 'text' || type === 'date') {
-      valueA = a[col]?.toUpperCase()
-      valueB = b[col]?.toUpperCase()
+      valueA = String(a[col])?.toUpperCase()
+      valueB = String(b[col])?.toUpperCase()
     } else if (type === 'money') {
       valueA = a[col]
       valueB = b[col]
@@ -372,17 +397,6 @@ export default () => {
     )
   }
 
-  // const tagFilter = machine =>
-  //   tags
-  //     .filter(tag => tag.isActive)
-  //     .map(tag => tag.tagId)
-  //     .every(tag => machine.MachineTags.split(', ').includes(tag)) &&
-  //   tags
-  //     .filter(tag => !tag.tagId)
-  //     .filter(tag => tag.options.find(opt => opt.isActive))
-  //     .map(tag => tag.options.filter(opt => opt.isActive).map(tag => tag.tagId))
-  //     .every(label => label.some(opt => machine.MachineTags.split(', ').includes(opt)))
-
   const formatValue = (col_idx, value) => {
     if (value === null) return value
     if (currentReport.columns[col_idx].type === 'money')
@@ -396,13 +410,63 @@ export default () => {
 
   return (
     <>
-      {currentReport ? (
+      <div className="row mb-3">
+        <div className="d-flex offset-lg-1 col col-lg-10">
+          <form className="input-group input-group-sm" onSubmit={getReport}>
+            <div className="input-group-prepend">
+              <label className="input-group-text">Raport</label>
+            </div>
+            <select
+              className="form-control"
+              name="reportId"
+              onChange={handleChangeReport}
+            >
+              {defaultReports.map((report, idx) => (
+                <option key={idx} value={idx + 1}>
+                  {report.label}
+                </option>
+              ))}
+            </select>
+            <div className="input-group-prepend">
+              <label className="input-group-text">Od</label>
+            </div>
+            <input
+              type="date"
+              className="form-control border-right-0"
+              name="dateFrom"
+              style={{ maxWidth: 150 }}
+              defaultValue={
+                new Date(new Date().setMonth(new Date().getMonth() - 1))
+                  .toISOString()
+                  .split('T')[0]
+              }
+              max={new Date().toISOString().split('T')[0]}
+              disabled={isDateRangeDisabled}
+            />
+            <div className="input-group-prepend">
+              <label className="input-group-text">Do</label>
+            </div>
+            <input
+              type="date"
+              className="form-control border-right-0"
+              name="dateTo"
+              style={{ maxWidth: 150 }}
+              defaultValue={new Date().toISOString().split('T')[0]}
+              max={new Date().toISOString().split('T')[0]}
+              disabled={isDateRangeDisabled}
+            />
+            <div className="input-group-append">
+              <button className="btn bg-white border">Generuj</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      {currentReport && (
         <>
-          <Fab action={handleDownload} icon="far fa-save" />
-          <ReturnLink handleClick={resetReport} path="#" />
           <Pagination
             {...{
-              totalItems: currentReport.data.filter(reportFilter).length,
+              totalItems: currentReport.data.filter(reportFilter).filter(tagFilter)
+                .length,
               page,
               handleSwitchPage,
               rowsPerPage: filter.rowsPerPage,
@@ -424,65 +488,63 @@ export default () => {
             />
           )}
           {currentReport.data && (
-            <div className="row">
-              <div className="col overflow-auto">
-                <table className="table table-striped table-bordered align-middle table-machines">
-                  <thead>
-                    <tr>
-                      {filter.showIndexes && <th className="text-center">#</th>}
-                      {filter.columns
-                        .filter(col => !col.hidden)
-                        .map((col, idx) => (
-                          <th key={idx}>{col.name}</th>
+            <>
+              {currentReport.data.filter(reportFilter).filter(tagFilter).length > 0 ? (
+                <div className="overflow-auto">
+                  <div>
+                    <button
+                      className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+                      onClick={handleDownload}
+                    >
+                      <i className="fas fa-file-download mr-2" /> Pobierz raport
+                    </button>
+                  </div>
+                  <table className="table table-striped table-bordered align-middle report-table">
+                    <thead>
+                      <tr>
+                        {filter.showIndexes && <th className="text-center">#</th>}
+                        {filter.columns
+                          .filter(col => !col.hidden && !col.disabled)
+                          .map((col, idx) => (
+                            <th key={idx}>{col.name}</th>
+                          ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentReport.data
+                        .filter(reportFilter)
+                        .filter(tagFilter)
+                        .sort(sortRows)
+                        .slice((page - 1) * filter.rowsPerPage, page * filter.rowsPerPage)
+                        .map((row, row_idx) => (
+                          <tr key={row_idx}>
+                            {filter.showIndexes && (
+                              <td className="text-center small font-weight-bold">
+                                {(page - 1) * filter.rowsPerPage + row_idx + 1}
+                              </td>
+                            )}
+                            {Object.keys(row).map(
+                              (col, col_idx) =>
+                                filter.columns
+                                  .filter(col => !col.hidden && !col.disabled)
+                                  .map(col => col.id)
+                                  .includes(col_idx + 1) && (
+                                  <td key={col_idx} className="small">
+                                    {formatValue(col_idx, row[col])}
+                                  </td>
+                                )
+                            )}
+                          </tr>
                         ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentReport.data
-                      .filter(reportFilter)
-                      .filter(tagFilter)
-                      .sort(sortRows)
-                      .slice((page - 1) * filter.rowsPerPage, page * filter.rowsPerPage)
-                      .map((row, row_idx) => (
-                        <tr key={row_idx}>
-                          {filter.showIndexes && (
-                            <td className="text-center small font-weight-bold">
-                              {(page - 1) * filter.rowsPerPage + row_idx + 1}
-                            </td>
-                          )}
-                          {Object.keys(row).map(
-                            (col, col_idx) =>
-                              filter.columns
-                                .filter(col => !col.hidden)
-                                .map(col => col.id)
-                                .includes(col_idx + 1) && (
-                                <td key={col_idx} className="small">
-                                  {formatValue(col_idx, row[col])}
-                                </td>
-                              )
-                          )}
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <h5 className="text-center">Brak wyników</h5>
+              )}
+            </>
           )}
         </>
-      ) : (
-        <div className="row">
-          {defaultReports.map(report => (
-            <div key={report.id} className="col-12 col-md-6 col-lg-4 mb-2">
-              <button
-                onClick={() => handleChange(report.id)}
-                className="h-100 btn list-group-item list-group-item-action rounded"
-                disabled={report.disabled}
-              >
-                {report.label}
-              </button>
-            </div>
-          ))}
-        </div>
       )}
     </>
   )

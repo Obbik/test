@@ -245,3 +245,12 @@ table a i {
 .categories-section .list-group-item + .list-group-item {
   border-top-width: thin;
 }
+
+.report-table td {
+  font-size: 13px !important;
+}
+
+.notification .message {
+  font-weight: bolder;
+  word-break: break-word;
+}

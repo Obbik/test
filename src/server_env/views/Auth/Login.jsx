@@ -26,18 +26,26 @@ export default ({ login }) => {
 
       axios
         .post(`${API_URL}/auth/login`, {
-          email: email.value,
+          email: email.value.toLowerCase(),
           password: password.value,
-          clientId: clientId.value
+          clientId: clientId.value.toLowerCase()
         })
         .then(res => {
           decrementRequests()
 
-          if (res.status === 422) ErrorNotification('Validation failed.')
+          if (res.status === 422) return ErrorNotification('Validation failed.')
           if (res.status !== 200 && res.status !== 201)
-            ErrorNotification('Could not authenticate.')
+            return ErrorNotification('Could not authenticate.')
 
-          login(res.data.token, clientId.value)
+          localStorage.setItem(
+            'lastLogin',
+            JSON.stringify({
+              email: email.value.toLowerCase(),
+              clientId: clientId.value.toLowerCase()
+            })
+          )
+
+          login(res.data.token, clientId.value.toLowerCase())
         })
         .catch(err => {
           decrementRequests()
@@ -61,7 +69,11 @@ export default ({ login }) => {
                 <input
                   type="email"
                   name="email"
-                  defaultValue="jakub@vendim.pl"
+                  defaultValue={
+                    localStorage.getItem('lastLogin')
+                      ? JSON.parse(localStorage.getItem('lastLogin')).email
+                      : 'jakub@vendim.pl'
+                  }
                   className="form-control"
                   required
                 />
@@ -84,7 +96,12 @@ export default ({ login }) => {
                   type="text"
                   name="clientId"
                   className="form-control"
-                  defaultValue="console"
+                  defaultValue={
+                    localStorage.getItem('lastLogin')
+                      ? JSON.parse(localStorage.getItem('lastLogin')).clientId
+                      : 'console'
+                  }
+                  autoCapitalize="none"
                   required
                 />
               </div>
@@ -96,13 +113,13 @@ export default ({ login }) => {
           <div className="text-center">
             <button
               className="btn btn-link p-0 mx-3 rounded-circle"
-              onClick={() => changeLanguage('en')}
+              onClick={changeLanguage('en')}
             >
               <img className="flag" src={gbFlag} alt="en_flag" />
             </button>
             <button
               className="btn btn-link p-0 mx-3 rounded-circle"
-              onClick={() => changeLanguage('pl')}
+              onClick={changeLanguage('pl')}
             >
               <img className="flag" src={plFlag} alt="pl_flag" />
             </button>

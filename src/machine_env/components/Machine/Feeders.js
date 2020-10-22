@@ -1,7 +1,12 @@
 import React, { useContext } from 'react'
 import { LangContext } from '../../context/lang-context'
 
-export default ({ openForm, machineProducts, handleDeleteMachineProduct }) => {
+export default ({
+  openForm,
+  machineProducts,
+  handleDeliverMachineProduct,
+  handleDeleteMachineProduct
+}) => {
   const {
     languagePack: { shelves }
   } = useContext(LangContext)
@@ -18,7 +23,7 @@ export default ({ openForm, machineProducts, handleDeleteMachineProduct }) => {
             <th className="text-center">{shelves.props.price}</th>
             {/* <th >{shelves.props.discountedPrice}</th> */}
             <th className="text-center">{shelves.props.quantity}</th>
-            <th style={{ width: '1%' }} colSpan={2} />
+            <th style={{ width: '1%' }} colSpan={3} />
           </tr>
         </thead>
         <tbody>
@@ -29,11 +34,14 @@ export default ({ openForm, machineProducts, handleDeleteMachineProduct }) => {
               <td className="text-center">{product.Price.toFixed(2)}</td>
               {/* <td>{product.DiscountedPrice.toFixed(2)}</td> */}
               <td className="text-center">{`${product.Quantity}/${product.MaxItemCount}`}</td>
-              {/* <td>
-                <button className="btn btn-info btn-sm btn-block">
-                  <i className="fas fa-cart-arrow-down" />
+              <td>
+                <button
+                  className="btn btn-info btn-sm btn-block icon-button"
+                  onClick={handleDeliverMachineProduct(product.MachineFeederNo)}
+                >
+                  <i className="fas fa-cart-arrow-down icon-large" />
                 </button>
-              </td> */}
+              </td>
               <td>
                 <button
                   className="btn btn-secondary btn-sm btn-block icon-button"

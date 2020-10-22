@@ -10,7 +10,12 @@ export default () => {
   const { showLoader, hideLoader } = useContext(LoaderContext)
   const { ErrorNotification, SuccessNofication } = useContext(NotificationContext)
 
-  const fetchApi = (path, { method = 'GET', data = null } = {}, onSuccess, onError) => {
+  const fetchApi = (
+    path,
+    { method = 'GET', data = null, withNotification = false } = {},
+    onSuccess,
+    onError
+  ) => {
     const token = sessionStorage.getItem('token')
 
     showLoader()
@@ -32,13 +37,14 @@ export default () => {
 
         hideLoader()
         if (onSuccess) onSuccess(res.data)
-        if (method !== 'GET') SuccessNofication(res.data.message)
+        if (method !== 'GET' || withNotification) SuccessNofication(res.data.message)
       })
       .catch(err => {
         hideLoader()
         if (onError) onError(err)
-        if (method === 'GET') setError(err.response ? err.response.data.message : err)
-        if (method !== 'GET')
+        if (method === 'GET' && !withNotification)
+          setError(err.response ? err.response.data.message : err)
+        if (method !== 'GET' || withNotification)
           ErrorNotification(err.response ? err.response.data.message : err)
       })
   }

@@ -22,6 +22,9 @@ export default () => {
   const toggleView = () => setMapView(prev => !prev)
 
   const { searchedText, updateSearchedText } = useFilter()
+  const [sortType, setSortType] = useState('1')
+  const updateSortType = id => setSortType(id)
+  const sortingOptions = ['Najw. transakcji', 'Ost. transakcja']
 
   const [machines, setMachines] = useState([])
   const machineIndex = useRef(null)
@@ -41,9 +44,7 @@ export default () => {
       machineIndex.current = idx
     }
 
-    const selectedMachine = filteredMachines.sort((a, b) => b.trx_count - a.trx_count)[
-      machineIndex.current
-    ]
+    const selectedMachine = filteredMachines.sort(sortMachines)[machineIndex.current]
     setHeaderData({
       text: `${selectedMachine.name} (${selectedMachine.type})`,
       subtext: selectedMachine.customer_name
@@ -83,10 +84,25 @@ export default () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMachine])
 
-  const filteredMachines = machines.filter(
-    ({ name, type, customer_name, serialNo, terminal, ip }) =>
+  const sortMachines = (a, b) => {
+    console.log(sortType)
+    if (sortType === '0') {
+      return b.trx_count - a.trx_count
+    } else if (sortType === '1') {
+      return (
+        new Date(b.transactions[0].create_date_time) -
+        new Date(a.transactions[0].create_date_time)
+      )
+    } else {
+      return 0
+    }
+  }
+
+  const filteredMachines = machines
+    .filter(({ name, type, customer_name, serialNo, terminal, ip }) =>
       filterItems(searchedText, name, type, customer_name, serialNo, terminal, ip)
-  )
+    )
+    .sort(sortMachines)
 
   return currentMachine ? (
     <>
@@ -120,7 +136,7 @@ export default () => {
       <ul className="nav nav-tabs machine-tabs mb-3">
         <li className="nav-item">
           <button
-            className={`nav-link btn ${currentMachineSection === 0 && 'active'}`}
+            className={`nav-link btn ${currentMachineSection === 0 ? 'active' : ''}`}
             onClick={changeSection(0)}
             tabIndex="0"
           >
@@ -141,7 +157,7 @@ export default () => {
         </li>
         <li className="nav-item">
           <button
-            className={`nav-link btn ${currentMachineSection === 2 && 'active'}`}
+            className={`nav-link btn ${currentMachineSection === 2 ? 'active' : ''}`}
             onClick={changeSection(2)}
             tabIndex="0"
           >
@@ -167,6 +183,9 @@ export default () => {
       <SearchInput
         tableView={mapView}
         onSearch={updateSearchedText}
+        sortingOptions={sortingOptions}
+        onSortChange={updateSortType}
+        currentSorting={sortType}
         onToggleView={toggleView}
         defaultValue={searchedText}
       />

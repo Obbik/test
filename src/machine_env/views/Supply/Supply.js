@@ -36,7 +36,7 @@ export default ({ logout }) => {
   }
 
   const openAll = () => {
-    fetchApi('vend-all')
+    fetchApi('vend-all', { withNotification: true })
   }
 
   const fillAllFeeders = () => {
@@ -63,7 +63,7 @@ export default ({ logout }) => {
     )
   }
 
-  const saveFeeders = () => fetchApi('visit', {}, logout)
+  const saveFeeders = () => fetchApi('visit', { withNotification: true }, logout)
 
   const [searchValue, setSearchValue] = useState('')
   const handleSearch = value => setSearchValue(value)

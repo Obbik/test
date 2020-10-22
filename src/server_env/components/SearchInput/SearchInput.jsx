@@ -1,7 +1,13 @@
 import React, { useContext } from 'react'
 import { LangContext } from '../../context/lang-context'
 
-export default ({ onSearch, defaultValue, handleSearch }) => {
+export default ({
+  onSearch,
+  defaultValue,
+  sortingOptions,
+  currentSorting,
+  onSortChange
+}) => {
   const { TRL_Pack } = useContext(LangContext)
 
   return (
@@ -16,6 +22,20 @@ export default ({ onSearch, defaultValue, handleSearch }) => {
             placeholder={TRL_Pack.searchbarPlaceholder}
             autoComplete="off"
           />
+          {sortingOptions && (
+            <select
+              className="form-control"
+              onChange={evt => onSortChange(evt.target.value)}
+              style={{ maxWidth: 200 }}
+              defaultValue={currentSorting}
+            >
+              {sortingOptions.map((opt, idx) => (
+                <option key={idx} value={idx}>
+                  {opt}
+                </option>
+              ))}
+            </select>
+          )}
           <div className="input-group-append">
             <span className="input-group-text bg-white border-left-0">
               <i className="fas fa-search"></i>
