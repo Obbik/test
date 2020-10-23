@@ -26,7 +26,7 @@ export default () => {
   const updateSortType = id => setSortType(id)
   const sortingOptions = ['Najw. transakcji', 'Ost. transakcja']
 
-  const [machines, setMachines] = useState([])
+  const [machines, setMachines] = useState(null)
   const machineIndex = useRef(null)
   const [currentMachine, setCurrentMachine] = useState(null)
 
@@ -85,7 +85,6 @@ export default () => {
   }, [currentMachine])
 
   const sortMachines = (a, b) => {
-    console.log(sortType)
     if (sortType === '0') {
       return b.trx_count - a.trx_count
     } else if (sortType === '1') {
@@ -98,11 +97,13 @@ export default () => {
     }
   }
 
-  const filteredMachines = machines
-    .filter(({ name, type, customer_name, serialNo, terminal, ip }) =>
-      filterItems(searchedText, name, type, customer_name, serialNo, terminal, ip)
-    )
-    .sort(sortMachines)
+  const filteredMachines =
+    machines &&
+    machines
+      .filter(({ name, type, customer_name, serialNo, terminal, ip }) =>
+        filterItems(searchedText, name, type, customer_name, serialNo, terminal, ip)
+      )
+      .sort(sortMachines)
 
   return currentMachine ? (
     <>
@@ -178,29 +179,29 @@ export default () => {
         )}
       </div>
     </>
-  ) : machines.length ? (
-    <>
-      <SearchInput
-        tableView={mapView}
-        onSearch={updateSearchedText}
-        sortingOptions={sortingOptions}
-        onSortChange={updateSortType}
-        currentSorting={sortType}
-        onToggleView={toggleView}
-        defaultValue={searchedText}
-      />
-      {!filteredMachines.length ? (
-        <NoResults />
-      ) : mapView ? (
-        <MachinesMap machines={filteredMachines} />
-      ) : (
-        <MachinesTable
-          machines={filteredMachines}
-          handleSelectMachine={handleSelectMachine}
-        />
-      )}
-    </>
   ) : (
-    <NoResults />
+    machines && (
+      <>
+        <SearchInput
+          tableView={mapView}
+          onSearch={updateSearchedText}
+          sortingOptions={sortingOptions}
+          onSortChange={updateSortType}
+          currentSorting={sortType}
+          onToggleView={toggleView}
+          defaultValue={searchedText}
+        />
+        {!filteredMachines.length ? (
+          <NoResults />
+        ) : mapView ? (
+          <MachinesMap machines={filteredMachines} />
+        ) : (
+          <MachinesTable
+            machines={filteredMachines}
+            handleSelectMachine={handleSelectMachine}
+          />
+        )}
+      </>
+    )
   )
 }

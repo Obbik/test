@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import Thermometer from 'react-thermometer-component'
 
 import useFetch from '../../hooks/fetch-hook'
@@ -11,7 +11,7 @@ export default () => {
   const decrementTemperature = () => setTemperature(prev => prev - 1)
 
   // const getTemperature = () => {
-  //   fetchApi('shop/temperature')
+  //   fetchApi('shop/temperature', {}, temperature => setTemperature(temperature))
   // }
 
   const submitTemperature = () => {

@@ -19,7 +19,7 @@ export default () => {
 
   const { form, openForm, closeForm } = useForm()
 
-  const [machines, setMachines] = useState([])
+  const [machines, setMachines] = useState(null)
   const getMachines = () => {
     fetchMssqlApi('machines', {}, machines => setMachines(machines))
   }
@@ -36,74 +36,71 @@ export default () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const filteredMachines = machines.filter(
-    ({ MachineName, Type, SerialNo, Terminal, ClientName }) =>
+  const filteredMachines =
+    machines &&
+    machines.filter(({ MachineName, Type, SerialNo, Terminal, ClientName }) =>
       filterItems(searchedText, MachineName, Type, SerialNo, Terminal, ClientName)
-  )
+    )
 
   return (
-    <>
-      {machines.length ? (
-        <>
-          <SearchInput onSearch={updateSearchedText} />
-          {!filteredMachines.length ? (
-            <NoResults buttonText="Dodaj maszyne" onClick={openForm()} />
-          ) : (
-            <>
-              <div>
-                <button
-                  className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
-                  onClick={openForm()}
-                >
-                  <i className="fas fa-plus mr-2" /> Dodaj maszyne
-                </button>
-              </div>
-              <div className="overflow-auto">
-                <table className="table table-striped border">
-                  <thead>
-                    <tr>
-                      <th>Maszyna</th>
-                      <th>Typ</th>
-                      <th>Nr seryjny</th>
-                      <th>Terminal</th>
-                      <th>Klient</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredMachines
-                      .filter(machine => machine.MachineName)
-                      .sort((a, b) => {
-                        if (a.SerialNo.toLowerCase() > b.SerialNo.toLowerCase()) return -1
-                        else if (a.SerialNo.toLowerCase() < b.SerialNo.toLowerCase())
-                          return 1
-                        else return 0
-                      })
-                      .map((machine, idx) => (
-                        <tr key={idx}>
-                          <td>
-                            <Link
-                              to={`/machine/${machine.MachineId}`}
-                              className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
-                            >
-                              {machine.MachineName}
-                            </Link>
-                          </td>
-                          <td>{machine.Type}</td>
-                          <td>{machine.SerialNo}</td>
-                          <td>{machine.Terminal}</td>
-                          <td>{machine.ClientName}</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-            </>
-          )}
-        </>
-      ) : (
-        <NoResults />
-      )}
-      {form && <MachineForm postSubmit={getMachines} handleClose={closeForm} />}
-    </>
+    machines && (
+      <>
+        <SearchInput onSearch={updateSearchedText} />
+        {!filteredMachines.length ? (
+          <NoResults buttonText="Dodaj maszyne" onClick={openForm()} />
+        ) : (
+          <>
+            <div>
+              <button
+                className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+                onClick={openForm()}
+              >
+                <i className="fas fa-plus mr-2" /> Dodaj maszyne
+              </button>
+            </div>
+            <div className="overflow-auto">
+              <table className="table table-striped border">
+                <thead>
+                  <tr>
+                    <th>Maszyna</th>
+                    <th>Typ</th>
+                    <th>Nr seryjny</th>
+                    <th>Terminal</th>
+                    <th>Klient</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredMachines
+                    .filter(machine => machine.MachineName)
+                    .sort((a, b) => {
+                      if (a.SerialNo.toLowerCase() > b.SerialNo.toLowerCase()) return -1
+                      else if (a.SerialNo.toLowerCase() < b.SerialNo.toLowerCase())
+                        return 1
+                      else return 0
+                    })
+                    .map((machine, idx) => (
+                      <tr key={idx}>
+                        <td>
+                          <Link
+                            to={`/machine/${machine.MachineId}`}
+                            className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
+                          >
+                            {machine.MachineName}
+                          </Link>
+                        </td>
+                        <td>{machine.Type}</td>
+                        <td>{machine.SerialNo}</td>
+                        <td>{machine.Terminal}</td>
+                        <td>{machine.ClientName}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+        {form && <MachineForm postSubmit={getMachines} handleClose={closeForm} />}
+      </>
+    )
   )
 }

@@ -1,15 +1,10 @@
-import React, { useContext } from 'react'
-import { LangContext } from '../../context/lang-context'
+import React from 'react'
 import { Link } from 'react-router-dom'
 
 import logo from '../../assets/images/logo-vendim.png'
 import logoSm from '../../assets/images/logo-vendim-sm.png'
 
 export default ({ fullWidth, navLinks }) => {
-  const {
-    languagePack: { navbar }
-  } = useContext(LangContext)
-
   const ListItem = ({ icon, text, path }) => (
     <>
       {fullWidth ? (

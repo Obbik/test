@@ -1,16 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react'
-// import { Link, Route, Switch } from 'react-router-dom'
-// import { useLocation, useParams } from 'react-router'
 import { SearchbarContext } from '../../../context/searchbar-context'
 import { NavigationContext } from '../../../context/navigation-context'
-// import { LangContext } from '../../../context/lang-context'
 import useFetch from '../../../hooks/fetch-hook'
 import useForm from '../../../hooks/form-hook'
 import TagForm from '../../../components/Modals/TagForm'
 
 export default () => {
   const { fetchMssqlApi } = useFetch()
-  // const { TRL_Pack } = useContext(LangContext)
   const { setHeaderData } = useContext(NavigationContext)
   const { Searchbar, compareText } = useContext(SearchbarContext)
 
@@ -68,7 +64,7 @@ export default () => {
         <>
           <Searchbar callback={handleUpdate} />
           <div className="row mb-2">
-            <div className="col-12 col-md-6 offset-lg-2 col-lg-4 mb-2">
+            <div className="col-12 col-md-6 offset-lg-2 col-lg-4 mb-2 mb-md-0">
               <button
                 className="btn list-group-item list-group-item-action text-center"
                 onClick={openForm('new')}
@@ -76,7 +72,7 @@ export default () => {
                 <i className="fas fa-plus" />
               </button>
             </div>
-            <div className="col-12 col-md-6 col-lg-4 mb-2 position-relative">
+            <div className="col-12 col-md-6 col-lg-4">
               <button
                 className="btn list-group-item list-group-item-action"
                 onClick={openForm('others')}

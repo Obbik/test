@@ -8,18 +8,20 @@ import pl from 'javascript-time-ago/locale/pl'
 import ServerApp from './server_env/app/App'
 import MachineApp from './machine_env/app/App'
 import * as serviceWorker from './serviceWorker'
-import { ENV } from './config'
+import { ENV } from './env'
 
 import 'react-notifications/lib/notifications.css'
 
 JavascriptTimeAgo.addLocale(en)
 JavascriptTimeAgo.addLocale(pl)
 
-console.log(`Environment: ${ENV}`)
+const environment = process.env.CLIENT_ENVIRONMENT || ENV
+
+if (process.env.NODE_ENV === 'development') console.log(`Environment: ${environment}`)
 
 render(
   <BrowserRouter basename="dashboard">
-    {ENV === 'SERVER' ? <ServerApp /> : <MachineApp />}
+    {environment === 'SERVER' ? <ServerApp /> : <MachineApp />}
   </BrowserRouter>,
   document.getElementById('root')
 )

@@ -11,7 +11,7 @@ import gbFlag from '../../assets/flags/gb.png'
 import plFlag from '../../assets/flags/pl.png'
 
 import logo from '../../assets/images/logo-vendim.png'
-import Loader from '../../../server_env/components/Loader/Loader'
+import Loader from '../../components/Loader/Loader'
 
 export default ({ login }) => {
   const { setError } = useContext(ErrorContext)

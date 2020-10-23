@@ -23,7 +23,7 @@ export default () => {
     fetchMssqlApi('clients', {}, clients => setClients(clients))
   }
 
-  const [terminals, setTerminals] = useState([])
+  const [terminals, setTerminals] = useState(null)
   const getTerminals = () => {
     fetchMssqlApi('terminals', {}, terminals => setTerminals(terminals))
   }
@@ -68,76 +68,81 @@ export default () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const filteredTerminals = terminals.filter(({ SerialNo, ClientName }) =>
-    filterItems(searchedText, SerialNo, ClientName)
-  )
+  const filteredTerminals =
+    terminals &&
+    terminals.filter(({ SerialNo, ClientName }) =>
+      filterItems(searchedText, SerialNo, ClientName)
+    )
 
   return (
-    <>
-      {terminals.length ? (
-        <>
-          <SearchInput onSearch={updateSearchedText} />
-          {!filteredTerminals.length ? (
-            <NoResults buttonText="Dodaj terminal" onClick={openForm()} />
-          ) : (
-            <>
-              <div>
-                <button
-                  className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
-                  onClick={openForm()}
-                >
-                  <i className="fas fa-plus mr-2" /> Dodaj terminal
-                </button>
-              </div>
-              <div className="overflow-auto">
-                <table className="table table-striped border">
-                  <thead>
-                    <tr>
-                      <th>Nr seryjny</th>
-                      <th>Klient</th>
-                      <th>Data dodania</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredTerminals
-                      .sort(
-                        (a, b) => new Date(b.CreateDateTime) - new Date(a.CreateDateTime)
-                      )
-                      .map((terminal, idx) => (
-                        <tr key={idx}>
-                          <td>
-                            <button
-                              className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
-                              onClick={openForm(terminal.TerminalId)}
-                            >
-                              {terminal.SerialNo}
-                            </button>
-                          </td>
-                          <td>{terminal.ClientName}</td>
-                          <td>{terminal.CreateDateTime}</td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-            </>
-          )}
-        </>
-      ) : (
-        <NoResults buttonText="Dodaj terminal" onClick={openForm()} />
-      )}
-      {form && (
-        <TerminalForm
-          terminalData={
-            form !== 'new'
-              ? filteredTerminals.find(terminal => terminal.TerminalId === form)
-              : null
-          }
-          clients={clients}
-          handleSubmit={submitTerminal}
-          handleClose={closeForm}
-        />
-      )}
-    </>
+    terminals && (
+      <>
+        {terminals.length ? (
+          <>
+            <SearchInput onSearch={updateSearchedText} />
+            {!filteredTerminals.length ? (
+              <NoResults buttonText="Dodaj terminal" onClick={openForm()} />
+            ) : (
+              <>
+                <div>
+                  <button
+                    className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+                    onClick={openForm()}
+                  >
+                    <i className="fas fa-plus mr-2" /> Dodaj terminal
+                  </button>
+                </div>
+                <div className="overflow-auto">
+                  <table className="table table-striped border">
+                    <thead>
+                      <tr>
+                        <th>Nr seryjny</th>
+                        <th>Klient</th>
+                        <th>Data dodania</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredTerminals
+                        .sort(
+                          (a, b) =>
+                            new Date(b.CreateDateTime) - new Date(a.CreateDateTime)
+                        )
+                        .map((terminal, idx) => (
+                          <tr key={idx}>
+                            <td>
+                              <button
+                                className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
+                                onClick={openForm(terminal.TerminalId)}
+                              >
+                                {terminal.SerialNo}
+                              </button>
+                            </td>
+                            <td>{terminal.ClientName}</td>
+                            <td>{terminal.CreateDateTime}</td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+          </>
+        ) : (
+          <NoResults buttonText="Dodaj terminal" onClick={openForm()} />
+        )}
+        {form && (
+          <TerminalForm
+            terminalData={
+              form !== 'new'
+                ? filteredTerminals.find(terminal => terminal.TerminalId === form)
+                : null
+            }
+            clients={clients}
+            handleSubmit={submitTerminal}
+            handleClose={closeForm}
+          />
+        )}
+      </>
+    )
   )
 }

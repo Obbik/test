@@ -1,14 +1,7 @@
-import React, { useContext } from 'react'
-import { LangContext } from '../../context/lang-context'
+import React from 'react'
 import { Link } from 'react-router-dom'
 
 export default ({ navLinks }) => {
-  const {
-    languagePack: { navbar }
-  } = useContext(LangContext)
-
-  const permissions = sessionStorage.getItem('permissions')
-
   const ListItem = ({ icon, text, path }) => (
     <li className="px-2 text-center">
       <Link to={path} className="nav-link d-flex flex-column text-dark btn btn-link p-1">
