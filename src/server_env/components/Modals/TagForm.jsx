@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
+import { NotificationContext } from '../../context/notification-context'
 import { LangContext } from '../../context/lang-context'
 import onClickAway from '../../util/onClickAway'
 import useFetch from '../../hooks/fetch-hook'
@@ -6,6 +7,7 @@ import useFetch from '../../hooks/fetch-hook'
 export default ({ tagData, handleClose, getTags, section }) => {
   const { fetchMssqlApi } = useFetch()
   const { TRL_Pack } = useContext(LangContext)
+  const { ErrorNotification } = useContext(NotificationContext)
   const modalRef = useRef(null)
 
   const initialTagData = useRef(tagData)
@@ -29,17 +31,20 @@ export default ({ tagData, handleClose, getTags, section }) => {
   const [input, setInput] = useState('')
   const handleChange = evt => setInput(evt.target.value)
 
-  const [editedOption, setEditedOption] = useState(null)
+  const [editedOption, setEditedOption] = useState(tagData ? null : 'new')
   const editOption = idx => () => {
-    setInput(idx === 'new' ? '' : options[idx].name)
-    setEditedOption(idx)
+    if (idx === null) setEditedOption(null)
+    else {
+      setInput(idx === 'new' ? '' : options[idx].name)
+      setEditedOption(idx)
+    }
   }
 
   const handleSubmit = evt => {
     evt.preventDefault()
 
     const { label } = evt.target.elements
-    console.log(initialTagData.current, label.value, options, tagData)
+    // console.log(initialTagData.current, label?.value, options, tagData)
 
     const promises = []
 
@@ -51,12 +56,11 @@ export default ({ tagData, handleClose, getTags, section }) => {
       )
     }
 
-    if (tagData) {
-      if (initialTagData.current.options)
-        initialTagData.current.options
-          .map(opt => opt.tagId)
-          .filter(tagId => !options.map(otp => otp.tagId).includes(tagId))
-          .forEach(tagId => pushRequest(`tag/${tagId}`, { method: 'DELETE' }))
+    if (tagData && initialTagData.current.options) {
+      initialTagData.current.options
+        .map(({ tagId }) => tagId)
+        .filter(tagId => !options.map(otp => otp.tagId).includes(tagId))
+        .forEach(tagId => pushRequest(`tag/${tagId}`, 'DELETE'))
 
       options.forEach(({ tagId, name }) => {
         if (tagId) {
@@ -64,35 +68,31 @@ export default ({ tagData, handleClose, getTags, section }) => {
             name !== initialTagData.current.options.find(opt => opt.tagId === tagId).name
           )
             pushRequest(`tag/${tagId}`, 'PUT', {
-              Name: `${initialTagData.current.label} - ${name}`
+              Name: tagData.others ? name : `${initialTagData.current.label} - ${name}`
             })
         } else {
           pushRequest('tags', 'POST', {
-            Name: `${initialTagData.current.label} - ${name}`,
+            Name: tagData.others ? name : `${initialTagData.current.label} - ${name}`,
             Type: section
           })
         }
       })
-    } else {
-      pushRequest('tags', 'POST', {
-        Name: `${label.value} - `,
-        Type: section
-      })
 
+      if (!tagData.others && initialTagData.current.label !== label.value)
+        pushRequest('tags', 'PUT', {
+          PrevLabel: initialTagData.current.label,
+          NewLabel: label.value
+        })
+    } else {
       if (options.length > 0)
         options.forEach(({ name }) => {
           pushRequest('tags', 'POST', {
-            Name: `${label.value} - ${name}`,
+            Name: tagData.others ? name : `${label.value} - ${name}`,
             Type: section
           })
         })
+      else return ErrorNotification('Podaj przynajmniej jedną opcję')
     }
-
-    if (tagData && initialTagData.current.label !== label.value)
-      pushRequest('tags', 'PUT', {
-        PrevLabel: initialTagData.current.label,
-        NewLabel: label.value
-      })
 
     Promise.all(promises).then(() => {
       getTags()
@@ -118,13 +118,17 @@ export default ({ tagData, handleClose, getTags, section }) => {
           </div>
           <div className="modal-body p-0">
             <form id="notes-form" onSubmit={handleSubmit} className="p-3">
-              <input
-                className="form-control"
-                name="label"
-                defaultValue={tagData?.label}
-                required
-                autoComplete="off"
-              />
+              {tagData?.others ? (
+                <h6 className="text-center">Inne</h6>
+              ) : (
+                <input
+                  className="form-control"
+                  name="label"
+                  defaultValue={tagData?.label}
+                  required
+                  autoComplete="off"
+                />
+              )}
               <hr />
               {options.length > 0 && (
                 <div
@@ -183,28 +187,24 @@ export default ({ tagData, handleClose, getTags, section }) => {
                 </div>
               )}
               {editedOption === 'new' ? (
-                <div className="position-relative cursor-pointer mb-1">
-                  <li className="list-group-item list-group-item-action pr-5">
+                <div className="mb-1">
+                  <li className="list-group-item d-flex px-2">
+                    <button
+                      type="button"
+                      className="btn btn-light"
+                      onClick={editOption(null)}
+                    >
+                      <i className="fas fa-trash text-muted" />
+                    </button>
                     <input
-                      className="form-control"
+                      className="form-control mx-2"
                       onChange={handleChange}
                       value={input}
-                      autoFocus
                     />
+                    <button type="button" className="btn btn-light" onClick={saveOption}>
+                      <i className="fas fa-plus text-success" />
+                    </button>
                   </li>
-                  <button
-                    type="button"
-                    className="btn btn-light position-absolute"
-                    onClick={saveOption}
-                    style={{
-                      top: '50%',
-                      right: 5,
-                      transform: 'translateY(-50%)',
-                      zIndex: 25
-                    }}
-                  >
-                    <i className="fas fa-plus text-success" />
-                  </button>
                 </div>
               ) : (
                 <div

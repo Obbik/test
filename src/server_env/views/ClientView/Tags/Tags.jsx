@@ -67,8 +67,8 @@ export default () => {
       {tags[section].length ? (
         <>
           <Searchbar callback={handleUpdate} />
-          <div className="row">
-            <div className="col-12 col-md-6 col-lg-4 mb-2">
+          <div className="row mb-2">
+            <div className="col-12 col-md-6 offset-lg-2 col-lg-4 mb-2">
               <button
                 className="btn list-group-item list-group-item-action text-center"
                 onClick={openForm('new')}
@@ -76,6 +76,16 @@ export default () => {
                 <i className="fas fa-plus" />
               </button>
             </div>
+            <div className="col-12 col-md-6 col-lg-4 mb-2 position-relative">
+              <button
+                className="btn list-group-item list-group-item-action"
+                onClick={openForm('others')}
+              >
+                Inne
+              </button>
+            </div>
+          </div>
+          <div className="row">
             {filteredTags.map((tag, idx) => (
               <div key={idx} className="col-12 col-md-6 col-lg-4 mb-2 position-relative">
                 <button
@@ -115,7 +125,13 @@ export default () => {
       )}
       {form && (
         <TagForm
-          tagData={form !== 'new' ? filteredTags.find(tag => tag.label === form) : null}
+          tagData={
+            form === 'others'
+              ? tags[section].find(label => label.others)
+              : form !== 'new'
+              ? filteredTags.find(tag => tag.label === form)
+              : null
+          }
           handleClose={closeForm}
           getTags={getTags}
           section={section === 'machine' ? 1 : 2}

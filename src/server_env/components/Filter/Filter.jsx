@@ -211,25 +211,19 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, resetFilter
           <hr className="my-2" />
           <div className="mb-n1">
             {tags.map(tag =>
-              filter.activeTags.includes(tag.tagId) ? (
-                <button className="btn btn-info badge badge-pill px-2 py-1 mx-2 mb-1">
-                  {tag.label}
-                </button>
-              ) : (
-                tag.options
-                  .filter(opt => filter.activeTags.includes(opt.tagId))
-                  .map(opt => (
-                    <button className="btn btn-info badge badge-pill px-2 py-1 mx-2 mb-1">
-                      {`${tag.label} - ${opt.name}`}
-                    </button>
-                  ))
-              )
+              tag.options
+                .filter(opt => filter.activeTags.includes(opt.tagId))
+                .map(opt => (
+                  <button className="btn btn-info badge badge-pill px-2 py-1 mx-2 mb-1">
+                    {tag.label ? `${tag.label} - ${opt.name}` : opt.name}
+                  </button>
+                ))
             )}
             <button
               className="btn btn-info badge badge-pill px-2 py-1 mx-2 mb-1"
               onClick={openForm()}
             >
-              <i className="fas fa-pen" />
+              <i className="fas fa-plus" />
             </button>
           </div>
           {form && (
@@ -244,15 +238,11 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, resetFilter
                   <div
                     key={idx}
                     className={`font-weight-bolder list-group-item cursor-pointer ${
-                      idx === activeLabel
-                        ? 'active'
-                        : filter.activeTags.includes(tag.tagId)
-                        ? 'list-group-item-success'
-                        : ''
+                      idx === activeLabel ? 'active' : ''
                     }`}
                     onClick={handleChangeLabel(idx)}
                   >
-                    {tag.label}
+                    {tag.others ? 'Inne' : tag.label}
                   </div>
                 ))}
               </div>

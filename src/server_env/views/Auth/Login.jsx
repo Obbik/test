@@ -63,7 +63,7 @@ export default ({ login }) => {
             <div className="text-center mt-2 mb-3">
               <img src={logo} alt="logo" height="60" />
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} autoComplete="off">
               <div className="form-group">
                 <label className="small">{TRL_Pack.auth.email}</label>
                 <input

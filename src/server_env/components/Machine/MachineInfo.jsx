@@ -167,8 +167,6 @@ export default ({ machineData: initialMachineData, updateMachine }) => {
       maintenancesData.find(m => m.Name === maintenance.value).MaintenanceTypeId
     )
 
-    console.log(updatedMachine)
-
     fetchMssqlApi(
       `machine/${initialMachineData.MachineId}`,
       { method: 'PUT', data: updatedMachine },
@@ -275,25 +273,16 @@ export default ({ machineData: initialMachineData, updateMachine }) => {
                 <div className="col-lg-4 mb-2 mb-lg-0 text-lg-right">Tagi</div>
                 <div className="col-lg-8 my-auto">
                   {tags.map(tag =>
-                    tag.isActive ? (
-                      <button
-                        type="button"
-                        className="btn btn-info badge badge-pill px-2 py-1 mx-2 mb-1"
-                      >
-                        {tag.label}
-                      </button>
-                    ) : (
-                      tag.options
-                        .filter(opt => opt.isActive)
-                        .map(opt => (
-                          <button
-                            type="button"
-                            className="btn btn-info badge badge-pill px-2 py-1 mx-2 mb-1"
-                          >
-                            {`${tag.label} - ${opt.name}`}
-                          </button>
-                        ))
-                    )
+                    tag.options
+                      .filter(opt => opt.isActive)
+                      .map(opt => (
+                        <button
+                          type="button"
+                          className="btn btn-info badge badge-pill px-2 py-1 mx-2 mb-1"
+                        >
+                          {tag.label ? `${tag.label} - ${opt.name}` : opt.name}
+                        </button>
+                      ))
                   )}
                   <button
                     type="button"

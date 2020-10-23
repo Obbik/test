@@ -86,7 +86,9 @@ export default () => {
   }
 
   const getTags = () => {
-    fetchMssqlApi('tags', {}, tags => setTags(tags.machine))
+    fetchMssqlApi('tags', {}, tags =>
+      setTags(tags.machine.filter(tag => tag.options.length > 0))
+    )
   }
 
   useEffect(() => {
@@ -134,18 +136,28 @@ export default () => {
           .includes(col.searchbar.toLowerCase())
       )
 
-  // tags.every(label => label.some(opt => row.MachineTags.split(', ').includes(opt)))
-
   const tagFilter = machine => {
     return (
       tags
-        .filter(tag => tag.options.length === 0 && filter.activeTags.includes(tag.tagId))
-        .map(tag => tag.tagId)
-        .every(tag => machine.MachineTags.split(', ').includes(tag)) &&
+        .filter(
+          label =>
+            label.others &&
+            label.options
+              .map(tag => tag.tagId)
+              .some(tag => filter.activeTags.includes(tag))
+        )
+        .map(label =>
+          label.options
+            .map(opt => opt.tagId)
+            .filter(tagId => filter.activeTags.includes(tagId))
+        )
+        .every(label =>
+          label.every(opt => machine.MachineTags.split(', ').includes(opt))
+        ) &&
       tags
         .filter(
           label =>
-            label.options.length > 0 &&
+            !label.others &&
             label.options
               .map(tag => tag.tagId)
               .some(tag => filter.activeTags.includes(tag))

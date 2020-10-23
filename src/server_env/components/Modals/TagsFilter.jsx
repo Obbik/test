@@ -38,8 +38,9 @@ export default ({ tags, setTags, handleClose, multitag, setFilter }) => {
           ? {
               ...tag,
               options: tag.options.map(opt => {
+                console.log(tag)
                 if (tagId === opt.tagId) return { ...opt, isActive: !opt.isActive }
-                else if (!multitag)
+                else if (!multitag && !tag.others)
                   return {
                     ...opt,
                     isActive: false
@@ -59,15 +60,11 @@ export default ({ tags, setTags, handleClose, multitag, setFilter }) => {
           <div
             key={idx}
             className={`font-weight-bolder list-group-item cursor-pointer ${
-              idx === activeLabel
-                ? 'active'
-                : tag.isActive
-                ? 'list-group-item-success'
-                : ''
+              idx === activeLabel ? 'active' : ''
             }`}
             onClick={handleChange(idx)}
           >
-            {tag.label}
+            {tag.others ? 'Inne' : tag.label}
           </div>
         ))}
       </div>

@@ -25,9 +25,11 @@ export default () => {
 
   const [filter, setFilter] = useState(defaultFilter)
 
-  const [tags, setTags] = useState([])
+  const [tags, setTags] = useState(null)
   const getTags = () => {
-    fetchMssqlApi('tags', {}, tags => setTags(tags.machine))
+    fetchMssqlApi('tags', {}, tags =>
+      setTags(tags.machine.filter(tag => tag.options.length > 0))
+    )
   }
 
   const toggleFilter = () => setFilter(prev => ({ ...prev, visible: !prev.visible }))
@@ -308,13 +310,15 @@ export default () => {
         return newFilterData
       }),
       tags: [
+        ...(tags.filter(label => label.others).options ||
+          []
+            .filter(opt => filter.activeTags.includes(opt.tagId))
+            .map(opt => [opt.tagId])),
         ...tags
-          .filter(tag => filter.activeTags.includes(tag.tagId))
-          .map(tag => [tag.tagId]),
-        ...tags
-          .filter(label => label.options.length > 0)
-          .filter(label =>
-            label.options.find(opt => filter.activeTags.includes(opt.tagId))
+          .filter(
+            label =>
+              !label.others &&
+              label.options.find(opt => filter.activeTags.includes(opt.tagId))
           )
           .map(tag =>
             tag.options
@@ -377,13 +381,25 @@ export default () => {
   const tagFilter = machine => {
     return (
       tags
-        .filter(tag => tag.options.length === 0 && filter.activeTags.includes(tag.tagId))
-        .map(tag => tag.tagId)
-        .every(tag => machine.MachineTags.split(', ').includes(tag)) &&
+        .filter(
+          label =>
+            label.others &&
+            label.options
+              .map(tag => tag.tagId)
+              .some(tag => filter.activeTags.includes(tag))
+        )
+        .map(label =>
+          label.options
+            .map(opt => opt.tagId)
+            .filter(tagId => filter.activeTags.includes(tagId))
+        )
+        .every(label =>
+          label.every(opt => machine.MachineTags.split(', ').includes(opt))
+        ) &&
       tags
         .filter(
           label =>
-            label.options.length > 0 &&
+            !label.others &&
             label.options
               .map(tag => tag.tagId)
               .some(tag => filter.activeTags.includes(tag))
@@ -410,137 +426,145 @@ export default () => {
 
   return (
     <>
-      <div className="row mb-3">
-        <div className="d-flex offset-lg-1 col col-lg-10">
-          <form className="input-group input-group-sm" onSubmit={getReport}>
-            <div className="input-group-prepend">
-              <label className="input-group-text">Raport</label>
-            </div>
-            <select
-              className="form-control"
-              name="reportId"
-              onChange={handleChangeReport}
-            >
-              {defaultReports.map((report, idx) => (
-                <option key={idx} value={idx + 1}>
-                  {report.label}
-                </option>
-              ))}
-            </select>
-            <div className="input-group-prepend">
-              <label className="input-group-text">Od</label>
-            </div>
-            <input
-              type="date"
-              className="form-control border-right-0"
-              name="dateFrom"
-              style={{ maxWidth: 150 }}
-              defaultValue={
-                new Date(new Date().setMonth(new Date().getMonth() - 1))
-                  .toISOString()
-                  .split('T')[0]
-              }
-              max={new Date().toISOString().split('T')[0]}
-              disabled={isDateRangeDisabled}
-            />
-            <div className="input-group-prepend">
-              <label className="input-group-text">Do</label>
-            </div>
-            <input
-              type="date"
-              className="form-control border-right-0"
-              name="dateTo"
-              style={{ maxWidth: 150 }}
-              defaultValue={new Date().toISOString().split('T')[0]}
-              max={new Date().toISOString().split('T')[0]}
-              disabled={isDateRangeDisabled}
-            />
-            <div className="input-group-append">
-              <button className="btn bg-white border">Generuj</button>
-            </div>
-          </form>
-        </div>
-      </div>
-      {currentReport && (
+      {tags && (
         <>
-          <Pagination
-            {...{
-              totalItems: currentReport.data.filter(reportFilter).filter(tagFilter)
-                .length,
-              page,
-              handleSwitchPage,
-              rowsPerPage: filter.rowsPerPage,
-              toggleFilter,
-              filterVisibility: filter.visible
-            }}
-          />
-          {filter.visible && (
-            <Filter
-              {...{
-                filter,
-                setFilter,
-                columns: currentReport.columns,
-                data: currentReport.data,
-                resetPage,
-                tags,
-                resetFilter
-              }}
-            />
-          )}
-          {currentReport.data && (
-            <>
-              {currentReport.data.filter(reportFilter).filter(tagFilter).length > 0 ? (
-                <div className="overflow-auto">
-                  <div>
-                    <button
-                      className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
-                      onClick={handleDownload}
-                    >
-                      <i className="fas fa-file-download mr-2" /> Pobierz raport
-                    </button>
-                  </div>
-                  <table className="table table-striped table-bordered align-middle report-table">
-                    <thead>
-                      <tr>
-                        {filter.showIndexes && <th className="text-center">#</th>}
-                        {filter.columns
-                          .filter(col => !col.hidden && !col.disabled)
-                          .map((col, idx) => (
-                            <th key={idx}>{col.name}</th>
-                          ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {currentReport.data
-                        .filter(reportFilter)
-                        .filter(tagFilter)
-                        .sort(sortRows)
-                        .slice((page - 1) * filter.rowsPerPage, page * filter.rowsPerPage)
-                        .map((row, row_idx) => (
-                          <tr key={row_idx}>
-                            {filter.showIndexes && (
-                              <td className="text-center small font-weight-bold">
-                                {(page - 1) * filter.rowsPerPage + row_idx + 1}
-                              </td>
-                            )}
-                            {Object.keys(row).map(
-                              (col, col_idx) =>
-                                filter.columns
-                                  .filter(col => !col.hidden && !col.disabled)
-                                  .map(col => col.id)
-                                  .includes(col_idx + 1) && (
-                                  <td key={col_idx} className="small">
-                                    {formatValue(col_idx, row[col])}
-                                  </td>
-                                )
-                            )}
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
+          <div className="row mb-3">
+            <div className="d-flex offset-lg-1 col col-lg-10">
+              <form className="input-group input-group-sm" onSubmit={getReport}>
+                <div className="input-group-prepend">
+                  <label className="input-group-text">Raport</label>
                 </div>
-              ) : (
-                <h5 className="text-center">Brak wyników</h5>
+                <select
+                  className="form-control"
+                  name="reportId"
+                  onChange={handleChangeReport}
+                >
+                  {defaultReports.map((report, idx) => (
+                    <option key={idx} value={idx + 1}>
+                      {report.label}
+                    </option>
+                  ))}
+                </select>
+                <div className="input-group-prepend">
+                  <label className="input-group-text">Od</label>
+                </div>
+                <input
+                  type="date"
+                  className="form-control border-right-0"
+                  name="dateFrom"
+                  style={{ maxWidth: 150 }}
+                  defaultValue={
+                    new Date(new Date().setMonth(new Date().getMonth() - 1))
+                      .toISOString()
+                      .split('T')[0]
+                  }
+                  max={new Date().toISOString().split('T')[0]}
+                  disabled={isDateRangeDisabled}
+                />
+                <div className="input-group-prepend">
+                  <label className="input-group-text">Do</label>
+                </div>
+                <input
+                  type="date"
+                  className="form-control border-right-0"
+                  name="dateTo"
+                  style={{ maxWidth: 150 }}
+                  defaultValue={new Date().toISOString().split('T')[0]}
+                  max={new Date().toISOString().split('T')[0]}
+                  disabled={isDateRangeDisabled}
+                />
+                <div className="input-group-append">
+                  <button className="btn bg-white border">Generuj</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          {currentReport && (
+            <>
+              <Pagination
+                {...{
+                  totalItems: currentReport.data.filter(reportFilter).filter(tagFilter)
+                    .length,
+                  page,
+                  handleSwitchPage,
+                  rowsPerPage: filter.rowsPerPage,
+                  toggleFilter,
+                  filterVisibility: filter.visible
+                }}
+              />
+              {filter.visible && (
+                <Filter
+                  {...{
+                    filter,
+                    setFilter,
+                    columns: currentReport.columns,
+                    data: currentReport.data,
+                    resetPage,
+                    tags,
+                    resetFilter
+                  }}
+                />
+              )}
+              {currentReport.data && (
+                <>
+                  {currentReport.data.filter(reportFilter).filter(tagFilter).length >
+                  0 ? (
+                    <div className="overflow-auto">
+                      <div>
+                        <button
+                          className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+                          onClick={handleDownload}
+                        >
+                          <i className="fas fa-file-download mr-2" /> Pobierz raport
+                        </button>
+                      </div>
+                      <table className="table table-striped table-bordered align-middle report-table">
+                        <thead>
+                          <tr>
+                            {filter.showIndexes && <th className="text-center">#</th>}
+                            {filter.columns
+                              .filter(col => !col.hidden && !col.disabled)
+                              .map((col, idx) => (
+                                <th key={idx}>{col.name}</th>
+                              ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {currentReport.data
+                            .filter(reportFilter)
+                            .filter(tagFilter)
+                            .sort(sortRows)
+                            .slice(
+                              (page - 1) * filter.rowsPerPage,
+                              page * filter.rowsPerPage
+                            )
+                            .map((row, row_idx) => (
+                              <tr key={row_idx}>
+                                {filter.showIndexes && (
+                                  <td className="text-center small font-weight-bold">
+                                    {(page - 1) * filter.rowsPerPage + row_idx + 1}
+                                  </td>
+                                )}
+                                {Object.keys(row).map(
+                                  (col, col_idx) =>
+                                    filter.columns
+                                      .filter(col => !col.hidden && !col.disabled)
+                                      .map(col => col.id)
+                                      .includes(col_idx + 1) && (
+                                      <td key={col_idx} className="small">
+                                        {formatValue(col_idx, row[col])}
+                                      </td>
+                                    )
+                                )}
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <h5 className="text-center">Brak wyników</h5>
+                  )}
+                </>
               )}
             </>
           )}
