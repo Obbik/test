@@ -29,7 +29,7 @@ export default () => {
             onClick={changeSection(0)}
             tabIndex="0"
           >
-            Wybory
+            Konfiguracja
           </button>
         </li>
         <li className="nav-item">
@@ -47,7 +47,7 @@ export default () => {
             onClick={changeSection(2)}
             tabIndex="0"
           >
-            Winda
+            Winda/wybory
           </button>
         </li>
       </ul>
