@@ -15,9 +15,9 @@ const TestFeeder = () => {
         let url = 'shop/test-feeder';
 
         if (selectedRadio === 'Merge')
-            url = '/shop/feeder/double';
+            url = 'shop/feeder/double';
         else if (selectedRadio === 'Unmerge')
-            url = '/shop/feeder/single';
+            url = 'shop/feeder/single';
 
         fetchApi(
             url,
@@ -89,7 +89,7 @@ const TestFeeder = () => {
                                 Rozłącz
                             </label>
                         </div>
-                        <button type="submit" className="btn btn-secondary mr-2">Wydaj</button>
+                        <button type="submit" className="btn btn-secondary mr-2">Wyślij</button>
                     </form>
                 </div>
             </div>
