@@ -48,11 +48,12 @@ export default ({ feederData, closeModal, getMachineProducts }) => {
     }
 
     let path, method
+
     if (!feederData) {
       path = 'machine-product'
       method = 'POST'
     } else {
-      path = `machine-product/${feederData.MachineFeederNo}`
+      path = `machine-product/${feederData.MachineProductId}`
       method = 'PUT'
     }
 
