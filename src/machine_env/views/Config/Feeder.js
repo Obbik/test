@@ -43,6 +43,7 @@ const TestFeeder = () => {
                                 placeholder="Podaj nr wyboru"
                                 min={0}
                                 onChange={e => setMachineFeederNo(e.target.value)}
+                                onKeyUp={e => setMachineFeederNo(e.target.value)}
                                 value={machineFeederNo}
                                 required
                             />
