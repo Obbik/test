@@ -18,6 +18,14 @@ export default () => {
     fetchApi('shop/temperature', { method: 'POST', data: { Temperature: temperature } })
   }
 
+  const enableTemperature = () => {
+    fetchApi('shop/temperature/1', { method: 'GET', data: null, withNotification: true})
+  }
+
+  const disableTemperature = () => {
+    fetchApi('shop/temperature/0', { method: 'GET', data: null, withNotification: true})
+  }
+
   useEffect(() => {
     // getTemperature()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -25,6 +33,12 @@ export default () => {
 
   return (
     <>
+      <div className="row mb-4">
+        <div className="col text-center">
+          <button className="btn btn-success mr-1" onClick={enableTemperature}>&#10004;</button>
+          <button className="btn btn-danger" onClick={disableTemperature}>&#10008;</button>
+        </div>
+      </div>
       <div className="d-flex justify-content-center mb-4">
         <div className="d-flex align-items-center mr-3">
           <button
