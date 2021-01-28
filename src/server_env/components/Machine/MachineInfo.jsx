@@ -102,7 +102,7 @@ export default ({ machineData: initialMachineData, updateMachine }) => {
     getLocations()
     getMaintenances()
     getMachineTypes()
-    getTags()
+    // getTags()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

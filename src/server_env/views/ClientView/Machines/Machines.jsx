@@ -95,7 +95,7 @@ export default () => {
     setHeaderData({ text: TRL_Pack.machines.header })
 
     getMachines()
-    getTags()
+    // getTags()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -193,7 +193,7 @@ export default () => {
               columns: filter.columns,
               data: machines,
               resetPage,
-              tags,
+              // tags,
               resetFilter
             }}
           />
