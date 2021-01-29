@@ -46,20 +46,29 @@ export default ({ children }) => {
       : [
           { text: 'Maszyny', path: '/machines', icon: 'fas fa-tablet-alt' },
           { text: 'Raporty', path: '/reports', icon: 'far fa-file-alt' },
-          { text: 'Tagi', path: '/tags', icon: 'fas fa-tags' }
+        //   { text: 'Tagi', path: '/tags', icon: 'fas fa-tags' }
         ]
-
-  if (localStorage.getItem('clientId') === 'dev')
+    
     navlinks.push(
-      {
-        text: 'Definicje',
-        onClick: () => setSectionModal(<Definitions handleClose={closeModal} />),
-        icon: 'fas fa-cubes'
-      },
-      { text: 'Katalog', path: '/catalog-products', icon: 'fas fa-th-list' }
+        {
+            text: 'Definicje',
+            onClick: () => setSectionModal(<Definitions handleClose={closeModal} />),
+            icon: 'fas fa-cubes'
+        },
+        { text: 'Katalog', path: '/catalog-products', icon: 'fas fa-th-list' },
+        { text: 'Wyloguj się', path: '/logout', icon: 'fas fa-sign-out-alt' }
     )
+//   if (localStorage.getItem('clientId') === 'dev')
+    // navlinks.push(
+    //   {
+    //     text: 'Definicje',
+    //     onClick: () => setSectionModal(<Definitions handleClose={closeModal} />),
+    //     icon: 'fas fa-cubes'
+    //   },
+    //   { text: 'Katalog', path: '/catalog-products', icon: 'fas fa-th-list' }
+    // )
 
-  navlinks.push({ text: 'Wyloguj się', path: '/logout', icon: 'fas fa-sign-out-alt' })
+//   navlinks.push({ text: 'Wyloguj się', path: '/logout', icon: 'fas fa-sign-out-alt' })
 
   return (
     <NavigationContext.Provider value={{ setHeaderData }}>

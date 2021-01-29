@@ -269,7 +269,7 @@ export default ({ machineData: initialMachineData, updateMachine }) => {
                   />
                 </div>
               </div>
-              <div className="row mb-n1">
+              {/* <div className="row mb-n1">
                 <div className="col-lg-4 mb-2 mb-lg-0 text-lg-right">Tagi</div>
                 <div className="col-lg-8 my-auto">
                   {tags.map(tag =>
@@ -295,7 +295,7 @@ export default ({ machineData: initialMachineData, updateMachine }) => {
                 {form && (
                   <TagsFilter tags={tags} handleClose={closeForm} setTags={setTags} />
                 )}
-              </div>
+              </div> */}
             </form>
           </div>
           <div className="card-footer text-center">

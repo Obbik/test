@@ -41,7 +41,7 @@ export default ({ machineId }) => {
   )
 
   const getMachineProducts = () => {
-    fetchMssqlApi(`machine/${machineId}/products`, {}, machineProducts => {
+    fetchMssqlApi(`machine-products?machineId=${machineId}`, {}, machineProducts => {
       machineProducts.forEach(
         machineProduct => (machineProduct.id = feedersCounter.current++)
       )
