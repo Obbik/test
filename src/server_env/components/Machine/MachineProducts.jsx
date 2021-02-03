@@ -31,6 +31,7 @@ export default ({ machineId }) => {
             machineProduct.toDelete ||
             machineProduct.FeederNo !== initialProduct.FeederNo ||
             Number(machineProduct.PriceBrutto) !== initialProduct.PriceBrutto ||
+            machineProduct.Quantity !== initialProduct.Quantity ||
             machineProduct.MaxItemCount !== initialProduct.MaxItemCount ||
             machineProduct.ProductName !== initialProduct.ProductName
           )
@@ -77,6 +78,7 @@ export default ({ machineId }) => {
         added: true,
         FeederNo: '',
         PriceBrutto: 3,
+        Quantity: 10,
         MaxItemCount: 10,
         ProductName: '',
         id: feedersCounter.current++
@@ -109,6 +111,7 @@ export default ({ machineId }) => {
         initialMachineProducts.current = initialMachineProducts.current.concat({
           FeederNo: feeder.feederNo,
           PriceBrutto: feeder.price,
+          Quantity: feeder.quantity,
           MaxItemCount: feeder.maxQuantity,
           ProductName: feeder.productName,
           id: feeder.id
@@ -119,6 +122,7 @@ export default ({ machineId }) => {
               ? {
                   FeederNo: feeder.feederNo,
                   PriceBrutto: feeder.price,
+                  Quantity: feeder.quantity,
                   MaxItemCount: feeder.maxQuantity,
                   ProductName: feeder.productName,
                   id: feeder.id
@@ -141,6 +145,7 @@ export default ({ machineId }) => {
               ? {
                   FeederNo: feeder.feederNo,
                   PriceBrutto: feeder.price,
+                  Quantity: feeder.quantity,
                   MaxItemCount: feeder.maxQuantity,
                   ProductName: feeder.productName,
                   id: feeder.id
@@ -153,6 +158,7 @@ export default ({ machineId }) => {
               ? {
                   FeederNo: feeder.feederNo,
                   PriceBrutto: feeder.price,
+                  Quantity: feeder.quantity,
                   MaxItemCount: feeder.maxQuantity,
                   ProductName: feeder.productName,
                   id: feeder.id
@@ -189,11 +195,16 @@ export default ({ machineId }) => {
     if (
       !machineProductsData.every(machineProduct => {
         if (machineProduct.added) {
-          const { FeederNo, ProductName, PriceBrutto, MaxItemCount } = machineProduct
+          const { FeederNo, ProductName, PriceBrutto, Quantity, MaxItemCount } = machineProduct
           const ProductId = productNameToId(ProductName)
 
-          if (!FeederNo || isNaN(ProductId) || isNaN(PriceBrutto) || isNaN(MaxItemCount))
+          if (!FeederNo || isNaN(ProductId) || isNaN(PriceBrutto) || isNaN(Quantity) || isNaN(MaxItemCount))
             return false
+
+          if(Quantity > MaxItemCount) {
+            console.log('Quantity is greater than max item count');
+            return false
+          }
 
           changedFeeders.added.push({
             id: machineProduct.id,
@@ -201,6 +212,7 @@ export default ({ machineId }) => {
             productId: ProductId,
             productName: ProductName,
             price: parseFloat(PriceBrutto),
+            quantity: parseInt(Quantity),
             maxQuantity: parseInt(MaxItemCount)
           })
         } else if (machineProduct.toDelete) {
@@ -215,25 +227,27 @@ export default ({ machineId }) => {
           if (
             initialProduct.FeederNo !== machineProduct.FeederNo ||
             initialProduct.PriceBrutto !== machineProduct.PriceBrutto ||
+            initialProduct.Quantity !== machineProduct.Quantity ||
             initialProduct.MaxItemCount !== machineProduct.MaxItemCount ||
             initialProduct.ProductName !== machineProduct.ProductName
           ) {
-            const { FeederNo, ProductName, PriceBrutto, MaxItemCount } = machineProduct
+            const { FeederNo, ProductName, PriceBrutto, Quantity, MaxItemCount } = machineProduct
             const ProductId = productNameToId(ProductName)
 
-            if (
-              !FeederNo ||
-              isNaN(ProductId) ||
-              isNaN(PriceBrutto) ||
-              isNaN(MaxItemCount)
-            )
+            if (!FeederNo || isNaN(ProductId) || isNaN(PriceBrutto) || isNaN(Quantity) || isNaN(MaxItemCount))
               return false
+            
+            if(Quantity > MaxItemCount) {
+              console.log('Quantity is greater than max item count');
+              return false
+            }
 
             changedFeeders.modified.push({
               id: machineProduct.id,
               feederNo: FeederNo,
               productId: ProductId,
               price: parseFloat(PriceBrutto),
+              quantity: parseInt(Quantity),
               maxQuantity: parseInt(MaxItemCount)
             })
           }
@@ -244,7 +258,10 @@ export default ({ machineId }) => {
       ErrorNotification('Invalid inputs.')
       return
     }
-
+    console.log('changedFeeders.added', changedFeeders.added);
+    console.log('changedFeeders.deleted', changedFeeders.deleted);
+    console.log('changedFeeders.modified', changedFeeders.modified);
+    
     if (changedFeeders.added.length)
       changedFeeders.added.forEach(feeder => addFeeder(feeder))
     if (changedFeeders.deleted.length)
@@ -324,6 +341,7 @@ export default ({ machineId }) => {
               <th>Nr</th>
               <th>Produkt</th>
               <th>Cena (zł)</th>
+              <th>Ilość</th>
               <th>Pojemność</th>
               <th className="text-center">Ostatnia sprzedaż</th>
               <th style={{ width: '1%' }} />
@@ -366,6 +384,18 @@ export default ({ machineId }) => {
                   <td>
                     <TextInput
                       style={{ maxWidth: 100 }}
+                      name="Quantity"
+                      value={machineProduct.Quantity}
+                      handleChange={handleChange(machineProduct.id)}
+                      type="number"
+                      min={1}
+                      max={machineProduct.MaxItemCount}
+                      required
+                    />
+                  </td>
+                  <td>
+                    <TextInput
+                      style={{ maxWidth: 100 }}
                       name="MaxItemCount"
                       value={machineProduct.MaxItemCount}
                       handleChange={handleChange(machineProduct.id)}
@@ -391,6 +421,7 @@ export default ({ machineId }) => {
               .map((machineProduct, idx) => (
                 <tr key={idx}>
                   <td>
+                    {/* {machineProduct.FeederNo} */}
                     <TextInput
                       style={{ maxWidth: 75 }}
                       name="FeederNo"
@@ -416,6 +447,18 @@ export default ({ machineId }) => {
                       type="number"
                       min={0}
                       max={1000}
+                      required
+                    />
+                  </td>
+                  <td>
+                    <TextInput
+                      style={{ maxWidth: 100 }}
+                      name="Quantity"
+                      value={machineProduct.Quantity}
+                      handleChange={handleChange(machineProduct.id)}
+                      type="number"
+                      min={1}
+                      max={machineProduct.MaxItemCount}
                       required
                     />
                   </td>

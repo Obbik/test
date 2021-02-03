@@ -1,2 +1,2 @@
-// export const ENV = 'SERVER'
-export const ENV = 'MACHINE'
+export const ENV = 'SERVER'
+// export const ENV = 'MACHINE'
