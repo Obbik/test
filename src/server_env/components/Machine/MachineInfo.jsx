@@ -275,14 +275,15 @@ export default ({ machineData: initialMachineData, updateMachine }) => {
                   {tags.map(tag =>
                     tag.options
                       .filter(opt => opt.isActive)
-                      .map(opt => (
+                      .map(opt =>
                         <button
-                          type="button"
-                          className="btn btn-info badge badge-pill px-2 py-1 mx-2 mb-1"
+                            key={opt.tagId}    
+                            type="button"
+                            className="btn btn-info badge badge-pill px-2 py-1 mx-2 mb-1"
                         >
                           {tag.label ? `${tag.label} - ${opt.name}` : opt.name}
                         </button>
-                      ))
+                      )
                   )}
                   <button
                     type="button"
