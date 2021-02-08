@@ -11,7 +11,8 @@ export default ({
   minLength,
   maxLength,
   min,
-  max
+  max,
+  step
 }) => {
   const [isValid, setIsValid] = useState(true)
 
@@ -21,8 +22,8 @@ export default ({
       if (minLength && value.length < minLength) return false
       if (maxLength && value.length > maxLength) return false
       if (type === 'number' && isNaN(value)) return false
-      if (min && Number(value) < min) return false
-      if (max && Number(value) > max) return false
+      if (Number(value) < min) return false
+      if (Number(value) > max) return false
       return true
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -33,7 +34,7 @@ export default ({
       className={`form-control form-control-sm ${className} ${
         !isValid ? 'invalid-input' : ''
       }`}
-      {...{ name, type, value, style }}
+      {...{ name, type, value, style, min, max, required, step }}
       onChange={handleChange}
       data-valid={isValid}
     />

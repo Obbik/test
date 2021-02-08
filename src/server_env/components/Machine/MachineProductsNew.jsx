@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { Prompt } from 'react-router';
 
 import useFetch from '../../hooks/fetch-hook';
+import { NotificationContext } from '../../context/notification-context'
 
 import TextInput from '../FormElements/TextInput'
 import DatalistInput from '../FormElements/DatalistInput'
@@ -9,6 +11,8 @@ let tableRowId = 0;
 
 const MachineProductsNew = (props) => {
     const { fetchMssqlApi } = useFetch();
+    const { ErrorNotification } = useContext(NotificationContext);
+
     const [machineProducts, setMachineProducts] = useState([]);
     const [initialMachineProducts, setInitialMachineProducts] = useState([]);
     const [products, setProducts] = useState([]);
@@ -21,7 +25,7 @@ const MachineProductsNew = (props) => {
             setMachineProducts(newMachineProducts);
         });
 
-        fetchMssqlApi('products', {}, products => setProducts(products))
+        fetchMssqlApi('products', {}, products => setProducts(products));
     }, [])
 
     useEffect(() => {
@@ -34,7 +38,7 @@ const MachineProductsNew = (props) => {
         });
     }, [machineProducts])
 
-    useEffect(() => console.log('machineProducts', machineProducts, 'isTableModified', isTableModified));
+    useEffect(() => console.log('machineProducts', machineProducts));
 
     const handleChange = (machineProductId, e) => {
         const name = e.target.name;
@@ -75,8 +79,46 @@ const MachineProductsNew = (props) => {
         setMachineProducts(newMachineProducts);
     }
 
-    const handleSubmit = () => {
-        // TO DO: handle http requests, get ProductId by name
+    const handleSubmit = (e) => {
+        // e.preventDefault();
+        let productId;
+
+        machineProducts.forEach(machineProduct => {
+            const {MachineProductId, MachineInventoryItemId, MachineFeederNo, Name, PriceBrutto, Quantity, MaxItemCount, RequestMethod} = machineProduct;
+            // Check if a request method is assigned to machine product
+            if(RequestMethod) {
+                productId = getProductId(Name); // Get product id
+
+                // Validate inputs
+                if(MachineFeederNo && Name && PriceBrutto  && PriceBrutto >= 0 && Quantity && parseInt(Quantity) >= 0 && MaxItemCount && parseInt(MaxItemCount) >= 0 && parseInt(MaxItemCount) >= parseInt(Quantity) && productId) {
+                    // HTTP requests here
+                    const data = {
+                        MachineFeederNo: MachineFeederNo,
+                        ProductId: parseInt(productId),
+                        PriceBrutto: parseFloat(PriceBrutto),
+                        Quantity: parseInt(Quantity),
+                        MaxItemCount: parseInt(MaxItemCount)
+                    }
+
+                    if(RequestMethod === 'POST') {
+                        fetchMssqlApi(`machine-product/${props.machineId}`, {method: RequestMethod, data: data}, res => console.log(res.data));
+                    } else if(RequestMethod === 'PUT') {
+                        fetchMssqlApi(`machine-product/${MachineProductId}/${MachineInventoryItemId}`, {method: RequestMethod, data: data}, res => console.log(res.data));
+                    } else if(RequestMethod === 'DELETE') {
+                        fetchMssqlApi(`machine-product/${MachineProductId}/${MachineInventoryItemId}`, {method: RequestMethod}, res => console.log(res.data));
+                    }
+                } else {
+                    ErrorNotification('Please enter correct data');
+                }
+            }
+        });
+
+        fetchMssqlApi(`machine-products/${props.machineId}`, {}, machineProducts => {
+            const newMachineProducts = machineProducts.map(machineProduct => ({ ...machineProduct, RequestMethod: null }))
+            setInitialMachineProducts(newMachineProducts);
+            setMachineProducts(newMachineProducts);
+        });
+
     }
 
     const cancelSubmit = () => {
@@ -99,7 +141,6 @@ const MachineProductsNew = (props) => {
     }
 
     const removeTableRow = tableRowId => {
-        console.log('tableRowId', tableRowId);
         const newMachineProducts = [...machineProducts];
 
         const filteredMachineproducts = newMachineProducts.filter(newMachineProduct => newMachineProduct.TableRowId !== tableRowId);
@@ -113,6 +154,15 @@ const MachineProductsNew = (props) => {
                 return true;
 
         return false;
+    }
+
+    const getProductId = name => {
+        const foundProduct = products.find(product => product.Name === name);
+
+        if(foundProduct)
+            return foundProduct.ProductId;
+        else
+            return null;
     }
 
     return (
@@ -146,10 +196,10 @@ const MachineProductsNew = (props) => {
                 ))}
             </datalist>
             <div className="card-body overflow-auto" style={{ maxHeight: 550 }}>
-                {/* <Prompt
-                when={isUnsavedData}
-                message="Wykryto niezapisane zmiany, czy na pewno chcesz opuścić stronę?"
-            /> */}
+                <Prompt
+                    when={isTableModified}
+                    message="Wykryto niezapisane zmiany, czy na pewno chcesz opuścić stronę?"
+                />
                 <table className="table table-striped">
                     <thead>
                         <tr>
@@ -190,6 +240,7 @@ const MachineProductsNew = (props) => {
                                         handleChange={(e => handleChange(machineProduct.MachineProductId, e))}
                                         type="number"
                                         min={0}
+                                        step={0.1}
                                         max={1000}
                                         required
                                     />
@@ -201,7 +252,7 @@ const MachineProductsNew = (props) => {
                                         value={machineProduct.Quantity}
                                         handleChange={(e => handleChange(machineProduct.MachineProductId, e))}
                                         type="number"
-                                        min={1}
+                                        min={0}
                                         max={machineProduct.MaxItemCount}
                                         required
                                     />
@@ -213,8 +264,7 @@ const MachineProductsNew = (props) => {
                                         value={machineProduct.MaxItemCount}
                                         handleChange={(e => handleChange(machineProduct.MachineProductId, e))}
                                         type="number"
-                                        min={1}
-                                        max={1000}
+                                        min={0}
                                         required
                                     />
                                 </td>
@@ -243,7 +293,7 @@ const MachineProductsNew = (props) => {
             </div>
             <div className="card-footer text-center">
                 <button className="btn btn-secondary btn-sm mr-3" onClick={cancelSubmit} disabled={!isTableModified}>Anuluj</button>
-                <button className="btn btn-success btn-sm" onClick={(e) => handleSubmit()} disabled={!isTableModified}>Zapisz</button>
+                <button className="btn btn-success btn-sm" onClick={(e) => handleSubmit(e)} disabled={!isTableModified}>Zapisz</button>
             </div>
         </div>
     )
