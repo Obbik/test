@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { DB_TYPE } from "../../env"
 import LangProvider from '../context/lang-context'
 import ErrorProvider from '../context/error-context'
 import LoaderProvider from '../context/loader-context'
@@ -39,6 +40,8 @@ import useAuth from '../hooks/auth-hook'
 export default () => {
   const { isAuth, login, logout } = useAuth()
 
+  console.log(DB_TYPE)
+  
   let authRoutes = []
   if (localStorage.getItem('clientId') === 'console')
     authRoutes.push(
@@ -73,7 +76,7 @@ export default () => {
         component: Catalog
       }
     )
-
+      
   return (
     <LangProvider>
       <ErrorProvider>

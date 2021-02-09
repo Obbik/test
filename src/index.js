@@ -5,23 +5,25 @@ import JavascriptTimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import pl from 'javascript-time-ago/locale/pl'
 
+import Dashboard from './dashboard_env/app/App'
 import ServerApp from './server_env/app/App'
 import MachineApp from './machine_env/app/App'
 import * as serviceWorker from './serviceWorker'
-import { ENV } from './env'
+import { DB_TYPE } from './env'
 
 import 'react-notifications/lib/notifications.css'
 
 JavascriptTimeAgo.addLocale(en)
 JavascriptTimeAgo.addLocale(pl)
 
-const environment = process.env.CLIENT_ENVIRONMENT || ENV
+const environment = process.env.CLIENT_ENVIRONMENT || DB_TYPE
 
 if (process.env.NODE_ENV === 'development') console.log(`Environment: ${environment}`)
 
 render(
   <BrowserRouter basename="dashboard">
-    {environment === 'SERVER' ? <ServerApp /> : <MachineApp />}
+    {/* {environment === 'SERVER' ? <ServerApp /> : <MachineApp />} */}
+    <Dashboard />
   </BrowserRouter>,
   document.getElementById('root')
 )
