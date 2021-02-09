@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { Prompt } from 'react-router';
 
 import useFetch from '../../hooks/fetch-hook';
-import { NotificationContext } from '../../context/notification-context'
+import { NotificationContext } from '../../context/notification-context';
+import { API_URL } from '../../config/config';
 
-import TextInput from '../FormElements/TextInput'
-import DatalistInput from '../FormElements/DatalistInput'
+import TextInput from '../FormElements/TextInput';
+import DatalistInput from '../FormElements/DatalistInput';
 
 let tableRowId = 0;
 
@@ -19,12 +20,7 @@ const MachineProductsNew = (props) => {
     const [isTableModified, setIsTableModified] = useState(false);
 
     useEffect(() => {
-        fetchMssqlApi(`machine/${props.machineId}/products`, {}, machineProducts => {
-            const newMachineProducts = machineProducts.map(machineProduct => ({ ...machineProduct, RequestMethod: null }))
-            setInitialMachineProducts(newMachineProducts);
-            setMachineProducts(newMachineProducts);
-        });
-
+        getMachineProducts();
         fetchMssqlApi('products', {}, products => setProducts(products));
     }, [])
 
@@ -39,6 +35,14 @@ const MachineProductsNew = (props) => {
     }, [machineProducts])
 
     useEffect(() => console.log('machineProducts', machineProducts));
+
+    const getMachineProducts = () => {
+        fetchMssqlApi(`machine-products/${props.machineId}`, {}, machineProducts => {
+            const newMachineProducts = machineProducts.map(machineProduct => ({ ...machineProduct, RequestMethod: null }))
+            setInitialMachineProducts(newMachineProducts);
+            setMachineProducts(newMachineProducts);
+        });
+    }
 
     const handleChange = (machineProductId, e) => {
         const name = e.target.name;
@@ -80,7 +84,7 @@ const MachineProductsNew = (props) => {
     }
 
     const handleSubmit = (e) => {
-        // e.preventDefault();
+        e.preventDefault();
         let productId;
 
         machineProducts.forEach(machineProduct => {
@@ -107,18 +111,13 @@ const MachineProductsNew = (props) => {
                     } else if(RequestMethod === 'DELETE') {
                         fetchMssqlApi(`machine-product/${MachineProductId}/${MachineInventoryItemId}`, {method: RequestMethod}, res => console.log(res.data));
                     }
+
+                    getMachineProducts();
                 } else {
                     ErrorNotification('Please enter correct data');
                 }
             }
         });
-
-        fetchMssqlApi(`machine-products/${props.machineId}`, {}, machineProducts => {
-            const newMachineProducts = machineProducts.map(machineProduct => ({ ...machineProduct, RequestMethod: null }))
-            setInitialMachineProducts(newMachineProducts);
-            setMachineProducts(newMachineProducts);
-        });
-
     }
 
     const cancelSubmit = () => {
@@ -165,6 +164,26 @@ const MachineProductsNew = (props) => {
             return null;
     }
 
+    const handleDownload = () => {
+        fetchMssqlApi(
+            `/report/machine-products/${props.machineId}`,
+            { method: 'POST', hideNotification: true },
+            path => {
+                console.log(path);
+                window.open(`${API_URL}/${path}`, '_blank')
+            }
+        )
+    }
+
+    const handleResetLastSales = () => {
+        const confirmReset = window.confirm('Potwierdź reset sprzedaży');
+    
+        if (confirmReset)
+            fetchMssqlApi(`/machine/${props.machineId}/reset-sales`, { method: 'POST' }, () => {
+                getMachineProducts();
+            });
+      }
+
     return (
         <div className="card">
             <h5 className="card-header">
@@ -174,21 +193,23 @@ const MachineProductsNew = (props) => {
                     <i className="fas fa-plus mr-2" />
                     Nowy
                 </button>
-                {/* {initialMachineProducts.current.length > 0 && (
+                {initialMachineProducts.length > 0 && (
                     <Fragment>
                         <button
                             className="float-right btn btn-sm btn-link text-decoration-none mr-2"
                             onClick={handleDownload}
-                        >
+                        >   
                         <i className="fas fa-file-download mr-2" />
                             Pobierz
                         </button>
-                        <button className="float-right btn btn-sm btn-link text-decoration-none mr-2">
+                        <button 
+                            className="float-right btn btn-sm btn-link text-decoration-none mr-2"
+                            onClick={handleResetLastSales}>
                             <i className="fas fa-eraser mr-2" />
                             Reset sprzedaży
                         </button>
                     </Fragment>
-                )} */}
+                )}
             </h5>
             <datalist id="Name">
                 {products.map((product, idx) => (
