@@ -1,0 +1,24 @@
+{
+    "token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVGVzdCIsImVtYWlsIjoib3duZXJAZ21haWwuY29tIiwidXNlcklkIjoyLCJjbGllbnRJZCI6Im11bHRpdmVuZCIsImlhdCI6MTYxMjc5MzI3MywiZXhwIjoxNjEyNzk2ODczLCJhdWQiOiJodHRwOi8vdmVuZGltLnBsIiwiaXNzIjoiVmVuZGltIiwic3ViIjoidXNlckB2ZW5kaW0ucGwifQ.TL1-PrZFhHGDgvGNMVbpnBRzV2sUGcgfBYq_BdrQka01jmCC10q20Stm022JK19k55A4AhFSuALgBusJ-v0uWQ",
+    "userId": 2,
+    "userName": "Test",
+    "clientId": "multivend",
+    "permissions": [
+        {
+            "PermissionId": 1,
+            "Name": "VD_PRODUCTS"
+        },
+        {
+            "PermissionId": 2,
+            "Name": "VD_CATEGORIES"
+        },
+        {
+            "PermissionId": 3,
+            "Name": "VD_MACHINE_CONFIG"
+        },
+        {
+            "PermissionId": 4,
+            "Name": "VD_MACHINE_RECHARGE"
+        }
+    ]
+}

@@ -1,0 +1,223 @@
+{
+  "buttons": {
+    "save": "Save",
+    "return": "Return",
+    "goToShop": "Return to shop",
+    "login": "Log in",
+    "open": "Open",
+    "saveVisit": "Save visit"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "clientId": "Client ID"
+  },
+  "navigation": {
+    "monitoring": "Monitoring",
+    "machines": "Machines",
+    "reports": "Reports",
+    "definitions": "Definitions",
+    "logout": "Log out"
+  },
+  "navbar": {
+    "products": "Products",
+    "categories": "Categories",
+    "settings": "Settings",
+    "config": "Config",
+    "supply": "Supply",
+    "logout": "Log out"
+  },
+  "searchbarPlaceholder": "Search...",
+  "fileUploadPlaceholder": "Choose file",
+  "noResults": "No results found",
+  "filter": {
+    "rowsPerPage": "Rows per page",
+    "sortBy": "Sort by",
+    "showIndexes": "Show indexes",
+    "columns": "Columns"
+  },
+  "monitoring": {
+    "header": "Monitoring",
+    "serialNo": "Serial No",
+    "machine": "Machine",
+    "ipAddress": "IP Address",
+    "technicalData": "Technical data",
+    "softVersion": "Software version",
+    "transactions": "Transactions",
+    "notifications": "Notifications",
+    "info": "Info"
+  },
+  "notifications": {
+    "level": "Level",
+    "alert": "Alert",
+    "date": "Date"
+  },
+  "transactions": {
+    "status": "Status",
+    "payment": "Payment",
+    "cost": "Cost",
+    "date": "Date",
+    "shelf": "Shelf",
+    "ean": "EAN"
+  },
+  "machines": {
+    "header": "Machines",
+    "properties": {
+      "machineName": "Machine name",
+      "serialNo": "Serial No",
+      "location": "Location",
+      "machineType": "Machine type",
+      "maintenance": "Maintenance"
+    }
+  },
+  "machine": {
+    "header": "Machine details",
+    "settings": {
+      "header": "Settings"
+    },
+    "info": {
+      "header": "Info"
+    }
+  },
+  "reports": {
+    "header": "Reports",
+    "lastVisits": {
+      "title": "Last visits",
+      "cols": ["Machine", "Date", "Serviceman", "Sale", "Coin extraction"]
+    },
+    "lastCoinInventories": {
+      "title": "Last coin inventories",
+      "cols": [
+        "Machine",
+        "Serial No",
+        "Machine Type",
+        "Serviceman",
+        "Date",
+        "KP",
+        "Coins Value",
+        "Expected Coins Value",
+        "Coin Sales Diff",
+        "Cashless Sales Diff",
+        "Total Sales Diff"
+      ]
+    },
+    "lastCoinInventoriesSum": {
+      "title": "Last coin inventories summary",
+      "cols": [
+        "Machine",
+        "Serial No",
+        "Machine Type",
+        "Coins Value",
+        "Expected Coins Value",
+        "Coin Sales Diff",
+        "Cashless Sales Diff",
+        "Total Sales Diff",
+        "Comment",
+        "Servicemen"
+      ]
+    }
+  },
+  "definitions": {
+    "header": "Definitions",
+    "products": "Products",
+    "categories": "Categories",
+    "locations": "Locations",
+    "machineTypes": "Machine Types",
+    "maintenances": "Maintenances"
+  },
+  "products": {
+    "header": "Products",
+    "productCategoriesHeader": "Product categories",
+    "confirmDeletionText": "Confirm product deletion",
+    "newItemHeader": "New product",
+    "editItemHeader": "Edit product",
+    "properties": {
+      "ean": "EAN",
+      "image": "Image",
+      "productName": "Product name",
+      "description": "Description"
+    },
+    "defaultHeader": "Products",
+    "addProductButton": "Add product",
+    "productCategoryHeader": "Product categories",
+    "confirmDeletion": "Confirm product deletion",
+    "newProductHeader": "New product",
+    "editProductHeader": "Edit product",
+    "props": {
+      "ean": "Ean",
+      "image": "Image",
+      "productName": "Name",
+      "description": "Description"
+    }
+  },
+  "categories": {
+    "header": "Categories",
+    "addCategoryButton": "Add category",
+    "confirmDeletionText": "Confirm category deletion",
+    "newItemHeader": "New category",
+    "editItemHeader": "Edit category",
+    "confirmDeletion": "Confirm category deletion",
+    "newCategoryHeader": "New category",
+    "editCategoryHeader": "Edit category",
+    "props": {
+      "image": "Image",
+      "categoryName": "Name"},
+
+    "properties": {
+      "image": "Image",
+      "categoryName": "Category name"
+    }
+  },
+  "locations": {
+    "header": "Locations",
+    "addLocationButton": "Add location",
+    "confirmDeletionText": "Confirm location deletion",
+    "newItemHeader": "New location",
+    "editItemHeader": "Edit location",
+    "properties": {
+      "locationName": "Location name",
+      "geolocation": "Geolocation",
+      "long": "Longitude",
+      "lat": "Latitude",
+      "rent": "Rent",
+      "comment": "Comment"
+    }
+  },
+  "machineTypes": {
+    "header": "Machine types",
+    "addMachineTypeButton": "Add machine type",
+    "confirmDeletionText": "Confirm machine type deletion?",
+    "newItemHeader": "New machine type",
+    "editItemHeader": "Edit machine type",
+    "properties": {
+      "machineTypeName": "Machine type name"
+    }
+  },
+  "maintenances": {
+    "header": "Maintenances",
+    "addMaintenanceButton": "Add maintenance",
+    "confirmDeletionText": "Confirm maintennace deletion",
+    "newItemHeader": "New maintenance",
+    "editItemHeader": "Edit maintenance",
+    "properties": {
+      "maintenanceName": "Maintenance name"
+    }
+  },
+    "shelves": {
+      "configHeader": "Machine config",
+      "rechargeHeader": "Machine recharge",
+      "addShelfButton": "Add shelf",
+      "confirmDeletion": "Confirm category shelf",
+      "newShelfHeader": "New shelf",
+      "editShelfHeader": "Edit shelf",
+      "props": {
+        "shelf": "#",
+        "productName": "Product",
+        "price": "Price",
+        "discountedPrice": "Discounted price",
+        "quantity": "Quantity",
+        "capacity": "Capacity"
+
+      }
+    }
+}
