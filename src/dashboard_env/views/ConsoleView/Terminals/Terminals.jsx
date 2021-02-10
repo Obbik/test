@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { NavigationContext } from '../../../context/navigation-context'
 // import { LangContext } from '../../context/lang-context'
 import useForm from '../../../hooks/form-hook'
-import useFetch from '../../../hooks/fetchSQL-hook'
+import useFetch from '../../../hooks/fetchMSSQL-hook'
 import useFilter from '../../../hooks/filter-hook'
 
 import SearchInput from '../../../components/SearchInput/SearchInput'
@@ -83,53 +83,53 @@ export default () => {
             {!filteredTerminals.length ? (
               <NoResults buttonText="Dodaj terminal" onClick={openForm()} />
             ) : (
-              <>
-                <div>
-                  <button
-                    className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
-                    onClick={openForm()}
-                  >
-                    <i className="fas fa-plus mr-2" /> Dodaj terminal
+                <>
+                  <div>
+                    <button
+                      className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+                      onClick={openForm()}
+                    >
+                      <i className="fas fa-plus mr-2" /> Dodaj terminal
                   </button>
-                </div>
-                <div className="overflow-auto">
-                  <table className="table table-striped border">
-                    <thead>
-                      <tr>
-                        <th>Nr seryjny</th>
-                        <th>Klient</th>
-                        <th>Data dodania</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredTerminals
-                        .sort(
-                          (a, b) =>
-                            new Date(b.CreateDateTime) - new Date(a.CreateDateTime)
-                        )
-                        .map((terminal, idx) => (
-                          <tr key={idx}>
-                            <td>
-                              <button
-                                className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
-                                onClick={openForm(terminal.TerminalId)}
-                              >
-                                {terminal.SerialNo}
-                              </button>
-                            </td>
-                            <td>{terminal.ClientName}</td>
-                            <td>{terminal.CreateDateTime}</td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            )}
+                  </div>
+                  <div className="overflow-auto">
+                    <table className="table table-striped border">
+                      <thead>
+                        <tr>
+                          <th>Nr seryjny</th>
+                          <th>Klient</th>
+                          <th>Data dodania</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredTerminals
+                          .sort(
+                            (a, b) =>
+                              new Date(b.CreateDateTime) - new Date(a.CreateDateTime)
+                          )
+                          .map((terminal, idx) => (
+                            <tr key={idx}>
+                              <td>
+                                <button
+                                  className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
+                                  onClick={openForm(terminal.TerminalId)}
+                                >
+                                  {terminal.SerialNo}
+                                </button>
+                              </td>
+                              <td>{terminal.ClientName}</td>
+                              <td>{terminal.CreateDateTime}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )}
           </>
         ) : (
-          <NoResults buttonText="Dodaj terminal" onClick={openForm()} />
-        )}
+            <NoResults buttonText="Dodaj terminal" onClick={openForm()} />
+          )}
         {form && (
           <TerminalForm
             terminalData={

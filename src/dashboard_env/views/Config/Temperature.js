@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Thermometer from 'react-thermometer-component'
 
-import useFetch from '../../hooks/fetchSQL-hook'
+import useFetch from '../../hooks/fetchMSSQL-hook'
 
 export default () => {
   const { fetchApi } = useFetch()
@@ -19,11 +19,11 @@ export default () => {
   }
 
   const enableTemperature = () => {
-    fetchApi('shop/temperature/1', { method: 'GET', data: null, withNotification: true})
+    fetchApi('shop/temperature/1', { method: 'GET', data: null, withNotification: true })
   }
 
   const disableTemperature = () => {
-    fetchApi('shop/temperature/0', { method: 'GET', data: null, withNotification: true})
+    fetchApi('shop/temperature/0', { method: 'GET', data: null, withNotification: true })
   }
 
   useEffect(() => {

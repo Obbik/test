@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import useFetch from '../../hooks/fetchSQL-hook';
+import useFetch from '../../hooks/fetchMSSQL-hook';
 
 // TO DO: merge/unmerge user instructions
 

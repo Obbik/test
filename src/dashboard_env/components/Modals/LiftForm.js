@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import useFetch from '../../hooks/fetchSQL-hook'
+import useFetch from '../../hooks/fetchMSSQL-hook'
 import FormSkel from './FormSkel'
 
 export default ({ floor, closeModal }) => {

@@ -1,125 +1,118 @@
-import React, { useContext } from 'react'
+import React, { useEffect, useContext } from 'react'
+import { ErrorContext } from '../../context/error-context'
 import { LangContext } from '../../context/lang-context'
 import { NotificationContext } from '../../context/notification-context'
 import { LoaderContext } from '../../context/loader-context'
 import axios from 'axios'
 
+import { API_URL } from '../../config/config'
+
 import gbFlag from '../../assets/flags/gb.png'
 import plFlag from '../../assets/flags/pl.png'
 
 import logo from '../../assets/images/logo-vendim.png'
-import { API_URL } from '../../config/config'
 import Loader from '../../components/Loader/Loader'
 
 export default ({ login }) => {
+  const { setError } = useContext(ErrorContext)
   const { ErrorNotification } = useContext(NotificationContext)
-  const { loader, incrementRequests, decrementRequests } = useContext(LoaderContext)
-  const { changeLanguage, TRL_Pack } = useContext(LangContext)
+  const { loader, showLoader, hideLoader } = useContext(LoaderContext)
+  const {
+    changeLanguage,
+    languagePack: { buttons, auth }
+  } = useContext(LangContext)
 
   const handleSubmit = evt => {
     evt.preventDefault()
 
-    const { email, password, clientId } = evt.target.elements
+    const { email, password } = evt.target.elements
 
-    if (email.value && password.value && clientId.value) {
-      incrementRequests()
+    if (email.value && password.value) {
+      showLoader()
 
       axios
-        .post(`${API_URL}/auth/login`, {
-          email: email.value.toLowerCase(),
-          password: password.value,
-          clientId: clientId.value.toLowerCase()
+        .put(`${API_URL}/api/auth/login`, {
+          Email: email.value,
+          Password: password.value,
+          ClientId: 'multivend'
         })
         .then(res => {
-          decrementRequests()
-
-          if (res.status === 422) return ErrorNotification('Validation failed.')
+          if (res.status === 422) setError('Validation failed.')
           if (res.status !== 200 && res.status !== 201)
-            return ErrorNotification('Could not authenticate.')
+            setError('Could not authenticate.')
 
-          localStorage.setItem(
-            'lastLogin',
-            JSON.stringify({
-              email: email.value.toLowerCase(),
-              clientId: clientId.value.toLowerCase()
-            })
-          )
+          hideLoader()
+          const { token, permissions } = res.data
 
-          login(res.data.token, clientId.value.toLowerCase())
+          login(token, permissions)
         })
         .catch(err => {
-          decrementRequests()
-          ErrorNotification(err.response?.data || err.toString())
+          hideLoader()
+          ErrorNotification(err)
         })
     }
   }
 
+  // const returnToShop = () => (window.location.href = SHOP_URL)
+
+  // useEffect(() => {
+  //   const returnToShopTimeout = setTimeout(returnToShop, 60000)
+  //   return () => clearTimeout(returnToShopTimeout)
+  // }, [])
+
   return (
     <>
       {loader && <Loader />}
-      <div className="col col-md-6 col-lg-5 mx-auto d-flex align-items-center">
+      <div className="col col-md-8 col-lg-6 mx-auto d-flex align-items-center">
         <div className="container">
-          <div className="card card-body bg-fade mb-4">
-            <div className="text-center mt-2 mb-3">
-              <img src={logo} alt="logo" height="60" />
+          <div className="mt-4">
+            <button className="btn btn-link text-decoration-none">
+              <i className="fas fa-arrow-left mr-2" />
+              {buttons.goToShop}
+            </button>
+          </div>
+          <div className="card card-body bg-fade my-3 p-4">
+            <div className="text-center mt-2 mb-4">
+              <img src={logo} alt="logo" height="70" />
             </div>
-            <form onSubmit={handleSubmit} autoComplete="off">
-              <div className="form-group">
-                <label className="small">{TRL_Pack.auth.email}</label>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-2 mb-md-3 mb-lg-4">
+                <label className="small">{auth.email}</label>
                 <input
                   type="email"
                   name="email"
-                  defaultValue={
-                    localStorage.getItem('lastLogin')
-                      ? JSON.parse(localStorage.getItem('lastLogin')).email
-                      : 'jakub@vendim.pl'
-                  }
-                  className="form-control"
+                  defaultValue="service@gmail.com"
+                  className="form-control py-md-3 py-lg-4"
                   required
                 />
               </div>
-              <div className="form-group">
-                <label className="small">{TRL_Pack.auth.password}</label>
+              <div className="mb-3 mb-md-4 mb-lg-5">
+                <label className="small">{auth.password}</label>
                 <input
                   type="password"
                   name="password"
-                  defaultValue=""
+                  // defaultValue="123456"
                   autoComplete="off"
-                  className="form-control"
+                  className="form-control py-md-3 py-lg-4"
                   required
                   autoFocus
                 />
               </div>
-              <div className="form-group">
-                <label className="small">{TRL_Pack.auth.clientId}</label>
-                <input
-                  type="text"
-                  name="clientId"
-                  className="form-control"
-                  defaultValue={
-                    localStorage.getItem('lastLogin')
-                      ? JSON.parse(localStorage.getItem('lastLogin')).clientId
-                      : 'console'
-                  }
-                  autoCapitalize="none"
-                  required
-                />
-              </div>
-              <button type="submit" className="btn btn-success btn-block">
-                {TRL_Pack.buttons.login}
+              <button type="submit" className="btn btn-success btn-block py-md-1 py-lg-2">
+                {buttons.login}
               </button>
             </form>
           </div>
-          <div className="text-center">
+          <div className="text-center mb-4">
             <button
               className="btn btn-link p-0 mx-3 rounded-circle"
-              onClick={changeLanguage('en')}
+              onClick={() => changeLanguage('en')}
             >
               <img className="flag" src={gbFlag} alt="en_flag" />
             </button>
             <button
               className="btn btn-link p-0 mx-3 rounded-circle"
-              onClick={changeLanguage('pl')}
+              onClick={() => changeLanguage('pl')}
             >
               <img className="flag" src={plFlag} alt="pl_flag" />
             </button>

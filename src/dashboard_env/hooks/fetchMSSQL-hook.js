@@ -13,8 +13,8 @@ export default () => {
   const fetchMssqlApi = (
     path,
     { method = 'GET', data = null, hideNotification } = {},
-    onSuccess = () => {},
-    onError = () => {}
+    onSuccess = () => { },
+    onError = () => { }
   ) => {
     const token = localStorage.getItem('token')
 

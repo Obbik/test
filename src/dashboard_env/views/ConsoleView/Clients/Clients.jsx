@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { NavigationContext } from '../../../context/navigation-context'
 // import { LangContext } from '../../../context/lang-context'
 import useForm from '../../../hooks/form-hook'
-import useFetch from '../../../hooks/fetchSQL-hook'
+import useFetch from '../../../hooks/fetchMSSQL-hook'
 import useFilter from '../../../hooks/filter-hook'
 
 import SearchInput from '../../../components/SearchInput/SearchInput'
@@ -66,46 +66,46 @@ export default () => {
             {!filteredClients.length ? (
               <NoResults buttonText="Dodaj klienta" onClick={openForm()} />
             ) : (
-              <>
-                <div>
-                  <button
-                    className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
-                    onClick={openForm()}
-                  >
-                    <i className="fas fa-plus mr-2" /> Dodaj klienta
+                <>
+                  <div>
+                    <button
+                      className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+                      onClick={openForm()}
+                    >
+                      <i className="fas fa-plus mr-2" /> Dodaj klienta
                   </button>
-                </div>
-                <div className="overflow-auto">
-                  <table className="table table-striped border">
-                    <thead>
-                      <tr>
-                        <th>Nazwa</th>
-                        <th>Baza</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredClients.map((client, idx) => (
-                        <tr key={idx}>
-                          <td>
-                            <button
-                              className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
-                              onClick={openForm(client.CustomerId)}
-                            >
-                              {client.Name}
-                            </button>
-                          </td>
-                          <td>{client.Abbreviation}</td>
+                  </div>
+                  <div className="overflow-auto">
+                    <table className="table table-striped border">
+                      <thead>
+                        <tr>
+                          <th>Nazwa</th>
+                          <th>Baza</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            )}
+                      </thead>
+                      <tbody>
+                        {filteredClients.map((client, idx) => (
+                          <tr key={idx}>
+                            <td>
+                              <button
+                                className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
+                                onClick={openForm(client.CustomerId)}
+                              >
+                                {client.Name}
+                              </button>
+                            </td>
+                            <td>{client.Abbreviation}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )}
           </>
         ) : (
-          <NoResults buttonText="Dodaj klienta" onClick={openForm()} />
-        )}
+            <NoResults buttonText="Dodaj klienta" onClick={openForm()} />
+          )}
         {form && (
           <ClientForm
             clientData={

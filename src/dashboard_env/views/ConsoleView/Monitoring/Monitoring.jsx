@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
 import { NavigationContext } from '../../../context/navigation-context'
 import { LangContext } from '../../../context/lang-context'
-import useFetch from '../../../hooks/fetchSQL-hook'
+import useFetch from '../../../hooks/fetchMSSQL-hook'
 import useFilter from '../../../hooks/filter-hook'
 
 import MachinesMap from '../../../components/Monitoring/MachinesMap'
@@ -107,6 +107,7 @@ export default () => {
 
   return currentMachine ? (
     <>
+
       <div className="mb-3 d-flex justify-content-between">
         <div>
           <button
@@ -180,28 +181,28 @@ export default () => {
       </div>
     </>
   ) : (
-    machines && (
-      <>
-        <SearchInput
-          tableView={mapView}
-          onSearch={updateSearchedText}
-          sortingOptions={sortingOptions}
-          onSortChange={updateSortType}
-          currentSorting={sortType}
-          onToggleView={toggleView}
-          defaultValue={searchedText}
-        />
-        {!filteredMachines.length ? (
-          <NoResults />
-        ) : mapView ? (
-          <MachinesMap machines={filteredMachines} />
-        ) : (
-          <MachinesTable
-            machines={filteredMachines}
-            handleSelectMachine={handleSelectMachine}
+      machines && (
+        <>
+          <SearchInput
+            tableView={mapView}
+            onSearch={updateSearchedText}
+            sortingOptions={sortingOptions}
+            onSortChange={updateSortType}
+            currentSorting={sortType}
+            onToggleView={toggleView}
+            defaultValue={searchedText}
           />
-        )}
-      </>
+          {!filteredMachines.length ? (
+            <NoResults />
+          ) : mapView ? (
+            <MachinesMap machines={filteredMachines} />
+          ) : (
+                <MachinesTable
+                  machines={filteredMachines}
+                  handleSelectMachine={handleSelectMachine}
+                />
+              )}
+        </>
+      )
     )
-  )
 }

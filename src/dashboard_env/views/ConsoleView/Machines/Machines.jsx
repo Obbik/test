@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { LangContext } from '../../../context/lang-context'
 import { NavigationContext } from '../../../context/navigation-context'
 import useForm from '../../../hooks/form-hook'
-import useFetch from '../../../hooks/fetchSQL-hook'
+import useFetch from '../../../hooks/fetchMSSQL-hook'
 import useFilter from '../../../hooks/filter-hook'
 import NoResults from '../../../components/NoResults/NoResults'
 import MachineForm from '../../../components/Modals/MachineForm'
@@ -49,56 +49,56 @@ export default () => {
         {!filteredMachines.length ? (
           <NoResults buttonText="Dodaj maszyne" onClick={openForm()} />
         ) : (
-          <>
-            <div>
-              <button
-                className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
-                onClick={openForm()}
-              >
-                <i className="fas fa-plus mr-2" /> Dodaj maszyne
+            <>
+              <div>
+                <button
+                  className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+                  onClick={openForm()}
+                >
+                  <i className="fas fa-plus mr-2" /> Dodaj maszyne
               </button>
-            </div>
-            <div className="overflow-auto">
-              <table className="table table-striped border">
-                <thead>
-                  <tr>
-                    <th>Maszyna</th>
-                    <th>Typ</th>
-                    <th>Nr seryjny</th>
-                    <th>Terminal</th>
-                    <th>Klient</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredMachines
-                    .filter(machine => machine.MachineName)
-                    .sort((a, b) => {
-                      if (a.SerialNo.toLowerCase() > b.SerialNo.toLowerCase()) return -1
-                      else if (a.SerialNo.toLowerCase() < b.SerialNo.toLowerCase())
-                        return 1
-                      else return 0
-                    })
-                    .map((machine, idx) => (
-                      <tr key={idx}>
-                        <td>
-                          <Link
-                            to={`/machine/${machine.MachineId}`}
-                            className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
-                          >
-                            {machine.MachineName}
-                          </Link>
-                        </td>
-                        <td>{machine.Type}</td>
-                        <td>{machine.SerialNo}</td>
-                        <td>{machine.Terminal}</td>
-                        <td>{machine.ClientName}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          </>
-        )}
+              </div>
+              <div className="overflow-auto">
+                <table className="table table-striped border">
+                  <thead>
+                    <tr>
+                      <th>Maszyna</th>
+                      <th>Typ</th>
+                      <th>Nr seryjny</th>
+                      <th>Terminal</th>
+                      <th>Klient</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredMachines
+                      .filter(machine => machine.MachineName)
+                      .sort((a, b) => {
+                        if (a.SerialNo.toLowerCase() > b.SerialNo.toLowerCase()) return -1
+                        else if (a.SerialNo.toLowerCase() < b.SerialNo.toLowerCase())
+                          return 1
+                        else return 0
+                      })
+                      .map((machine, idx) => (
+                        <tr key={idx}>
+                          <td>
+                            <Link
+                              to={`/machine/${machine.MachineId}`}
+                              className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
+                            >
+                              {machine.MachineName}
+                            </Link>
+                          </td>
+                          <td>{machine.Type}</td>
+                          <td>{machine.SerialNo}</td>
+                          <td>{machine.Terminal}</td>
+                          <td>{machine.ClientName}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
         {form && <MachineForm postSubmit={getMachines} handleClose={closeForm} />}
       </>
     )

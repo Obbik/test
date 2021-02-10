@@ -32,50 +32,48 @@ export default ({ children }) => {
 
   const [headerData, setHeaderData] = useState({})
 
-  let navlinks=[]
+  let navlinks = []
 
-    if (sessionStorage.getItem('DB_TYPE') === "mssql")
-    {
-      navlinks.push(
-    ...[
-        { text: 'Monitoring', path: '/', icon: 'fa fa-desktop' },
-                { text: 'Maszyny', path: '/machines', icon: 'fas fa-tablet-alt' },
-                { text: 'Terminale', path: '/terminals', icon: 'fas fa-credit-card' },
-                { text: 'Klienci', path: '/clients', icon: 'fas fa-users-cog' },
-                // { text: 'Zadania', path: '/tasks', icon: 'fas fa-tasks' },
-                { text: 'Produkty', path: '/products', icon: 'fas fa-cookie-bite' },
-                { text: 'Kategorie', path: '/categories', icon: 'fas fa-th-large' }
-      ])
-    }
-    else if (localStorage.getItem('clientId') === 'console')
-    {
-      navlinks.push (
-        ...[
-          { text: 'Monitoring', path: '/', icon: 'fa fa-desktop' },
-          { text: 'Maszyny', path: '/machines', icon: 'fas fa-tablet-alt' },
-          { text: 'Terminale', path: '/terminals', icon: 'fas fa-credit-card' },
-          { text: 'Klienci', path: '/clients', icon: 'fas fa-users-cog' },
-          // { text: 'Zadania', path: '/tasks', icon: 'fas fa-tasks' },
-          { text: 'Produkty', path: '/products', icon: 'fas fa-cookie-bite' },
-          { text: 'Kategorie', path: '/categories', icon: 'fas fa-th-large' }
-        ])
-      }
-
-  else if (sessionStorage.getItem('DB_TYPE') === 'sql')
+  if (sessionStorage.getItem('DB_TYPE') === "mssql") // MACHINE Routes
   {
     navlinks.push(
-  ...[
-      // { text: 'Monitoring', path: '/', icon: 'fa fa-desktop' },
-      { text: 'Maszyny', path: '/machines', icon: 'fas fa-tablet-alt' },
-      { text: 'Kategorie', path: '/categories', icon: 'fas fa-th-large' },
-              { text: 'Terminale', path: '/terminals', icon: 'fas fa-credit-card' },
-              { text: 'Klienci', path: '/clients', icon: 'fas fa-users-cog' },
-              // { text: 'Zadania', path: '/tasks', icon: 'fas fa-tasks' },
-              { text: 'Produkty', path: '/products', icon: 'fas fa-cookie-bite' },
-    ])
+      ...[
+        { text: 'Kategorie', path: '/categories', icon: 'fas fa-th-large' },
+        // { text: 'Zadania', path: '/tasks', icon: 'fas fa-tasks' },
+        { text: 'Produkty', path: '/products', icon: 'fas fa-cookie-bite' },
+        { text: "supply", path: '/supply', icon: 'fas fa-cart-plus' },
+        { text: 'konfiguracja', path: '/config', icon: 'fas fa-cog' },
+      ])
   }
-console.log(navlinks)
-console.log(sessionStorage.getItem('DB_TYPE'))
+  else if (localStorage.getItem('clientId') === 'console') //CONSOLE aka admin panel Routes
+  {
+    navlinks.push(
+      ...[
+        { text: 'Monitoring', path: '/', icon: 'fa fa-desktop' },
+        { text: 'Maszyny', path: '/machines', icon: 'fas fa-tablet-alt' },
+        { text: 'Terminale', path: '/terminals', icon: 'fas fa-credit-card' },
+        { text: 'Klienci', path: '/clients', icon: 'fas fa-users-cog' },
+        // { text: 'Zadania', path: '/tasks', icon: 'fas fa-tasks' },
+        { text: 'Produkty', path: '/products', icon: 'fas fa-cookie-bite' },
+        { text: 'Kategorie', path: '/categories', icon: 'fas fa-th-large' }
+      ])
+  }
+
+  else //SERVER Routes
+  {
+    navlinks.push(
+      ...[
+        { text: 'Produkty', path: '/products', icon: 'fas fa-cookie-bite' },
+        { text: 'Kategorie', path: '/categories', icon: 'fas fa-th-large' },
+        { text: 'Maszyny', path: '/machines', icon: 'fas fa-tablet-alt' },
+        // { text: 'Zadania', path: '/tasks', icon: 'fas fa-tasks' },
+        { text: 'Katalog', path: '/catalog-products', icon: 'fas fa-th-list' },
+        { text: 'Tagi', path: '/tags', icon: 'fas fa-tags' },
+        { text: 'Raporty', path: '/reports', icon: 'far fa-file-alt' },
+      ])
+  }
+  console.log(navlinks)
+  console.log(sessionStorage.getItem('DB_TYPE'))
   navlinks.push({ text: 'Wyloguj się', path: '/logout', icon: 'fas fa-sign-out-alt' })
 
   return (
@@ -90,16 +88,15 @@ console.log(sessionStorage.getItem('DB_TYPE'))
         {fatalError ? (
           <ErrorWrapper />
         ) : (
-          <div
-            className={`d-flex flex-column flex-grow-1 ${
-              loader ? 'position-relative' : ''
-            }`}
-          >
-            {sectionModal}
-            {loader && <Loader />}
-            <div className="container-lg p-3 h-100 d-flex flex-column">{children}</div>
-          </div>
-        )}
+            <div
+              className={`d-flex flex-column flex-grow-1 ${loader ? 'position-relative' : ''
+                }`}
+            >
+              {sectionModal}
+              {loader && <Loader />}
+              <div className="container-lg p-3 h-100 d-flex flex-column">{children}</div>
+            </div>
+          )}
       </div>
     </NavigationContext.Provider>
   )

@@ -116,16 +116,15 @@ export default ({
                           {category.Name}
                         </button>
                       ) : (
-                        <span style={{ wordBreak: 'break-word' }} className="p-1">
-                          {category.Name}
-                        </span>
-                      )}
+                          <span style={{ wordBreak: 'break-word' }} className="p-1">
+                            {category.Name}
+                          </span>
+                        )}
                     </td>
                     <td className="text-center">
                       <img
-                        src={`${
-                          category.ConsoleId ? CONSOLE_CLOUD : LOCAL_CLOUD
-                        }/categories/${category.Image}`}
+                        src={`${category.ConsoleId ? CONSOLE_CLOUD : LOCAL_CLOUD
+                          }/categories/${category.Image}`}
                         onError={evt => (evt.target.src = sampleProduct)}
                         alt={category.Name}
                         width="64"
@@ -150,26 +149,26 @@ export default ({
                         </button>
                       </td>
                     ) : (
-                      <td className="text-center">
-                        <button
-                          onClick={unsubscribeCategory(category.ConsoleId)}
-                          className="btn btn-link"
-                        >
-                          <i className="fa fa-times text-muted" />
-                        </button>
-                      </td>
-                    )}
+                        <td className="text-center">
+                          <button
+                            onClick={unsubscribeCategory(category.ConsoleId)}
+                            className="btn btn-link"
+                          >
+                            <i className="fa fa-times text-muted" />
+                          </button>
+                        </td>
+                      )}
                   </tr>
                 ))}
             </tbody>
           </table>
         </div>
       ) : (
-        <NoResults
-          onClick={openForm()}
-          buttonText={TRL_Pack.categories.addCategoryButton}
-        />
-      )}
+          <NoResults
+            onClick={openForm()}
+            buttonText={TRL_Pack.categories.addCategoryButton}
+          />
+        )}
       {form && (
         <CategoryForm
           categoryData={

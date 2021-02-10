@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { NavigationContext } from '../../context/navigation-context'
-import axios from "axios"
 import { LangContext } from '../../context/lang-context'
 // import { NotificationContext } from '../../context/notification-context'
 import SearchInput from '../../components/SearchInput/SearchInput'
@@ -8,11 +7,11 @@ import MachineSupply from '../../components/Machine/Supply'
 
 import NewQuantityForm from '../../components/Modals/NewQuantityForm'
 
-import useFetch from '../../hooks/fetchSQL-hook'
+import useFetch from '../../hooks/fetchMSSQL-hook'
 import useForm from '../../hooks/form-hook'
 
 export default ({ logout }) => {
-  const { fetchApi } = useFetch()
+  const { fetchMssqlApi } = useFetch()
   const { form, openForm, closeForm } = useForm()
 
   const { setHeaderData } = useContext(NavigationContext)
@@ -22,59 +21,31 @@ export default ({ logout }) => {
 
   const [machineType, setMachineType] = useState(null)
   const [machineProducts, setMachineProducts] = useState([])
-  
 
-  const token = localStorage.getItem('token')
-  
-  const getMachineProducts = async () => {
-    const data = await axios({
-      method: 'GET',
-      url: 'http://localhost:3000/api/machine-products',
-      headers:{
-        Authorization: `Bearer ${token}`
-      }
+  //TODO CHECK ENDPOINT "Invalid object name 'tblProductEx'."
+  const getMachineProducts = () => {
+    fetchMssqlApi('machine-products', {}, data => {
+      if (data.map(product => product.MachineFeederNo).every(No => !isNaN(No)))
+        data.sort((a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo))
+
+      setMachineProducts(data)
     })
-  //   .then(data=>{
-  //   if (data.map(product => product.MachineFeederNo).every(No => !isNaN(No)))
-  //   data.sort((a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo))
-  // })
-  
-
-    setMachineProducts(data)
   }
-  //   fetchApi('machine-products', {}, data => {
-  //     console.log(data)
-    //   if (data.map(product => product.MachineFeederNo).every(No => !isNaN(No)))
-    //     data.sort((a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo))
-      
-    // })
-  // }
-  console.log(token)
 
-  const getMachine = async() => {
-    const data = await axios({
-      method: 'GET',
-      url: 'http://localhost:3000/api/machines',
-      headers:{
-        Authorization: `Bearer ${token}`
-      },
-     
-    })
-    
-    // setMachineType(data[0].Type)
-    // fetchApi('machines', {}, data => setMachineType(data[0].Type))
+  const getMachine = () => {
+    fetchMssqlApi('machines', {}, data => setMachineType(data[0].Type))
   }
 
   const openAll = () => {
-    fetchApi('vend-all', { withNotification: true })
+    fetchMssqlApi('vend-all', { withNotification: true })
   }
 
   const fillAllFeeders = () => {
-    fetchApi(`machine-products/fill`, { method: 'PATCH' }, getMachineProducts)
+    fetchMssqlApi(`machine-products/fill`, { method: 'PATCH' }, getMachineProducts)
   }
 
   const fillSingleFeeder = machineProductId => () => {
-    fetchApi(
+    fetchMssqlApi(
       `machine-product/fill/${machineProductId}`,
       { method: 'PATCH' },
       getMachineProducts
@@ -82,18 +53,18 @@ export default ({ logout }) => {
   }
 
   const emptyAllFeeders = () => {
-    fetchApi(`machine-products/empty`, { method: 'PATCH' }, getMachineProducts)
+    fetchMssqlApi(`machine-products/empty`, { method: 'PATCH' }, getMachineProducts)
   }
 
   const emptySingleFeeder = machineProductId => () => {
-    fetchApi(
+    fetchMssqlApi(
       `machine-product/empty/${machineProductId}`,
       { method: 'PATCH' },
       getMachineProducts
     )
   }
 
-  const saveFeeders = () => fetchApi('visit', { withNotification: true }, logout)
+  const saveFeeders = () => fetchMssqlApi('visit', { withNotification: true }, logout)
 
   const [searchValue, setSearchValue] = useState('')
   const handleSearch = value => setSearchValue(value)
@@ -102,7 +73,7 @@ export default ({ logout }) => {
   )
 
   useEffect(() => {
-    // getMachineProducts()
+    getMachineProducts()
     getMachine()
     setHeaderData({ text: shelves.rechargeHeader })
 

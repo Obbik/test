@@ -11,7 +11,6 @@ import useForm from '../../hooks/form-hook'
 
 export default () => {
   const { fetchApi } = useFetch()
-  console.log(useFetch())
   const { form, openForm, closeForm } = useForm()
 
   const {

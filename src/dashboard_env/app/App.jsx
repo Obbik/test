@@ -37,7 +37,7 @@ import Categories from '../views/ConsoleView/Categories/Categories'
 
 import Machines from '../views/ClientView/Machines/Machines'
 import FullMachine from '../views/ClientView/Machines/FullMachine'
-// import Definition from '../views/ClientView/Definitions/Definition'
+import Definition from '../views/ClientView/Definitions/Definition'
 import Catalog from '../views/ClientView/Catalog/Catalog'
 import Reports from '../views/ClientView/Reports/Reports'
 import Tags from '../views/ClientView/Tags/Tags'
@@ -47,97 +47,63 @@ import useAuth from '../hooks/auth-hook'
 export default () => {
   const { isAuth, login, logout } = useAuth()
 
-  sessionStorage.setItem("DB_TYPE",DB_TYPE)
+  sessionStorage.setItem("DB_TYPE", DB_TYPE)
   let authRoutes = []
-  
 
-  if (localStorage.getItem('clientId') === 'console')
+
+  if (sessionStorage.getItem('DB_TYPE') === "mysql") // MACHINE Routes
   {
-    console.log("konsola")
+    console.log("MACHINE")
+    authRoutes.push(
+      { path: ['/products', '/products/:categoryId'], component: Products },
+      { path: '/config', component: Config },
+      { path: '/supply', component: Supply },
+      { path: '/categories', component: Categories }
+    )
+  }
+
+  else if (localStorage.getItem('clientId') === 'console') {
+    console.log("console")
     authRoutes.push(
       { path: '/', component: Monitoring },
-      { path: '/supply', component: Config},
+      { path: '/supply', component: Config },
       { path: '/machines', component: MachinesConsole },
       { path: '/machine/:machineId', component: FullMachineConsole },
       { path: '/terminals', component: Terminals },
       { path: '/clients', component: Clients },
-      { path: '/tasks', component: Tasks },
+      // { path: '/tasks', component: Tasks },
       { path: ['/products', '/products/:categoryId'], component: Products },
+      {
+        path: [
+          '/catalog-products',
+          '/catalog-categories',
+          '/catalog-products/:categoryId'
+        ],
+        component: Catalog
+      }
     )
   }
-  // else
-  //   authRoutes.push(
-  //     { path: '/machines', component: Machines },
-  //     { path: '/machine/:machineId', component: FullMachine },
-  //     // { path: '/definitions', component: Definitions },
-  //     // { path: '/definitions/:definition', component: Definition },
-  //     { path: '/reports', component: Reports },
-  //     { path: '/tags', component: Tags }
-  //   )
 
-  else if (localStorage.getItem('clientId') === 'dev')
-  {
-    
-    if (DB_TYPE === "mssql"){
-      
-      authRoutes.push(
-          { path: ['/products', '/products/:categoryId'], component: Products },
-          { path: '/categories', component: Categories }, 
-          { path: '/machine/:machineId', component: FullMachine },
-          // { path: '/definitions', component: Definitions },
-          // { path: '/definitions/:definition', component: Definition },
-          // { path: '/definitions/:definition', component: Definition },
-          { path: '/config', component: Config },
-          { path: '/supply', component:Supply},
-      )
-    }
-    if (DB_TYPE === "sql"){
-      authRoutes.push(
-          { path: ['/products', '/products/:categoryId'], component: Products },
-            { path: '/machines', component: Machines },
-            { path: '/categories', component: Categories }, 
-            { path: '/machine/:machineId', component: FullMachine },
-            // { path: '/definitions', component: Definitions },
-            // { path: '/definitions/:definition', component: Definition },
-            { path: '/reports', component: Reports },
-            { path: '/tags', component: Tags },
-          
-            // { path: '/definitions/:definition', component: Definition },
-            {
-              path: [
-                '/catalog-products',
-                '/catalog-categories',
-                '/catalog-products/:categoryId'
-              ],
-              component: Catalog
-            }
-          )
-    }
+  else {
+    console.log("SERVER")
+    authRoutes.push(
+      { path: ['/products', '/products/:categoryId'], component: Products },
+      { path: '/machines', component: Machines },
+      { path: '/categories', component: Categories },
+      { path: '/machine/:machineId', component: FullMachine },
+      { path: '/reports', component: Reports },
+      { path: '/tags', component: Tags },
+      {
+        path: [
+          '/catalog-products',
+          '/catalog-categories',
+          '/catalog-products/:categoryId'
+        ],
+        component: Catalog
+      }
+    )
   }
-
-    // authRoutes.push(
-    //  { path: ['/products', '/products/:categoryId'], component: Products },
-    //   { path: '/machines', component: Machines },
-    //   { path: '/categories', component: Categories }, 
-    //   { path: '/machine/:machineId', component: FullMachine },
-    //   // { path: '/definitions', component: Definitions },
-    //   // { path: '/definitions/:definition', component: Definition },
-    //   { path: '/reports', component: Reports },
-    //   { path: '/tags', component: Tags },
-    //   { path: '/config', component: Config },
-    //   { path: '/supply', component:Supply},
-    
-    //   // { path: '/definitions/:definition', component: Definition },
-    //   {
-    //     path: [
-    //       '/catalog-products',
-    //       '/catalog-categories',
-    //       '/catalog-products/:categoryId'
-    //     ],
-    //     component: Catalog
-    //   }
-    // )
-      console.log(authRoutes)
+  console.log(authRoutes)
 
   return (
     <LangProvider>
@@ -160,17 +126,17 @@ export default () => {
                       {localStorage.getItem('clientId') === 'console' ? (
                         <Redirect to="/" />
                       ) : (
-                        <Redirect to="/machines" />
-                      )}
+                          <Redirect to="/machines" />
+                        )}
                     </Switch>
                   </SearchbarProvider>
                 </NavigationProvider>
               ) : (
-                <Switch>
-                  <Route exact path="/login" render={() => <Login login={login} />} />
-                  <Redirect to="/login" />
-                </Switch>
-              )}
+                  <Switch>
+                    <Route exact path="/login" render={() => <Login login={login} />} />
+                    <Redirect to="/login" />
+                  </Switch>
+                )}
               <NotificationContainer />
             </div>
           </LoaderProvider>

@@ -46,8 +46,8 @@ export default () => {
 
   const getProducts = () => {
     if (categoryId)
-      fetchMssqlApi(`products/${categoryId}`, {}, products => setProducts(products))
-    else fetchMssqlApi('products', {}, products => setProducts(products))
+      fetchMssqlApi(`products/${categoryId}`, {}, ({ products }) => console.log(products), setProducts(products))
+    else fetchMssqlApi('products', {}, ({ products }) => console.log(products), setProducts(products))
   }
 
   const submitProduct = productCategories => evt => {
@@ -106,6 +106,7 @@ export default () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId])
 
+
   const filteredProducts = products.filter(({ Name }) => filterItems(searchedText, Name))
 
   return (
@@ -120,71 +121,71 @@ export default () => {
             handleSwitchPage={updateCurrentPage}
           />
           {!filteredProducts.length ? (
-            <NoResults buttonText="Dodaj produkt" onClick={() => {}} />
+            <NoResults buttonText="Dodaj produkt" onClick={() => { }} />
           ) : (
-            <>
-              <div>
-                <button
-                  className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
-                  onClick={openForm()}
-                >
-                  <i className="fas fa-plus mr-2" /> Dodaj produkt
+              <>
+                <div>
+                  <button
+                    className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+                    onClick={openForm()}
+                  >
+                    <i className="fas fa-plus mr-2" /> Dodaj produkt
                 </button>
-              </div>
-              <div className="overflow-auto">
-                <table className="table table-striped border">
-                  <thead>
-                    <tr>
-                      <th>Ean</th>
-                      <th>Nazwa</th>
-                      <th>Zdjęcie</th>
-                      <th style={{ width: '1%' }} />
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredProducts
-                      .slice((page - 1) * 25, page * 25)
-                      .map((product, idx) => (
-                        <tr key={idx}>
-                          <td className="font-weight-bold">{product.EAN}</td>
-                          <td>
-                            <button
-                              style={{ wordBreak: 'break-word' }}
-                              className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
-                              onClick={openForm(product.EAN)}
-                              title={product.Description || 'brak opisu'}
-                            >
-                              {product.Name}
-                            </button>
-                          </td>
-                          <td>
-                            <img
-                              src={`${CONSOLE_CLOUD}/products/${product.EAN}.png`}
-                              onError={evt => (evt.target.src = sampleProduct)}
-                              alt={product.Name}
-                              width="48"
-                              height="48"
-                            />
-                          </td>
-                          <td>
-                            <button
-                              className="btn btn-link"
-                              onClick={deleteProduct(product.EAN)}
-                            >
-                              <i className="fas fa-trash text-danger" />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-            </>
-          )}
+                </div>
+                <div className="overflow-auto">
+                  <table className="table table-striped border">
+                    <thead>
+                      <tr>
+                        <th>Ean</th>
+                        <th>Nazwa</th>
+                        <th>Zdjęcie</th>
+                        <th style={{ width: '1%' }} />
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredProducts
+                        .slice((page - 1) * 25, page * 25)
+                        .map((product, idx) => (
+                          <tr key={idx}>
+                            <td className="font-weight-bold">{product.EAN}</td>
+                            <td>
+                              <button
+                                style={{ wordBreak: 'break-word' }}
+                                className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
+                                onClick={openForm(product.EAN)}
+                                title={product.Description || 'brak opisu'}
+                              >
+                                {product.Name}
+                              </button>
+                            </td>
+                            <td>
+                              <img
+                                src={`${CONSOLE_CLOUD}/products/${product.EAN}.png`}
+                                onError={evt => (evt.target.src = sampleProduct)}
+                                alt={product.Name}
+                                width="48"
+                                height="48"
+                              />
+                            </td>
+                            <td>
+                              <button
+                                className="btn btn-link"
+                                onClick={deleteProduct(product.EAN)}
+                              >
+                                <i className="fas fa-trash text-danger" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
         </>
       ) : (
-        <NoResults buttonText="Dodaj produkt" onClick={openForm()} />
-      )}
+          <NoResults buttonText="Dodaj produkt" onClick={openForm()} />
+        )}
       {form && (
         <ProductForm
           productData={
