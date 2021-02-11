@@ -34,8 +34,6 @@ const MachineProductsNew = (props) => {
         });
     }, [machineProducts])
 
-    useEffect(() => console.log('machineProducts', machineProducts));
-
     const getMachineProducts = () => {
         fetchMssqlApi(`machine-products/${props.machineId}`, {}, machineProducts => {
             const newMachineProducts = machineProducts.map(machineProduct => ({ ...machineProduct, RequestMethod: null }))
@@ -87,7 +85,15 @@ const MachineProductsNew = (props) => {
         e.preventDefault();
         let productId;
 
-        machineProducts.forEach(machineProduct => {
+        const modifiedMachineProducts = machineProducts.filter(machineProduct => machineProduct.RequestMethod !== null);
+
+        modifiedMachineProducts.forEach((machineProduct, i) => {
+            let _getMachineProducts = false;
+            
+            if(i === modifiedMachineProducts.length - 1) {
+                _getMachineProducts = true;
+            }
+
             const {MachineProductId, MachineInventoryItemId, MachineFeederNo, Name, PriceBrutto, Quantity, MaxItemCount, RequestMethod} = machineProduct;
             // Check if a request method is assigned to machine product
             if(RequestMethod) {
@@ -105,14 +111,28 @@ const MachineProductsNew = (props) => {
                     }
 
                     if(RequestMethod === 'POST') {
-                        fetchMssqlApi(`machine-product/${props.machineId}`, {method: RequestMethod, data: data}, res => console.log(res.data));
+                        fetchMssqlApi(`machine-product/${props.machineId}`, {method: RequestMethod, data: data}, res => {
+                            if(_getMachineProducts) {
+                                getMachineProducts();
+                                _getMachineProducts = false;
+                            }
+                        });
                     } else if(RequestMethod === 'PUT') {
-                        fetchMssqlApi(`machine-product/${MachineProductId}/${MachineInventoryItemId}`, {method: RequestMethod, data: data}, res => console.log(res.data));
+                        fetchMssqlApi(`machine-product/${MachineProductId}/${MachineInventoryItemId}`, {method: RequestMethod, data: data}, res => {
+                            if(_getMachineProducts) {
+                                getMachineProducts();
+                                _getMachineProducts = false;
+                            }
+                        });
                     } else if(RequestMethod === 'DELETE') {
-                        fetchMssqlApi(`machine-product/${MachineProductId}/${MachineInventoryItemId}`, {method: RequestMethod}, res => console.log(res.data));
+                        fetchMssqlApi(`machine-product/${MachineProductId}/${MachineInventoryItemId}`, {method: RequestMethod}, res => {
+                            if(_getMachineProducts) {
+                                getMachineProducts();
+                                _getMachineProducts = false;
+                            }
+                        })
                     }
 
-                    getMachineProducts();
                 } else {
                     ErrorNotification('Please enter correct data');
                 }
@@ -169,7 +189,6 @@ const MachineProductsNew = (props) => {
             `/report/machine-products/${props.machineId}`,
             { method: 'POST', hideNotification: true },
             path => {
-                console.log(path);
                 window.open(`${API_URL}/${path}`, '_blank')
             }
         )
