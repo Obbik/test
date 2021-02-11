@@ -84,7 +84,7 @@ export default () => {
   const getMachines = () => {
     fetchMssqlApi('machines', {}, machines => setMachines(machines))
   }
-
+  // TODO NO TAG ENDPOINT
   const getTags = () => {
     fetchMssqlApi('tags', {}, tags =>
       setTags(tags.machine.filter(tag => tag.options.length > 0))
@@ -255,8 +255,8 @@ export default () => {
           </table>
         </div>
       ) : (
-        <NoResults />
-      )}
+          <NoResults />
+        )}
     </>
   )
 }

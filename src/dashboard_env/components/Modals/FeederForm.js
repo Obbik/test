@@ -4,8 +4,8 @@ import { LangContext } from '../../context/lang-context'
 import useFetch from '../../hooks/fetchMSSQL-hook'
 import FormSkel from './FormSkel'
 
-export default ({ feederData, closeModal, getMachineProducts }) => {
-  const { fetchApi } = useFetch()
+export default ({ feederData, handleClose, getMachineProducts }) => {
+  const { fetchMssqlApi } = useFetch()
 
   const {
     TRL_Pack: { shelves }
@@ -14,7 +14,7 @@ export default ({ feederData, closeModal, getMachineProducts }) => {
   const [allProducts, setAllProducts] = useState([])
 
   const getAllProducts = () => {
-    fetchApi('all-products', {}, data => setAllProducts(data))
+    fetchMssqlApi('all-products', {}, data => setAllProducts(data))
   }
 
   const getEanByName = Name => {
@@ -57,8 +57,8 @@ export default ({ feederData, closeModal, getMachineProducts }) => {
       method = 'PUT'
     }
 
-    fetchApi(path, { method, data: fetchBody }, () => {
-      closeModal()
+    fetchMssqlApi(path, { method, data: fetchBody }, () => {
+      handleClose()
       getMachineProducts()
     })
   }
@@ -72,7 +72,7 @@ export default ({ feederData, closeModal, getMachineProducts }) => {
   return (
     <FormSkel
       headerText={feederData ? shelves.editShelfHeader : shelves.newShelfHeader}
-      handleClose={closeModal}
+      handleClose={handleClose}
     >
       <form onSubmit={handleSubmit} id="modal-form" autoComplete="off">
         <div className="form-group">

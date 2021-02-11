@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import axios from 'axios'
-import { NotificationContext } from '../context/notification-context'
+import notificationContext, { NotificationContext } from '../context/notification-context'
 import { LoaderContext } from '../context/loader-context'
 import { ErrorContext } from '../context/error-context'
 import { API_URL } from '../config/config'
@@ -37,7 +37,7 @@ export default () => {
         onSuccess(res.data)
         if (method !== 'GET') {
           console.log(res)
-          if (!hideNotification) SuccessNofication(res.data)
+          if (!hideNotification) SuccessNofication(res.data.message)
         }
       })
       .catch(err => {

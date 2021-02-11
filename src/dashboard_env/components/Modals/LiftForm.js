@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react'
 import useFetch from '../../hooks/fetchMSSQL-hook'
 import FormSkel from './FormSkel'
 
-export default ({ floor, closeModal }) => {
-  const { fetchApi } = useFetch()
+export default ({ floor, handleClose }) => {
+  const { fetchMssqlApi } = useFetch()
 
   const getLiftPosition = () => {
-    fetchApi(`shop/lift/position/${floor}'`)
+    fetchMssqlApi(`shop/lift/position/${floor}'`)
   }
 
   const [position, setPosition] = useState(10)
@@ -16,17 +16,17 @@ export default ({ floor, closeModal }) => {
   const handleSubmit = evt => {
     evt.preventDefault()
 
-    fetchApi(
+    fetchMssqlApi(
       `shop/lift/position/${floor}`,
       { method: 'POST', data: { Position: position * 100 } },
-      closeModal
+      handleClose
     )
   }
 
   useEffect(() => getLiftPosition(), [])
 
   return (
-    <FormSkel headerText={`Półka ${floor}`} handleClose={closeModal}>
+    <FormSkel headerText={`Półka ${floor}`} handleClose={handleClose}>
       <form onSubmit={handleSubmit} id="modal-form" autoComplete="off">
         <div className="d-flex align-items-center">
           <span className="font-weight-bolder" style={{ width: 75 }}>

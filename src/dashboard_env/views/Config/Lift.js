@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React from 'react'
 import useForm from '../../hooks/form-hook'
 
 import useFetch from '../../hooks/fetchMSSQL-hook'
@@ -7,15 +7,15 @@ import Feeder from './Feeder';
 // import MergeFeeder from './MergeFeeder';
 
 export default () => {
-    const { fetchApi } = useFetch()
+    const { fetchMssqlApi } = useFetch()
     const { form, openForm, closeForm } = useForm()
 
     const resetLift = () => {
-        fetchApi('shop/lift/move/0', { withNotification: true })
+        fetchMssqlApi('shop/lift/move/0', { withNotification: true })
     }
 
     const moveLift = floor => () => {
-        fetchApi(`shop/lift/move/${floor}`, { withNotification: true })
+        fetchMssqlApi(`shop/lift/move/${floor}`, { withNotification: true })
     }
 
     return (

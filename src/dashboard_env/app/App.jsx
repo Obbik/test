@@ -16,10 +16,7 @@ import '../assets/fontawesome/css/all.css'
 
 import './App.css'
 
-// import Login from '../views/Auth/Login'
-// import Logout from '../views/Auth/Logout'
-
-import Login from '../views/Auth/Login'
+import Login from '../views/Auth/login'
 import Logout from '../views/Auth/Logout'
 // import Products from '../views/Product/Products'
 // import Categories from '../views/Category/Categories'
@@ -31,13 +28,13 @@ import MachinesConsole from '../views/ConsoleView/Machines/Machines'
 import FullMachineConsole from '../views/ConsoleView/Machines/FullMachine'
 import Terminals from '../views/ConsoleView/Terminals/Terminals'
 import Clients from '../views/ConsoleView/Clients/Clients'
-import Tasks from '../views/ConsoleView/Tasks/Tasks'
+// import Tasks from '../views/ConsoleView/Tasks/Tasks'
 import Products from '../views/ConsoleView/Products/Products'
 import Categories from '../views/ConsoleView/Categories/Categories'
 
 import Machines from '../views/ClientView/Machines/Machines'
 import FullMachine from '../views/ClientView/Machines/FullMachine'
-import Definition from '../views/ClientView/Definitions/Definition'
+// import Definition from '../views/ClientView/Definitions/Definition'
 import Catalog from '../views/ClientView/Catalog/Catalog'
 import Reports from '../views/ClientView/Reports/Reports'
 import Tags from '../views/ClientView/Tags/Tags'
@@ -47,9 +44,21 @@ import useAuth from '../hooks/auth-hook'
 export default () => {
   const { isAuth, login, logout } = useAuth()
 
+
   sessionStorage.setItem("DB_TYPE", DB_TYPE)
   let authRoutes = []
 
+  const getInitialRoutes = () => {
+    if (sessionStorage.getItem('DB_TYPE') === "mysql") {
+      return ('/config')
+    }
+    else if (localStorage.getItem('clientId') === 'console') {
+      return ('/')
+    }
+    else {
+      return ('/machines')
+    }
+  }
 
   if (sessionStorage.getItem('DB_TYPE') === "mysql") // MACHINE Routes
   {
@@ -63,7 +72,6 @@ export default () => {
   }
 
   else if (localStorage.getItem('clientId') === 'console') {
-    console.log("console")
     authRoutes.push(
       { path: '/', component: Monitoring },
       { path: '/supply', component: Config },
@@ -103,7 +111,7 @@ export default () => {
       }
     )
   }
-  console.log(authRoutes)
+
 
   return (
     <LangProvider>
@@ -115,6 +123,7 @@ export default () => {
                 <NavigationProvider>
                   <SearchbarProvider>
                     <Switch>
+
                       {authRoutes.map((route, idx) => (
                         <Route key={idx} exact {...route} />
                       ))}
@@ -123,11 +132,7 @@ export default () => {
                         path="/logout"
                         render={() => <Logout logout={logout} />}
                       />
-                      {localStorage.getItem('clientId') === 'console' ? (
-                        <Redirect to="/" />
-                      ) : (
-                          <Redirect to="/machines" />
-                        )}
+                      {<Redirect to={getInitialRoutes()} />}
                     </Switch>
                   </SearchbarProvider>
                 </NavigationProvider>

@@ -25,12 +25,13 @@ export default ({ login }) => {
             incrementRequests()
 
             axios
-                .post(`${API_URL}/auth/login`, {
-                    email: email.value.toLowerCase(),
-                    password: password.value,
-                    clientId: clientId.value.toLowerCase()
+                .put(`${API_URL}/api/auth/login`, {
+                    Email: email.value.toLowerCase(),
+                    Password: password.value,
+                    ClientId: clientId.value.toLowerCase()
                 })
                 .then(res => {
+                    console.log(res)
                     decrementRequests()
 
                     if (res.status === 422) return ErrorNotification('Validation failed.')

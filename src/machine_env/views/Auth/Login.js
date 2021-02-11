@@ -31,7 +31,7 @@ export default ({ login }) => {
       showLoader()
 
       axios
-        .put(`${API_URL}api/auth/login`, {
+        .put(`${API_URL}/api/auth/login`, {
           Email: email.value,
           Password: password.value,
           ClientId: 'multivend'

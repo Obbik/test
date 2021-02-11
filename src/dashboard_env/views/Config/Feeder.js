@@ -4,7 +4,7 @@ import useFetch from '../../hooks/fetchMSSQL-hook';
 // TO DO: merge/unmerge user instructions
 
 const TestFeeder = () => {
-    const { fetchApi } = useFetch();
+    const { fetchMssqlApi } = useFetch();
 
     const [machineFeederNo, setMachineFeederNo] = useState('');
     const [selectedRadio, setSelectedRadio] = useState('Vend');
@@ -19,7 +19,7 @@ const TestFeeder = () => {
         else if (selectedRadio === 'Unmerge')
             url = 'shop/feeder/single';
 
-        fetchApi(
+        fetchMssqlApi(
             url,
             { method: 'POST', data: { MachineFeederNo: machineFeederNo } }
         )

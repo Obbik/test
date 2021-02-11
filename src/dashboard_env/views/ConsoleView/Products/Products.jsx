@@ -46,10 +46,9 @@ export default () => {
 
   const getProducts = () => {
     if (categoryId)
-      fetchMssqlApi(`products/${categoryId}`, {}, ({ products }) => console.log(products), setProducts(products))
-    else fetchMssqlApi('products', {}, ({ products }) => console.log(products), setProducts(products))
+      fetchMssqlApi(`products/${categoryId}`, {}, (products) => setProducts(products))
+    else fetchMssqlApi('products', {}, (products) => setProducts(products))
   }
-
   const submitProduct = productCategories => evt => {
     evt.preventDefault()
 
@@ -92,7 +91,6 @@ export default () => {
       getProducts()
     })
   }
-
   const deleteProduct = ean => () => {
     if (window.confirm('Potwierdź usunięcie produktu'))
       fetchMssqlApi(`product/${ean}`, { method: 'DELETE' }, getProducts)

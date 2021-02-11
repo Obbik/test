@@ -15,12 +15,11 @@ export default ({ children }) => {
   const sidebarWidth = localStorage.getItem('sidebarWidth')
 
   const [sectionModal, setSectionModal] = useState(null)
-  const closeModal = () => setSectionModal(null)
+  const handleClose = () => setSectionModal(null)
 
   const [width, setWidth] = useState(sidebarWidth)
   const toggleSidebarWidth = () =>
     setWidth(prev => {
-      console.log(prev)
       if (prev === 'md') {
         localStorage.setItem('sidebarWidth', 'sm')
         return 'sm'
@@ -34,13 +33,13 @@ export default ({ children }) => {
 
   let navlinks = []
 
-  if (sessionStorage.getItem('DB_TYPE') === "mssql") // MACHINE Routes
+  if (sessionStorage.getItem('DB_TYPE') === "mysql") // MACHINE Routes
   {
     navlinks.push(
       ...[
-        { text: 'Kategorie', path: '/categories', icon: 'fas fa-th-large' },
         // { text: 'Zadania', path: '/tasks', icon: 'fas fa-tasks' },
         { text: 'Produkty', path: '/products', icon: 'fas fa-cookie-bite' },
+        { text: 'Kategorie', path: '/categories', icon: 'fas fa-th-large' },
         { text: "supply", path: '/supply', icon: 'fas fa-cart-plus' },
         { text: 'konfiguracja', path: '/config', icon: 'fas fa-cog' },
       ])
@@ -72,8 +71,6 @@ export default ({ children }) => {
         { text: 'Raporty', path: '/reports', icon: 'far fa-file-alt' },
       ])
   }
-  console.log(navlinks)
-  console.log(sessionStorage.getItem('DB_TYPE'))
   navlinks.push({ text: 'Wyloguj się', path: '/logout', icon: 'fas fa-sign-out-alt' })
 
   return (

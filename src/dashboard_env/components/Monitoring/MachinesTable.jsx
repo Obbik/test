@@ -45,8 +45,8 @@ export default ({ machines, handleSelectMachine }) => {
                     ) : machine.summary_status === 1 ? (
                       <i className="fa fa-exclamation-triangle text-warning mx-2" />
                     ) : (
-                      <i className="fa fa-exclamation-circle text-danger mx-2" />
-                    )}
+                          <i className="fa fa-exclamation-circle text-danger mx-2" />
+                        )}
                   </td>
                   <td>
                     <ReactTimeAgo date={new Date(machine.lastHeartbeat)} locale="pl" />
@@ -163,7 +163,7 @@ export default ({ machines, handleSelectMachine }) => {
               ))}
           </tbody>
         </table>
-      </div>
+      </div >
       <ReactTooltip multiline border />
     </>
   )

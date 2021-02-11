@@ -26,7 +26,7 @@ export default () => {
     fetchMssqlApi('catalog-products', {}, products => setProducts(products))
     // }
   }
-
+  // TODO NO catalog-categories endpoint
   const getCategories = () => {
     fetchMssqlApi('catalog-categories', {}, categories => setCategories(categories))
   }
@@ -56,9 +56,8 @@ export default () => {
         <li className="nav-item w-50">
           <Link
             to="/catalog-products"
-            className={`nav-link btn w-100 ${
-              pathname === '/catalog-products' ? 'active' : ''
-            }`}
+            className={`nav-link btn w-100 ${pathname === '/catalog-products' ? 'active' : ''
+              }`}
           >
             {TRL_Pack.definitions.products}
           </Link>
@@ -66,9 +65,8 @@ export default () => {
         <li className="nav-item w-50">
           <Link
             to="/catalog-categories"
-            className={`nav-link btn w-100 ${
-              pathname === '/catalog-categories' ? 'active' : ''
-            }`}
+            className={`nav-link btn w-100 ${pathname === '/catalog-categories' ? 'active' : ''
+              }`}
           >
             {TRL_Pack.definitions.categories}
           </Link>

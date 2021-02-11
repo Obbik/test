@@ -4,26 +4,26 @@ import Thermometer from 'react-thermometer-component'
 import useFetch from '../../hooks/fetchMSSQL-hook'
 
 export default () => {
-  const { fetchApi } = useFetch()
+  const { fetchMssqlApi } = useFetch()
   const [temperature, setTemperature] = useState(7)
 
   const incrementTemperature = () => setTemperature(prev => prev + 1)
   const decrementTemperature = () => setTemperature(prev => prev - 1)
 
   // const getTemperature = () => {
-  //   fetchApi('shop/temperature', {}, temperature => setTemperature(temperature))
+  //   fetchMssqlApi('shop/temperature', {}, temperature => setTemperature(temperature))
   // }
 
   const submitTemperature = () => {
-    fetchApi('shop/temperature', { method: 'POST', data: { Temperature: temperature } })
+    fetchMssqlApi('shop/temperature', { method: 'POST', data: { Temperature: temperature } })
   }
 
   const enableTemperature = () => {
-    fetchApi('shop/temperature/1', { method: 'GET', data: null, withNotification: true })
+    fetchMssqlApi('shop/temperature/1', { method: 'GET', data: null, withNotification: true })
   }
 
   const disableTemperature = () => {
-    fetchApi('shop/temperature/0', { method: 'GET', data: null, withNotification: true })
+    fetchMssqlApi('shop/temperature/0', { method: 'GET', data: null, withNotification: true })
   }
 
   useEffect(() => {

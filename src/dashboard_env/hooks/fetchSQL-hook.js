@@ -7,9 +7,10 @@ import { API_URL } from '../config/config'
 
 export default () => {
   const { setError } = useContext(ErrorContext)
-//   const { showLoader, hideLoader } = useContext(LoaderContext)
-const [ loader, setLoader ] = useState(false)
-const { ErrorNotification, SuccessNofication } = useContext(NotificationContext)
+  //   const { showLoader, hideLoader } = useContext(LoaderContext)
+  const [loader, setLoader] = useState(false)
+  const { ErrorNotification, SuccessNofication } = useContext(NotificationContext)
+
 
   const fetchApi = (
     path,

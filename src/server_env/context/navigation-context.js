@@ -35,19 +35,19 @@ export default ({ children }) => {
   let navlinks =
     localStorage.getItem('clientId') === 'console'
       ? [
-          { text: 'Monitoring', path: '/', icon: 'fa fa-desktop' },
-          { text: 'Maszyny', path: '/machines', icon: 'fas fa-tablet-alt' },
-          { text: 'Terminale', path: '/terminals', icon: 'fas fa-credit-card' },
-          { text: 'Klienci', path: '/clients', icon: 'fas fa-users-cog' },
-          // { text: 'Zadania', path: '/tasks', icon: 'fas fa-tasks' },
-          { text: 'Produkty', path: '/products', icon: 'fas fa-cookie-bite' },
-          { text: 'Kategorie', path: '/categories', icon: 'fas fa-th-large' }
-        ]
+        { text: 'Monitoring', path: '/', icon: 'fa fa-desktop' },
+        { text: 'Maszyny', path: '/machines', icon: 'fas fa-tablet-alt' },
+        { text: 'Terminale', path: '/terminals', icon: 'fas fa-credit-card' },
+        { text: 'Klienci', path: '/clients', icon: 'fas fa-users-cog' },
+        // { text: 'Zadania', path: '/tasks', icon: 'fas fa-tasks' },
+        { text: 'Produkty', path: '/products', icon: 'fas fa-cookie-bite' },
+        { text: 'Kategorie', path: '/categories', icon: 'fas fa-th-large' }
+      ]
       : [
-          { text: 'Maszyny', path: '/machines', icon: 'fas fa-tablet-alt' },
-          { text: 'Raporty', path: '/reports', icon: 'far fa-file-alt' },
-          { text: 'Tagi', path: '/tags', icon: 'fas fa-tags' }
-        ]
+        { text: 'Maszyny', path: '/machines', icon: 'fas fa-tablet-alt' },
+        { text: 'Raporty', path: '/reports', icon: 'far fa-file-alt' },
+        { text: 'Tagi', path: '/tags', icon: 'fas fa-tags' }
+      ]
 
   if (localStorage.getItem('clientId') === 'dev')
     navlinks.push(
@@ -73,16 +73,15 @@ export default ({ children }) => {
         {fatalError ? (
           <ErrorWrapper />
         ) : (
-          <div
-            className={`d-flex flex-column flex-grow-1 ${
-              loader ? 'position-relative' : ''
-            }`}
-          >
-            {sectionModal}
-            {loader && <Loader />}
-            <div className="container-lg p-3 h-100 d-flex flex-column">{children}</div>
-          </div>
-        )}
+            <div
+              className={`d-flex flex-column flex-grow-1 ${loader ? 'position-relative' : ''
+                }`}
+            >
+              {sectionModal}
+              {loader && <Loader />}
+              <div className="container-lg p-3 h-100 d-flex flex-column">{children}</div>
+            </div>
+          )}
       </div>
     </NavigationContext.Provider>
   )

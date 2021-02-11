@@ -37,7 +37,10 @@ export default () => {
 
   const login = (token, clientId) => {
     localStorage.setItem('token', token)
-    localStorage.setItem('clientId', clientId)
+
+    localStorage.getItem('DB_TYPE') === "mysql" ?
+      localStorage.setItem('clientId', "multivend") :
+      localStorage.setItem('clientId', clientId)
 
     const newExpirationDate = new Date(new Date().getTime() + 1000 * 60 * 60)
 

@@ -3,13 +3,13 @@ import { LangContext } from '../../context/lang-context'
 
 import sampleProduct from '../../assets/images/sample-product.svg'
 
-import useFetch from '../../hooks/fetchSQL-hook'
+import useFetch from '../../hooks/fetchMSSQL-hook'
 
 import { API_URL } from '../../config/config'
 import FormSkel from './FormSkel'
 
-export default ({ categoryData, getCategories, closeModal }) => {
-  const { fetchApi } = useFetch()
+export default ({ categoryData, getCategories, handleClose }) => {
+  const { fetchMssqlApi } = useFetch()
 
   const {
     TRL_Pack: { categories }
@@ -46,8 +46,8 @@ export default ({ categoryData, getCategories, closeModal }) => {
       method = 'PUT'
     }
 
-    fetchApi(path, { method, data: formData }, () => {
-      closeModal()
+    fetchMssqlApi(path, { method, data: formData }, () => {
+      handleClose()
       getCategories()
     })
   }
@@ -57,7 +57,7 @@ export default ({ categoryData, getCategories, closeModal }) => {
       headerText={
         categoryData ? categories.editCategoryHeader : categories.newCategoryHeader
       }
-      handleClose={closeModal}
+      handleClose={handleClose}
     >
       <div className="text-center">
         {(categoryData || image) && (

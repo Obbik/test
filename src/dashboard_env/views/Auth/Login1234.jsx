@@ -5,7 +5,7 @@ import { NotificationContext } from '../../context/notification-context'
 import { LoaderContext } from '../../context/loader-context'
 import axios from 'axios'
 
-import { API_URL } from '../../config/config'
+import { SHOP_URL, API_URL } from '../../config/config'
 
 import gbFlag from '../../assets/flags/gb.png'
 import plFlag from '../../assets/flags/pl.png'
@@ -19,7 +19,7 @@ export default ({ login }) => {
   const { loader, showLoader, hideLoader } = useContext(LoaderContext)
   const {
     changeLanguage,
-    languagePack: { buttons, auth }
+    TRL_Pack: { buttons, auth }
   } = useContext(LangContext)
 
   const handleSubmit = evt => {
@@ -28,7 +28,7 @@ export default ({ login }) => {
     const { email, password } = evt.target.elements
 
     if (email.value && password.value) {
-      showLoader()
+      // showLoader()
 
       axios
         .put(`${API_URL}/api/auth/login`, {
@@ -41,24 +41,25 @@ export default ({ login }) => {
           if (res.status !== 200 && res.status !== 201)
             setError('Could not authenticate.')
 
-          hideLoader()
-          const { token, permissions } = res.data
+          // hideLoader()
+          const { token, permissions, clientId } = res.data
+          console.log(res.data.clientId, clientId)
+          login(token, permissions, clientId)
 
-          login(token, permissions)
         })
         .catch(err => {
-          hideLoader()
+          // hideLoader()
           ErrorNotification(err)
         })
     }
   }
 
-  // const returnToShop = () => (window.location.href = SHOP_URL)
+  const returnToShop = () => (window.location.href = SHOP_URL)
 
-  // useEffect(() => {
-  //   const returnToShopTimeout = setTimeout(returnToShop, 60000)
-  //   return () => clearTimeout(returnToShopTimeout)
-  // }, [])
+  useEffect(() => {
+    const returnToShopTimeout = setTimeout(returnToShop, 60000)
+    return () => clearTimeout(returnToShopTimeout)
+  }, [])
 
   return (
     <>

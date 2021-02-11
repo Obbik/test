@@ -6,11 +6,11 @@ import MachineProducts from '../../components/Machine/Feeders'
 
 import FeederForm from '../../components/Modals/FeederForm'
 
-import useFetch from '../../hooks/fetchSQL-hook'
+import useFetch from '../../hooks/fetchMSSQL-hook'
 import useForm from '../../hooks/form-hook'
 
 export default () => {
-  const { fetchApi } = useFetch()
+  const { fetchMssqlApi } = useFetch()
   const { form, openForm, closeForm } = useForm()
 
   const {
@@ -23,7 +23,7 @@ export default () => {
   const [machineProducts, setMachineProducts] = useState([])
 
   const getMachineProducts = () => {
-    fetchApi('machine-products', {}, data => {
+    fetchMssqlApi('machine-products', {}, data => {
       if (data.map(product => product.MachineFeederNo).every(No => !isNaN(No)))
         data.sort((a, b) => Number(a.MachineFeederNo) - Number(b.MachineFeederNo))
 
@@ -32,7 +32,7 @@ export default () => {
   }
 
   const deliverMachineProduct = feederNo => () => {
-    fetchApi(
+    fetchMssqlApi(
       'shop/test-feeder',
       { method: 'POST', data: { MachineFeederNo: feederNo } },
       getMachineProducts
@@ -41,7 +41,7 @@ export default () => {
 
   const deleteMachineProduct = id => () => {
     if (window.confirm(shelves.confirmDeletion))
-      fetchApi(`machine-product/${id}`, { method: 'DELETE' }, getMachineProducts)
+      fetchMssqlApi(`machine-product/${id}`, { method: 'DELETE' }, getMachineProducts)
   }
 
   const filteredMachines = machineProducts.filter(machineProduct =>

@@ -3,8 +3,8 @@ import React from 'react'
 import useFetch from '../../hooks/fetchMSSQL-hook'
 import FormSkel from './FormSkel'
 
-export default ({ machineProduct, closeModal, getMachineProducts }) => {
-  const { fetchApi } = useFetch()
+export default ({ machineProduct, handleClose, getMachineProducts }) => {
+  const { fetchMssqlApi } = useFetch()
 
   const handleSubmit = evt => {
     evt.preventDefault()
@@ -15,11 +15,11 @@ export default ({ machineProduct, closeModal, getMachineProducts }) => {
       Quantity: parseInt(newQuantity.value)
     }
 
-    fetchApi(
+    fetchMssqlApi(
       `machine-product/${machineProduct.MachineProductId}`,
       { method: 'PATCH', data: fetchBody },
       () => {
-        closeModal()
+        handleClose()
         getMachineProducts()
       }
     )
@@ -28,7 +28,7 @@ export default ({ machineProduct, closeModal, getMachineProducts }) => {
   return (
     <FormSkel
       headerText={`Wybór nr ${machineProduct.MachineFeederNo}`}
-      handleClose={closeModal}
+      handleClose={handleClose}
     >
       <form onSubmit={handleSubmit} id="modal-form" autoComplete="off">
         <div>

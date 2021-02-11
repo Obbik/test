@@ -52,10 +52,10 @@ export default ({ logout }) => {
     )
   }
 
+
   const emptyAllFeeders = () => {
     fetchMssqlApi(`machine-products/empty`, { method: 'PATCH' }, getMachineProducts)
   }
-
   const emptySingleFeeder = machineProductId => () => {
     fetchMssqlApi(
       `machine-product/empty/${machineProductId}`,

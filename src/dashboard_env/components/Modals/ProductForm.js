@@ -3,13 +3,13 @@ import { LangContext } from '../../context/lang-context'
 
 import sampleProduct from '../../assets/images/sample-product.svg'
 
-import useFetch from '../../hooks/fetchSQL-hook'
+import useFetch from '../../hooks/fetchMSSQL-hook'
 
 import { API_URL } from '../../config/config'
 import FormSkel from './FormSkel'
 
-export default ({ productData, getProducts, categories, closeModal }) => {
-  const { fetchApi } = useFetch()
+export default ({ productData, getProducts, categories, handleClose }) => {
+  const { fetchMssqlApi } = useFetch()
 
   const {
     TRL_Pack: { products }
@@ -26,7 +26,7 @@ export default ({ productData, getProducts, categories, closeModal }) => {
   })
 
   const getProductCategories = () => {
-    fetchApi(`category-product/${productData.EAN}`, {}, productCategories => {
+    fetchMssqlApi(`category-product/${productData.EAN}`, {}, productCategories => {
       initialProductCategoriesDetailed.current = productCategories
       setProductCategories(prev => ({
         ...prev,
@@ -78,21 +78,20 @@ export default ({ productData, getProducts, categories, closeModal }) => {
       method = 'PUT'
     }
 
-    fetchApi(path, { method, data: formData }, () => {
+    fetchMssqlApi(path, { method, data: formData }, () => {
       if (ean.value !== '0') {
         productCategories.added.forEach(categoryId =>
-          fetchApi('category-product', {
+          fetchMssqlApi('category-product', {
             method: 'POST',
             data: { CategoryId: categoryId, Ean: ean.value }
           })
         )
 
         productCategories.deleted.forEach(categoryId =>
-          fetchApi(
-            `category-product/${
-              initialProductCategoriesDetailed.current.find(
-                pc => (pc.CategoryId = categoryId)
-              ).CategoryProductId
+          fetchMssqlApi(
+            `category-product/${initialProductCategoriesDetailed.current.find(
+              pc => (pc.CategoryId = categoryId)
+            ).CategoryProductId
             }`,
             {
               method: 'DELETE'
@@ -100,7 +99,7 @@ export default ({ productData, getProducts, categories, closeModal }) => {
           )
         )
 
-        closeModal()
+        handleClose()
         getProducts()
       }
     })
@@ -111,15 +110,16 @@ export default ({ productData, getProducts, categories, closeModal }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
+  console.log(handleClose)
   return (
-    <FormSkel
+
+    < FormSkel
       headerText={productData ? products.editProductHeader : products.newProductHeader}
-      handleClose={closeModal}
+      handleClose={handleClose}
     >
       <div className="text-center">
         {(productData || image) && (
-          <img
+          <img alt="#"
             src={image || API_URL + productData.Image}
             onError={evt => (evt.target.src = sampleProduct)}
             width="256"
@@ -180,9 +180,8 @@ export default ({ productData, getProducts, categories, closeModal }) => {
           onClick={toggleCategoriesSection}
         >
           <i
-            className={`fas ${
-              categoriesSection ? 'fa-chevron-up' : 'fa-chevron-down'
-            } text-muted`}
+            className={`fas ${categoriesSection ? 'fa-chevron-up' : 'fa-chevron-down'
+              } text-muted`}
           />
         </button>
         {categoriesSection && (
@@ -190,13 +189,12 @@ export default ({ productData, getProducts, categories, closeModal }) => {
             {categories.map((category, idx) => (
               <div
                 key={idx}
-                className={`col-6 pl-3 font-weight-bolder list-group-item ${
-                  productCategories.added.includes(category.CategoryId) ||
+                className={`col-6 pl-3 font-weight-bolder list-group-item ${productCategories.added.includes(category.CategoryId) ||
                   (productCategories.initial.includes(category.CategoryId) &&
                     !productCategories.deleted.includes(category.CategoryId))
-                    ? 'list-group-item-success'
-                    : ''
-                }`}
+                  ? 'list-group-item-success'
+                  : ''
+                  }`}
                 onClick={toggleProductCategory(category.CategoryId)}
               >
                 {category.Name}
@@ -205,6 +203,6 @@ export default ({ productData, getProducts, categories, closeModal }) => {
           </div>
         )}
       </form>
-    </FormSkel>
+    </FormSkel >
   )
 }

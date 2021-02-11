@@ -8,9 +8,8 @@ import Lift from './Lift'
 
 export default () => {
   const { setHeaderData } = useContext(NavigationContext)
-  const  {TRL_Pack:{shelves}}  = useContext(LangContext)
+  const { TRL_Pack: { shelves } } = useContext(LangContext)
 
-  console.log(shelves)
   const [currentMachineSection, setCurrentMachineSection] = useState(0)
   const changeSection = id => () => setCurrentMachineSection(id)
 
