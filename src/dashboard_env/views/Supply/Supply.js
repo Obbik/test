@@ -134,7 +134,7 @@ export default ({ logout }) => {
       {form && (
         <NewQuantityForm
           machineProduct={form}
-          closeModal={closeForm}
+          handleClose={closeForm}
           getMachineProducts={getMachineProducts}
         />
       )}

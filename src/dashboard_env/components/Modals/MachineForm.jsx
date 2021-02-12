@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import useFetch from '../../hooks/fetchSQL-hook'
+import useFetch from '../../hooks/fetchMSSQL-hook'
 import { LangContext } from '../../context/lang-context'
 
 import FormSkel from './FormSkel'

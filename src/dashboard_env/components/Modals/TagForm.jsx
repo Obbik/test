@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from 'react'
 import { NotificationContext } from '../../context/notification-context'
 import { LangContext } from '../../context/lang-context'
 import onClickAway from '../../util/onClickAway'
-import useFetch from '../../hooks/fetchSQL-hook'
+import useFetch from '../../hooks/fetchMSSQL-hook'
 
 export default ({ tagData, handleClose, getTags, section }) => {
   const { fetchMssqlApi } = useFetch()
@@ -121,14 +121,14 @@ export default ({ tagData, handleClose, getTags, section }) => {
               {tagData?.others ? (
                 <h6 className="text-center">Inne</h6>
               ) : (
-                <input
-                  className="form-control"
-                  name="label"
-                  defaultValue={tagData?.label}
-                  required
-                  autoComplete="off"
-                />
-              )}
+                  <input
+                    className="form-control"
+                    name="label"
+                    defaultValue={tagData?.label}
+                    required
+                    autoComplete="off"
+                  />
+                )}
               <hr />
               {options.length > 0 && (
                 <div
@@ -161,28 +161,28 @@ export default ({ tagData, handleClose, getTags, section }) => {
                         </button>
                       </div>
                     ) : (
-                      <div key={idx} className="position-relative cursor-pointer mt-1">
-                        <li
-                          className="list-group-item list-group-item-action pr-5"
-                          onClick={editOption(idx)}
-                        >
-                          {opt.name}
-                        </li>
-                        <button
-                          type="button"
-                          className="btn btn-light position-absolute"
-                          onClick={removeOption(idx)}
-                          style={{
-                            top: '50%',
-                            right: 5,
-                            transform: 'translateY(-50%)',
-                            zIndex: 25
-                          }}
-                        >
-                          <i className="fas fa-times text-danger" />
-                        </button>
-                      </div>
-                    )
+                        <div key={idx} className="position-relative cursor-pointer mt-1">
+                          <li
+                            className="list-group-item list-group-item-action pr-5"
+                            onClick={editOption(idx)}
+                          >
+                            {opt.name}
+                          </li>
+                          <button
+                            type="button"
+                            className="btn btn-light position-absolute"
+                            onClick={removeOption(idx)}
+                            style={{
+                              top: '50%',
+                              right: 5,
+                              transform: 'translateY(-50%)',
+                              zIndex: 25
+                            }}
+                          >
+                            <i className="fas fa-times text-danger" />
+                          </button>
+                        </div>
+                      )
                   )}
                 </div>
               )}
@@ -207,14 +207,14 @@ export default ({ tagData, handleClose, getTags, section }) => {
                   </li>
                 </div>
               ) : (
-                <div
-                  onClick={editOption('new')}
-                  className="mt-1 list-group-item list-group-item-action cursor-pointer text-center"
-                  style={{ zIndex: 30 }}
-                >
-                  <i className="fas fa-plus text-muted" />
-                </div>
-              )}
+                  <div
+                    onClick={editOption('new')}
+                    className="mt-1 list-group-item list-group-item-action cursor-pointer text-center"
+                    style={{ zIndex: 30 }}
+                  >
+                    <i className="fas fa-plus text-muted" />
+                  </div>
+                )}
             </form>
           </div>
           <div className="modal-footer bg-light">

@@ -57,7 +57,7 @@ export default () => {
                     </div>
                 ))}
             </div>
-            {form && <LiftForm floor={form} closeModal={closeForm} />}
+            {form && <LiftForm floor={form} handleClose={closeForm} />}
         </>
     )
 }

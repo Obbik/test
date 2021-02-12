@@ -6,8 +6,6 @@ import en from 'javascript-time-ago/locale/en'
 import pl from 'javascript-time-ago/locale/pl'
 
 import Dashboard from './dashboard_env/app/App'
-import ServerApp from './server_env/app/App'
-import MachineApp from './machine_env/app/App'
 import * as serviceWorker from './serviceWorker'
 import { DB_TYPE } from './env'
 
@@ -22,7 +20,6 @@ if (process.env.NODE_ENV === 'development') console.log(`Environment: ${environm
 
 render(
   <BrowserRouter basename="dashboard">
-    {/* {environment === 'SERVER' ? <ServerApp /> : <MachineApp />} */}
     <Dashboard />
   </BrowserRouter>,
   document.getElementById('root')

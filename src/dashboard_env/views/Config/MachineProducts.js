@@ -77,7 +77,7 @@ export default () => {
               ? machineProducts.find(mp => mp.MachineProductId === form)
               : null
           }
-          closeModal={closeForm}
+          handleClose={closeForm}
           getMachineProducts={getMachineProducts}
         />
       )}
