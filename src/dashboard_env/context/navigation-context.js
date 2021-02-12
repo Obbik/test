@@ -5,7 +5,7 @@ import { LoaderContext } from '../context/loader-context'
 import { ErrorContext } from './error-context'
 import ErrorWrapper from '../components/ErrorWrapper/ErrorWrapper'
 import Loader from '../components/Loader/Loader'
-import Definitions from '../components/Modals/Definitions'
+
 
 export const NavigationContext = createContext()
 
@@ -15,7 +15,7 @@ export default ({ children }) => {
   const sidebarWidth = localStorage.getItem('sidebarWidth')
 
   const [sectionModal, setSectionModal] = useState(null)
-  const handleClose = () => setSectionModal(null)
+
 
   const [width, setWidth] = useState(sidebarWidth)
   const toggleSidebarWidth = () =>

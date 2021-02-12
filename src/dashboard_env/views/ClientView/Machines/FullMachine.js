@@ -7,7 +7,7 @@ import useFetch from '../../../hooks/fetchMSSQL-hook'
 import ReturnLink from '../../../components/Return/ReturnLink'
 
 import MachineInfo from '../../../components/Machine/MachineInfo'
-import MachineProducts from '../../../components/Machine/MachineProducts'
+// import MachineProducts from '../../../components/Machine/MachineProducts'
 import MachineProductsNew from '../../../components/Machine/MachineProductsNew'
 import MachineRecipes from '../../../components/Machine/MachineRecipes'
 // import MachineReports from '../../../components/Machine/MachineReports'

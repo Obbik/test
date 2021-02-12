@@ -79,6 +79,7 @@ export default () => {
       { path: '/machine/:machineId', component: FullMachineConsole },
       { path: '/terminals', component: Terminals },
       { path: '/clients', component: Clients },
+      { path: '/categories', component: Categories },
       // { path: '/tasks', component: Tasks },
       { path: ['/products', '/products/:categoryId'], component: Products },
       {

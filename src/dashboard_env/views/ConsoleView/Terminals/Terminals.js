@@ -23,7 +23,7 @@ export default () => {
     fetchMssqlApi('clients', {}, clients => setClients(clients))
   }
 
-  const [terminals, setTerminals] = useState(null)
+  const [terminals, setTerminals] = useState(null) // TODO CREATE API TERMINAL ENDPOINT
   const getTerminals = () => {
     fetchMssqlApi('terminals', {}, terminals => setTerminals(terminals))
   }

@@ -5,7 +5,8 @@ export const NotificationContext = createContext()
 
 export default ({ children }) => {
   const ErrorNotification = ({ message }) =>
-    NotificationManager.error(message.toString(), null, 4000)
+    console.log(message)
+  // NotificationManager.error(message.toString(), null, 4000)
 
   const SuccessNofication = (message = 'Success.') =>
     NotificationManager.success(message, null, 4000)
