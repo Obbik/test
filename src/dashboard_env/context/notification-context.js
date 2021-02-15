@@ -4,7 +4,7 @@ import { NotificationManager } from 'react-notifications'
 export const NotificationContext = createContext()
 
 export default ({ children }) => {
-  const ErrorNotification = ({ message }) =>
+  const ErrorNotification = (message) =>
     console.log(message)
   // NotificationManager.error(message.toString(), null, 4000)
 

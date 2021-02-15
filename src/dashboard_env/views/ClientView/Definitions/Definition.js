@@ -27,7 +27,6 @@ export default () => {
     searchedText,
     page
   }
-
   const routes = [
     {
       path: ['/definitions/products', '/definitions/products/:categoryId'],
