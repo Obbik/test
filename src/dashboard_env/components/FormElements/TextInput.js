@@ -23,6 +23,7 @@ export default ({
       if (maxLength && value.length > maxLength) return false
       if (type === 'number' && isNaN(value)) return false
       if (Number(value) < min) return false
+      if (max && Number(value) > max) return false
       if (Number(value) > max) return false
       return true
     })
@@ -31,10 +32,9 @@ export default ({
 
   return (
     <input
-      className={`form-control form-control-sm ${className} ${
-        !isValid ? 'invalid-input' : ''
-      }`}
-      {...{ name, type, value, style, min, max, required, step }}
+      className={`form-control form-control-sm ${className} ${!isValid ? 'invalid-input' : ''
+        }`}
+      {...{ name, type, value, style }}
       onChange={handleChange}
       data-valid={isValid}
     />
