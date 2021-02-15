@@ -12,7 +12,7 @@ export default () => {
 
   const fetchMssqlApi = (
     path,
-    { method = 'GET', data = null, hideNotification } = {},
+    { method = 'GET', data = null, hideNotification, params = null } = {},
     onSuccess = () => { },
     onError = () => { }
   ) => {
@@ -28,7 +28,8 @@ export default () => {
       headers: {
         Authorization: `Bearer ${token}`
       },
-      data
+      data,
+      params
     })
       .then(res => {
         if (res.status > 299) throw new Error()

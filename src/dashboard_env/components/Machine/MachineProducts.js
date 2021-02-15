@@ -34,8 +34,13 @@ const MachineProducts = (props) => {
     });
   }, [machineProducts])
 
+
   const getMachineProducts = () => {
-    fetchMssqlApi(`machine-products/${props.machineId}`, {}, machineProducts => {
+    const params = {
+        machineId: props.machineId
+    };
+
+    fetchMssqlApi(`machine-products`, {method: 'GET', data: null, hideNotification: false, params}, machineProducts => {
       const newMachineProducts = machineProducts.map(machineProduct => ({ ...machineProduct, RequestMethod: null }))
       setInitialMachineProducts(newMachineProducts);
       setMachineProducts(newMachineProducts);
