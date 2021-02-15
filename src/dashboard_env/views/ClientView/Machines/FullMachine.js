@@ -7,8 +7,8 @@ import useFetch from '../../../hooks/fetchMSSQL-hook'
 import ReturnLink from '../../../components/Return/ReturnLink'
 
 import MachineInfo from '../../../components/Machine/MachineInfo'
-// import MachineProducts from '../../../components/Machine/MachineProducts'
-import MachineProductsNew from '../../../components/Machine/MachineProductsNew'
+import MachineProducts from '../../../components/Machine/MachineProducts'
+// import MachineProductsNew from '../../../components/Machine/MachineProductsNew'
 import MachineRecipes from '../../../components/Machine/MachineRecipes'
 // import MachineReports from '../../../components/Machine/MachineReports'
 
@@ -39,7 +39,7 @@ export default () => {
         <>
           <MachineInfo machineData={machineData} updateMachine={setMachineData} />
           {machineData.MaintenanceType === 'SNACK' ? (
-            <MachineProductsNew machineId={machineId} />
+            <MachineProducts machineId={machineId} />
             // <MachineProducts machineId={machineId} />
           ) : (
               machineData.MaintenanceType === 'COFFEE' && (
