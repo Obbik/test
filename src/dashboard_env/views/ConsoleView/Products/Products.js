@@ -12,7 +12,7 @@ import Pagination from '../../../components/Pagination/Pagination'
 
 import sampleProduct from '../../../assets/images/sample-product.svg'
 
-import { CONSOLE_CLOUD } from '../../../config/config'
+import { API_URL } from '../../../config/config'
 import filterItems from '../../../util/filterItems'
 import ProductForm from '../../../components/Modals/ProductForm'
 
@@ -43,7 +43,6 @@ export default () => {
       }
     })
   }
-
 
   const getProducts = () => {
     if (categoryId) {
@@ -80,9 +79,7 @@ export default () => {
             data: { categoryId }
           })
         )
-        console.log(formData)
         productCategories.deleted.forEach(categoryId =>
-          console.log(formData),
           fetchMssqlApi(`product-category/${ean.value}`, {
             method: 'DELETE',
             data: { categoryId }
@@ -163,7 +160,7 @@ export default () => {
                             <td>
                               {/* {console.log(product.Image)} */}
                               <img
-                                src={product.Image}
+                                src={`${API_URL}/${product.Image}`}
                                 onError={evt => (evt.target.src = sampleProduct)}
                                 alt={product.Name}
                                 width="48"
@@ -188,18 +185,22 @@ export default () => {
         </>
       ) : (
           <NoResults buttonText="Dodaj produkt" onClick={openForm()} />
-        )}
-      {form && (
-        <ProductForm
-          productData={
-            form !== 'new' ? filteredProducts.find(product => product.EAN === form) : null
-          }
-          getProducts={getProducts}
-          categories={categories}
-          handleSubmit={submitProduct}
-          handleClose={closeForm}
-        />
-      )}
+        )
+      }
+      {
+        form && (
+          <ProductForm
+            form={form}
+            productData={
+              form !== 'new' ? filteredProducts.find(product => product.EAN === form) : null
+            }
+            getProducts={getProducts}
+            categories={categories}
+            handleSubmit={submitProduct}
+            handleClose={closeForm}
+          />
+        )
+      }
     </>
   )
 }

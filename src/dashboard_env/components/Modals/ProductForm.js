@@ -8,7 +8,7 @@ import useFetch from '../../hooks/fetchMSSQL-hook'
 import { API_URL } from '../../config/config'
 import FormSkel from './FormSkel'
 
-export default ({ productData, getProducts, categories, handleClose }) => {
+export default ({ form, productData, getProducts, categories, handleClose }) => {
   const { fetchMssqlApi } = useFetch()
   const {
     TRL_Pack: { products }
@@ -77,6 +77,7 @@ export default ({ productData, getProducts, categories, handleClose }) => {
 
     fetchMssqlApi(path, { method, data: formData }, () => {
       for (var value of formData.values()) {
+        console.log(value)
       }
       if (ean.value !== '0') {
         productCategories.added.forEach(categoryId => {
@@ -130,11 +131,13 @@ export default ({ productData, getProducts, categories, handleClose }) => {
       <form onSubmit={handleSubmit} id="modal-form" autoComplete="off">
         <div className="form-group">
           <label className="h6">{products.props.ean}</label>
+          {console.log(form)}
           <input
             type="number"
             name="ean"
             className="form-control"
             defaultValue={productData && productData.EAN}
+            disabled={form === "new" ? "" : 1}
             required
           />
         </div>

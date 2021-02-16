@@ -82,6 +82,7 @@ export default ({
     formData.append('Image', image.files[0])
 
     let path, method
+
     if (form !== 'new') {
       path = `product/${form}`
       method = 'PUT'
