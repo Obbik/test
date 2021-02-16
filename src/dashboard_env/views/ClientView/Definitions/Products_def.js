@@ -42,6 +42,7 @@ export default ({
   }
 
   const getProducts = () => {
+    console.log("testproduktow")
     fetchMssqlApi('products', {}, products => setItems(products))
   }
 
@@ -139,6 +140,7 @@ export default ({
             <FormSkel
               headerText={TRL_Pack.products.productCategoriesHeader}
               handleClose={closeProductCategoriesForm}
+
             >
               <form className="mb-n3" id="modal-form" onSubmit={handleSubmit}>
                 {categories.map((category, idx) => (
@@ -167,6 +169,7 @@ export default ({
       {formModal && (
         <ProductForm
           productData={filteredItems.find(p => p.ProductId === formModal)}
+          getProducts={"test"}
           handleSubmit={submitProduct}
           handleClose={closeForm}
         />

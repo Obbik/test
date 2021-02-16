@@ -48,6 +48,7 @@ export default () => {
         else ErrorNotification(err.response?.data || err.toString())
 
         console.log(err.response?.data || err)
+        console.group(err.response)
       })
   }
 

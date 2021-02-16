@@ -68,7 +68,7 @@ export default ({ productData, categories, handleSubmit, handleClose }) => {
             className="form-control"
             defaultValue={productData && productData.EAN}
             required
-            pattern="\d*"
+            pattern="/d*"
           />
         </div>
         <div className="form-group">
@@ -114,9 +114,8 @@ export default ({ productData, categories, handleSubmit, handleClose }) => {
           onClick={toggleCategoriesSection}
         >
           <i
-            className={`fas ${
-              categoriesSection ? 'fa-chevron-up' : 'fa-chevron-down'
-            } text-muted`}
+            className={`fas ${categoriesSection ? 'fa-chevron-up' : 'fa-chevron-down'
+              } text-muted`}
           />
         </button>
         {categoriesSection && (
@@ -124,13 +123,12 @@ export default ({ productData, categories, handleSubmit, handleClose }) => {
             {categories.map((category, idx) => (
               <div
                 key={idx}
-                className={`col-6 pl-3 font-weight-bolder list-group-item ${
-                  productCategories.added.includes(category.CategoryId) ||
-                  (productCategories.initial.includes(category.CategoryId) &&
-                    !productCategories.deleted.includes(category.CategoryId))
+                className={`col-6 pl-3 font-weight-bolder list-group-item ${productCategories.added.includes(category.CategoryId) ||
+                    (productCategories.initial.includes(category.CategoryId) &&
+                      !productCategories.deleted.includes(category.CategoryId))
                     ? 'list-group-item-success'
                     : ''
-                }`}
+                  }`}
                 onClick={toggleProductCategory(category.CategoryId)}
               >
                 {category.Name}

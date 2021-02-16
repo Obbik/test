@@ -14,7 +14,7 @@ export default ({ feederData, handleClose, getMachineProducts }) => {
   const [allProducts, setAllProducts] = useState([])
 
   const getAllProducts = () => {
-    fetchMssqlApi('all-products', {}, data => setAllProducts(data))
+    fetchMssqlApi('products', {}, data => setAllProducts(data))
   }
 
   const getEanByName = Name => {

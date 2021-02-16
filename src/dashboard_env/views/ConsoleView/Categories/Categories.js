@@ -78,75 +78,75 @@ export default () => {
           {!filteredCategories.length ? (
             <NoResults buttonText="Dodaj kategorie" onClick={openForm()} />
           ) : (
-            <>
-              <div>
-                <button
-                  className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
-                  onClick={openForm()}
-                >
-                  <i className="fas fa-plus mr-2" /> Dodaj kategorie
+              <>
+                <div>
+                  <button
+                    className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+                    onClick={openForm()}
+                  >
+                    <i className="fas fa-plus mr-2" /> Dodaj kategorie
                 </button>
-              </div>
-              <div className="overflow-auto">
-                <table className="table table-striped border">
-                  <thead>
-                    <tr>
-                      <th className="text-center" style={{ width: 50 }}>
-                        #
+                </div>
+                <div className="overflow-auto">
+                  <table className="table table-striped border">
+                    <thead>
+                      <tr>
+                        <th className="text-center" style={{ width: 50 }}>
+                          #
                       </th>
-                      <th>Nazwa</th>
-                      <th>Zdjęcie</th>
-                      <th style={{ width: '1%' }} colSpan={2} />
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredCategories.map((category, idx) => (
-                      <tr key={idx}>
-                        <td className="font-weight-bold text-center">{idx + 1}</td>
-                        <td>
-                          <button
-                            className="btn btn-link font-size-inherit text-decoration-none text-reset p-1"
-                            onClick={openForm(category.CategoryId)}
-                          >
-                            {category.Name}
-                          </button>
-                        </td>
-                        <td>
-                          <img
-                            src={`${CONSOLE_CLOUD}/categories/${category.Image}`}
-                            onError={evt => (evt.target.src = sampleProduct)}
-                            alt={category.Name}
-                            width="48"
-                            height="48"
-                          />
-                        </td>
-                        <td>
-                          <Link
-                            to={`/products/${category.CategoryId}`}
-                            className="btn btn-link"
-                          >
-                            <i className="fas fa-cookie text-warning" />
-                          </Link>
-                        </td>
-                        <td>
-                          <button
-                            className="btn btn-link"
-                            onClick={deleteCategory(category.CategoryId)}
-                          >
-                            <i className="fas fa-trash text-danger" />
-                          </button>
-                        </td>
+                        <th>Nazwa</th>
+                        <th>Zdjęcie</th>
+                        <th style={{ width: '1%' }} colSpan={2} />
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </>
-          )}
+                    </thead>
+                    <tbody>
+                      {filteredCategories.map((category, idx) => (
+                        <tr key={idx}>
+                          <td className="font-weight-bold text-center">{idx + 1}</td>
+                          <td>
+                            <button
+                              className="btn btn-link font-size-inherit text-decoration-none text-reset p-1"
+                              onClick={openForm(category.CategoryId)}
+                            >
+                              {category.Name}
+                            </button>
+                          </td>
+                          <td>
+                            <img
+                              src={`${CONSOLE_CLOUD}/categories/${category.Image}`}
+                              onError={evt => (evt.target.src = sampleProduct)}
+                              alt={category.Name}
+                              width="48"
+                              height="48"
+                            />
+                          </td>
+                          <td>
+                            <Link
+                              to={`/products/${category.CategoryId}`}
+                              className="btn btn-link"
+                            >
+                              <i className="fas fa-cookie text-warning" />
+                            </Link>
+                          </td>
+                          <td>
+                            <button
+                              className="btn btn-link"
+                              onClick={deleteCategory(category.CategoryId)}
+                            >
+                              <i className="fas fa-trash text-danger" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
         </>
       ) : (
-        <NoResults buttonText="Dodaj kategorie" onClick={openForm()} />
-      )}
+          <NoResults buttonText="Dodaj kategorie" onClick={openForm()} />
+        )}
       {form && (
         <CategoryForm
           categoryData={

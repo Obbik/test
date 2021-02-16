@@ -44,9 +44,11 @@ export default () => {
     })
   }
 
+
   const getProducts = () => {
-    if (categoryId)
+    if (categoryId) {
       fetchMssqlApi(`products/${categoryId}`, {}, (products) => setProducts(products))
+    }
     else fetchMssqlApi('products', {}, (products) => setProducts(products))
   }
   const submitProduct = productCategories => evt => {
@@ -66,7 +68,7 @@ export default () => {
       path = `product/${form}`
       method = 'PUT'
     } else {
-      path = 'product'
+      path = ''
       method = 'POST'
     }
 
@@ -78,8 +80,9 @@ export default () => {
             data: { categoryId }
           })
         )
-
+        console.log(formData)
         productCategories.deleted.forEach(categoryId =>
+          console.log(formData),
           fetchMssqlApi(`product-category/${ean.value}`, {
             method: 'DELETE',
             data: { categoryId }
@@ -109,6 +112,7 @@ export default () => {
 
   return (
     <>
+
       {products.length ? (
         <>
           <SearchInput onSearch={updateSearchedText} />
@@ -157,8 +161,9 @@ export default () => {
                               </button>
                             </td>
                             <td>
+                              {/* {console.log(product.Image)} */}
                               <img
-                                src={`${CONSOLE_CLOUD}/products/${product.EAN}.png`}
+                                src={product.Image}
                                 onError={evt => (evt.target.src = sampleProduct)}
                                 alt={product.Name}
                                 width="48"
@@ -189,6 +194,7 @@ export default () => {
           productData={
             form !== 'new' ? filteredProducts.find(product => product.EAN === form) : null
           }
+          getProducts={getProducts}
           categories={categories}
           handleSubmit={submitProduct}
           handleClose={closeForm}

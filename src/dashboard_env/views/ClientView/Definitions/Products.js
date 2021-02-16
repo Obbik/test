@@ -49,6 +49,7 @@ export default ({
   }, [searchedText])
 
   const getProducts = () => {
+    console.log("getprodukt")
     fetchMssqlApi('products', {}, products => {
       setItemsCount({ total: products.length, filtered: products.length })
       setProducts(products)
@@ -152,8 +153,8 @@ export default ({
                         {product.EAN !== '0' ? (
                           product.EAN
                         ) : (
-                          <i className="fas fa-ban text-muted" />
-                        )}
+                            <i className="fas fa-ban text-muted" />
+                          )}
                       </td>
                       <td className="small">
                         {product.ProductId ? (
@@ -166,29 +167,28 @@ export default ({
                             {product.Name}
                           </button>
                         ) : (
-                          <span
-                            style={{ wordBreak: 'break-word' }}
-                            className="p-1"
-                            title={product.Description || 'brak opisu'}
-                          >
-                            {product.Name}
-                          </span>
-                        )}
+                            <span
+                              style={{ wordBreak: 'break-word' }}
+                              className="p-1"
+                              title={product.Description || 'brak opisu'}
+                            >
+                              {product.Name}
+                            </span>
+                          )}
                       </td>
                       <td className="text-center">
                         {product.EAN !== '0' ? (
                           <img
-                            src={`${
-                              product.ProductId ? LOCAL_CLOUD : CONSOLE_CLOUD
-                            }/products/${product.EAN}.png`}
+                            src={`${product.ProductId ? LOCAL_CLOUD : CONSOLE_CLOUD
+                              }/products/${product.EAN}.png`}
                             onError={evt => (evt.target.src = sampleProduct)}
                             alt={product.Name}
                             width="48"
                             height="48"
                           />
                         ) : (
-                          <i className="fas fa-ban text-muted" />
-                        )}
+                            <i className="fas fa-ban text-muted" />
+                          )}
                       </td>
                       {product.ProductId ? (
                         <td>
@@ -200,15 +200,15 @@ export default ({
                           </button>
                         </td>
                       ) : (
-                        <td className="text-center">
-                          <button
-                            onClick={unsubscribeProduct(product.EAN)}
-                            className="btn btn-link"
-                          >
-                            <i className="fa fa-times text-muted" />
-                          </button>
-                        </td>
-                      )}
+                          <td className="text-center">
+                            <button
+                              onClick={unsubscribeProduct(product.EAN)}
+                              className="btn btn-link"
+                            >
+                              <i className="fa fa-times text-muted" />
+                            </button>
+                          </td>
+                        )}
                     </tr>
                   ))}
               </tbody>
@@ -216,13 +216,14 @@ export default ({
           </div>
         </>
       ) : (
-        <NoResults onClick={openForm()} buttonText={TRL_Pack.products.addProductButton} />
-      )}
+          <NoResults onClick={openForm()} buttonText={TRL_Pack.products.addProductButton} />
+        )}
       {form && (
         <ProductForm
           productData={
             form !== 'new' ? filteredProducts.find(p => p.ProductId === form) : null
           }
+          getProducts={getProducts}
           categories={categories.filter(c => c.CategoryId)}
           handleSubmit={submitProduct}
           handleClose={closeForm}

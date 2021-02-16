@@ -10,7 +10,6 @@ import FormSkel from './FormSkel'
 
 export default ({ productData, getProducts, categories, handleClose }) => {
   const { fetchMssqlApi } = useFetch()
-
   const {
     TRL_Pack: { products }
   } = useContext(LangContext)
@@ -66,9 +65,7 @@ export default ({ productData, getProducts, categories, handleClose }) => {
     formData.append('Ean', ean.value)
     formData.append('Name', name.value)
     formData.append('Description', description.value)
-
     if (image.files[0]) formData.append('Image', image.files[0])
-
     let path, method
     if (!productData) {
       path = 'product'
@@ -79,13 +76,16 @@ export default ({ productData, getProducts, categories, handleClose }) => {
     }
 
     fetchMssqlApi(path, { method, data: formData }, () => {
+      for (var value of formData.values()) {
+      }
       if (ean.value !== '0') {
-        productCategories.added.forEach(categoryId =>
+        productCategories.added.forEach(categoryId => {
           fetchMssqlApi('category-product', {
             method: 'POST',
-            data: { CategoryId: categoryId, Ean: ean.value }
+            data: { CategoryId: categoryId, Ean: ean.value },
           })
-        )
+        })
+
 
         productCategories.deleted.forEach(categoryId =>
           fetchMssqlApi(
@@ -102,7 +102,8 @@ export default ({ productData, getProducts, categories, handleClose }) => {
         handleClose()
         getProducts()
       }
-    })
+    }
+    )
   }
 
   useEffect(() => {
@@ -110,7 +111,6 @@ export default ({ productData, getProducts, categories, handleClose }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  console.log(handleClose)
   return (
 
     < FormSkel
