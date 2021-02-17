@@ -80,7 +80,7 @@ export default () => {
             render={() => (
               <VendimProducts
                 products={products}
-                categories={categories}
+                categories={setCategories}
                 getProducts={getProducts}
               />
             )}

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { LangContext } from '../../context/lang-context'
 
 import sampleProduct from '../../assets/images/sample-product.svg'
@@ -10,16 +10,20 @@ import FormSkel from './FormSkel'
 
 export default ({ categoryData, getCategories, handleClose }) => {
   const { fetchMssqlApi } = useFetch()
-
   const {
     TRL_Pack: { categories }
   } = useContext(LangContext)
 
-  const [image, setImage] = useState(null)
+  const initialValue = (categoryData) => {
+    if (categoryData) { return `${API_URL}/${categoryData.Image}` }
+    else {
+      return null
+    }
+  }
+  const [image, setImage] = useState(initialValue(categoryData))
 
   const handleChangeImage = evt => {
     evt.preventDefault()
-
     if (evt.target.files[0]) {
       const reader = new FileReader()
       reader.readAsDataURL(evt.target.files[0])
@@ -31,12 +35,14 @@ export default ({ categoryData, getCategories, handleClose }) => {
     evt.preventDefault()
 
     const { name, image } = evt.target.elements
-
     const formData = new FormData()
     formData.append('Name', name.value)
-
-    if (image.files[0]) formData.append('Image', image.files[0])
-
+    if (image.files[0]) {
+      formData.append('Image', image.files[0])
+    }
+    else if (categoryData) {
+      formData.append('Image', categoryData.Image)
+    }
     let path, method
     if (!categoryData) {
       path = 'category'
@@ -46,12 +52,12 @@ export default ({ categoryData, getCategories, handleClose }) => {
       method = 'PUT'
     }
 
-    console.log(getCategories)
     fetchMssqlApi(path, { method, data: formData }, () => {
       handleClose()
-      // getCategories()
+      getCategories()
     })
   }
+
 
   return (
     <FormSkel

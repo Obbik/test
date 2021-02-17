@@ -11,9 +11,9 @@ import CategoryForm from '../../../components/Modals/CategoryForm'
 
 import sampleProduct from '../../../assets/images/sample-product.svg'
 
-import { API_URL, CONSOLE_CLOUD } from '../../../config/config'
+import { API_URL } from '../../../config/config'
 import filterItems from '../../../util/filterItems'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 
 export default () => {
   const { fetchMssqlApi } = useFetch()
@@ -22,6 +22,7 @@ export default () => {
   const { searchedText, updateSearchedText } = useFilter()
 
   const { form, openForm, closeForm } = useForm()
+  // const { categories, setCategories } = useState({})
 
   const [categories, setCategories] = useState([])
 
@@ -54,14 +55,15 @@ export default () => {
     })
   }
 
+
   const deleteCategory = categoryId => () => {
     if (window.confirm('Potwierdź usunięcie kategorii'))
       fetchMssqlApi(`category/${categoryId}`, { method: 'DELETE' }, getCategories)
   }
+  console.log(categories)
 
   useEffect(() => {
     setHeaderData({ text: 'Kategorie' })
-
     getCategories()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -113,7 +115,7 @@ export default () => {
                           </td>
                           <td>
                             <img
-                              src={`${API_URL}/categories/${category.Image}`}
+                              src={`${API_URL}/${category.Image}`}
                               onError={evt => (evt.target.src = sampleProduct)}
                               alt={category.Name}
                               width="48"
@@ -154,6 +156,7 @@ export default () => {
               ? filteredCategories.find(category => category.CategoryId === form)
               : null
           }
+          getCategories={getCategories}
           handleSubmit={submitCategory}
           handleClose={closeForm}
         />
