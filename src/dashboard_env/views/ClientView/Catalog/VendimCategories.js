@@ -72,7 +72,7 @@ export default ({ categories, getCategories }) => {
                       </td>
                       <td>
                         <Link
-                          to={`/catalog-products/${category.CategoryId}`}
+                          to={`/catalog-products`}
                           className="btn btn-link"
                         >
                           <i className="fas fa-cookie text-warning" />

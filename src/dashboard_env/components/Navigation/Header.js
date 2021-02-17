@@ -56,7 +56,9 @@ export default ({ toggleSidebar, navlinks, headerData: { text, subtext } = {} })
         <nav className="d-lg-none collapse navbar-collapse px-3 pb-2 show">
           <ul className="navbar-nav ml-auto">
             {navlinks.map((navlink, idx) => (
-              <ListItem key={idx} {...navlink} />
+              <h1>text
+                < ListItem key={idx} {...navlink} />
+              </h1>
             ))}
           </ul>
         </nav>

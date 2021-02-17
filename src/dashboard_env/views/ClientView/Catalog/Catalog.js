@@ -21,7 +21,7 @@ export default () => {
   const getProducts = () => {
     // if (categoryId) {
     //   setProducts(productsByCategory)
-    fetchMssqlApi(`catalog-products/${categoryId}`, {}, products => setProducts(products))
+    fetchMssqlApi(`catalog-products`, {}, products => setProducts(products))
     // } else {
     // fetchMssqlApi('catalog-products', {}, products => setProducts(products))
     // }
