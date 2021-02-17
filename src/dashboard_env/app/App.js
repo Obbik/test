@@ -86,7 +86,7 @@ export default () => {
         path: [
           '/catalog-products',
           '/catalog-categories',
-          '/catalog-products/:categoryId'
+          '/catalog-products'
         ],
         component: Catalog
       }
@@ -106,7 +106,7 @@ export default () => {
         path: [
           '/catalog-products',
           '/catalog-categories',
-          '/catalog-products/:categoryId'
+          '/catalog-products'
         ],
         component: Catalog
       }

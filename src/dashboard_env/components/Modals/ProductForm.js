@@ -204,7 +204,6 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
                   }`}
                 onClick={toggleProductCategory(category.CategoryId)}
               >
-                {console.log(category)}
                 {category.Name}
               </div>
             ))}

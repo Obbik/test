@@ -32,7 +32,7 @@ export default ({ children }) => {
   const [headerData, setHeaderData] = useState({})
 
   let navlinks = []
-
+  const currentPath = window.location.pathname.slice(10)
   if (sessionStorage.getItem('DB_TYPE') === "mysql") // MACHINE Routes
   {
     navlinks.push(
@@ -73,6 +73,9 @@ export default ({ children }) => {
   }
   navlinks.push({ text: 'Wyloguj się', path: '/logout', icon: 'fas fa-sign-out-alt' })
 
+  // {
+  //   if (currentPath === navlinks.path) { console.log(navlinks.path) } else{console.log(currentPath,navlinks.pa)}
+  // }
   return (
     <NavigationContext.Provider value={{ setHeaderData }}>
       <Sidebar width={width} navlinks={navlinks} />
