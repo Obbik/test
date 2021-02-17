@@ -60,8 +60,6 @@ export default () => {
     if (window.confirm('Potwierdź usunięcie kategorii'))
       fetchMssqlApi(`category/${categoryId}`, { method: 'DELETE' }, getCategories)
   }
-  console.log(categories)
-
   useEffect(() => {
     setHeaderData({ text: 'Kategorie' })
     getCategories()

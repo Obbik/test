@@ -13,8 +13,13 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
   const {
     TRL_Pack: { products }
   } = useContext(LangContext)
-
-  const [image, setImage] = useState(null)
+  const initialValue = (productData) => {
+    if (productData) { return `${API_URL}/${productData.Image}` }
+    else {
+      return null
+    }
+  }
+  const [image, setImage] = useState(initialValue(productData))
   const [categoriesSection, setCategoriesSection] = useState(false)
   const toggleCategoriesSection = () => setCategoriesSection(prev => !prev)
   const initialProductCategoriesDetailed = useRef([])
@@ -66,6 +71,9 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
     formData.append('Name', name.value)
     formData.append('Description', description.value)
     if (image.files[0]) formData.append('Image', image.files[0])
+    else if (productData) {
+      formData.append('Image', productData.Image)
+    }
     let path, method
     if (!productData) {
       path = 'product'
@@ -76,9 +84,6 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
     }
 
     fetchMssqlApi(path, { method, data: formData }, () => {
-      for (var value of formData.values()) {
-        console.log(value)
-      }
       if (ean.value !== '0') {
         productCategories.added.forEach(categoryId => {
           fetchMssqlApi('category-product', {
