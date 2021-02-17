@@ -32,7 +32,7 @@ export default ({ children }) => {
   const [headerData, setHeaderData] = useState({})
 
   let navlinks = []
-  const currentPath = window.location.pathname.slice(10)
+
   if (sessionStorage.getItem('DB_TYPE') === "mysql") // MACHINE Routes
   {
     navlinks.push(
@@ -43,9 +43,6 @@ export default ({ children }) => {
         { text: "supply", path: '/supply', icon: 'fas fa-cart-plus' },
         { text: 'konfiguracja', path: '/config', icon: 'fas fa-cog' },
       ])
-  }
-  else if (localStorage.getItem('clientId') === 'console') //CONSOLE aka admin panel Routes
-  {
     navlinks.push(
       ...[
         { text: 'Monitoring', path: '/', icon: 'fa fa-desktop' },
@@ -73,14 +70,12 @@ export default ({ children }) => {
   }
   navlinks.push({ text: 'Wyloguj się', path: '/logout', icon: 'fas fa-sign-out-alt' })
 
-  {
-    if (currentPath === navlinks.path) { console.log(navlinks.path) } else { console.log(currentPath, navlinks.pa) }
-  }
+
   return (
     <NavigationContext.Provider value={{ setHeaderData }}>
       <Sidebar width={width} navlinks={navlinks} />
       <div className="w-100 d-flex flex-column">
-        <h1>text</h1>
+
         <Header
           toggleSidebar={toggleSidebarWidth}
           headerData={headerData}

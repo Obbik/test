@@ -5,6 +5,9 @@ import logo from '../../assets/images/logo-vendim.png'
 import logoSm from '../../assets/images/logo-vendim-sm.png'
 
 export default ({ width, navlinks }) => {
+  console.log(navlinks)
+  const currentPath = window.location.pathname.slice(10)
+
   const ListItem = ({ icon, text, path, onClick }) => (
     <>
       {width === 'md' ? (
@@ -14,40 +17,47 @@ export default ({ width, navlinks }) => {
               to={path}
               className="nav-link d-flex align-items-center text-center text-dark btn btn-link p-1"
             >
-              <i className={`mr-3 ${icon}`} style={{ width: 25, fontSize: '1.125em' }} />
-              <span className="font-weight-normal">{text}</span>
+
+              <i className={`mr-3 ${icon}`}
+                style={{ width: 25, fontSize: '1.125em' }} />
+              <span className=
+                {(currentPath === path) ?
+                  "font-weight-bolder" :
+                  "font-weight-normal"}
+              >{text}</span>
             </Link>
           ) : (
-            <div
-              onClick={onClick}
-              className="nav-link d-flex align-items-center text-center text-dark btn btn-link p-1"
-            >
-              <i className={`mr-3 ${icon}`} style={{ width: 25, fontSize: '1.125em' }} />
-              <span className="font-weight-normal">{text}</span>
-            </div>
-          )}
+              <div
+                onClick={onClick}
+                className="nav-link d-flex align-items-center text-center text-dark btn btn-link p-1"
+              >
+
+                <i className={`mr-3 ${icon}`} style={{ width: 25, fontSize: '1.125em' }} />
+                <span className="font-weight-normal">{text}</span>
+              </div>
+            )}
         </li>
       ) : (
-        <li className="py-2 text-center">
-          {path ? (
-            <Link
-              to={path}
-              className="nav-link d-flex flex-column text-dark btn btn-link p-1"
-            >
-              <i className={`${icon} mb-1`} style={{ fontSize: '1.25em' }} />
-              <span className="mt-1 small">{text}</span>
-            </Link>
-          ) : (
-            <div
-              onClick={onClick}
-              className="nav-link d-flex flex-column text-dark btn btn-link p-1"
-            >
-              <i className={`${icon} mb-1`} style={{ fontSize: '1.25em' }} />
-              <span className="mt-1 small">{text}</span>
-            </div>
-          )}
-        </li>
-      )}
+          <li className="py-2 text-center">
+            {path ? (
+              <Link
+                to={path}
+                className="nav-link d-flex flex-column text-dark btn btn-link p-1"
+              >
+                <i className={`${icon} mb-1`} style={{ fontSize: '1.25em' }} />
+                <span className="mt-1 small">{text}</span>
+              </Link>
+            ) : (
+                <div
+                  onClick={onClick}
+                  className="nav-link d-flex flex-column text-dark btn btn-link p-1"
+                >
+                  <i className={`${icon} mb-1`} style={{ fontSize: '1.25em' }} />
+                  <span className="mt-1 small">{text}</span>
+                </div>
+              )}
+          </li>
+        )}
     </>
   )
 
@@ -108,8 +118,8 @@ export default ({ width, navlinks }) => {
         {width === 'md' ? (
           <img src={logo} alt="logo" height="40" />
         ) : (
-          <img src={logoSm} alt="logo" height="25" />
-        )}
+            <img src={logoSm} alt="logo" height="25" />
+          )}
       </div>
       <ul className="list-group list-group-flush pt-3 px-2 list-unstyled">
         {navlinks.map((navlink, idx) => (
