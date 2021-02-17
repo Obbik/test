@@ -19,6 +19,20 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
       return null
     }
   }
+  let IsShared
+  const isShared = () => {
+    if (productData) {
+      IsShared = productData.IsShared
+    }
+    if (IsShared) {
+      return "disabled"
+    }
+    else {
+      return null
+    }
+  }
+
+
   const [image, setImage] = useState(initialValue(productData))
   const [categoriesSection, setCategoriesSection] = useState(false)
   const toggleCategoriesSection = () => setCategoriesSection(prev => !prev)
@@ -50,7 +64,7 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
       else return { ...prev, added: prev.added.concat(id) }
     })
   }
-
+  console.log(productCategories)
   const handleChangeImage = evt => {
     evt.preventDefault()
 
@@ -120,7 +134,7 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
   return (
 
     < FormSkel
-      headerText={productData ? products.editProductHeader : products.newProductHeader}
+      headerText={productData ? (productData.IsShared === 1 ? products.editProductDisabledHeader : products.editProductHeader) : products.newProductHeader}
       handleClose={handleClose}
     >
       <div className="text-center">
@@ -156,6 +170,7 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
                 onChange={handleChangeImage}
                 id="image-upload"
                 accept="image/x-png"
+                disabled={isShared()}
               />
               <label className="custom-file-label" htmlFor="image-upload">
                 Choose file
@@ -170,6 +185,7 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
             className="form-control"
             defaultValue={productData && productData.Name}
             required
+            disabled={isShared()}
           />
         </div>
         <div className="form-group">
@@ -179,12 +195,15 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
             className="form-control"
             rows="4"
             defaultValue={productData && productData.Description}
+            disabled={isShared()}
+
           />
         </div>
         <button
           type="button"
           className="btn btn-light btn-block border"
           onClick={toggleCategoriesSection}
+
         >
           <i
             className={`fas ${categoriesSection ? 'fa-chevron-up' : 'fa-chevron-down'
@@ -202,7 +221,9 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
                   ? 'list-group-item-success'
                   : ''
                   }`}
-                onClick={toggleProductCategory(category.CategoryId)}
+
+                onClick={isShared() === "disabled" ? () => null : toggleProductCategory(category.CategoryId)}
+
               >
                 {category.Name}
               </div>

@@ -5,7 +5,6 @@ import { LangContext } from '../../context/lang-context'
 import FormSkel from './FormSkel'
 
 export default ({ postSubmit, machineData, handleClose }) => {
-  console.log(machineData)
   const { TRL_Pack } = useContext(LangContext)
   const { fetchMssqlApi } = useFetch()
 

@@ -158,7 +158,6 @@ export default () => {
                               </button>
                             </td>
                             <td>
-                              {/* {console.log(product.Image)} */}
                               <img
                                 src={`${API_URL}/${product.Image}`}
                                 onError={evt => (evt.target.src = sampleProduct)}
@@ -168,12 +167,21 @@ export default () => {
                               />
                             </td>
                             <td>
-                              <button
-                                className="btn btn-link"
-                                onClick={deleteProduct(product.EAN)}
-                              >
-                                <i className="fas fa-trash text-danger" />
-                              </button>
+                              {!product.IsShared ?
+                                <button
+                                  className="btn btn-link"
+                                  onClick={deleteProduct(product.EAN)}
+                                >
+                                  <i className="fas fa-trash text-danger" />
+                                </button>
+                                :
+                                <button
+                                  className="btn btn-link"
+                                // onClick={deleteProduct(product.EAN)}
+                                >
+                                  <i className="fas fa-times text-grey" />
+                                </button>
+                              }
                             </td>
                           </tr>
                         ))}

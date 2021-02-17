@@ -5,9 +5,7 @@ import logo from '../../assets/images/logo-vendim.png'
 import logoSm from '../../assets/images/logo-vendim-sm.png'
 
 export default ({ width, navlinks }) => {
-  console.log(navlinks)
   const currentPath = window.location.pathname.slice(10)
-
   const ListItem = ({ icon, text, path, onClick }) => (
     <>
       {width === 'md' ? (
@@ -17,7 +15,6 @@ export default ({ width, navlinks }) => {
               to={path}
               className="nav-link d-flex align-items-center text-center text-dark btn btn-link p-1"
             >
-
               <i className={`mr-3 ${icon}`}
                 style={{ width: 25, fontSize: '1.125em' }} />
               <span className=

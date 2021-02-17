@@ -132,6 +132,7 @@
     "confirmDeletion": "Czy na pewno chcesz usunąć produkt?",
     "newProductHeader": "Dodaj produkt",
     "editProductHeader": "Edytuj produkt",
+    "editProductDisabledHeader":"Opis produktu",
     "props": {
       "ean": "Ean",
       "image": "Zdjęcie",
