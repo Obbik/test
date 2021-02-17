@@ -11,7 +11,7 @@ import CategoryForm from '../../../components/Modals/CategoryForm'
 
 import sampleProduct from '../../../assets/images/sample-product.svg'
 
-import { CONSOLE_CLOUD } from '../../../config/config'
+import { API_URL, CONSOLE_CLOUD } from '../../../config/config'
 import filterItems from '../../../util/filterItems'
 import { Link } from 'react-router-dom'
 
@@ -113,7 +113,7 @@ export default () => {
                           </td>
                           <td>
                             <img
-                              src={`${CONSOLE_CLOUD}/categories/${category.Image}`}
+                              src={`${API_URL}/categories/${category.Image}`}
                               onError={evt => (evt.target.src = sampleProduct)}
                               alt={category.Name}
                               width="48"
@@ -121,12 +121,12 @@ export default () => {
                             />
                           </td>
                           <td>
-                            <Link
+                            {/* <Link
                               to={`/products/${category.CategoryId}`}
                               className="btn btn-link"
                             >
                               <i className="fas fa-cookie text-warning" />
-                            </Link>
+                            </Link> */}
                           </td>
                           <td>
                             <button

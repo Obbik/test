@@ -131,7 +131,6 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
       <form onSubmit={handleSubmit} id="modal-form" autoComplete="off">
         <div className="form-group">
           <label className="h6">{products.props.ean}</label>
-          {console.log(form)}
           <input
             type="number"
             name="ean"
@@ -200,6 +199,7 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
                   }`}
                 onClick={toggleProductCategory(category.CategoryId)}
               >
+                {console.log(category)}
                 {category.Name}
               </div>
             ))}
