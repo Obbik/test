@@ -51,7 +51,9 @@ export default ({ categoryData, getCategories, handleClose }) => {
       path = `category/${categoryData.CategoryId}`
       method = 'PUT'
     }
-
+    for (var value of formData) {
+      console.log(value, path);
+    }
     fetchMssqlApi(path, { method, data: formData }, () => {
       handleClose()
       getCategories()

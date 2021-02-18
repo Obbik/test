@@ -22,7 +22,14 @@ export default ({ categories, getCategories }) => {
   const copyCategory = id => () => {
     fetchMssqlApi(`catalog-category/copy/${id}`, { method: 'POST' }, getCategories)
   }
-
+  const saveProduct = (name, image) => async () => {
+    console.log(name, image)
+    fetchMssqlApi(
+      `category`,
+      { method: 'POST', data: { 'Name': name, 'Image': image } },
+      getCategories,
+    )
+  }
   const subscribeCategory = id => () => {
     fetchMssqlApi(`catalog-category/subscribe/${id}`, { method: 'POST' }, getCategories)
   }
@@ -100,7 +107,7 @@ export default ({ categories, getCategories }) => {
                             <td>
                               <button
                                 className="btn btn-link"
-                                onClick={subscribeCategory(category.CategoryId)}
+                                onClick={saveProduct(category.Name, category.Image)}
                               >
                                 <i className="fas fa-save text-success" />
                               </button>

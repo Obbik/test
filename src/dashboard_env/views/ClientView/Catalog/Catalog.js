@@ -28,11 +28,12 @@ export default () => {
   }
   // TODO NO catalog-categories endpoint
   const getCategories = () => {
-    // fetchMssqlApi('catalog-categories', {}, categories => setCategories(categories))
+    fetchMssqlApi('catalog-categories', {}, categories => setCategories(categories))
   }
+  // console.log(categories)
   useEffect(() => {
     getProducts()
-    // getCategories()
+    getCategories()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
