@@ -42,14 +42,6 @@ export default ({ products, categories, getProducts }) => {
       getProducts,
     )
   }
-  // const copyProduct = ean => () => {
-  //   fetchMssqlApi(`catalog-product/copy/${ean}`, { method: 'POST' }, getProducts)
-  // }
-
-  // const subscribeProduct = ean => () => {
-  //   fetchMssqlApi(`catalog-product/subscribe/${ean}`, { method: 'POST' }, getProducts)
-  // }
-
   const unsubscribeProduct = ean => () => {
     if (window.confirm('Potwierdź odsubskrybowanie produktu'))
       fetchMssqlApi(
@@ -108,21 +100,6 @@ export default ({ products, categories, getProducts }) => {
                           />
                         </td>
                         <td>
-                          <i
-                            className="fas fa-th-large text-muted"
-                            data-type="info"
-                            data-tip={
-                              product.ProductCategories &&
-                              categories
-                                .filter(category =>
-                                  product.ProductCategories.split(' , ').includes(
-                                    category.CategoryId
-                                  )
-                                )
-                                .map(category => category.Name)
-                                .join('<br />')
-                            }
-                          />
                         </td>
                         {product.IsSubscribed ? (
                           <td colSpan={2} className="text-center">
@@ -135,27 +112,50 @@ export default ({ products, categories, getProducts }) => {
                           </td>
                         ) : (
                             <>
-                              <td>
-                                <button
-                                  className="btn btn-link"
-                                  onClick={subscribeProduct(product.EAN)}
-                                >
-                                  <i className="fas fa-copy text-info" />
-                                </button>
-                              </td>
-                              <td>
-                                {console.log(product)}
-                                <button
-                                  className="btn btn-link"
-                                  onClick={saveProduct(
-                                    product.EAN,
-                                    product.Name,
-                                    product.Description,
-                                    product.Image)}
-                                >
-                                  <i className="fas fa-save text-success" />
-                                </button>
-                              </td>
+                              {product.IsInProducts ? (
+                                <>
+                                  <td>
+                                    <button
+                                      className="btn btn-link"
+                                      onClick={subscribeProduct(product.EAN)}
+                                      disabled
+                                    >
+                                      <i className="fas fa-copy" style={{ color: "grey" }} />
+                                    </button>
+                                  </td>
+                                  <td>
+                                    <button
+                                      className="btn btn-link"
+                                      disabled
+                                    >
+                                      <i className="fas fa-save" style={{ color: "grey" }} />
+                                    </button>
+                                  </td>
+                                </>
+                              ) : (
+                                  <>
+                                    <td>
+                                      <button
+                                        className="btn btn-link"
+                                        onClick={subscribeProduct(product.EAN)}
+                                      >
+                                        <i className="fas fa-copy text-info" />
+                                      </button>
+                                    </td>
+                                    <td>
+                                      <button
+                                        className="btn btn-link"
+                                        onClick={saveProduct(
+                                          product.EAN,
+                                          product.Name,
+                                          product.Description,
+                                          product.Image)}
+                                      >
+                                        <i className="fas fa-save text-success" />
+                                      </button>
+                                    </td>
+                                  </>
+                                )}
                             </>
                           )}
                       </tr>

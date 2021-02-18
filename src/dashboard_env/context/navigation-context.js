@@ -43,6 +43,9 @@ export default ({ children }) => {
         { text: "supply", path: '/supply', icon: 'fas fa-cart-plus' },
         { text: 'konfiguracja', path: '/config', icon: 'fas fa-cog' },
       ])
+
+  }
+  else if (localStorage.getItem('clientId') === 'console')
     navlinks.push(
       ...[
         { text: 'Monitoring', path: '/', icon: 'fa fa-desktop' },
@@ -53,7 +56,6 @@ export default ({ children }) => {
         { text: 'Produkty', path: '/products', icon: 'fas fa-cookie-bite' },
         { text: 'Kategorie', path: '/categories', icon: 'fas fa-th-large' }
       ])
-  }
 
   else //SERVER Routes
   {
