@@ -91,6 +91,15 @@ export default () => {
       getProducts()
     })
   }
+
+  const unsubscribeProduct = ean => () => {
+    if (window.confirm('Potwierdź odsubskrybowanie produktu'))
+      fetchMssqlApi(
+        `/shared-product/${ean}`,
+        { method: 'DELETE' },
+        getProducts
+      )
+  }
   const deleteProduct = ean => () => {
     if (window.confirm('Potwierdź usunięcie produktu'))
       fetchMssqlApi(`product/${ean}`, { method: 'DELETE' }, getProducts)
@@ -177,7 +186,7 @@ export default () => {
                                 :
                                 <button
                                   className="btn btn-link"
-                                // onClick={deleteProduct(product.EAN)}
+                                  onClick={unsubscribeProduct(product.EAN)}
                                 >
                                   <i className="fas fa-times text-grey" />
                                 </button>

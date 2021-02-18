@@ -28,18 +28,32 @@ export default ({ products, categories, getProducts }) => {
     compareText(product.Name, product.EAN)
   )
 
-  const copyProduct = ean => () => {
-    fetchMssqlApi(`catalog-product/copy/${ean}`, { method: 'POST' }, getProducts)
+  const subscribeProduct = ean => async () => {
+    fetchMssqlApi(
+      `shared-product`,
+      { method: 'POST', data: { 'Ean': ean } },
+      getProducts,
+    )
   }
+  const saveProduct = (ean, name, desc, image) => async () => {
+    fetchMssqlApi(
+      `product`,
+      { method: 'POST', data: { 'Ean': ean, "Name": name, "Description": desc, "Image": image } },
+      getProducts,
+    )
+  }
+  // const copyProduct = ean => () => {
+  //   fetchMssqlApi(`catalog-product/copy/${ean}`, { method: 'POST' }, getProducts)
+  // }
 
-  const subscribeProduct = ean => () => {
-    fetchMssqlApi(`catalog-product/subscribe/${ean}`, { method: 'POST' }, getProducts)
-  }
+  // const subscribeProduct = ean => () => {
+  //   fetchMssqlApi(`catalog-product/subscribe/${ean}`, { method: 'POST' }, getProducts)
+  // }
 
   const unsubscribeProduct = ean => () => {
     if (window.confirm('Potwierdź odsubskrybowanie produktu'))
       fetchMssqlApi(
-        `/catalog-product/unsubscribe/${ean}`,
+        `/shared-product/${ean}`,
         { method: 'DELETE' },
         getProducts
       )
@@ -124,15 +138,20 @@ export default ({ products, categories, getProducts }) => {
                               <td>
                                 <button
                                   className="btn btn-link"
-                                  onClick={copyProduct(product.EAN)}
+                                  onClick={subscribeProduct(product.EAN)}
                                 >
                                   <i className="fas fa-copy text-info" />
                                 </button>
                               </td>
                               <td>
+                                {console.log(product)}
                                 <button
                                   className="btn btn-link"
-                                  onClick={subscribeProduct(product.EAN)}
+                                  onClick={saveProduct(
+                                    product.EAN,
+                                    product.Name,
+                                    product.Description,
+                                    product.Image)}
                                 >
                                   <i className="fas fa-save text-success" />
                                 </button>

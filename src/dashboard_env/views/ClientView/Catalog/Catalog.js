@@ -30,7 +30,7 @@ export default () => {
   const getCategories = () => {
     // fetchMssqlApi('catalog-categories', {}, categories => setCategories(categories))
   }
-
+  // console.log(products)
   useEffect(() => {
     getProducts()
     // getCategories()

@@ -21,7 +21,6 @@ export default () => {
     if (!token) setError('No token provided')
 
     incrementRequests()
-
     return axios({
       method,
       url: `${API_URL}/api/${path}`,
