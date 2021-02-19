@@ -29,7 +29,14 @@ export default () => {
   const getCategories = () => {
     fetchMssqlApi('categories', {}, categories => setCategories(categories))
   }
-
+  const unsubscribeCategory = id => () => {
+    if (window.confirm('Potwierdź odsubskrybowanie kategorii'))
+      fetchMssqlApi(
+        `/shared-category/${id}`,
+        { method: 'DELETE' },
+        getCategories
+      )
+  }
   const submitCategory = evt => {
     evt.preventDefault()
 
@@ -120,21 +127,32 @@ export default () => {
                               height="48"
                             />
                           </td>
-                          <td>
+                          {/* <td>
+
                             <Link
                               to={`/products/${category.CategoryId}`}
                               className="btn btn-link"
                             >
                               <i className="fas fa-cookie text-warning" />
                             </Link>
-                          </td>
+                            
+                          </td> */}
                           <td>
-                            <button
-                              className="btn btn-link"
-                              onClick={deleteCategory(category.CategoryId)}
-                            >
-                              <i className="fas fa-trash text-danger" />
-                            </button>
+                            {!category.IsShared ?
+                              <button
+                                className="btn btn-link"
+                                onClick={deleteCategory(category.CategoryId)}
+                              >
+                                <i className="fas fa-trash text-danger" />
+                              </button>
+                              :
+                              <button
+                                className="btn btn-link"
+                                onClick={unsubscribeCategory(category.CategoryId)}
+                              >
+                                <i className="fas fa-times text-grey" />
+                              </button>
+                            }
                           </td>
                         </tr>
                       ))}
