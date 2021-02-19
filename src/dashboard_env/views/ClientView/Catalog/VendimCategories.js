@@ -19,11 +19,7 @@ export default ({ categories, getCategories }) => {
 
   const filteredCategories = categories.filter(category => compareText(category.Name))
 
-  const copyCategory = id => () => {
-    fetchMssqlApi(`catalog-category/copy/${id}`, { method: 'POST' }, getCategories)
-  }
   const saveProduct = (name, image) => async () => {
-    console.log(name, image)
     fetchMssqlApi(
       `category`,
       { method: 'POST', data: { 'Name': name, 'Image': image } },
@@ -31,18 +27,17 @@ export default ({ categories, getCategories }) => {
     )
   }
   const subscribeCategory = id => () => {
-    fetchMssqlApi(`catalog-category/subscribe/${id}`, { method: 'POST' }, getCategories)
+    fetchMssqlApi(`shared-category`, { method: 'POST', data: { "CategoryId": id } }, getCategories)
   }
 
   const unsubscribeCategory = id => () => {
     if (window.confirm('Potwierdź odsubskrybowanie kategorii'))
       fetchMssqlApi(
-        `/catalog-category/unsubscribe/${id}`,
+        `/shared-category/${id}`,
         { method: 'DELETE' },
         getCategories
       )
   }
-
   return (
     <>
       {categories.length ? (
@@ -81,8 +76,9 @@ export default ({ categories, getCategories }) => {
                         <Link
                           to={`/catalog-products`}
                           className="btn btn-link"
+                          test={"test"}
                         >
-                          <i className="fas fa-cookie text-warning" />
+                          <i className="fas fa-filter " style={{ color: "black" }} />
                         </Link>
                       </td>
                       {category.IsSubscribed ? (
@@ -96,22 +92,46 @@ export default ({ categories, getCategories }) => {
                         </td>
                       ) : (
                           <>
-                            <td>
-                              <button
-                                className="btn btn-link"
-                                onClick={copyCategory(category.CategoryId)}
-                              >
-                                <i className="fas fa-copy text-info" />
-                              </button>
-                            </td>
-                            <td>
-                              <button
-                                className="btn btn-link"
-                                onClick={saveProduct(category.Name, category.Image)}
-                              >
-                                <i className="fas fa-save text-success" />
-                              </button>
-                            </td>
+                            {category.IsInSubscribed ? (
+                              <>
+                                <td>
+                                  <button
+                                    className="btn btn-link"
+                                    onClick={subscribeCategory(category.CategoryId)}
+                                    disabled
+                                  >
+                                    <i className="fas fa-copy" style={{ color: "grey" }} />
+                                  </button>
+                                </td>
+                                <td>
+                                  <button
+                                    className="btn btn-link"
+                                    disabled
+                                  >
+                                    <i className="fas fa-save" style={{ color: "grey" }} />
+                                  </button>
+                                </td>
+                              </>
+                            ) : (
+                                <>
+                                  <td>
+                                    <button
+                                      className="btn btn-link"
+                                      onClick={subscribeCategory(category.CategoryId)}
+                                    >
+                                      <i className="fas fa-copy text-info" />
+                                    </button>
+                                  </td>
+                                  <td>
+                                    <button
+                                      className="btn btn-link"
+                                      onClick={saveProduct(category.Name, category.Image)}
+                                    >
+                                      <i className="fas fa-save text-success" />
+                                    </button>
+                                  </td>
+                                </>
+                              )}
                           </>
                         )}
                     </tr>

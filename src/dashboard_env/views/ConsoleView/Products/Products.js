@@ -104,7 +104,6 @@ export default () => {
     if (window.confirm('Potwierdź usunięcie produktu'))
       fetchMssqlApi(`product/${ean}`, { method: 'DELETE' }, getProducts)
   }
-
   useEffect(() => {
     setHeaderData({ text: 'Produkty' })
 

@@ -31,6 +31,18 @@ export default ({ categoryData, getCategories, handleClose }) => {
     } else setImage(null)
   }
 
+  let IsShared
+  const disableShared = () => {
+    if (categoryData) {
+      IsShared = categoryData.IsShared
+    }
+    if (IsShared) {
+      return "disabled"
+    }
+    else {
+      return null
+    }
+  }
   const handleSubmit = evt => {
     evt.preventDefault()
 
@@ -51,9 +63,6 @@ export default ({ categoryData, getCategories, handleClose }) => {
       path = `category/${categoryData.CategoryId}`
       method = 'PUT'
     }
-    for (var value of formData) {
-      console.log(value, path);
-    }
     fetchMssqlApi(path, { method, data: formData }, () => {
       handleClose()
       getCategories()
@@ -63,15 +72,18 @@ export default ({ categoryData, getCategories, handleClose }) => {
 
   return (
     <FormSkel
+      noFooter={disableShared()}
       headerText={
         categoryData ? categories.editCategoryHeader : categories.newCategoryHeader
       }
       handleClose={handleClose}
     >
+      {console.log(categoryData)}
       <div className="text-center">
         {(categoryData || image) && (
           <img
             src={image || API_URL + categoryData.Image}
+            alt=""
             onError={evt => (evt.target.src = sampleProduct)}
             width="256"
             height="256"
@@ -90,6 +102,7 @@ export default ({ categoryData, getCategories, handleClose }) => {
                 onChange={handleChangeImage}
                 accept="image/x-png,image/svg+xml"
                 id="image-upload"
+                disabled={disableShared()}
               />
               <label className="custom-file-label" htmlFor="image-upload">
                 Choose file
@@ -103,6 +116,7 @@ export default ({ categoryData, getCategories, handleClose }) => {
             name="name"
             className="form-control"
             defaultValue={categoryData && categoryData.Name}
+            disabled={disableShared()}
             required
           />
         </div>

@@ -13,7 +13,7 @@ import sampleProduct from '../../../assets/images/sample-product.svg'
 
 import { API_URL } from '../../../config/config'
 import filterItems from '../../../util/filterItems'
-// import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 export default () => {
   const { fetchMssqlApi } = useFetch()
@@ -121,12 +121,12 @@ export default () => {
                             />
                           </td>
                           <td>
-                            {/* <Link
+                            <Link
                               to={`/products/${category.CategoryId}`}
                               className="btn btn-link"
                             >
                               <i className="fas fa-cookie text-warning" />
-                            </Link> */}
+                            </Link>
                           </td>
                           <td>
                             <button

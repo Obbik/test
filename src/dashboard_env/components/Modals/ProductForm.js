@@ -134,6 +134,7 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
   return (
 
     < FormSkel
+      noFooter={isShared()}
       headerText={productData ? (productData.IsShared === 1 ? products.editProductDisabledHeader : products.editProductHeader) : products.newProductHeader}
       handleClose={handleClose}
     >
