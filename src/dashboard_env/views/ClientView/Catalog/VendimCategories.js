@@ -72,7 +72,7 @@ export default ({ categories, getCategories }) => {
                           height="64"
                         />
                       </td>
-                      <td>
+                      {/* <td>
                         <Link
                           to={`/catalog-products`}
                           className="btn btn-link"
@@ -80,7 +80,7 @@ export default ({ categories, getCategories }) => {
                         >
                           <i className="fas fa-filter " style={{ color: "black" }} />
                         </Link>
-                      </td>
+                      </td> */}
                       {category.IsSubscribed ? (
                         <td colSpan={2} className="text-center">
                           <button
@@ -92,7 +92,7 @@ export default ({ categories, getCategories }) => {
                         </td>
                       ) : (
                           <>
-                            {category.IsInSubscribed ? (
+                            {category.IsInCategories ? (
                               <>
                                 <td>
                                   <button
@@ -126,6 +126,7 @@ export default ({ categories, getCategories }) => {
                                     <button
                                       className="btn btn-link"
                                       onClick={saveProduct(category.Name, category.Image)}
+
                                     >
                                       <i className="fas fa-save text-success" />
                                     </button>
