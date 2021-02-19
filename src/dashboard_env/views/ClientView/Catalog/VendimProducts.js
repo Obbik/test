@@ -136,6 +136,12 @@ export default ({ products, categories, getProducts }) => {
                                   <>
                                     <td>
                                       <button
+                                        title="Zasubskrybuj produkt"
+                                        data-toggle="popover"
+                                        data-placement="top"
+                                        data-trigger="hover"
+                                        data-content="Click anywhere in the document to close this popover"
+                                        data-container="body"
                                         className="btn btn-link"
                                         onClick={subscribeProduct(product.EAN)}
                                       >
@@ -144,6 +150,12 @@ export default ({ products, categories, getProducts }) => {
                                     </td>
                                     <td>
                                       <button
+                                        title="Zapisz produkt"
+                                        data-toggle="popover"
+                                        data-placement="top"
+                                        data-trigger="hover"
+                                        data-content="Click anywhere in the document to close this popover"
+                                        data-container="body"
                                         className="btn btn-link"
                                         onClick={saveProduct(
                                           product.EAN,

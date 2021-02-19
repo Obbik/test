@@ -7,7 +7,7 @@ import useFetch from '../../../hooks/fetchMSSQL-hook'
 import NoResults from '../../../components/NoResults/NoResults'
 import sampleProduct from '../../../assets/images/sample-product.svg'
 
-import { CONSOLE_CLOUD } from '../../../config/config'
+import { API_URL, CONSOLE_CLOUD } from '../../../config/config'
 
 export default ({ categories, getCategories }) => {
   const { TRL_Pack } = useContext(LangContext)
@@ -65,7 +65,7 @@ export default ({ categories, getCategories }) => {
                       <td>{category.Name}</td>
                       <td className="text-center">
                         <img
-                          src={`${CONSOLE_CLOUD}/categories/${category.Image}`}
+                          src={`${API_URL}/${category.Image}`}
                           onError={evt => (evt.target.src = sampleProduct)}
                           alt={category.Name}
                           width="64"
@@ -96,10 +96,12 @@ export default ({ categories, getCategories }) => {
                               <>
                                 <td>
                                   <button
+
                                     className="btn btn-link"
                                     onClick={subscribeCategory(category.CategoryId)}
                                     disabled
                                   >
+
                                     <i className="fas fa-copy" style={{ color: "grey" }} />
                                   </button>
                                 </td>
@@ -116,14 +118,26 @@ export default ({ categories, getCategories }) => {
                                 <>
                                   <td>
                                     <button
+                                      title="Zasubskrybuj produkt"
+                                      data-toggle="popover"
+                                      data-placement="top"
+                                      data-trigger="hover"
+                                      data-content="Click anywhere in the document to close this popover"
+                                      data-container="body"
                                       className="btn btn-link"
                                       onClick={subscribeCategory(category.CategoryId)}
                                     >
-                                      <i className="fas fa-copy text-info" />
+                                      <i className="fas fa-copy text-info" data-container="body" />
                                     </button>
                                   </td>
                                   <td>
                                     <button
+                                      title="Zapisz produkt"
+                                      data-toggle="popover"
+                                      data-placement="top"
+                                      data-trigger="hover"
+                                      data-content="Click anywhere in the document to close this popover"
+                                      data-container="body"
                                       className="btn btn-link"
                                       onClick={saveProduct(category.Name, category.Image)}
 
