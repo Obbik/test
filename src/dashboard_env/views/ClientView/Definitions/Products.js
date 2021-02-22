@@ -4,6 +4,7 @@ import { NavigationContext } from '../../../context/navigation-context'
 import { useHistory, useParams } from 'react-router'
 import useFetch from '../../../hooks/fetchMSSQL-hook'
 
+
 import ProductForm from '../../../components/Modals/ProductForm'
 import NoResults from '../../../components/NoResults/NoResults'
 
@@ -112,7 +113,6 @@ export default ({
       getProducts()
     })
   }
-
   useEffect(() => {
     setHeaderData({ text: TRL_Pack.products.header })
 

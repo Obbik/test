@@ -22,12 +22,12 @@ export default ({
         <span className="page-link">{idx}</span>
       </li>
     ) : (
-      <li className="page-item">
-        <button className="page-link" onClick={handleSwitchPage(idx)}>
-          {idx}
-        </button>
-      </li>
-    )
+        <li className="page-item">
+          <button className="page-link" onClick={handleSwitchPage(idx)}>
+            {idx}
+          </button>
+        </li>
+      )
 
   const PaginationBar = () => {
     if (totalPages <= 5)
@@ -79,9 +79,8 @@ export default ({
         {toggleFilter && (
           <button className="btn ml-2 my-auto" onClick={toggleFilter}>
             <i
-              className={`fas fa-filter ${
-                filterVisibility ? 'text-primary' : 'text-secondary'
-              }`}
+              className={`fas fa-filter ${filterVisibility ? 'text-primary' : 'text-secondary'
+                }`}
             />
           </button>
         )}

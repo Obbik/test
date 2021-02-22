@@ -133,11 +133,19 @@
     "newProductHeader": "Dodaj produkt",
     "editProductHeader": "Edytuj produkt",
     "editProductDisabledHeader":"Opis produktu",
+    "filter":{
+      "productName":"Nazwa produktu",
+      "isShared":"Produkty współdzielone",
+      "ean":"Ean"
+    },
     "props": {
       "ean": "Ean",
       "image": "Zdjęcie",
       "productName": "Nazwa produktu",
-      "description": "Opis"
+      "description": "Opis",
+      "shared":"Tak",
+      "notShared":"Nie"
+      
     },
     "header": "Produkty",
     "productCategoriesHeader": "Kategorie produktu",

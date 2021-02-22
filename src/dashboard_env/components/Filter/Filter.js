@@ -39,11 +39,34 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, resetFilter
     }))
   }
 
+  const toggleSelectBar = name => {
+    setFilter(prev => ({
+      ...prev,
+      columns: prev.columns.map(col => {
+        if (col.name === name) {
+          if (col.selectbar === undefined) col.selectbar = ''
+          else col.selectbar = undefined
+        }
+        return col
+      })
+    }))
+  }
+
+  const handleChangeSelectbar = evt => {
+    const { name, value } = evt.target
+    resetPage()
+    setFilter(prev => ({
+      ...prev,
+      columns: prev.columns.map(col => {
+        if (col.name === name) col.selectbar = value
+
+        return col
+      })
+    }))
+  }
   const handleChangeSearchbar = evt => {
     const { name, value } = evt.target
-
     resetPage()
-
     setFilter(prev => ({
       ...prev,
       columns: prev.columns.map(col => {
@@ -162,9 +185,8 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, resetFilter
                   style={{ fontSize: '1.125em', top: 3, left: 5 }}
                 >
                   <i
-                    className={`fas ${
-                      col.hidden ? 'fa-eye-slash' : 'fa-eye text-primary'
-                    }`}
+                    className={`fas ${col.hidden ? 'fa-eye-slash' : 'fa-eye text-primary'
+                      }`}
                   />
                   <input
                     type="checkbox"
@@ -177,12 +199,38 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, resetFilter
               )}
               {col.searchable && (
                 <i
-                  className={`fas fa-search mx-1 position-absolute ${
-                    col.searchbar === undefined ? '' : 'text-primary'
-                  }`}
+                  className={`fas fa-search mx-1 position-absolute ${col.searchbar === undefined ? '' : 'text-primary'
+                    }`}
                   onClick={() => toggleSearchbar(col.name)}
                   style={{ fontSize: '1.125em', top: 8, right: 5 }}
                 />
+              )}
+              {col.selectable && (
+                <i
+                  className={`fas fa-search mx-1 position-absolute ${col.selectbar === undefined ? '' : 'text-primary'
+                    }`}
+                  onClick={() => toggleSelectBar(col.name)}
+                  style={{ fontSize: '1.125em', top: 8, right: 5 }}
+                />
+              )}
+              {col.type === "bool" && col.selectbar !== undefined && (
+                <>
+                  <select
+                    className="mt-2 form-control form-control-sm"
+                    placeholder={TRL_Pack.searchbarPlaceholder}
+                    defaultValue={col.selectbar}
+                    list={col.name}
+                    name={col.name}
+                    onChange={handleChangeSelectbar}
+                  >
+                    {[...new Set(data.map(d => d[Object.keys(d)[col.id - 1]]))]
+                      .map(
+                        (entry, idx) => (
+                          < option key={idx} value={entry} >{entry === 0 ? TRL_Pack.products.props.shared : TRL_Pack.products.props.notShared} </ option>
+                        )
+                      )}
+                  </select>
+                </>
               )}
               {col.searchbar !== undefined && (
                 <>
@@ -197,10 +245,11 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, resetFilter
                   <datalist id={col.name}>
                     {[...new Set(data.map(d => d[Object.keys(d)[col.id - 1]]))].map(
                       (entry, idx) => (
-                        <option key={idx} value={entry} />
+                        < option key={idx} value={entry} />
                       )
                     )}
                   </datalist>
+                  {/* {x(data, col)} */}
                 </>
               )}
             </div>
@@ -237,9 +286,8 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, resetFilter
                 {tags.map((tag, idx) => (
                   <div
                     key={idx}
-                    className={`font-weight-bolder list-group-item cursor-pointer ${
-                      idx === activeLabel ? 'active' : ''
-                    }`}
+                    className={`font-weight-bolder list-group-item cursor-pointer ${idx === activeLabel ? 'active' : ''
+                      }`}
                     onClick={handleChangeLabel(idx)}
                   >
                     {tag.others ? 'Inne' : tag.label}
@@ -251,11 +299,10 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, resetFilter
                   {tags[activeLabel].options.map((opt, idx) => (
                     <div
                       key={idx}
-                      className={`font-weight-bolder list-group-item cursor-pointer ${
-                        filter.activeTags.includes(opt.tagId)
-                          ? 'list-group-item-success'
-                          : ''
-                      }`}
+                      className={`font-weight-bolder list-group-item cursor-pointer ${filter.activeTags.includes(opt.tagId)
+                        ? 'list-group-item-success'
+                        : ''
+                        }`}
                       onClick={toggleTag(opt.tagId)}
                     >
                       {opt.name}

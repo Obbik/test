@@ -30,7 +30,6 @@ export default ({ children }) => {
     })
 
   const [headerData, setHeaderData] = useState({})
-
   let navlinks = []
 
   if (sessionStorage.getItem('DB_TYPE') === "mysql") // MACHINE Routes

@@ -84,7 +84,6 @@ export default () => {
   const getMachines = () => {
     fetchMssqlApi('machines', {}, machines => setMachines(machines))
   }
-  // TODO NO TAG ENDPOINT
   const getTags = () => {
     fetchMssqlApi('tags', {}, tags =>
       setTags(tags.machine.filter(tag => tag.options.length > 0))
@@ -105,7 +104,6 @@ export default () => {
 
   const sortRows = (a, b) => {
     const [id, order, type] = filter.sortBy.split(' | ')
-
     const col = Object.keys(machines[0])[Number(id) - 1]
 
     if (a[col] === b[col]) return 0
@@ -175,6 +173,7 @@ export default () => {
     <>
       <Pagination
         {...{
+
           totalItems: machines.filter(reportFilter).filter(tagFilter).length,
           page: filter.page,
           handleSwitchPage,
@@ -203,15 +202,8 @@ export default () => {
         <div className="overflow-auto">
           <table className="table table-striped">
             <thead>
-              <tr>
-                {filter.showIndexes && <th className="text-center">#</th>}
-                {filter.columns
-                  .filter(col => !col.hidden && !col.disabled)
-                  .map((col, idx) => (
-                    <th key={idx}>{col.name}</th>
-                  ))}
-                <th />
-              </tr>
+
+
             </thead>
             <tbody>
               {machines
@@ -256,7 +248,8 @@ export default () => {
         </div>
       ) : (
           <NoResults />
-        )}
+        )
+      }
     </>
   )
 }

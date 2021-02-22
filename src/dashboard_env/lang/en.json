@@ -131,6 +131,12 @@
     "confirmDeletionText": "Confirm product deletion",
     "newItemHeader": "New product",
     "editItemHeader": "Edit product",
+    "filter":{
+        "productName":"Product name",
+        "isShared":"Shared products",
+        "ean":"Ean"
+        
+    },
     "properties": {
       "ean": "EAN",
       "image": "Image",
@@ -148,7 +154,9 @@
       "ean": "Ean",
       "image": "Image",
       "productName": "Name",
-      "description": "Description"
+      "description": "Description",
+      "shared":"Yes",
+      "notShared":"No"
     }
   },
   "categories": {
