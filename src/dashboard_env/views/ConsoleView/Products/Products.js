@@ -6,7 +6,7 @@ import useFetch from '../../../hooks/fetchMSSQL-hook'
 import useForm from '../../../hooks/form-hook'
 import useFilter from '../../../hooks/filter-hook'
 
-import SearchInput from '../../../components/SearchInput/SearchInput'
+// import SearchInput from '../../../components/SearchInput/SearchInput'
 import NoResults from '../../../components/NoResults/NoResults'
 import Pagination from '../../../components/Pagination/Pagination'
 import Filter from '../../../components/Filter/Filter'
@@ -26,6 +26,7 @@ export default () => {
   const history = useHistory()
 
   const resetPage = () => setFilter(prev => ({ ...prev, page: 1 }))
+  const resetFilter = () => setFilter(defaultFilter)
   const toggleFilter = () => setFilter(prev => ({ ...prev, visible: !prev.visible }))
   const { form, openForm, closeForm } = useForm()
 
@@ -217,7 +218,7 @@ export default () => {
     <>
       {products.length ? (
         <>
-          <SearchInput onSearch={updateSearchedText} />
+          {/* <SearchInput onSearch={updateSearchedText} /> */}
           <Pagination
             totalItems={filteredProducts.length}
             page={filter.page}
@@ -225,6 +226,7 @@ export default () => {
             handleSwitchPage={handleSwitchPage}
             filterVisibility={filter.visible}
             toggleFilter={toggleFilter}
+            resetFilter={resetFilter}
 
           />
           {filter.visible && (
@@ -235,6 +237,7 @@ export default () => {
                 columns: filter.columns,
                 data: products,
                 resetPage,
+                resetFilter
               }}
             />
           )}

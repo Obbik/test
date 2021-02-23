@@ -107,6 +107,7 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, resetFilter
         className="d-block mx-auto btn btn-secondary badge badge-pill px-2 py-1 mb-1"
         onClick={resetFilter}
       >
+        {console.log(filter)}
         Reset Filter
       </button>
       <hr className="my-2" />
@@ -217,7 +218,6 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, resetFilter
                 <>
                   <select
                     className="mt-2 form-control form-control-sm"
-                    placeholder={TRL_Pack.searchbarPlaceholder}
                     defaultValue={col.selectbar}
                     list={col.name}
                     name={col.name}
@@ -226,9 +226,11 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, resetFilter
                     {[...new Set(data.map(d => d[Object.keys(d)[col.id - 1]]))]
                       .map(
                         (entry, idx) => (
-                          < option key={idx} value={entry} >{entry === 0 ? TRL_Pack.products.props.shared : TRL_Pack.products.props.notShared} </ option>
+                          < option key={idx} value={entry} >{entry === 0 ? TRL_Pack.products.props.notShared : TRL_Pack.products.props.shared} </ option>
                         )
+
                       )}
+                    < option value={""} > {TRL_Pack.products.sharedProductLackOption} </ option>
                   </select>
                 </>
               )}

@@ -150,6 +150,7 @@
     "newProductHeader": "New product",
     "editProductHeader": "Edit product",
     "editProductDisabledHeader":"Product Description",
+    "sharedProductLackOption":"None",
     "props": {
       "ean": "Ean",
       "image": "Image",
@@ -157,6 +158,7 @@
       "description": "Description",
       "shared":"Yes",
       "notShared":"No"
+
     }
   },
   "categories": {
