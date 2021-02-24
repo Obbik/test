@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { DB_TYPE } from "../../env"
+import { API_URL } from "../config/config"
 
 import LangProvider from '../context/lang-context'
 import ErrorProvider from '../context/error-context'
@@ -15,6 +16,7 @@ import 'react-notifications/lib/notifications.css'
 import '../assets/fontawesome/css/all.css'
 
 import './App.css'
+import axios from "axios"
 
 import Login from '../views/Auth/login'
 import Logout from '../views/Auth/Logout'
@@ -41,14 +43,99 @@ import Tags from '../views/ClientView/Tags/Tags'
 
 import useAuth from '../hooks/auth-hook'
 
+
 export default () => {
   const { isAuth, login, logout } = useAuth()
+
+  const [permission, setPermission] = useState([])
+
 
 
   sessionStorage.setItem("DB_TYPE", DB_TYPE)
   let authRoutes = []
 
+
+
+  if (sessionStorage.getItem('DB_TYPE') === "mysql") // MACHINE Routes
+  {
+    permission.forEach((permission) => {
+      console.log("MACHINE")
+      switch (permission.Name) {
+        case "VD_PRODUCTS":
+          authRoutes.push({ path: ['/products', '/products/:categoryId'], component: Products })
+          break;
+        case "VD_CATEGORIES":
+          authRoutes.push({ path: '/categories', component: Categories },)
+          break;
+        case "VD_MACHINE_CONFIG":
+          authRoutes.push({ path: '/machines', component: Machines }, { path: '/machine/:machineId', component: FullMachine },)
+          break;
+        case "VD_MACHINE_RECHARGE":
+          authRoutes.push({ path: ['/catalog-products', '/catalog-categories', '/catalog-products'], component: Catalog })
+          break;
+        default:
+          break;
+      }
+    })
+  }
+
+  else if (localStorage.getItem('clientId') === 'console') {
+    permission.forEach((permission) => {
+      switch (permission.Name) {
+        case "VD_MONITORING":
+          authRoutes.push({ path: '/', component: Monitoring })
+          break;
+        case "VD_MACHINES":
+          authRoutes.push({ path: '/machines', component: MachinesConsole },)
+          break;
+        case "VD_TERMINALS":
+          authRoutes.push({ path: '/terminals', component: Terminals },)
+          break;
+        case "VD_CUSTOMERS":
+          authRoutes.push({ path: '/clients', component: Clients },)
+          break;
+        case "VD_PRODUCTS":
+          authRoutes.push({ path: ['/products', '/products/:categoryId'], component: Products },)
+          break;
+        case "VD_CATEGORIES":
+          authRoutes.push({ path: ['/catalog-products', '/catalog-categories'], component: Catalog })
+          break;
+        default:
+          break;
+      }
+    }
+    )
+  }
+  else {
+    console.log("SERVER")
+    permission.forEach((permission) => {
+      switch (permission.Name) {
+        case "VD_PRODUCTS":
+          authRoutes.push({ path: ['/products', '/products/:categoryId'], component: Products })
+          break;
+        case "VD_CATEGORIES":
+          authRoutes.push({ path: '/categories', component: Categories },)
+          break;
+        case "VD_MACHINES":
+          authRoutes.push({ path: '/machines', component: Machines }, { path: '/machine/:machineId', component: FullMachine },)
+          break;
+        case "VD_PRODUCT_CATALOG":
+          authRoutes.push({ path: ['/catalog-products', '/catalog-categories', '/catalog-products'], component: Catalog })
+          break;
+        case "VD_TAGS":
+          authRoutes.push({ path: '/tags', component: Tags },)
+          break;
+        case "VD_REPORTS":
+          authRoutes.push({ path: '/reports', component: Reports },)
+          break;
+        default:
+          break;
+      }
+    })
+  }
   const getInitialRoutes = () => {
+
+    if (authRoutes.length > 0) return authRoutes[0]
     if (sessionStorage.getItem('DB_TYPE') === "mysql") {
       return ('/config')
     }
@@ -59,61 +146,15 @@ export default () => {
       return ('/machines')
     }
   }
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/api/permissions`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        },
+      }).then(({ data }) => setPermission(data))
 
-  if (sessionStorage.getItem('DB_TYPE') === "mysql") // MACHINE Routes
-  {
-    console.log("MACHINE")
-    authRoutes.push(
-      { path: ['/products', '/products/:categoryId'], component: Products },
-      { path: '/config', component: Config },
-      { path: '/supply', component: Supply },
-      { path: '/categories', component: Categories }
-    )
-  }
-
-  else if (localStorage.getItem('clientId') === 'console') {
-    authRoutes.push(
-      { path: '/', component: Monitoring },
-      { path: '/supply', component: Config },
-      { path: '/machines', component: MachinesConsole },
-      { path: '/machine/:machineId', component: FullMachineConsole },
-      { path: '/terminals', component: Terminals },
-      { path: '/clients', component: Clients },
-      { path: '/categories', component: Categories },
-      // { path: '/tasks', component: Tasks },
-      { path: ['/products', '/products/:categoryId'], component: Products },
-      {
-        path: [
-          '/catalog-products',
-          '/catalog-categories',
-          '/catalog-products'
-        ],
-        component: Catalog
-      }
-    )
-  }
-
-  else {
-    console.log("SERVER")
-    authRoutes.push(
-      { path: ['/products', '/products/:categoryId'], component: Products },
-      { path: '/machines', component: Machines },
-      { path: '/categories', component: Categories },
-      { path: '/machine/:machineId', component: FullMachine },
-      { path: '/reports', component: Reports },
-      { path: '/tags', component: Tags },
-      {
-        path: [
-          '/catalog-products',
-          '/catalog-categories',
-          '/catalog-products'
-        ],
-        component: Catalog
-      }
-    )
-  }
-
-
+  }, [])
   return (
     <LangProvider>
       <ErrorProvider>
@@ -139,7 +180,7 @@ export default () => {
                 </NavigationProvider>
               ) : (
                   <Switch>
-                    <Route exact path="/login" render={() => <Login login={login} />} />
+                    <Route exact path="/login" render={() => <Login login={login} setPermission={setPermission} />} />
                     <Redirect to="/login" />
                   </Switch>
                 )}

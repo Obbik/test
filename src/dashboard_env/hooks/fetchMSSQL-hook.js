@@ -9,7 +9,6 @@ export default () => {
   const { incrementRequests, decrementRequests } = useContext(LoaderContext)
   const { ErrorNotification, SuccessNofication } = useContext(NotificationContext)
   const { setError } = useContext(ErrorContext)
-
   const fetchMssqlApi = (
     path,
     { method = 'GET', data = null, hideNotification, params = null } = {},

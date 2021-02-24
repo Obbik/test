@@ -98,14 +98,6 @@ export default () => {
     })
   }
 
-  const unsubscribeProduct = ean => () => {
-    if (window.confirm('Potwierdź odsubskrybowanie produktu'))
-      fetchMssqlApi(
-        `/shared-product/${ean}`,
-        { method: 'DELETE' },
-        getProducts
-      )
-  }
   const deleteProduct = ean => () => {
     if (window.confirm('Potwierdź usunięcie produktu'))
       fetchMssqlApi(`product/${ean}`, { method: 'DELETE' }, getProducts)

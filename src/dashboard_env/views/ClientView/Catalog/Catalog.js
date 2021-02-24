@@ -26,7 +26,7 @@ export default () => {
     // fetchMssqlApi('catalog-products', {}, products => setProducts(products))
     // }
   }
-  // TODO NO catalog-categories endpoint
+
   const getCategories = () => {
     fetchMssqlApi('catalog-categories', {}, categories => setCategories(categories))
   }

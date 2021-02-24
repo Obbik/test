@@ -44,10 +44,8 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
     data: []
   })
 
-  console.log(productCategories)
   const getProductCategories = () => {
     fetchMssqlApi(`categories/${productData.EAN}`, {}, productCategories => {
-      console.log(productCategories)
       setProductCategories(prev => ({
         ...prev,
         data: productCategories,
@@ -67,7 +65,6 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
   // }
   const toggleProductCategory = (id, categoryId) => () => {
     setProductCategories(prev => {
-      console.log(id, categoryId)
       if (prev.deleted.includes(id))
         return { ...prev, deleted: prev.deleted.filter(cId => cId !== id) }
       else if (prev.added.includes(id))

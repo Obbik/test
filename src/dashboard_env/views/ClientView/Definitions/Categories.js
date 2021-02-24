@@ -141,8 +141,6 @@ export default ({
                           <i className="fa fa-trash text-danger" />
                         </button>
                       </td>
-
-
                     )}
                   </tr>
                 ))}

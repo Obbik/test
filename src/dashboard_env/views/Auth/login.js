@@ -11,14 +11,13 @@ import logo from '../../assets/images/logo-vendim.png'
 import { API_URL } from '../../config/config'
 import Loader from '../../components/Loader/Loader'
 
-export default ({ login }) => {
+export default ({ login, setPermission }) => {
     const { ErrorNotification } = useContext(NotificationContext)
     const { loader, incrementRequests, decrementRequests } = useContext(LoaderContext)
     const { changeLanguage, TRL_Pack } = useContext(LangContext)
 
     const handleSubmit = evt => {
         evt.preventDefault()
-
         const { email, password, clientId } = evt.target.elements
 
         if (email.value && password.value && clientId.value) {
@@ -31,8 +30,8 @@ export default ({ login }) => {
                     ClientId: clientId.value.toLowerCase()
                 })
                 .then(res => {
-                    console.log(res)
                     decrementRequests()
+
 
                     if (res.status === 422) return ErrorNotification('Validation failed.')
                     if (res.status !== 200 && res.status !== 201)
@@ -47,6 +46,18 @@ export default ({ login }) => {
                     )
 
                     login(res.data.token, clientId.value.toLowerCase())
+
+                    axios
+                        .get(`${API_URL}/api/permissions`, {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem('token')}`
+                            },
+                        }).then(({ data }) => setPermission(data))
+
+                        .catch(err => {
+                            decrementRequests()
+                            ErrorNotification(err.response?.data || err.toString())
+                        })
                 })
                 .catch(err => {
                     decrementRequests()
@@ -54,7 +65,6 @@ export default ({ login }) => {
                 })
         }
     }
-
     return (
         <>
             {loader && <Loader />}
