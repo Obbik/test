@@ -286,7 +286,12 @@ export default () => {
 
                               .map((col, col_idx) => (
                                 <td key={col_idx} className="small">
-                                  {returnParsedIsShared(product[col])}
+                                  <button
+                                    style={{ wordBreak: 'break-word' }}
+                                    className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
+                                    onClick={openForm(product.EAN)}>
+                                    {returnParsedIsShared(product[col])}
+                                  </button>
                                 </td>
                               ))}
                             <td>
@@ -299,20 +304,14 @@ export default () => {
                               />
                             </td>
                             <td>
-                              {!product.IsShared ?
+                              {
                                 <button
                                   className="btn btn-link"
                                   onClick={deleteProduct(product.EAN)}
                                 >
                                   <i className="fas fa-trash text-danger" />
                                 </button>
-                                :
-                                <button
-                                  className="btn btn-link"
-                                  onClick={unsubscribeProduct(product.EAN)}
-                                >
-                                  <i className="fas fa-times text-grey" />
-                                </button>
+
                               }
                             </td>
                           </tr>

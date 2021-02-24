@@ -26,18 +26,7 @@ export default ({ categories, getCategories }) => {
       getCategories,
     )
   }
-  const subscribeCategory = id => () => {
-    fetchMssqlApi(`shared-category`, { method: 'POST', data: { "CategoryId": id } }, getCategories)
-  }
 
-  const unsubscribeCategory = id => () => {
-    if (window.confirm('Potwierdź odsubskrybowanie kategorii'))
-      fetchMssqlApi(
-        `/shared-category/${id}`,
-        { method: 'DELETE' },
-        getCategories
-      )
-  }
   return (
     <>
       {categories.length ? (
@@ -72,30 +61,12 @@ export default ({ categories, getCategories }) => {
                           height="64"
                         />
                       </td>
-                      {/* <td>
-                        <Link
-                          to={`/catalog-products`}
-                          className="btn btn-link"
-                          test={"test"}
-                        >
-                          <i className="fas fa-filter " style={{ color: "black" }} />
-                        </Link>
-                      </td> */}
-                      {category.IsSubscribed ? (
-                        <td colSpan={2} className="text-center">
-                          <button
-                            onClick={unsubscribeCategory(category.CategoryId)}
-                            className="btn btn-link"
-                          >
-                            <i className="fa fa-times text-muted" />
-                          </button>
-                        </td>
-                      ) : (
-                          <>
-                            {category.IsInCategories ? (
-                              <>
-                                <td>
-                                  <button
+                      {(
+                        <>
+                          {category.IsInCategories ? (
+                            <>
+                              <td>
+                                {/* <button
 
                                     className="btn btn-link"
                                     onClick={subscribeCategory(category.CategoryId)}
@@ -103,52 +74,41 @@ export default ({ categories, getCategories }) => {
                                   >
 
                                     <i className="fas fa-copy" style={{ color: "grey" }} />
-                                  </button>
+                                  </button> */}
+                              </td>
+                              <td>
+                                <button
+                                  className="btn btn-link"
+                                  disabled
+                                >
+                                  <i className="fas fa-save" style={{ color: "grey" }} />
+                                </button>
+                              </td>
+                            </>
+                          ) : (
+                              <>
+                                <td>
+
                                 </td>
                                 <td>
                                   <button
+                                    title="Zapisz produkt"
+                                    data-toggle="popover"
+                                    data-placement="top"
+                                    data-trigger="hover"
+                                    data-content="Click anywhere in the document to close this popover"
+                                    data-container="body"
                                     className="btn btn-link"
-                                    disabled
+                                    onClick={saveProduct(category.Name, category.Image)}
+
                                   >
-                                    <i className="fas fa-save" style={{ color: "grey" }} />
+                                    <i className="fas fa-save text-success" />
                                   </button>
                                 </td>
                               </>
-                            ) : (
-                                <>
-                                  <td>
-                                    <button
-                                      title="Zasubskrybuj produkt"
-                                      data-toggle="popover"
-                                      data-placement="top"
-                                      data-trigger="hover"
-                                      data-content="Click anywhere in the document to close this popover"
-                                      data-container="body"
-                                      className="btn btn-link"
-                                      onClick={subscribeCategory(category.CategoryId)}
-                                    >
-                                      <i className="fas fa-copy text-info" data-container="body" />
-                                    </button>
-                                  </td>
-                                  <td>
-                                    <button
-                                      title="Zapisz produkt"
-                                      data-toggle="popover"
-                                      data-placement="top"
-                                      data-trigger="hover"
-                                      data-content="Click anywhere in the document to close this popover"
-                                      data-container="body"
-                                      className="btn btn-link"
-                                      onClick={saveProduct(category.Name, category.Image)}
-
-                                    >
-                                      <i className="fas fa-save text-success" />
-                                    </button>
-                                  </td>
-                                </>
-                              )}
-                          </>
-                        )}
+                            )}
+                        </>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -160,7 +120,8 @@ export default ({ categories, getCategories }) => {
         </>
       ) : (
           <NoResults />
-        )}
+        )
+      }
     </>
   )
 }

@@ -40,31 +40,44 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
   const [productCategories, setProductCategories] = useState({
     initial: [],
     added: [],
-    deleted: []
+    deleted: [],
+    data: []
   })
 
+  console.log(productCategories)
   const getProductCategories = () => {
-    fetchMssqlApi(`category-product/${productData.EAN}`, {}, productCategories => {
-      initialProductCategoriesDetailed.current = productCategories
+    fetchMssqlApi(`categories/${productData.EAN}`, {}, productCategories => {
+      console.log(productCategories)
       setProductCategories(prev => ({
         ...prev,
-        initial: productCategories.map(category => category.CategoryId)
+        data: productCategories,
+        initial: productCategories.map(category => category.CategoryProductId)
       }))
     })
   }
-
-  const toggleProductCategory = id => () => {
+  // const getSharedProductCategories = () => {
+  //   fetchMssqlApi(`shared-category-products/${productData.EAN}`, {}, productSharedCategories => {
+  //     initialProductCategoriesDetailed.current = productCategories
+  //     setProductCategories(prev => ({
+  //       ...prev,
+  //       initial: [...prev.initial, ...productSharedCategories.map(category => category.CategoryId)],
+  //       shared: productSharedCategories.map(category => category.CategoryId)
+  //     }))
+  //   })
+  // }
+  const toggleProductCategory = (id, categoryId) => () => {
     setProductCategories(prev => {
+      console.log(id, categoryId)
       if (prev.deleted.includes(id))
         return { ...prev, deleted: prev.deleted.filter(cId => cId !== id) }
       else if (prev.added.includes(id))
         return { ...prev, added: prev.added.filter(cId => cId !== id) }
-      else if (prev.initial.includes(id))
+      else if (categoryId != null)
         return { ...prev, deleted: prev.deleted.concat(id) }
       else return { ...prev, added: prev.added.concat(id) }
     })
+
   }
-  console.log(productCategories)
   const handleChangeImage = evt => {
     evt.preventDefault()
 
@@ -106,18 +119,15 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
           })
         })
 
-
-        productCategories.deleted.forEach(categoryId =>
+        productCategories.deleted.forEach(categoryId => {
+          const { CategoryProductId } = (productCategories.data.find(pc => { if (pc.CategoryId === categoryId) return pc.CategoryProductId }))
           fetchMssqlApi(
-            `category-product/${initialProductCategoriesDetailed.current.find(
-              pc => (pc.CategoryId = categoryId)
-            ).CategoryProductId
-            }`,
+            `category-product/${CategoryProductId}`,
             {
               method: 'DELETE'
             }
           )
-        )
+        })
 
         handleClose()
         getProducts()
@@ -126,8 +136,18 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
     )
   }
 
+
+
+
+  const selectCategories = (category) => {
+    if ((category.CategoryProductId == null) && productCategories.added.includes(category.categoryId)) return "list-group-item-success"
+    else if ((category.CategoryProductId != null) && (!productCategories.deleted.includes(category.CategoryId))) return "list-group-item-success"
+    else if (productCategories.added.includes(category.CategoryId)) return "list-group-item-success"
+    else return ""
+  }
+
   useEffect(() => {
-    if (productData) getProductCategories()
+    if (productData) { getProductCategories() }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -213,18 +233,12 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
         </button>
         {categoriesSection && (
           <div className="row mt-3 no-gutters categories-section">
-            {categories.map((category, idx) => (
+            {productCategories.data.map((category, idx) => (
+
               <div
                 key={idx}
-                className={`col-6 pl-3 font-weight-bolder list-group-item ${productCategories.added.includes(category.CategoryId) ||
-                  (productCategories.initial.includes(category.CategoryId) &&
-                    !productCategories.deleted.includes(category.CategoryId))
-                  ? 'list-group-item-success'
-                  : ''
-                  }`}
-
-                onClick={isShared() === "disabled" ? () => null : toggleProductCategory(category.CategoryId)}
-
+                className={`col-6 pl-3 font-weight-bolder list-group-item selectCategories ${selectCategories(category)}`}
+                onClick={toggleProductCategory(category.CategoryId, category.CategoryProductId)}
               >
                 {category.Name}
               </div>

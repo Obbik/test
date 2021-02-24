@@ -61,14 +61,7 @@ export default ({
     })
   }
 
-  const unsubscribeCategory = id => () => {
-    if (window.confirm('Potwierdź odsubskrybowanie kategorii'))
-      fetchMssqlApi(
-        `/catalog-category/unsubscribe/${id}`,
-        { method: 'DELETE' },
-        getCategories
-      )
-  }
+
 
   useEffect(() => {
     setHeaderData({ text: TRL_Pack.categories.header })
@@ -139,7 +132,7 @@ export default ({
                         <i className="fas fa-cookie text-warning" />
                       </Link>
                     </td> */}
-                    {category.CategoryId ? (
+                    { (
                       <td>
                         <button
                           onClick={deleteCategory(category.CategoryId)}
@@ -148,16 +141,9 @@ export default ({
                           <i className="fa fa-trash text-danger" />
                         </button>
                       </td>
-                    ) : (
-                        <td className="text-center">
-                          <button
-                            onClick={unsubscribeCategory(category.ConsoleId)}
-                            className="btn btn-link"
-                          >
-                            <i className="fa fa-times text-muted" />
-                          </button>
-                        </td>
-                      )}
+
+
+                    )}
                   </tr>
                 ))}
             </tbody>
