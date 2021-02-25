@@ -137,6 +137,7 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, resetFilter
               value={filter.sortBy}
               onChange={handleChange}
             >
+              <option defaultValue="selected" value={""}>{TRL_Pack.products.sharedProductLackOption}</option>
               {columns
                 .filter(col => col.sortable)
                 .map((col, idx) => (

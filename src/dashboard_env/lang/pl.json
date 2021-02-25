@@ -133,7 +133,7 @@
     "newProductHeader": "Dodaj produkt",
     "editProductHeader": "Edytuj produkt",
     "editProductDisabledHeader":"Opis produktu",
-    "sharedProductLackOption":"None",
+    "sharedProductLackOption":"brak",
     "filter":{
       "productName":"Nazwa produktu",
       "isShared":"Produkty współdzielone",

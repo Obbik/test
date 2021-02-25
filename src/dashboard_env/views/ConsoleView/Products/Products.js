@@ -135,13 +135,16 @@ export default () => {
         searchable: true,
         type: 'text',
       },
-      {
-        id: 9,
-        name: TRL_Pack.products.filter.isShared,
-        sortable: true,
-        selectable: true,
-        type: 'bool',
-      },
+      localStorage.getItem("clientId") !== "console" ?
+        {
+          id: 9,
+          name: TRL_Pack.products.filter.isShared,
+          sortable: true,
+          selectable: true,
+          type: 'bool',
+        }
+        : "",
+
       { solid: "true" }
     ]
   }

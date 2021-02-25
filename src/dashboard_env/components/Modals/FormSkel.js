@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useContext } from 'react'
 import { LangContext } from '../../context/lang-context'
 import onClickAway from '../../util/onClickAway'
 
-export default ({ headerText, noFooter, classes, handleClose, children, style }) => {
+export default ({ headerText, noFooter, classes, handleClose, children, style, disableSubmit }) => {
   const { TRL_Pack } = useContext(LangContext)
   const modalRef = useRef(null)
 
@@ -11,7 +11,7 @@ export default ({ headerText, noFooter, classes, handleClose, children, style })
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
-
+  console.log(disableSubmit)
   return (
     <div className="modal fade show d-block" tabIndex="-1">
       <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -27,7 +27,7 @@ export default ({ headerText, noFooter, classes, handleClose, children, style })
           </div>
           {!noFooter && (
             <div className="modal-footer bg-light">
-              <button type="submit" className="btn btn-success btn-sm" form="modal-form">
+              <button type="submit" disabled={disableSubmit ? "disabled" : ""} className="btn btn-success btn-sm" form="modal-form">
                 {TRL_Pack.buttons.save}
               </button>
             </div>

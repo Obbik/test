@@ -4,6 +4,7 @@ import { NotificationContext } from '../../context/notification-context'
 import { LoaderContext } from '../../context/loader-context'
 import axios from 'axios'
 
+import { NotificationManager } from 'react-notifications'
 import gbFlag from '../../assets/flags/gb.png'
 import plFlag from '../../assets/flags/pl.png'
 
@@ -28,7 +29,7 @@ export default ({ login, setPermission }) => {
                     Email: email.value.toLowerCase(),
                     Password: password.value,
                     ClientId: clientId.value.toLowerCase()
-                })
+                }).catch(res => (res.status === 200 ? "" : NotificationManager.error("No Connection with server")))
                 .then(res => {
                     decrementRequests()
 
@@ -56,12 +57,11 @@ export default ({ login, setPermission }) => {
 
                         .catch(err => {
                             decrementRequests()
-                            ErrorNotification(err.response?.data || err.toString())
+                            ErrorNotification(err.response?.data || err.toString() || "No Connection with server")
                         })
                 })
                 .catch(err => {
                     decrementRequests()
-                    ErrorNotification(err.response?.data || err.toString())
                 })
         }
     }

@@ -128,17 +128,20 @@ export default ({ form, productData, getProducts, handleClose }) => {
     else return ""
   }
 
+  console.log(productCategories)
   useEffect(() => {
     if (productData) { getProductCategories() }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  console.log()
   return (
 
     < FormSkel
       noFooter={isShared()}
       headerText={productData ? (productData.IsShared === 1 ? products.editProductDisabledHeader : products.editProductHeader) : products.newProductHeader}
       handleClose={handleClose}
+      disableSubmit={(productCategories.added.length === 0 && productCategories.deleted.length === 0 && form !== "new") ? true : null}
     >
       <div className="text-center">
         {(productData || image) && (
