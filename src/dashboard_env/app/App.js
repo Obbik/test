@@ -122,7 +122,8 @@ export default () => {
           authRoutes.push({ path: '/machines', component: Machines }, { path: '/machine/:machineId', component: FullMachine },)
           break;
         case "VD_PRODUCT_CATALOG":
-          authRoutes.push({ path: ['/catalog-products', '/catalog-categories', '/catalog-products'], component: Catalog })
+
+          authRoutes.push({ path: '/categories', component: Categories }, { path: ['/catalog-products', '/catalog-categories'], component: Catalog })
           break;
         case "VD_TAGS":
           authRoutes.push({ path: '/tags', component: Tags },)
@@ -164,7 +165,6 @@ export default () => {
         <NotificationProvider>
           <LoaderProvider>
             <div className="d-flex min-vh-100 bg-light">
-              {console.log(isAuth)}
               {isAuth ? (
                 <NavigationProvider>
                   <SearchbarProvider>

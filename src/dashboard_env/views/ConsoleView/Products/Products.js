@@ -148,7 +148,7 @@ export default () => {
           selectable: true,
           type: 'bool',
         }
-        : null,
+        : "",
 
       { solid: "true" }
     ]

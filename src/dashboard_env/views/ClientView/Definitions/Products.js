@@ -50,7 +50,6 @@ export default ({
   }, [searchedText])
 
   const getProducts = () => {
-    console.log("getprodukt")
     fetchMssqlApi('products', {}, products => {
       setItemsCount({ total: products.length, filtered: products.length })
       setProducts(products)
