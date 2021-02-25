@@ -41,14 +41,16 @@ import Catalog from '../views/ClientView/Catalog/Catalog'
 import Reports from '../views/ClientView/Reports/Reports'
 import Tags from '../views/ClientView/Tags/Tags'
 
+import { useLocation, useHistory } from "react-router-dom";
 import useAuth from '../hooks/auth-hook'
 
 
 export default () => {
+  let location = useLocation();
+  let history = useHistory();
   const { isAuth, login, logout } = useAuth()
 
   const [permission, setPermission] = useState([])
-
 
 
   sessionStorage.setItem("DB_TYPE", DB_TYPE)
@@ -134,17 +136,18 @@ export default () => {
     })
   }
   const getInitialRoutes = () => {
-
+    if (localStorage.getItem('clientId') === "dev") {
+      return ('/machines')
+    }
     if (authRoutes.length > 0) return authRoutes[0]
-    if (sessionStorage.getItem('DB_TYPE') === "mysql") {
+    else if (sessionStorage.getItem('DB_TYPE') === "mysql") {
       return ('/config')
     }
     else if (localStorage.getItem('clientId') === 'console') {
       return ('/')
     }
-    else {
-      return ('/machines')
-    }
+    // if location.path
+    // return (history.goBack())
   }
   useEffect(() => {
     axios
@@ -161,26 +164,30 @@ export default () => {
         <NotificationProvider>
           <LoaderProvider>
             <div className="d-flex min-vh-100 bg-light">
+              {console.log(isAuth)}
               {isAuth ? (
                 <NavigationProvider>
                   <SearchbarProvider>
-                    <Switch>
-
+                    {authRoutes.length > 0 ? <Switch>
                       {authRoutes.map((route, idx) => (
                         <Route key={idx} exact {...route} />
                       ))}
+
                       <Route
                         exact
                         path="/logout"
-                        render={() => <Logout logout={logout} />}
+                        render={() => (<Logout logout={logout} />)}
                       />
                       {<Redirect to={getInitialRoutes()} />}
-                    </Switch>
+                    </Switch> :
+                      null
+                    }
+
                   </SearchbarProvider>
                 </NavigationProvider>
               ) : (
                   <Switch>
-                    <Route exact path="/login" render={() => <Login login={login} setPermission={setPermission} />} />
+                    <Route exact path="/login" render={() => (<Login login={login} setPermission={setPermission} />)} />
                     <Redirect to="/login" />
                   </Switch>
                 )}

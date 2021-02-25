@@ -98,6 +98,11 @@ export default () => {
     })
   }
 
+  const unsubscribeProduct = ean => () => {
+    if (window.confirm('Potwierdź odsubskrybowanie produktu'))
+      fetchMssqlApi(`shared-product/${ean}`, { method: 'DELETE' }, getProducts)
+  }
+
   const deleteProduct = ean => () => {
     if (window.confirm('Potwierdź usunięcie produktu'))
       fetchMssqlApi(`product/${ean}`, { method: 'DELETE' }, getProducts)
@@ -143,7 +148,7 @@ export default () => {
           selectable: true,
           type: 'bool',
         }
-        : "",
+        : null,
 
       { solid: "true" }
     ]
@@ -299,15 +304,19 @@ export default () => {
                               />
                             </td>
                             <td>
-                              {
-                                <button
+                              {!product.IsShared ? <button
+                                className="btn btn-link"
+                                onClick={deleteProduct(product.EAN)}
+                              >
+                                <i className="fas fa-trash text-danger" />
+                              </button>
+                                : <button
                                   className="btn btn-link"
-                                  onClick={deleteProduct(product.EAN)}
+                                  onClick={unsubscribeProduct(product.EAN)}
                                 >
-                                  <i className="fas fa-trash text-danger" />
-                                </button>
+                                  <i className="fas fa-times text-danger" />
+                                </button>}
 
-                              }
                             </td>
                           </tr>
 

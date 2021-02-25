@@ -136,9 +136,7 @@ export default ({ form, productData, getProducts, handleClose }) => {
   }, [])
   console.log()
   return (
-
     < FormSkel
-      noFooter={isShared()}
       headerText={productData ? (productData.IsShared === 1 ? products.editProductDisabledHeader : products.editProductHeader) : products.newProductHeader}
       handleClose={handleClose}
       disableSubmit={(productCategories.added.length === 0 && productCategories.deleted.length === 0 && form !== "new") ? true : null}

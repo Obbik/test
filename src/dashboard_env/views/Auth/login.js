@@ -19,6 +19,9 @@ export default ({ login, setPermission }) => {
 
     const handleSubmit = evt => {
         evt.preventDefault()
+
+
+
         const { email, password, clientId } = evt.target.elements
 
         if (email.value && password.value && clientId.value) {
