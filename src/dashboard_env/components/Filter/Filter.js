@@ -134,7 +134,8 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, resetFilter
               className="form-control form-control-sm ml-2"
               style={{ maxWidth: 175 }}
               name="sortBy"
-              value={filter.sortBy}
+              defaultValue="none"
+              // value={filter.sortBy}
               onChange={handleChange}
             >
               <option defaultValue value={""}>{TRL_Pack.products.sharedProductLackOption}</option>

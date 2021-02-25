@@ -100,7 +100,7 @@ export default () => {
           authRoutes.push({ path: ['/products', '/products/:categoryId'], component: Products },)
           break;
         case "VD_CATEGORIES":
-          authRoutes.push({ path: ['/catalog-products', '/catalog-categories'], component: Catalog })
+          authRoutes.push({ path: '/categories', component: Categories })
           break;
         default:
           break;
@@ -122,8 +122,7 @@ export default () => {
           authRoutes.push({ path: '/machines', component: Machines }, { path: '/machine/:machineId', component: FullMachine },)
           break;
         case "VD_PRODUCT_CATALOG":
-
-          authRoutes.push({ path: '/categories', component: Categories }, { path: ['/catalog-products', '/catalog-categories'], component: Catalog })
+          authRoutes.push({ path: ['/catalog-products', '/catalog-categories'], component: Catalog })
           break;
         case "VD_TAGS":
           authRoutes.push({ path: '/tags', component: Tags },)
