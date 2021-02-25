@@ -8,7 +8,7 @@ import useFetch from '../../hooks/fetchMSSQL-hook'
 import { API_URL } from '../../config/config'
 import FormSkel from './FormSkel'
 
-export default ({ form, productData, getProducts, categories, handleClose }) => {
+export default ({ form, productData, getProducts, handleClose }) => {
   const { fetchMssqlApi } = useFetch()
   const {
     TRL_Pack: { products }
@@ -36,7 +36,6 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
   const [image, setImage] = useState(initialValue(productData))
   const [categoriesSection, setCategoriesSection] = useState(false)
   const toggleCategoriesSection = () => setCategoriesSection(prev => !prev)
-  const initialProductCategoriesDetailed = useRef([])
   const [productCategories, setProductCategories] = useState({
     initial: [],
     added: [],
@@ -53,16 +52,6 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
       }))
     })
   }
-  // const getSharedProductCategories = () => {
-  //   fetchMssqlApi(`shared-category-products/${productData.EAN}`, {}, productSharedCategories => {
-  //     initialProductCategoriesDetailed.current = productCategories
-  //     setProductCategories(prev => ({
-  //       ...prev,
-  //       initial: [...prev.initial, ...productSharedCategories.map(category => category.CategoryId)],
-  //       shared: productSharedCategories.map(category => category.CategoryId)
-  //     }))
-  //   })
-  // }
   const toggleProductCategory = (id, categoryId) => () => {
     setProductCategories(prev => {
       if (prev.deleted.includes(id))
@@ -132,10 +121,6 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
     }
     )
   }
-
-
-
-
   const selectCategories = (category) => {
     if ((category.CategoryProductId == null) && productCategories.added.includes(category.categoryId)) return "list-group-item-success"
     else if ((category.CategoryProductId != null) && (!productCategories.deleted.includes(category.CategoryId))) return "list-group-item-success"
@@ -217,17 +202,20 @@ export default ({ form, productData, getProducts, categories, handleClose }) => 
 
           />
         </div>
-        <button
-          type="button"
-          className="btn btn-light btn-block border"
-          onClick={toggleCategoriesSection}
+        {form != "new" ? (
+          <button
+            type="button"
+            className="btn btn-light btn-block border"
+            onClick={toggleCategoriesSection}
 
-        >
-          <i
-            className={`fas ${categoriesSection ? 'fa-chevron-up' : 'fa-chevron-down'
-              } text-muted`}
-          />
-        </button>
+          >
+            <i
+              className={`fas ${categoriesSection ? 'fa-chevron-up' : 'fa-chevron-down'
+                } text-muted`}
+            />
+          </button>
+        ) : ""}
+
         {categoriesSection && (
           <div className="row mt-3 no-gutters categories-section">
             {productCategories.data.map((category, idx) => (
