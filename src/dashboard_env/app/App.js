@@ -46,8 +46,6 @@ import useAuth from '../hooks/auth-hook'
 
 
 export default () => {
-  let location = useLocation();
-  let history = useHistory();
   const { isAuth, login, logout } = useAuth()
 
   const [permission, setPermission] = useState([])
@@ -63,14 +61,14 @@ export default () => {
     permission.forEach((permission) => {
       console.log("MACHINE")
       switch (permission.Name) {
+        case "VD_MACHINE_CONFIG":
+          authRoutes.push({ path: '/machines', component: Machines }, { path: '/machine/:machineId', component: FullMachine },)
+          break;
         case "VD_PRODUCTS":
           authRoutes.push({ path: ['/products', '/products/:categoryId'], component: Products })
           break;
         case "VD_CATEGORIES":
           authRoutes.push({ path: '/categories', component: Categories },)
-          break;
-        case "VD_MACHINE_CONFIG":
-          authRoutes.push({ path: '/machines', component: Machines }, { path: '/machine/:machineId', component: FullMachine },)
           break;
         case "VD_MACHINE_RECHARGE":
           authRoutes.push({ path: ['/catalog-products', '/catalog-categories', '/catalog-products'], component: Catalog })
@@ -114,6 +112,7 @@ export default () => {
       switch (permission.Name) {
         case "VD_PRODUCTS":
           authRoutes.push({ path: ['/products', '/products/:categoryId'], component: Products })
+
           break;
         case "VD_CATEGORIES":
           authRoutes.push({ path: '/categories', component: Categories },)
@@ -135,19 +134,16 @@ export default () => {
       }
     })
   }
+
   const getInitialRoutes = () => {
-    if (localStorage.getItem('clientId') === "dev") {
-      return ('/machines')
+    if (authRoutes.length > 0) {
+      if (typeof (authRoutes[0].path) == "object")
+        return <Redirect to={authRoutes[0].path[0]} />
+
+      else {
+        return <Redirect to={authRoutes[0].path} />
+      }
     }
-    if (authRoutes.length > 0) return authRoutes[0]
-    else if (sessionStorage.getItem('DB_TYPE') === "mysql") {
-      return ('/config')
-    }
-    else if (localStorage.getItem('clientId') === 'console') {
-      return ('/')
-    }
-    // if location.path
-    // return (history.goBack())
   }
   useEffect(() => {
     axios
@@ -177,7 +173,7 @@ export default () => {
                         path="/logout"
                         render={() => (<Logout logout={logout} />)}
                       />
-                      {<Redirect to={getInitialRoutes()} />}
+                      {getInitialRoutes()}
                     </Switch> :
                       null
                     }

@@ -148,7 +148,7 @@ export default () => {
           selectable: true,
           type: 'bool',
         }
-        : "",
+        : { solid: "true" },
 
       { solid: "true" }
     ]
@@ -207,6 +207,8 @@ export default () => {
       }
     }
   }
+
+
 
   const [filter, setFilter] = useState(() => {
     if (localStorage.getItem('productFilter')) {

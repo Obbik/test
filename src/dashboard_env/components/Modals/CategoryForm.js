@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useRef } from 'react'
 import { LangContext } from '../../context/lang-context'
 
 import sampleProduct from '../../assets/images/sample-product.svg'
@@ -13,7 +13,7 @@ export default ({ categoryData, getCategories, handleClose }) => {
   const {
     TRL_Pack: { categories }
   } = useContext(LangContext)
-
+  const fileRef = useRef(null);
   const initialValue = (categoryData) => {
     if (categoryData) { return `${API_URL}/${categoryData.Image}` }
     else {
@@ -21,14 +21,18 @@ export default ({ categoryData, getCategories, handleClose }) => {
     }
   }
   const [image, setImage] = useState(initialValue(categoryData))
+  const [name, setName] = useState(categoryData.Name)
+  const [disabled, setDisabled] = useState(true)
+
 
   const handleChangeImage = evt => {
     evt.preventDefault()
     if (evt.target.files[0]) {
+      setDisabled(false)
       const reader = new FileReader()
       reader.readAsDataURL(evt.target.files[0])
       reader.onloadend = () => setImage(reader.result)
-    } else setImage(null)
+    } else { setImage(null); setDisabled(true) }
   }
 
   let IsShared
@@ -69,16 +73,23 @@ export default ({ categoryData, getCategories, handleClose }) => {
     })
   }
 
+  const disableButton = () => {
+    console.log(disabled === true)
+    if (disabled === true && name === categoryData.Name)
+      return "disabled"
+    else return ""
+  }
+
 
   return (
     <FormSkel
+      disableSubmit={disableButton()}
       noFooter={disableShared()}
       headerText={
         categoryData ? categories.editCategoryHeader : categories.newCategoryHeader
       }
       handleClose={handleClose}
     >
-      {console.log(categoryData)}
       <div className="text-center">
         {(categoryData || image) && (
           <img
@@ -96,6 +107,7 @@ export default ({ categoryData, getCategories, handleClose }) => {
           <div className="input-group">
             <div className="custom-file">
               <input
+                ref={fileRef}
                 type="file"
                 className="custom-file-input"
                 name="image"
@@ -115,6 +127,7 @@ export default ({ categoryData, getCategories, handleClose }) => {
           <input
             name="name"
             className="form-control"
+            onChange={evt => setName(evt.target.value)}
             defaultValue={categoryData && categoryData.Name}
             disabled={disableShared()}
             required

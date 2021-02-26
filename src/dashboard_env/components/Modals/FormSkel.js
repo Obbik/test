@@ -5,13 +5,11 @@ import onClickAway from '../../util/onClickAway'
 export default ({ headerText, noFooter, classes, handleClose, children, style, disableSubmit }) => {
   const { TRL_Pack } = useContext(LangContext)
   const modalRef = useRef(null)
-
   useEffect(
     () => onClickAway(modalRef, handleClose),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
-  console.log(disableSubmit)
   return (
     <div className="modal fade show d-block" tabIndex="-1">
       <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
