@@ -20,7 +20,7 @@ export default () => {
 
   const deleteLabel = label => () => {
     if (window.confirm('Czy na pewno chcesz usunąć sekcje?'))
-      fetchMssqlApi('/tags', { method: 'DELETE', data: { Label: label } }, getTags)
+      fetchMssqlApi('tags', { method: 'DELETE', data: { Label: label } }, getTags)
   }
 
   const { form, openForm, closeForm } = useForm()
@@ -108,25 +108,25 @@ export default () => {
           </div>
         </>
       ) : (
-        <div className="row">
-          <div className="col-12 col-md-6 col-lg-4 mb-2">
-            <button
-              className="btn list-group-item list-group-item-action text-center"
-              onClick={openForm('new')}
-            >
-              <i className="fas fa-plus" />
-            </button>
+          <div className="row">
+            <div className="col-12 col-md-6 col-lg-4 mb-2">
+              <button
+                className="btn list-group-item list-group-item-action text-center"
+                onClick={openForm('new')}
+              >
+                <i className="fas fa-plus" />
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
       {form && (
         <TagForm
           tagData={
             form === 'others'
               ? tags[section].find(label => label.others)
               : form !== 'new'
-              ? filteredTags.find(tag => tag.label === form)
-              : null
+                ? filteredTags.find(tag => tag.label === form)
+                : null
           }
           handleClose={closeForm}
           getTags={getTags}

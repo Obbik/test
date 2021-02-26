@@ -71,7 +71,7 @@ export default ({ tagData, handleClose, getTags, section }) => {
               Name: tagData.others ? name : `${initialTagData.current.label} - ${name}`
             })
         } else {
-          pushRequest('tags', 'POST', {
+          pushRequest('tag', 'POST', {
             Name: tagData.others ? name : `${initialTagData.current.label} - ${name}`,
             Type: section
           })
@@ -79,15 +79,15 @@ export default ({ tagData, handleClose, getTags, section }) => {
       })
 
       if (!tagData.others && initialTagData.current.label !== label.value)
-        pushRequest('tags', 'PUT', {
+        pushRequest('tag', 'PUT', {
           PrevLabel: initialTagData.current.label,
           NewLabel: label.value
         })
     } else {
       if (options.length > 0)
         options.forEach(({ name }) => {
-          pushRequest('tags', 'POST', {
-            Name: tagData.others ? name : `${label.value} - ${name}`,
+          pushRequest('tag', 'POST', {
+            Name: tagData ? name : `${label.value} - ${name}`,
             Type: section
           })
         })
@@ -108,6 +108,7 @@ export default ({ tagData, handleClose, getTags, section }) => {
 
   return (
     <div className="modal fade show d-block" tabIndex="-1">
+      {console.log(tagData)}
       <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div ref={modalRef} className="modal-content border-0">
           <div className="modal-header bg-light align-items-center">
