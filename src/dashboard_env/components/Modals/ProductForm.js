@@ -19,22 +19,26 @@ export default ({ form, productData, getProducts, handleClose }) => {
       return null
     }
   }
-  let IsShared
-  const isShared = () => {
+
+  const shared = { ean: true, image: true, name: true, desc: true }
+  const notShared = { ean: true, image: false, name: false, desc: false }
+
+  const [disabled] = useState(() => {
     if (productData) {
-      IsShared = productData.IsShared
-    }
-    if (IsShared) {
-      return "disabled"
-    }
-    else {
-      return null
+      if (productData.IsShared) {
+        return shared
+      }
+      else {
+        return notShared
+      }
     }
   }
+  )
 
-
+  const [data, setData] = useState(productData ? { Image: productData.Image, Name: productData.Name, Description: productData.Description } : null)
   const [image, setImage] = useState(initialValue(productData))
   const [categoriesSection, setCategoriesSection] = useState(false)
+  const [changedImage, setChangedImage] = useState(false)
   const toggleCategoriesSection = () => setCategoriesSection(prev => !prev)
   const [productCategories, setProductCategories] = useState({
     initial: [],
@@ -68,10 +72,11 @@ export default ({ form, productData, getProducts, handleClose }) => {
     evt.preventDefault()
 
     if (evt.target.files[0]) {
+      setChangedImage(true)
       const reader = new FileReader()
       reader.readAsDataURL(evt.target.files[0])
       reader.onloadend = () => setImage(reader.result)
-    } else setImage(null)
+    } else { setImage(null); setChangedImage(false) }
   }
 
   const handleSubmit = evt => {
@@ -128,18 +133,30 @@ export default ({ form, productData, getProducts, handleClose }) => {
     else return ""
   }
 
-  console.log(productCategories)
+  const disableButton = () => {
+    if (productCategories.added.length === 0 && productCategories.deleted.length === 0 && form !== "new" && JSON.stringify(disabled) === JSON.stringify(notShared)) {
+      if (data.Description === productData.Description && data.Name === productData.Name && changedImage === false) {
+        return "disabled"
+      }
+      else {
+        return ""
+      }
+    }
+    else if (productCategories.added.length === 0 && productCategories.deleted.length === 0 && form !== "new" && JSON.stringify(disabled) === JSON.stringify(shared)) {
+      return "disabled"
+    }
+  }
+
   useEffect(() => {
     if (productData) { getProductCategories() }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  console.log()
   return (
     < FormSkel
       headerText={productData ? (productData.IsShared === 1 ? products.editProductDisabledHeader : products.editProductHeader) : products.newProductHeader}
       handleClose={handleClose}
-      disableSubmit={(productCategories.added.length === 0 && productCategories.deleted.length === 0 && form !== "new") ? true : null}
+      disableSubmit={disableButton()}
     >
       <div className="text-center">
         {(productData || image) && (
@@ -159,7 +176,7 @@ export default ({ form, productData, getProducts, handleClose }) => {
             name="ean"
             className="form-control"
             defaultValue={productData && productData.EAN}
-            disabled={form === "new" ? "" : 1}
+            disabled={form === "new" ? "" : disabled.ean}
             required
           />
         </div>
@@ -174,7 +191,7 @@ export default ({ form, productData, getProducts, handleClose }) => {
                 onChange={handleChangeImage}
                 id="image-upload"
                 accept="image/x-png"
-                disabled={isShared()}
+                disabled={form === "new" ? "" : disabled.name}
               />
               <label className="custom-file-label" htmlFor="image-upload">
                 Choose file
@@ -187,9 +204,10 @@ export default ({ form, productData, getProducts, handleClose }) => {
           <input
             name="name"
             className="form-control"
+            onChange={val => { const value = val.target.value; setData((prev) => ({ ...prev, Name: value })) }}
             defaultValue={productData && productData.Name}
             required
-            disabled={isShared()}
+            disabled={form === "new" ? "" : disabled.name}
           />
         </div>
         <div className="form-group">
@@ -198,8 +216,9 @@ export default ({ form, productData, getProducts, handleClose }) => {
             name="description"
             className="form-control"
             rows="4"
+            onChange={val => { const value = val.target.value; setData((prev) => ({ ...prev, Description: value })) }}
             defaultValue={productData && productData.Description}
-            disabled={isShared()}
+            disabled={form === "new" ? "" : disabled.desc}
 
           />
         </div>

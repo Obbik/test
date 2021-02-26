@@ -21,7 +21,7 @@ export default ({ categoryData, getCategories, handleClose }) => {
     }
   }
   const [image, setImage] = useState(initialValue(categoryData))
-  const [name, setName] = useState(categoryData.Name)
+  const [name, setName] = useState(categoryData ? categoryData.Name : null)
   const [disabled, setDisabled] = useState(true)
 
 
@@ -75,7 +75,7 @@ export default ({ categoryData, getCategories, handleClose }) => {
 
   const disableButton = () => {
     console.log(disabled === true)
-    if (disabled === true && name === categoryData.Name)
+    if (disabled === true && categoryData ? name === (categoryData.Name) : "")
       return "disabled"
     else return ""
   }
