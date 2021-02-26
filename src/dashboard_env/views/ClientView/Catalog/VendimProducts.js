@@ -28,13 +28,27 @@ export default ({ products, categories, getProducts }) => {
     compareText(product.Name, product.EAN)
   )
 
-
+  const subscribeProduct = ean => async () => {
+    fetchMssqlApi(
+      `shared-product`,
+      { method: 'POST', data: { 'Ean': ean } },
+      getProducts,
+    )
+  }
   const saveProduct = (ean, name, desc, image) => async () => {
     fetchMssqlApi(
       `product`,
       { method: 'POST', data: { 'Ean': ean, "Name": name, "Description": desc, "Image": image } },
       getProducts,
     )
+  }
+  const unsubscribeProduct = ean => () => {
+    if (window.confirm('Potwierdź odsubskrybowanie produktu'))
+      fetchMssqlApi(
+        `/shared-product/${ean}`,
+        { method: 'DELETE' },
+        getProducts
+      )
   }
 
   return (
@@ -87,45 +101,63 @@ export default ({ products, categories, getProducts }) => {
                         </td>
                         <td>
                         </td>
-                        {(
-                          <>
-                            {product.IsInProducts ? (
-                              <>
-                                <td>
-                                  <button
-                                    className="btn btn-link"
-                                    disabled
-                                  >
-                                    <i className="fas fa-save" style={{ color: "grey" }} />
-                                  </button>
-                                </td>
-                              </>
-                            ) :
-                              (
+                        {product.IsSubscribed ? (
+                          <td colSpan={2} className="text-center">
+                            <button
+                              onClick={unsubscribeProduct(product.EAN)}
+                              className="btn btn-link link-icon"
+                            >
+                              <i className="fa fa-times text-muted" />
+                            </button>
+                          </td>
+                        ) : (
+                            <>
+                              {product.IsInProducts ? (
                                 <>
-
                                   <td>
                                     <button
-                                      title="Zapisz produkt"
-                                      data-toggle="popover"
-                                      data-placement="top"
-                                      data-trigger="hover"
-                                      data-content="Click anywhere in the document to close this popover"
-                                      data-container="body"
                                       className="btn btn-link"
-                                      onClick={saveProduct(
-                                        product.EAN,
-                                        product.Name,
-                                        product.Description,
-                                        product.Image)}
+                                      onClick={subscribeProduct(product.EAN)}
+                                      disabled
                                     >
-                                      <i className="fas fa-save text-success" />
+                                      <i className="fas fa-copy" style={{ color: "grey" }} />
+                                    </button>
+                                  </td>
+                                  <td>
+                                    <button
+                                      className="btn btn-link"
+                                      disabled
+                                    >
+                                      <i className="fas fa-save" style={{ color: "grey" }} />
                                     </button>
                                   </td>
                                 </>
-                              )}
-                          </>
-                        )}
+                              ) : (
+                                  <>
+                                    <td>
+                                      <button
+                                        className="btn btn-link"
+                                        onClick={subscribeProduct(product.EAN)}
+                                      >
+                                        <i className="fas fa-copy text-info" />
+                                      </button>
+                                    </td>
+                                    <td>
+                                      <button
+                                        className="btn btn-link"
+                                        onClick={saveProduct(
+                                          product.EAN,
+                                          product.Name,
+                                          product.Description,
+                                          product.Image)}
+                                      >
+                                        <i className="fas fa-save text-success" />
+                                      </button>
+                                    </td>
+                                  </>
+                                )}
+                            </>
+                          )}
                       </tr>
                     ))}
                 </tbody>
