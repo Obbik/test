@@ -108,7 +108,6 @@ export default ({ tagData, handleClose, getTags, section }) => {
 
   return (
     <div className="modal fade show d-block" tabIndex="-1">
-      {console.log(tagData)}
       <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div ref={modalRef} className="modal-content border-0">
           <div className="modal-header bg-light align-items-center">
@@ -219,7 +218,7 @@ export default ({ tagData, handleClose, getTags, section }) => {
             </form>
           </div>
           <div className="modal-footer bg-light">
-            <button type="submit" className="btn btn-success btn-sm" form="notes-form">
+            <button type="submit" className="btn btn-success btn-sm" form="notes-form" disabled={options.length === 0 ? "disabled" : ""}>
               {TRL_Pack.buttons.save}
             </button>
           </div>
