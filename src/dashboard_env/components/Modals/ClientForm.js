@@ -1,10 +1,10 @@
-import React, { useContext } from 'react'
-import { LangContext } from '../../context/lang-context'
+import React from 'react'
+// import { LangContext } from '../../context/lang-context'
 
 import FormSkel from './FormSkel'
 
 export default ({ clientData, handleSubmit, handleClose }) => {
-  const { TRL_Pack } = useContext(LangContext)
+  // const { TRL_Pack } = useContext(LangContext)
 
   return (
     <FormSkel

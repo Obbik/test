@@ -1,9 +1,9 @@
-import React, { useRef, useEffect, useContext } from 'react'
-import { LangContext } from '../../context/lang-context'
+import React, { useRef, useEffect } from 'react'
+// import { LangContext } from '../../context/lang-context'
 import onClickAway from '../../util/onClickAway'
 
 export default ({ handleSubmit, handleClose }) => {
-  const { TRL_Pack } = useContext(LangContext)
+  // const { TRL_Pack } = useContext(LangContext)
   const modalRef = useRef(null)
 
   useEffect(

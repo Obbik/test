@@ -28,24 +28,24 @@ export default ({ products, categories, getProducts }) => {
     compareText(product.Name, product.EAN)
   )
 
-  const subscribeProduct = ean => async () => {
+  const subscribeProduct = (ean, name, desc, image, IsSubscribed) => async () => {
     fetchMssqlApi(
-      `shared-product`,
-      { method: 'POST', data: { 'Ean': ean } },
+      `product`,
+      { method: 'POST', data: { 'Ean': ean, "Name": name, "Description": desc, "Image": image, IsSubscribed: IsSubscribed } },
       getProducts,
     )
   }
   const saveProduct = (ean, name, desc, image) => async () => {
     fetchMssqlApi(
       `product`,
-      { method: 'POST', data: { 'Ean': ean, "Name": name, "Description": desc, "Image": image } },
+      { method: 'POST', data: { 'Ean': ean, "Name": name, "Description": desc, "Image": image, "IsSubscribed": 0 } },
       getProducts,
     )
   }
   const unsubscribeProduct = ean => () => {
     if (window.confirm('Potwierdź odsubskrybowanie produktu'))
       fetchMssqlApi(
-        `/shared-product/${ean}`,
+        `/product/${ean}`,
         { method: 'DELETE' },
         getProducts
       )
@@ -104,6 +104,7 @@ export default ({ products, categories, getProducts }) => {
                         {product.IsSubscribed ? (
                           <td colSpan={2} className="text-center">
                             <button
+                              title="Odsubskrybuj Produkt" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="Content"
                               onClick={unsubscribeProduct(product.EAN)}
                               className="btn btn-link link-icon"
                             >
@@ -116,8 +117,9 @@ export default ({ products, categories, getProducts }) => {
                                 <>
                                   <td>
                                     <button
+                                      data-container="body" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus."
                                       className="btn btn-link"
-                                      onClick={subscribeProduct(product.EAN)}
+                                      onClick={subscribeProduct(product.EAN, product.Name, product.Description, product.Image, product.IsSubscribed)}
                                       disabled
                                     >
                                       <i className="fas fa-copy" style={{ color: "grey" }} />
@@ -136,14 +138,16 @@ export default ({ products, categories, getProducts }) => {
                                   <>
                                     <td>
                                       <button
+                                        title="Zasubskrybuj Produkt" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="Content"
                                         className="btn btn-link"
-                                        onClick={subscribeProduct(product.EAN)}
+                                        onClick={subscribeProduct(product.EAN, product.Name, product.Description, product.Image, !product.IsSubscribed)}
                                       >
                                         <i className="fas fa-copy text-info" />
                                       </button>
                                     </td>
                                     <td>
                                       <button
+                                        title="Zapisz Produkt" data-trigger="hover" data-toggle="popover" data-placement="top" data-content="Content"
                                         className="btn btn-link"
                                         onClick={saveProduct(
                                           product.EAN,

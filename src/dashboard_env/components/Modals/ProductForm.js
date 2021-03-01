@@ -222,7 +222,7 @@ export default ({ form, productData, getProducts, handleClose }) => {
 
           />
         </div>
-        {form != "new" ? (
+        {form !== "new" ? (
           <button
             type="button"
             className="btn btn-light btn-block border"

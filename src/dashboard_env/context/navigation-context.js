@@ -15,7 +15,7 @@ export default ({ children }) => {
   const { fatalError } = useContext(ErrorContext)
   const { loader } = useContext(LoaderContext)
   const sidebarWidth = localStorage.getItem('sidebarWidth')
-  const [sectionModal, setSectionModal] = useState(null)
+  const [sectionModal] = useState(null)
   const [permission, setPermission] = useState([])
 
   const [width, setWidth] = useState(sidebarWidth)

@@ -13,12 +13,12 @@ import sampleProduct from '../../../assets/images/sample-product.svg'
 
 import { API_URL } from '../../../config/config'
 import filterItems from '../../../util/filterItems'
-import { Link } from 'react-router-dom'
+
 
 export default () => {
   const { fetchMssqlApi } = useFetch()
   const { setHeaderData } = useContext(NavigationContext)
-  const { TRL_Pack } = useContext(LangContext)
+  // const { TRL_Pack } = useContext(LangContext)
   const { searchedText, updateSearchedText } = useFilter()
 
   const { form, openForm, closeForm } = useForm()

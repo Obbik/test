@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import useFetch from '../../hooks/fetchMSSQL-hook'
-import { LangContext } from '../../context/lang-context'
+// import { LangContext } from '../../context/lang-context'
 
 import FormSkel from './FormSkel'
 
 export default ({ postSubmit, machineData, handleClose }) => {
-  const { TRL_Pack } = useContext(LangContext)
+  // const { TRL_Pack } = useContext(LangContext)
   const { fetchMssqlApi } = useFetch()
 
   const [clients, setClients] = useState([])

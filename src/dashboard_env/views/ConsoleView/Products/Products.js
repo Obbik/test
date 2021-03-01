@@ -72,6 +72,7 @@ export default () => {
     if (form !== 'new') {
       path = `product/${form}`
       method = 'PUT'
+
     } else {
       path = ''
       method = 'POST'
@@ -82,7 +83,7 @@ export default () => {
         productCategories.added.forEach(categoryId =>
           fetchMssqlApi(`product-category/${ean.value}`, {
             method: 'POST',
-            data: { categoryId }
+            data: { categoryId, "IsSubscribed": 0 }
           })
         )
         productCategories.deleted.forEach(categoryId =>
@@ -100,7 +101,7 @@ export default () => {
 
   const unsubscribeProduct = ean => () => {
     if (window.confirm('Potwierdź odsubskrybowanie produktu'))
-      fetchMssqlApi(`shared-product/${ean}`, { method: 'DELETE' }, getProducts)
+      fetchMssqlApi(`product/${ean}`, { method: 'DELETE' }, getProducts)
   }
 
   const deleteProduct = ean => () => {
@@ -109,7 +110,6 @@ export default () => {
   }
   useEffect(() => {
     setHeaderData({ text: 'Produkty' })
-
     getCategories()
     getProducts()
     // eslint-disable-next-line react-hooks/exhaustive-deps

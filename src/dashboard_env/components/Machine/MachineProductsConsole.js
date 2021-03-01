@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import useFetch from '../../hooks/fetchMSSQL-hook'
 import sampleProduct from '../../assets/images/sample-product.svg'

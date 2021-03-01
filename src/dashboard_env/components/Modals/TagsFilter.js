@@ -1,15 +1,15 @@
-import React, { useState, useContext } from 'react'
-import { LangContext } from '../../context/lang-context'
+import React, { useState } from 'react'
+// import { LangContext } from '../../context/lang-context'
 import FormSkel from './FormSkel'
 
 export default ({ tags, setTags, handleClose, multitag, setFilter }) => {
-  const { TRL_Pack } = useContext(LangContext)
+  // const { TRL_Pack } = useContext(LangContext)
 
   const [activeLabel, setActiveLabel] = useState(null)
 
-  const addTagToFilter = tagId => {
-    setFilter(prev => ({ ...prev, activeTags: prev.activateTags.concat(tagId) }))
-  }
+  // const addTagToFilter = tagId => {
+  //   setFilter(prev => ({ ...prev, activeTags: prev.activateTags.concat(tagId) }))
+  // }
 
   const handleChange = labelIdx => () => {
     if (labelIdx === activeLabel) {
@@ -21,9 +21,9 @@ export default ({ tags, setTags, handleClose, multitag, setFilter }) => {
         prev.map((tag, idx) =>
           labelIdx === idx
             ? {
-                ...tag,
-                isActive: !tag.isActive
-              }
+              ...tag,
+              isActive: !tag.isActive
+            }
             : tag
         )
       )
@@ -36,18 +36,18 @@ export default ({ tags, setTags, handleClose, multitag, setFilter }) => {
       prev.map((tag, idx) =>
         activeLabel === idx
           ? {
-              ...tag,
-              options: tag.options.map(opt => {
-                console.log(tag)
-                if (tagId === opt.tagId) return { ...opt, isActive: !opt.isActive }
-                else if (!multitag && !tag.others)
-                  return {
-                    ...opt,
-                    isActive: false
-                  }
-                else return opt
-              })
-            }
+            ...tag,
+            options: tag.options.map(opt => {
+              console.log(tag)
+              if (tagId === opt.tagId) return { ...opt, isActive: !opt.isActive }
+              else if (!multitag && !tag.others)
+                return {
+                  ...opt,
+                  isActive: false
+                }
+              else return opt
+            })
+          }
           : tag
       )
     )
@@ -59,9 +59,8 @@ export default ({ tags, setTags, handleClose, multitag, setFilter }) => {
         {tags.map((tag, idx) => (
           <div
             key={idx}
-            className={`font-weight-bolder list-group-item cursor-pointer ${
-              idx === activeLabel ? 'active' : ''
-            }`}
+            className={`font-weight-bolder list-group-item cursor-pointer ${idx === activeLabel ? 'active' : ''
+              }`}
             onClick={handleChange(idx)}
           >
             {tag.others ? 'Inne' : tag.label}
@@ -73,9 +72,8 @@ export default ({ tags, setTags, handleClose, multitag, setFilter }) => {
           {tags[activeLabel].options.map((opt, idx) => (
             <div
               key={idx}
-              className={`font-weight-bolder list-group-item cursor-pointer ${
-                opt.isActive ? 'list-group-item-success' : ''
-              }`}
+              className={`font-weight-bolder list-group-item cursor-pointer ${opt.isActive ? 'list-group-item-success' : ''
+                }`}
               onClick={activateTag(opt.tagId)}
             >
               {opt.name}
