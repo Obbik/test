@@ -46,7 +46,7 @@ export default () => {
         if (method === 'GET') setError(err.response?.data || 'Failed to fetch data.')
         else ErrorNotification(err.response?.data || err.toString())
 
-        console.log(err.response?.data || err)
+        console.log(err.response || err.response)
         console.group(err.response)
       })
   }

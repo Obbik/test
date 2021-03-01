@@ -88,6 +88,7 @@ export default ({ form, productData, getProducts, handleClose }) => {
     formData.append('Ean', ean.value)
     formData.append('Name', name.value)
     formData.append('Description', description.value)
+    formData.append("IsSubscribed", 0)
     if (image.files[0]) formData.append('Image', image.files[0])
     else if (productData) {
       formData.append('Image', productData.Image)
@@ -96,17 +97,21 @@ export default ({ form, productData, getProducts, handleClose }) => {
     if (!productData) {
       path = 'product'
       method = 'POST'
+    }
+    else if (productData.IsSubscribed) {
+      path = 'product'
+      method = 'POST'
+
     } else {
       path = `product/${productData.EAN}`
       method = 'PUT'
     }
-
-    fetchMssqlApi(path, { method, data: formData }, () => {
-      if (ean.value !== '0') {
+    if (form === "new" || !productData.IsSubscribed) {
+      fetchMssqlApi(path, { method, data: formData }, () => {
         productCategories.added.forEach(categoryId => {
           fetchMssqlApi('category-product', {
             method: 'POST',
-            data: { CategoryId: categoryId, Ean: ean.value },
+            data: { CategoryId: categoryId, Ean: ean.value, },
           })
         })
 
@@ -119,12 +124,35 @@ export default ({ form, productData, getProducts, handleClose }) => {
             }
           )
         })
-
         handleClose()
         getProducts()
+
       }
+
+      )
     }
-    )
+    else {
+      if (productCategories.added.length > 0)
+        productCategories.added.forEach(categoryId => {
+          fetchMssqlApi('category-product', {
+            method: 'POST',
+            data: { CategoryId: categoryId, Ean: ean.value, }
+          })
+        })
+      else if (productCategories.deleted.length > 0) {
+        productCategories.deleted.forEach(categoryId => {
+          const { CategoryProductId } = (productCategories.data.find(pc => { if (pc.CategoryId === categoryId) return pc.CategoryProductId }))
+          fetchMssqlApi(
+            `category-product/${CategoryProductId}`,
+            {
+              method: 'DELETE'
+            }
+          )
+        })
+      }
+      handleClose()
+      getProducts()
+    }
   }
   const selectCategories = (category) => {
     if ((category.CategoryProductId == null) && productCategories.added.includes(category.categoryId)) return "list-group-item-success"
@@ -171,6 +199,7 @@ export default ({ form, productData, getProducts, handleClose }) => {
       <form onSubmit={handleSubmit} id="modal-form" autoComplete="off">
         <div className="form-group">
           <label className="h6">{products.props.ean}</label>
+          {console.log(form)}
           <input
             type="number"
             name="ean"
@@ -201,6 +230,7 @@ export default ({ form, productData, getProducts, handleClose }) => {
         </div>
         <div className="form-group">
           <label className="h6">{products.props.productName}</label>
+          {console.log(disabled)}
           <input
             name="name"
             className="form-control"
@@ -227,7 +257,6 @@ export default ({ form, productData, getProducts, handleClose }) => {
             type="button"
             className="btn btn-light btn-block border"
             onClick={toggleCategoriesSection}
-
           >
             <i
               className={`fas ${categoriesSection ? 'fa-chevron-up' : 'fa-chevron-down'

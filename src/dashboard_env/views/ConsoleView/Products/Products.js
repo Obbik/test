@@ -6,6 +6,7 @@ import useFetch from '../../../hooks/fetchMSSQL-hook'
 import useForm from '../../../hooks/form-hook'
 import useFilter from '../../../hooks/filter-hook'
 
+
 // import SearchInput from '../../../components/SearchInput/SearchInput'
 import NoResults from '../../../components/NoResults/NoResults'
 import Pagination from '../../../components/Pagination/Pagination'
@@ -16,6 +17,8 @@ import sampleProduct from '../../../assets/images/sample-product.svg'
 import { API_URL } from '../../../config/config'
 import filterItems from '../../../util/filterItems'
 import ProductForm from '../../../components/Modals/ProductForm'
+import DeleteForm from "../../../components/Modals/DeleteForm"
+
 
 export default () => {
   const { fetchMssqlApi } = useFetch()
@@ -100,12 +103,12 @@ export default () => {
   }
 
   const unsubscribeProduct = ean => () => {
-    if (window.confirm('Potwierdź odsubskrybowanie produktu'))
+    if (window.confirm('Potwierdź odsubskrybowanie produktu. \r\n Spowoduje to usunięcie kategorii produktu '))
       fetchMssqlApi(`product/${ean}`, { method: 'DELETE' }, getProducts)
   }
 
   const deleteProduct = ean => () => {
-    if (window.confirm('Potwierdź usunięcie produktu'))
+    if (window.confirm('Potwierdź usunięcie produktu. \r\n Spowoduje to usunięcie produktu wraz z kategoriami'))
       fetchMssqlApi(`product/${ean}`, { method: 'DELETE' }, getProducts)
   }
   useEffect(() => {
@@ -113,7 +116,7 @@ export default () => {
     getCategories()
     getProducts()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categoryId])
+  }, [])
 
   const defaultFilter = {
     showIndexes: false,
