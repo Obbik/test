@@ -306,8 +306,7 @@ export default () => {
                               />
                             </td>
                             <td>
-
-                              {!product.IsShared ? <button
+                              {!product.IsSubscribed ? <button
                                 className="btn btn-link"
                                 onClick={deleteProduct(product.EAN)}
                               >

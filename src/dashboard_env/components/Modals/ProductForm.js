@@ -25,7 +25,7 @@ export default ({ form, productData, getProducts, handleClose }) => {
 
   const [disabled] = useState(() => {
     if (productData) {
-      if (productData.IsShared) {
+      if (productData.IsSubscribed) {
         return shared
       }
       else {
@@ -154,7 +154,7 @@ export default ({ form, productData, getProducts, handleClose }) => {
   }, [])
   return (
     < FormSkel
-      headerText={productData ? (productData.IsShared === 1 ? products.editProductDisabledHeader : products.editProductHeader) : products.newProductHeader}
+      headerText={productData ? (productData.IsSubscribed === 1 ? products.editProductDisabledHeader : products.editProductHeader) : products.newProductHeader}
       handleClose={handleClose}
       disableSubmit={disableButton()}
     >
