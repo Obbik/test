@@ -32,9 +32,10 @@ export default ({ login, setPermission }) => {
                     Email: email.value.toLowerCase(),
                     Password: password.value,
                     ClientId: clientId.value.toLowerCase()
-                }).catch(res => (res.status === 200 ? "" : NotificationManager.error("No Connection with server")))
+                }).catch(res => (res.status === 200 ? "" : NotificationManager.error(Object.values(res.response.data)[0])))
                 .then(res => {
                     decrementRequests()
+
 
 
                     if (res.status === 422) return ErrorNotification('Validation failed.')
