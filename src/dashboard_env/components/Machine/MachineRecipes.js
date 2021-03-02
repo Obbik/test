@@ -40,16 +40,17 @@ export default ({ machineId }) => {
   )
 
   const getMachineRecipes = () => {
-    fetchMssqlApi(`machine/${machineId}/recipes`, {}, machineRecipes => {
+    fetchMssqlApi(`machine-products?machineId=${machineId}`, {}, machineRecipes => {
       machineRecipes.forEach(machineRecipe => (machineRecipe.id = slotsCounter.current++))
       initialMachineRecipes.current = machineRecipes
       setMachineRecipesData(machineRecipes)
     })
   }
-
   const getRecipes = () => {
     fetchMssqlApi('recipes', {}, recipes => setRecipesData(recipes))
   }
+  // console.log(m)
+  // console.log(recipesData)
 
   useEffect(() => {
     getMachineRecipes()

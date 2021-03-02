@@ -31,6 +31,7 @@ export default () => {
     })
   }
 
+  console.log(machineProducts)
   const deliverMachineProduct = feederNo => () => {
     fetchMssqlApi(
       'shop/test-feeder',

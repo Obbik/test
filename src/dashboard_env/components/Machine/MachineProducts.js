@@ -14,14 +14,25 @@ const MachineProducts = (props) => {
   const { fetchMssqlApi } = useFetch();
   const { ErrorNotification } = useContext(NotificationContext);
 
+
   const [machineProducts, setMachineProducts] = useState([]);
   const [initialMachineProducts, setInitialMachineProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [isTableModified, setIsTableModified] = useState(false);
+  const [product, setProduct] = useState([])
 
   useEffect(() => {
     getMachineProducts();
-    fetchMssqlApi('products', {}, products => setProducts(products));
+    fetchMssqlApi(`products`, {}, product => setProduct(product));
+  }, [])
+
+  console.log(machineProducts)
+
+
+
+  useEffect(() => {
+    getMachineProducts();
+    fetchMssqlApi(`machine-products?machineId=${props.machineId}`, {}, products => setProducts(products));
   }, [])
 
   useEffect(() => {
@@ -37,10 +48,10 @@ const MachineProducts = (props) => {
 
   const getMachineProducts = () => {
     const params = {
-        machineId: props.machineId
+      machineId: props.machineId
     };
 
-    fetchMssqlApi(`machine-products`, {method: 'GET', data: null, hideNotification: false, params}, machineProducts => {
+    fetchMssqlApi(`machine-products`, { method: 'GET', data: null, hideNotification: false, params }, machineProducts => {
       const newMachineProducts = machineProducts.map(machineProduct => ({ ...machineProduct, RequestMethod: null }))
       setInitialMachineProducts(newMachineProducts);
       setMachineProducts(newMachineProducts);
@@ -91,7 +102,6 @@ const MachineProducts = (props) => {
     let productId;
 
     const modifiedMachineProducts = machineProducts.filter(machineProduct => machineProduct.RequestMethod !== null);
-
     modifiedMachineProducts.forEach((machineProduct, i) => {
       let _getMachineProducts = false;
 
@@ -99,24 +109,26 @@ const MachineProducts = (props) => {
         _getMachineProducts = true;
       }
 
-      const { MachineProductId, MachineInventoryItemId, MachineFeederNo, Name, PriceBrutto, Quantity, MaxItemCount, RequestMethod } = machineProduct;
+      const { DiscountedPrice, MachineProductId, MachineInventoryItemId, MachineFeederNo, Name, PriceBrutto, Quantity, MaxItemCount, RequestMethod } = machineProduct;
       // Check if a request method is assigned to machine product
       if (RequestMethod) {
         productId = getProductId(Name); // Get product id
-
+        console.log(machineProducts)
         // Validate inputs
-        if (MachineFeederNo && Name && PriceBrutto && PriceBrutto >= 0 && Quantity && parseInt(Quantity) >= 0 && MaxItemCount && parseInt(MaxItemCount) >= 0 && parseInt(MaxItemCount) >= parseInt(Quantity) && productId) {
+        if (MachineFeederNo && Name && PriceBrutto && PriceBrutto >= 0 && Quantity && parseInt(Quantity) >= 0 && MaxItemCount && parseInt(MaxItemCount) >= 0 && parseInt(MaxItemCount) >= parseInt(Quantity)) {
           // HTTP requests here
           const data = {
-            MachineFeederNo: MachineFeederNo,
-            ProductId: parseInt(productId),
-            PriceBrutto: parseFloat(PriceBrutto),
+            MachineId: props.machineId,
+            MachineFeederNo: parseInt(MachineFeederNo),
+            MachineProductId: parseInt(MachineProductId),
+            Ean: parseInt(productId),
+            Price: parseFloat(PriceBrutto),
+            DiscountedPrice: parseInt(DiscountedPrice),
             Quantity: parseInt(Quantity),
             MaxItemCount: parseInt(MaxItemCount)
           }
-
           if (RequestMethod === 'POST') {
-            fetchMssqlApi(`machine-product/${props.machineId}`, { method: RequestMethod, data: data }, res => {
+            fetchMssqlApi(`machine-product`, { method: RequestMethod, data: data }, res => {
               if (_getMachineProducts) {
                 getMachineProducts();
                 _getMachineProducts = false;
@@ -148,7 +160,6 @@ const MachineProducts = (props) => {
   const cancelSubmit = () => {
     setMachineProducts(initialMachineProducts);
   }
-
   const addTableRow = () => {
     const newMachineProducts = [...machineProducts];
     newMachineProducts.unshift({
@@ -181,17 +192,16 @@ const MachineProducts = (props) => {
   }
 
   const getProductId = name => {
-    const foundProduct = products.find(product => product.Name === name);
-
+    const foundProduct = product.find(product => product.Name === name);
     if (foundProduct)
-      return foundProduct.ProductId;
+      return foundProduct.EAN;
     else
       return null;
   }
 
   const handleDownload = () => {
     fetchMssqlApi(
-      `/report/machine-products/${props.machineId}`,
+      `report/machine-products/${props.machineId}`,
       { method: 'POST', hideNotification: true },
       path => {
         window.open(`${API_URL}/${path}`, '_blank')
@@ -203,7 +213,7 @@ const MachineProducts = (props) => {
     const confirmReset = window.confirm('Potwierdź reset sprzedaży');
 
     if (confirmReset)
-      fetchMssqlApi(`/machine/${props.machineId}/reset-sales`, { method: 'POST' }, () => {
+      fetchMssqlApi(`machine/${props.machineId}/reset-sales`, { method: 'POST' }, () => {
         getMachineProducts();
       });
   }
@@ -236,7 +246,7 @@ const MachineProducts = (props) => {
         )}
       </h5>
       <datalist id="Name">
-        {products.map((product, idx) => (
+        {product.map((product, idx) => (
           <option key={idx}>{product.Name}</option>
         ))}
       </datalist>
@@ -274,7 +284,7 @@ const MachineProducts = (props) => {
                     name="Name"
                     value={machineProduct.Name}
                     handleChange={(e => handleChange(machineProduct.MachineProductId, e))}
-                    list={products.map(product => product.Name)}
+                    list={product.map(product => product.Name)}
                   />
                 </td>
                 <td>
