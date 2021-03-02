@@ -8,8 +8,9 @@ import LoaderProvider from '../context/loader-context'
 import NotificationProvider from '../context/notification-context'
 import NavigationProvider from '../context/navigation-context'
 import SearchbarProvider from '../context/searchbar-context'
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { Route, Switch, Redirect, useHistory } from 'react-router-dom'
 import { NotificationContainer } from 'react-notifications'
+
 
 import '../assets/bootstrap.min.css'
 import 'react-notifications/lib/notifications.css'
@@ -41,11 +42,12 @@ import Catalog from '../views/ClientView/Catalog/Catalog'
 import Reports from '../views/ClientView/Reports/Reports'
 import Tags from '../views/ClientView/Tags/Tags'
 
-import { useLocation, useHistory } from "react-router-dom";
 import useAuth from '../hooks/auth-hook'
 
 
 export default () => {
+  let history = useHistory();
+
   const { isAuth, login, logout } = useAuth()
 
   const [permission, setPermission] = useState([])
@@ -62,7 +64,7 @@ export default () => {
       console.log("MACHINE")
       switch (permission.Name) {
         case "VD_MACHINE_CONFIG":
-          authRoutes.push({ path: '/machines', component: Machines }, { path: '/machine/:machineId', component: FullMachine },)
+          authRoutes.push({ path: '/config', component: Config })
           break;
         case "VD_PRODUCTS":
           authRoutes.push({ path: ['/products', '/products/:categoryId'], component: Products })
@@ -71,7 +73,7 @@ export default () => {
           authRoutes.push({ path: '/categories', component: Categories },)
           break;
         case "VD_MACHINE_RECHARGE":
-          authRoutes.push({ path: ['/catalog-products', '/catalog-categories', '/catalog-products'], component: Catalog })
+          authRoutes.push({ path: '/supply', component: Supply })
           break;
         default:
           break;
@@ -112,7 +114,6 @@ export default () => {
       switch (permission.Name) {
         case "VD_PRODUCTS":
           authRoutes.push({ path: ['/products', '/products/:categoryId'], component: Products })
-
           break;
         case "VD_CATEGORIES":
           authRoutes.push({ path: '/categories', component: Categories },)
@@ -162,8 +163,10 @@ export default () => {
             <div className="d-flex min-vh-100 bg-light">
               {isAuth ? (
                 <NavigationProvider>
+
                   <SearchbarProvider>
                     {authRoutes.length > 0 ? <Switch>
+
                       {authRoutes.map((route, idx) => (
                         <Route key={idx} exact {...route} />
                       ))}
@@ -174,6 +177,7 @@ export default () => {
                         render={() => (<Logout logout={logout} />)}
                       />
                       {getInitialRoutes()}
+
                     </Switch> :
                       null
                     }
