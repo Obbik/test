@@ -82,6 +82,7 @@ export default ({ feederData, handleClose, getMachineProducts }) => {
             className="form-control"
             defaultValue={feederData && feederData.MachineFeederNo}
             required
+            disabled
           />
         </div>
         <div className="form-group">

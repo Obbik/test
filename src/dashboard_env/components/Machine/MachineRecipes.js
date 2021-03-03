@@ -49,8 +49,7 @@ export default ({ machineId }) => {
   const getRecipes = () => {
     fetchMssqlApi('recipes', {}, recipes => setRecipesData(recipes))
   }
-  // console.log(m)
-  // console.log(recipesData)
+
 
   useEffect(() => {
     getMachineRecipes()
@@ -97,38 +96,43 @@ export default ({ machineId }) => {
     Number(recipesData.find(recipe => recipe.Name === name)?.RecipeId)
 
   const addSlot = slot => {
-    fetchMssqlApi(`machine/${machineId}/recipes`, { method: 'POST', data: slot }, () => {
+    fetchMssqlApi(`machine-product`, { method: 'POST', data: slot }, () => {
       initialMachineRecipes.current = initialMachineRecipes.current.concat({
-        SlotNo: slot.slotNo,
-        PriceBrutto: slot.price,
+        MachineFeederNo: slot.slotNo,
+        Price: slot.price,
         RecipeName: slot.recipeName,
-        id: slot.id
+        id: slot.id,
+        MaxItemCount: null
       })
       setMachineRecipesData(prev =>
         prev.map(machineRecipe =>
           machineRecipe.id === slot.id
             ? {
-              SlotNo: slot.slotNo,
-              PriceBrutto: slot.price,
+              MachineFeederNo: slot.slotNo,
+              Price: slot.price,
               RecipeName: slot.recipeName,
-              id: slot.id
+              id: slot.id,
+              MaxItemCount: null
             }
             : machineRecipe
         )
       )
     })
+    getMachineRecipes()
+    getRecipes()
   }
 
   const modifyFeeder = slot => {
+    console.log(slot)
     fetchMssqlApi(
-      `machine/${machineId}/recipes/${slot.slotNo}`,
+      `machine-product/${slot.MachineProductId}`,
       { method: 'PUT', data: slot },
       () => {
         initialMachineRecipes.current = initialMachineRecipes.current.map(
           machineRecipes =>
             machineRecipes.id === slot.id
               ? {
-                SlotNo: slot.slotNo,
+                MachineFeederNo: slot.slotNo,
                 PriceBrutto: slot.price,
                 RecipeName: slot.recipeName,
                 id: slot.id
@@ -139,7 +143,7 @@ export default ({ machineId }) => {
           prev.map(machineRecipes =>
             machineRecipes.id === slot.id
               ? {
-                SlotNo: slot.slotNo,
+                MachineFeederNo: slot.slotNo,
                 PriceBrutto: slot.price,
                 RecipeName: slot.recipeName,
                 id: slot.id
@@ -149,11 +153,13 @@ export default ({ machineId }) => {
         )
       }
     )
+    getMachineRecipes()
+    getRecipes()
   }
 
-  const deleteFeeder = slot => {
+  const deleteFeeder = (slot) => {
     fetchMssqlApi(
-      `machine/${machineId}/recipes/${slot.slotNo}`,
+      `machine-product/${slot.MachineProductId}`,
       { method: 'DELETE' },
       () => {
         initialMachineRecipes.current = initialMachineRecipes.current.filter(
@@ -164,69 +170,72 @@ export default ({ machineId }) => {
         )
       }
     )
+    getMachineRecipes()
+    getRecipes()
   }
 
   const submitChanges = () => {
+
     const changedSlots = {
       added: [],
       deleted: [],
       modified: []
     }
-
     if (
       !machineRecipesData.every(machineRecipe => {
         if (machineRecipe.added) {
-          const { SlotNo, RecipeName, PriceBrutto } = machineRecipe
+          const { MachineFeederNo, RecipeName, PriceBrutto } = machineRecipe
           const RecipeId = recipeNameToId(RecipeName)
 
-          if (!SlotNo || isNaN(RecipeId) || isNaN(PriceBrutto)) return false
+          if (!MachineFeederNo || isNaN(RecipeId) || isNaN(PriceBrutto)) return false
 
           changedSlots.added.push({
-            id: machineRecipe.id,
-            slotNo: SlotNo,
-            recipeId: RecipeId,
-            recipeName: RecipeName,
-            price: parseFloat(PriceBrutto)
+            MachineId: parseInt(machineId),
+            MachineFeederNo: parseInt(MachineFeederNo),
+            RecipeId: RecipeId,
+            RecipeName: RecipeName,
+            Price: parseFloat(PriceBrutto),
           })
         } else if (machineRecipe.toDelete) {
-          const { SlotNo } = machineRecipe
-
-          changedSlots.deleted.push({ id: machineRecipe.id, slotNo: SlotNo })
+          // const { SlotNo } = machineRecipe
+          changedSlots.deleted.push({ id: machineRecipe.id, MachineProductId: machineRecipe.MachineProductId })
         } else {
           const initialRecipe = initialMachineRecipes.current.find(
             recipe => recipe.id === machineRecipe.id
           )
-
           if (
             initialRecipe.SlotNo !== machineRecipe.SlotNo ||
             initialRecipe.PriceBrutto !== machineRecipe.PriceBrutto ||
             initialRecipe.RecipeName !== machineRecipe.RecipeName
           ) {
-            const { SlotNo, RecipeName, PriceBrutto } = machineRecipe
+            const { MachineProductId, RecipeName, PriceBrutto } = machineRecipe
             const RecipeId = recipeNameToId(RecipeName)
 
-            if (!SlotNo || isNaN(RecipeId) || isNaN(PriceBrutto)) return false
-
+            if (!MachineProductId || isNaN(RecipeId) || isNaN(PriceBrutto)) return false
+            console.log(machineRecipe)
             changedSlots.modified.push({
-              id: machineRecipe.id,
-              slotNo: SlotNo,
-              recipeId: RecipeId,
-              price: parseFloat(PriceBrutto)
+              RecipeId: RecipeId,
+              RecipeName: RecipeName,
+              Price: parseFloat(PriceBrutto),
+              MachineFeederNo: parseInt(machineRecipe.MachineFeederNo),
+              MachineProductId: parseInt(MachineProductId),
+
             })
           }
         }
         return true
       })
     ) {
-      ErrorNotification('Invalid inputs.')
+      ErrorNotification('Invalid')
       return
     }
 
     if (changedSlots.added.length) changedSlots.added.forEach(slot => addSlot(slot))
     if (changedSlots.deleted.length)
-      changedSlots.deleted.forEach(slotNo => deleteFeeder(slotNo))
+      changedSlots.deleted.forEach(slot => deleteFeeder(slot))
     if (changedSlots.modified.length)
       changedSlots.modified.forEach(slot => modifyFeeder(slot))
+
   }
 
   const discardChanges = () => setMachineRecipesData(initialMachineRecipes.current)
@@ -312,8 +321,8 @@ export default ({ machineId }) => {
                   <td>
                     <TextInput
                       style={{ maxWidth: 75 }}
-                      name="SlotNo"
-                      value={machineRecipe.SlotNo}
+                      name="MachineFeederNo"
+                      value={machineRecipe.MachineFeederNo}
                       handleChange={handleChange(machineRecipe.id)}
                       required
                     />
@@ -357,7 +366,7 @@ export default ({ machineId }) => {
                     <TextInput
                       style={{ maxWidth: 75 }}
                       name="SlotNo"
-                      value={machineRecipe.SlotNo}
+                      value={machineRecipe.MachineFeederNo}
                       handleChange={handleChange(machineRecipe.id)}
                       required
                     />
@@ -416,7 +425,7 @@ export default ({ machineId }) => {
           Zapisz
         </button>
       </div>
-    </div>
+    </div >
   ) : (
       <div className="text-center py-2">
         <button className="btn btn-link text-decoration-none" onClick={handleAddRecipe}>
