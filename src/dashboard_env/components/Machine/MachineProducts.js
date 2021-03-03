@@ -135,14 +135,14 @@ const MachineProducts = (props) => {
               }
             });
           } else if (RequestMethod === 'PUT') {
-            fetchMssqlApi(`machine-product/${MachineProductId}/${MachineInventoryItemId}`, { method: RequestMethod, data: data }, res => {
+            fetchMssqlApi(`machine-product/${MachineProductId}`, { method: RequestMethod, data: data }, res => {
               if (_getMachineProducts) {
                 getMachineProducts();
                 _getMachineProducts = false;
               }
             });
           } else if (RequestMethod === 'DELETE') {
-            fetchMssqlApi(`machine-product/${MachineProductId}/${MachineInventoryItemId}`, { method: RequestMethod }, res => {
+            fetchMssqlApi(`machine-product/${MachineProductId}`, { method: RequestMethod }, res => {
               if (_getMachineProducts) {
                 getMachineProducts();
                 _getMachineProducts = false;
