@@ -26,10 +26,6 @@ const MachineProducts = (props) => {
     fetchMssqlApi(`products`, {}, product => setProduct(product));
   }, [])
 
-  console.log(machineProducts)
-
-
-
   useEffect(() => {
     getMachineProducts();
     fetchMssqlApi(`machine-products?machineId=${props.machineId}`, {}, products => setProducts(products));
@@ -135,21 +131,40 @@ const MachineProducts = (props) => {
               }
             });
           } else if (RequestMethod === 'PUT') {
-            fetchMssqlApi(`machine-product/${MachineProductId}`, { method: RequestMethod, data: data }, res => {
-              if (_getMachineProducts) {
-                getMachineProducts();
-                _getMachineProducts = false;
-              }
-            });
+            if (MachineInventoryItemId) {
+              fetchMssqlApi(`machine-product/${MachineProductId}/${MachineInventoryItemId}`, { method: RequestMethod, data: data }, res => {
+                if (_getMachineProducts) {
+                  getMachineProducts();
+                  _getMachineProducts = false;
+                }
+              });
+            }
+            else {
+              fetchMssqlApi(`machine-product/${MachineProductId}`, { method: RequestMethod, data: data }, res => {
+                if (_getMachineProducts) {
+                  getMachineProducts();
+                  _getMachineProducts = false;
+                }
+              });
+            }
           } else if (RequestMethod === 'DELETE') {
-            fetchMssqlApi(`machine-product/${MachineProductId}`, { method: RequestMethod }, res => {
-              if (_getMachineProducts) {
-                getMachineProducts();
-                _getMachineProducts = false;
-              }
-            })
+            if (MachineInventoryItemId) {
+              fetchMssqlApi(`machine-product/${MachineProductId}/${MachineInventoryItemId}`, { method: RequestMethod }, res => {
+                if (_getMachineProducts) {
+                  getMachineProducts();
+                  _getMachineProducts = false;
+                }
+              })
+            }
+            else {
+              fetchMssqlApi(`machine-product/${MachineProductId}`, { method: RequestMethod }, res => {
+                if (_getMachineProducts) {
+                  getMachineProducts();
+                  _getMachineProducts = false;
+                }
+              })
+            }
           }
-
         } else {
           ErrorNotification('Please enter correct data');
         }
@@ -312,6 +327,7 @@ const MachineProducts = (props) => {
                     required
                   />
                 </td>
+                {console.log(machineProduct.MaxItemCount)}
                 <td>
                   <TextInput
                     style={{ maxWidth: 100 }}

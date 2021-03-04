@@ -2,22 +2,17 @@ import React, { useState } from 'react'
 // import { LangContext } from '../../context/lang-context'
 import FormSkel from './FormSkel'
 
-export default ({ tags, setTags, handleClose, multitag, setFilter }) => {
+export default ({ tags, setTags, handleClose, multitag }) => {
   // const { TRL_Pack } = useContext(LangContext)
 
   const [activeLabel, setActiveLabel] = useState(null)
-
-  // const addTagToFilter = tagId => {
-  //   setFilter(prev => ({ ...prev, activeTags: prev.activateTags.concat(tagId) }))
-  // }
-
   const handleChange = labelIdx => () => {
     if (labelIdx === activeLabel) {
       setActiveLabel(null)
     } else if (tags[labelIdx].options.length > 0) {
       setActiveLabel(labelIdx)
     } else {
-      setTags(prev =>
+      setTags(prev => {
         prev.map((tag, idx) =>
           labelIdx === idx
             ? {
@@ -26,31 +21,29 @@ export default ({ tags, setTags, handleClose, multitag, setFilter }) => {
             }
             : tag
         )
-      )
+      })
       setActiveLabel(null)
     }
   }
 
   const activateTag = tagId => () => {
-    setTags(prev =>
-      prev.map((tag, idx) =>
-        activeLabel === idx
-          ? {
-            ...tag,
-            options: tag.options.map(opt => {
-              console.log(tag)
-              if (tagId === opt.tagId) return { ...opt, isActive: !opt.isActive }
-              else if (!multitag && !tag.others)
-                return {
-                  ...opt,
-                  isActive: false
-                }
-              else return opt
-            })
-          }
-          : tag
-      )
+    setTags(prev => prev.map((tag, idx) => {
+      return activeLabel === idx ? {
+        ...tag,
+        options: tag.options.map(opt => {
+          if (tagId === opt.tagId) return { ...opt, isActive: !opt.isActive }
+          else if (!multitag && !tag.others)
+            return {
+              ...opt,
+              isActive: false
+            }
+          else return opt
+        })
+      }
+        : tag
+    })
     )
+
   }
 
   return (

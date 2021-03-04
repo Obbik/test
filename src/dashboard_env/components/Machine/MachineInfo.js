@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import { LangContext } from '../../context/lang-context'
 import { NotificationContext } from '../../context/notification-context'
 import useFetch from '../../hooks/fetchMSSQL-hook'
@@ -11,7 +11,7 @@ import checkValidation from '../../util/checkValidation'
 import { Prompt } from 'react-router'
 import TagsFilter from '../Modals/TagsFilter'
 
-export default ({ machineData: initialMachineData, updateMachine }) => {
+export default ({ machineData: initialMachineData, updateMachine, machineId, data }) => {
   const { TRL_Pack } = useContext(LangContext)
   const { ErrorNotification } = useContext(NotificationContext)
   const { fetchMssqlApi } = useFetch()
@@ -54,7 +54,6 @@ export default ({ machineData: initialMachineData, updateMachine }) => {
   const getLocations = () => {
     fetchMssqlApi('locations', {}, locations => setLocationsData(locations))
   }
-
   const getMachineTypes = () => {
     fetchMssqlApi('machine-types', {}, machineTypes => setMachineTypesData(machineTypes))
   }
@@ -71,31 +70,25 @@ export default ({ machineData: initialMachineData, updateMachine }) => {
   }
 
   const getTags = () => {
-    fetchMssqlApi('tags', {}, tags =>
+    fetchMssqlApi(`tags/${initialMachineData.MachineId}`, {}, tags =>
       setTags(() => {
-        if (!machineData.machineTags) return tags.machine
-        else
-          return tags.machine.map(label => {
-            if (
-              label.tagId &&
-              machineData.machineTags.split(', ').includes(label.tagId)
-            ) {
-              return { ...label, isActive: true }
-            } else
-              return {
-                ...label,
-                options: label.options.map(opt => {
-                  if (
-                    opt.tagId &&
-                    machineData.machineTags.split(', ').includes(opt.tagId)
-                  )
-                    return { ...opt, isActive: true }
-                  else return opt
-                })
-              }
-          })
+        return tags.machine.map((label, idx_1) => {
+          return {
+            ...label,
+            options: label.options.map((opt, idx) => {
+              if (
+                opt.machineTagId !== null
+              )
+                return { ...opt, isActive: true }
+              else return opt
+            })
+          }
+
+        })
       })
+
     )
+
   }
 
   useEffect(() => {
@@ -107,48 +100,62 @@ export default ({ machineData: initialMachineData, updateMachine }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+
+
+
+
+
   const handleSubmit = evt => {
     evt.preventDefault()
 
+    let sender = false
+    let postData = []
+    let deleteData = []
+
+
     tags.forEach(label => {
-      if (label.isActive && !machineData.machineTags.split(', ').includes(label.tagId))
-        fetchMssqlApi(`machine/${initialMachineData.MachineId}/tags/${label.tagId}`, {
-          method: 'POST'
-        })
-      else if (
-        !label.isActive &&
-        machineData.machineTags.split(', ').includes(label.tagId)
+      label.options.forEach((options, i) => {
+        if (options.isActive && options.machineTagId === null) {
+          postData.push(options.tagId)
+        }
+        else if (!options.isActive && options.machineTagId !== null) {
+          deleteData.push(options.machineTagId)
+        }
+      }
       )
-        fetchMssqlApi(`machine/${initialMachineData.MachineId}/tags/${label.tagId}`, {
-          method: 'DELETE'
-        })
     })
+    postData.forEach((tagId, i) => {
+      sender = false
+      if (i === postData.length - 1) {
+        sender = true;
+      }
+      fetchMssqlApi(`machine-tag`, {
+        method: 'POST',
+        data: { "MachineId": parseInt(machineId), "TagId": parseInt(tagId) }
+      },
+        res => {
+          if (sender) {
+            getTags();
+            sender = false;
+          }
+        }
+      )
+    })
+    deleteData.forEach((machineTagId, i) => {
+      sender = false
+      if (i === deleteData.length - 1) {
+        sender = true;
+      }
+      fetchMssqlApi(`machine-tag/${machineTagId}`, {
+        method: 'DELETE'
+      }, res => {
 
-    tags
-      .filter(label => label.options.length > 0)
-      .forEach(label => {
-        label.options.forEach(opt => {
-          if (opt.isActive && !machineData.machineTags.split(', ').includes(opt.tagId))
-            fetchMssqlApi(`machine/${initialMachineData.MachineId}/tags/${opt.tagId}`, {
-              method: 'POST'
-            })
-          else if (
-            !opt.isActive &&
-            machineData.machineTags.split(', ').includes(opt.tagId)
-          )
-            fetchMssqlApi(`machine/${initialMachineData.MachineId}/tags/${opt.tagId}`, {
-              method: 'DELETE'
-            })
-        })
+        if (sender) {
+          getTags();
+          sender = false;
+        }
       })
-
-    if (
-      machineData.machineName === initialMachineData.MachineName &&
-      machineData.location === initialMachineData.LocationName &&
-      machineData.machineType === initialMachineData.MachineTypeName &&
-      machineData.maintenance === initialMachineData.MaintenanceName
-    )
-      return
+    })
 
     if (!checkValidation(evt.target.elements)) return ErrorNotification('Invalid inputs.')
 
@@ -171,6 +178,10 @@ export default ({ machineData: initialMachineData, updateMachine }) => {
       `machine/${initialMachineData.MachineId}`,
       { method: 'PUT', data: updatedMachine },
       () => {
+        if (sender) {
+          getTags();
+          sender = false;
+        }
         updateMachine(prev => ({
           ...prev,
           MachineName: machineName.value,
@@ -179,11 +190,10 @@ export default ({ machineData: initialMachineData, updateMachine }) => {
           MaintenanceName: maintenance.value
         }))
         setIsUnsavedData(false)
-      }
+      },
     )
-  }
 
-  useEffect(() => console.log(tags), [])
+  }
 
   const discardChanges = () =>
     setMachineData({
@@ -192,6 +202,7 @@ export default ({ machineData: initialMachineData, updateMachine }) => {
       machineType: initialMachineData.MachineTypeName,
       maintenance: initialMachineData.MaintenanceName
     })
+
 
   return (
     <div className="row mb-4">
@@ -273,16 +284,35 @@ export default ({ machineData: initialMachineData, updateMachine }) => {
                 <div className="col-lg-4 mb-2 mb-lg-0 text-lg-right">Tagi</div>
                 <div className="col-lg-8 my-auto">
                   {tags.map(tag =>
-                    tag.options
-                      .filter(opt => opt.isActive)
-                      .map(opt =>
-                        <button
-                          key={opt.tagId}
-                          type="button"
-                          className="btn btn-info badge badge-pill px-2 py-1 mx-2 mb-1"
-                        >
-                          {tag.label ? `${tag.label} - ${opt.name}` : opt.name}
-                        </button>
+                    tag.options.filter(opt => opt)
+                      .map(opt => {
+
+                        if (opt.isActive === true) {
+                          return (
+                            <button
+                              key={opt.tagId}
+                              type="button"
+                              className="btn btn-info badge badge-pill px-2 py-1 mx-2 mb-1"
+                            >
+                              {tag.label ? `${tag.label} - ${opt.name}` : opt.name}
+                            </button>
+
+                          )
+                        }
+                        else if (opt.isActive === true && opt.machineTagId !== null) {
+                          return (
+                            <button
+                              key={opt.tagId}
+                              type="button"
+                              className="btn btn-info badge badge-pill px-2 py-1 mx-2 mb-1"
+                            >
+                              {tag.label ? `${tag.label} - ${opt.name}` : opt.name}
+                            </button>
+                          )
+                        }
+
+
+                      }
                       )
                   )}
                   <button

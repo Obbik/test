@@ -202,8 +202,6 @@ export default () => {
         <div className="overflow-auto">
           <table className="table table-striped">
             <thead>
-
-
             </thead>
             <tbody>
               {machines

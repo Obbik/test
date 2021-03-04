@@ -37,10 +37,9 @@ export default () => {
       <ReturnLink path="/machines" />
       {machineData && (
         <>
-          <MachineInfo machineData={machineData} updateMachine={setMachineData} />
+          <MachineInfo machineData={machineData} machineId={machineData.MachineId} updateMachine={setMachineData} data={machineData} />
           {machineData.MaintenanceType === 'SNACK' ? (
             <MachineProducts machineId={machineId} />
-            // <MachineProducts machineId={machineId} />
           ) : (
               machineData.MaintenanceType === 'COFFEE' && (
                 <MachineRecipes machineId={machineId} />

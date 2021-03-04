@@ -4,9 +4,8 @@ import { LangContext } from '../../context/lang-context'
 import useFetch from '../../hooks/fetchMSSQL-hook'
 import FormSkel from './FormSkel'
 
-export default ({ feederData, handleClose, getMachineProducts }) => {
+export default ({ feederData, handleClose, getMachineProducts, form }) => {
   const { fetchMssqlApi } = useFetch()
-
   const {
     TRL_Pack: { shelves }
   } = useContext(LangContext)
@@ -82,7 +81,7 @@ export default ({ feederData, handleClose, getMachineProducts }) => {
             className="form-control"
             defaultValue={feederData && feederData.MachineFeederNo}
             required
-            disabled
+            disabled={form === 'new' ? "" : "disabled"}
           />
         </div>
         <div className="form-group">
