@@ -21,7 +21,6 @@ export default () => {
   const handleSearch = value => setSearchedValue(value)
 
   const [machineProducts, setMachineProducts] = useState([])
-
   const getMachineProducts = () => {
     fetchMssqlApi('machine-products', {}, data => {
       if (data.map(product => product.MachineFeederNo).every(No => !isNaN(No)))
@@ -30,7 +29,7 @@ export default () => {
       setMachineProducts(data)
     })
   }
-
+  console.log(machineProducts)
   const deliverMachineProduct = feederNo => () => {
     fetchMssqlApi(
       'shop/test-feeder',
@@ -47,7 +46,6 @@ export default () => {
   const filteredMachines = machineProducts.filter(machineProduct =>
     machineProduct.Name.toLowerCase().includes(searchedValue.toLowerCase())
   )
-
   useEffect(() => {
     getMachineProducts()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,15 +68,19 @@ export default () => {
         handleDeliverMachineProduct={deliverMachineProduct}
         handleDeleteMachineProduct={deleteMachineProduct}
       />
+      {console.log(form)}
       {form && (
         <FeederForm
           form={form}
           feederData={
             form !== 'new'
-              ? machineProducts.find(mp => mp.MachineProductId === form)
+              ? (machineProducts.find(mp => mp.MachineProductId === form))
               : null
           }
+          machineProducts={machineProducts}
           handleClose={closeForm}
+          MachineProducts={machineProducts}
+          setMachineProducts={setMachineProducts}
           getMachineProducts={getMachineProducts}
         />
       )}

@@ -4,11 +4,12 @@ import { LangContext } from '../../context/lang-context'
 import useFetch from '../../hooks/fetchMSSQL-hook'
 import FormSkel from './FormSkel'
 
-export default ({ feederData, handleClose, getMachineProducts, form }) => {
+export default ({ feederData, handleClose, MachineProducts, getMachineProducts, form, setMachineProducts }) => {
   const { fetchMssqlApi } = useFetch()
   const {
     TRL_Pack: { shelves }
   } = useContext(LangContext)
+  const [maxItemCount, setMaxItemCount] = useState(feederData.MaxItemCount)
 
   const [allProducts, setAllProducts] = useState([])
 
@@ -62,6 +63,9 @@ export default ({ feederData, handleClose, getMachineProducts, form }) => {
     })
   }
 
+  const handleChangeCapacityValue = e => {
+    setMaxItemCount(e.target.value)
+  }
   useEffect(() => {
     getAllProducts()
 
@@ -127,9 +131,9 @@ export default ({ feederData, handleClose, getMachineProducts, form }) => {
             type="number"
             name="Quantity"
             className="form-control"
-            defaultValue={feederData && feederData.Quantity}
+            defaultValue={feederData.Quantity}
             min={0}
-            max={(feederData && feederData.MaxItemCount) || 20}
+            max={maxItemCount || 20}
           />
         </div>
         <div>
@@ -138,6 +142,7 @@ export default ({ feederData, handleClose, getMachineProducts, form }) => {
             type="number"
             name="MaxItemCount"
             className="form-control"
+            onChange={(e) => handleChangeCapacityValue(e)}
             defaultValue={feederData && feederData.MaxItemCount}
             min={1}
             max={20}

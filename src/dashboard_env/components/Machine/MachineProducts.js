@@ -109,7 +109,6 @@ const MachineProducts = (props) => {
       // Check if a request method is assigned to machine product
       if (RequestMethod) {
         productId = getProductId(Name); // Get product id
-        console.log(machineProducts)
         // Validate inputs
         if (MachineFeederNo && Name && PriceBrutto && PriceBrutto >= 0 && Quantity && parseInt(Quantity) >= 0 && MaxItemCount && parseInt(MaxItemCount) >= 0 && parseInt(MaxItemCount) >= parseInt(Quantity)) {
           // HTTP requests here
@@ -327,7 +326,7 @@ const MachineProducts = (props) => {
                     required
                   />
                 </td>
-                {console.log(machineProduct.MaxItemCount)}
+
                 <td>
                   <TextInput
                     style={{ maxWidth: 100 }}
