@@ -68,7 +68,6 @@ export default () => {
         handleDeliverMachineProduct={deliverMachineProduct}
         handleDeleteMachineProduct={deleteMachineProduct}
       />
-      {console.log(form)}
       {form && (
         <FeederForm
           form={form}

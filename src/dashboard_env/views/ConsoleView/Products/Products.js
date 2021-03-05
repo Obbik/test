@@ -117,44 +117,77 @@ export default () => {
     getProducts()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  let defaultFilter
 
-  const defaultFilter = {
-    showIndexes: false,
-    page: 1,
-    rowsPerPage: 25,
-    rowsPerPageOptions: [10, 25, 50],
-    visible: false,
-    sortByColumns: true,
-    sortBy: '3 | asc | text',
-    activeTags: [],
-    disableIndexes: "true",
-    columns: [
-      {
-        id: 1,
-        name: TRL_Pack.products.filter.ean,
-        type: "price",
-        sortable: true,
-        searchable: true,
-      },
-      {
-        id: 2,
-        name: TRL_Pack.products.filter.productName,
-        sortable: true,
-        searchable: true,
-        type: 'text',
-      },
-      localStorage.getItem("clientId") !== "console" ?
+  if (localStorage.getItem("clientId") !== "console" && sessionStorage.getItem("DB_TYPE") !== "mysql") {
+    defaultFilter = {
+      showIndexes: false,
+      page: 1,
+      rowsPerPage: 25,
+      rowsPerPageOptions: [10, 25, 50],
+      visible: false,
+      sortByColumns: true,
+      sortBy: '3 | asc | text',
+      activeTags: [],
+      disableIndexes: "true",
+      columns: [
+        {
+          id: 1,
+          name: TRL_Pack.products.filter.ean,
+          type: "price",
+          sortable: true,
+          searchable: true,
+        },
+        {
+          id: 2,
+          name: TRL_Pack.products.filter.productName,
+          sortable: true,
+          searchable: true,
+          type: 'text',
+        },
         {
           id: 9,
           name: TRL_Pack.products.filter.isShared,
           sortable: true,
           selectable: true,
           type: 'bool',
-        }
-        : { solid: "true" },
+        },
+        { solid: "true" }
+      ]
+    }
 
-      { solid: "true" }
-    ]
+  }
+  else {
+
+    defaultFilter = {
+      showIndexes: false,
+      page: 1,
+      rowsPerPage: 25,
+      rowsPerPageOptions: [10, 25, 50],
+      visible: false,
+      sortByColumns: true,
+      sortBy: '3 | asc | text',
+      activeTags: [],
+      disableIndexes: "true",
+      columns: [
+        {
+          id: 1,
+          name: TRL_Pack.products.filter.ean,
+          type: "price",
+          sortable: true,
+          searchable: true,
+        },
+        {
+          id: 2,
+          name: TRL_Pack.products.filter.productName,
+          sortable: true,
+          searchable: true,
+          type: 'text',
+        },
+        { solid: "true" },
+        // () => { if (sessionStorage.getItem("DB_TYPE") !== "mysql") return ({ solid: "false" }) },
+      ]
+    }
   }
 
   const reportFilter = row =>
@@ -212,13 +245,13 @@ export default () => {
   }
 
 
-
   const [filter, setFilter] = useState(() => {
     if (localStorage.getItem('productFilter')) {
       return JSON.parse(localStorage.getItem('productFilter'))
     } else return defaultFilter
   })
   const filteredProducts = products.filter(({ Name }) => filterItems(searchedText, Name))
+
   return (
     <>
       {products.length ? (
@@ -295,7 +328,7 @@ export default () => {
                                     style={{ wordBreak: 'break-word' }}
                                     className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
                                     onClick={openForm(product.EAN)}>
-                                    {returnParsedIsShared(product[col])}
+                                    {sessionStorage.getItem("DB_TYPE") !== "mysql" ? returnParsedIsShared(product[col]) : product[col]}
                                   </button>
                                 </td>
                               ))}

@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useContext } from 'react'
 import { LangContext } from '../../context/lang-context'
 import onClickAway from '../../util/onClickAway'
 
-export default ({ headerText, noFooter, classes, handleClose, children, style, disableSubmit }) => {
+export default ({ headerText, noFooter, classes, handleClose, children, style, disableSubmit, acceptForm }) => {
   const { TRL_Pack } = useContext(LangContext)
   const modalRef = useRef(null)
   useEffect(
@@ -25,9 +25,11 @@ export default ({ headerText, noFooter, classes, handleClose, children, style, d
           </div>
           {!noFooter && (
             <div className="modal-footer bg-light">
-              <button type="submit" disabled={disableSubmit ? "disabled" : ""} className="btn btn-success btn-sm" form="modal-form">
-                {TRL_Pack.buttons.save}
-              </button>
+              {
+                <button type="submit" disabled={disableSubmit ? "disabled" : ""} className="btn btn-success btn-sm" form="modal-form">
+                  {acceptForm ? "confirm" : TRL_Pack.buttons.save}
+                </button>
+              }
             </div>
           )}
         </div>
