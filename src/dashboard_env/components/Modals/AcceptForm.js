@@ -1,25 +1,30 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { LangContext } from '../../context/lang-context'
 
-import sampleProduct from '../../assets/images/sample-product.svg'
-
-import useFetch from '../../hooks/fetchMSSQL-hook'
-
-import { API_URL } from '../../config/config'
 import FormSkel from './FormSkel'
 
-export default ({ form, productData, getProducts, handleClose, ean }) => {
-    console.log(ean)
+export default ({ deleteProduct, handleClose, ean, IsSubscribed, unsubscribeProduct }) => {
+    const HandleDelete = evt => {
+        evt.preventDefault()
+        !IsSubscribed ? deleteProduct(ean) : unsubscribeProduct(ean)
+        handleClose()
+    }
     return (
         < FormSkel
-            // headerText={(productData.IsSubscribed === 1 ? "potwierdź usuniecie produktu" : "potwierdz odsubskrybowanie produktu")}
+            headerText={"Usuń produkt"}
             handleClose={handleClose}
             acceptForm="true"
         >
-
-            <div>
-                zaakceptowanie spowoduje usuniecie
-            </div>
+            <>
+                <form onSubmit={HandleDelete} id="modal-form">
+                    <div >
+                        <label >
+                            {IsSubscribed ? "Potwierdz odsubskrybowanie produktu" :
+                                `zaakceptowanie spowoduje usuniecie o Eanie : ${ean}`
+                            }
+                        </label>
+                    </div>
+                </form>
+            </>
         </FormSkel >
     )
 }

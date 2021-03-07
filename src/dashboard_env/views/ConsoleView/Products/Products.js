@@ -18,6 +18,7 @@ import { API_URL } from '../../../config/config'
 import filterItems from '../../../util/filterItems'
 import ProductForm from '../../../components/Modals/ProductForm'
 import DeleteForm from "../../../components/Modals/DeleteForm"
+import AcceptForm from '../../../components/Modals/AcceptForm'
 
 
 export default () => {
@@ -33,6 +34,8 @@ export default () => {
   const toggleFilter = () => setFilter(prev => ({ ...prev, visible: !prev.visible }))
   const { form, openForm, closeForm } = useForm()
 
+  const [subscribed, setSubscribed] = useState(false)
+  const [ean, setEan] = useState(null)
   const [categories, setCategories] = useState([])
   const [products, setProducts] = useState([])
 
@@ -102,14 +105,12 @@ export default () => {
     })
   }
 
-  const unsubscribeProduct = ean => () => {
-    if (window.confirm('Potwierdź odsubskrybowanie produktu. \r\n Spowoduje to usunięcie kategorii produktu '))
-      fetchMssqlApi(`product/${ean}`, { method: 'DELETE' }, getProducts)
+  const unsubscribeProduct = ean => {
+    fetchMssqlApi(`product/${ean}`, { method: 'DELETE' }, getProducts)
   }
 
-  const deleteProduct = ean => () => {
-    if (window.confirm('Potwierdź usunięcie produktu. \r\n Spowoduje to usunięcie produktu wraz z kategoriami'))
-      fetchMssqlApi(`product/${ean}`, { method: 'DELETE' }, getProducts)
+  const deleteProduct = ean => {
+    fetchMssqlApi(`product/${ean}`, { method: 'DELETE' }, getProducts)
   }
   useEffect(() => {
     setHeaderData({ text: 'Produkty' })
@@ -252,6 +253,13 @@ export default () => {
   })
   const filteredProducts = products.filter(({ Name }) => filterItems(searchedText, Name))
 
+  const handleModal = (ean, isSubscribed) => {
+    setSubscribed(isSubscribed)
+    setEan(ean)
+    openForm("acceptModal")()
+
+  }
+
   return (
     <>
       {products.length ? (
@@ -342,15 +350,20 @@ export default () => {
                               />
                             </td>
                             <td>
-                              {!product.IsSubscribed ? <button
-                                className="btn btn-link"
-                                onClick={deleteProduct(product.EAN)}
-                              >
-                                <i className="fas fa-trash text-danger" />
-                              </button>
+                              {!product.IsSubscribed ?
+                                <button
+                                  className="btn btn-link"
+                                  // onClick={deleteProduct(product.EAN)}
+                                  onClick={() => handleModal(product.EAN, product.IsSubscribed)}
+
+                                >
+                                  <i className="fas fa-trash text-danger" />
+                                </button>
                                 : <button
                                   className="btn btn-link"
-                                  onClick={unsubscribeProduct(product.EAN)}
+                                  onClick={() => handleModal(product.EAN, product.IsSubscribed)}
+                                // onClick={unsubscribeProduct(product.EAN)}
+
                                 >
                                   <i className="fas fa-times text-danger" />
                                 </button>}
@@ -368,13 +381,17 @@ export default () => {
       ) : (
           <NoResults buttonText="Dodaj produkt" onClick={openForm()} />
         )
+      }{
+        form === "acceptModal" && form && (
+          <AcceptForm ean={ean} handleClose={closeForm} deleteProduct={deleteProduct} unsubscribeProduct={unsubscribeProduct} IsSubscribed={subscribed} />
+        )
       }
       {
-        form && (
+        form !== "acceptModal" && form && (
           <ProductForm
             form={form}
             productData={
-              form !== 'new' ? filteredProducts.find(product => product.EAN === form) : null
+              form !== 'new' && form !== "acceptModal" ? filteredProducts.find(product => product.EAN === form) : null
             }
             getProducts={getProducts}
             categories={categories}
