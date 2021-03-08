@@ -9,7 +9,7 @@ export default ({ feederData, handleClose, MachineProducts, getMachineProducts, 
   const {
     TRL_Pack: { shelves }
   } = useContext(LangContext)
-  const [maxItemCount, setMaxItemCount] = useState(feederData.MaxItemCount)
+  const [maxItemCount, setMaxItemCount] = useState(feederData ? feederData.MaxItemCount : null)
 
   const [allProducts, setAllProducts] = useState([])
 
@@ -131,7 +131,7 @@ export default ({ feederData, handleClose, MachineProducts, getMachineProducts, 
             type="number"
             name="Quantity"
             className="form-control"
-            defaultValue={feederData.Quantity}
+            defaultValue={feederData ? feederData.Quantity : null}
             min={0}
             max={maxItemCount || 20}
           />

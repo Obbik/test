@@ -2,6 +2,7 @@
   "buttons": {
     "save": "Zapisz",
     "return": "Wróć",
+    "cancel":"Anuluj",
     "goToShop": "Wróć do sklepu",
     "login": "Zaloguj się",
     "open": "Otwórz",
@@ -15,6 +16,8 @@
   "navbar": {
     "products": "Produkty",
     "categories": "Kategorie",
+    "catalog":"Katalog",
+    "tags":"Tagi",
     "settings": "Ustawienia",
     "config": "Konfiguracja",
     "supply": "Doładowanie",
@@ -23,9 +26,18 @@
   "navigation": {
     "monitoring": "Monitoring",
     "machines": "Maszyny",
-    "reports": "Raporty",
+    "reports":"Raporty",
+    "terminals":"Terminale",
+    "clients":"Klienci",
     "definitions": "Definicje",
-    "logout": "Wyloguj się"
+    "products": "Produkty",
+    "categories": "Kategorie",
+    "settings": "Ustawienia",
+    "catalog":"Katalog",
+    "tags":"Tagi",
+    "config": "Konfiguracja",
+    "supply": "Dostawa",
+    "logout": "Wyloguj"
   },
   "searchbarPlaceholder": "Szukaj...",
   "fileUploadPlaceholder": "Wybierz plik",
@@ -159,6 +171,24 @@
       "description": "Opis"
     }
   },
+  "Reports":{
+    "reports":"Reports",
+    "new":"Nowy",
+    "format":"Format",
+    "name":"Nazwa",
+    "from":"Od",
+    "to":"Do",
+    "details":"Szczegóły",
+    "delete":"Usuń",
+    "noReports":"Brak Raportów",
+    "generate":"generuj",
+    "downloadReport":"pobierz Raport"
+  },
+  "tags":{
+    "machine":"Machine",
+    "product":"Product",
+    "others":"Inne"
+  },
   "categories": {
     "header": "Kategorie",
     "addCategoryButton": "Dodaj kategorie",
@@ -166,6 +196,7 @@
     "newItemHeader": "Nowa kategoria",
     "editItemHeader": "Edytuj kategorie",
     "properties": {
+      "name":"nazwa",
       "image": "Zdjęcie",
       "categoryName": "Nazwa kategorii"
     },
@@ -208,9 +239,32 @@
       "comment": "Komentarz"
     }
   },
+  "fullMachine":{
+    "machineName":"Nazwa maszyny",
+    "location":"Lokalizacja",
+    "machineType":"Typ maszyny",
+    "maintenace":"Konserwacja",
+    "tags":"Tagi",
+    "serialNumber":"Numer Seryjny",
+    "support":"Obsługa",
+    "lastVisit":"Ostatnia Wizyta",
+    "listOfProduct":"Product list on the machine",
+    "new":"Nowy",
+    "download":"Pobierz",
+    "salesReset":"Reset sprzedaży"
+  },
+  "machineRecipies":{
+    "number":"Nr",
+    "recipies":"Receptura",
+    "price":"Cena (zł)",
+    "lastSales":"Ostatnia Sprzedaż",
+    "quantity":"Ilość",
+    "capacity":"Pojemność"
+  },
   "machineTypes": {
     "header": "Typy maszyn",
     "addMachineTypeButton": "Dodaj typ maszyn",
+    "confirmUnsaved":"Wykryto niezapisane zmiany, czy na pewno chcesz opuścić stronę?",
     "confirmDeletionText": "Czy na pewno chcesz usunąć typ maszyn?",
     "newItemHeader": "Nowy typ maszyn",
     "editItemHeader": "Edytuj typ maszyn",

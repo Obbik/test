@@ -5,6 +5,7 @@ import DatalistInput from '../FormElements/DatalistInput'
 import TextInput from '../FormElements/TextInput'
 import { API_URL } from '../../config/config'
 import { Prompt } from 'react-router'
+import { LangContext } from '../../context/lang-context'
 
 export default ({ machineId }) => {
   const { fetchMssqlApi } = useFetch()
@@ -12,7 +13,7 @@ export default ({ machineId }) => {
 
   const initialMachineRecipes = useRef(null)
   const [machineRecipesData, setMachineRecipesData] = useState([])
-
+  const { TRL_Pack } = useContext(LangContext)
   const slotsCounter = useRef(0)
 
   const [recipesData, setRecipesData] = useState([])
@@ -265,14 +266,14 @@ export default ({ machineId }) => {
   return machineRecipesData.length ? (
     <div className="card">
       <h5 className="card-header">
-        Wybory
+        {TRL_Pack.fullMachine.listOfProduct}
         <span className="ml-2 badge badge-info">{machineRecipesData.length}</span>
         <button
           className="float-right btn btn-sm btn-link text-decoration-none"
           onClick={handleAddRecipe}
         >
           <i className="fas fa-plus mr-2" />
-          Nowy
+          {TRL_Pack.fullMachine.new}
         </button>
         {initialMachineRecipes.current.length > 0 && (
           <>
@@ -281,14 +282,14 @@ export default ({ machineId }) => {
               onClick={handleDownload}
             >
               <i className="fas fa-file-download mr-2" />
-              Pobierz
+              {TRL_Pack.fullMachine.download}
             </button>
             <button
               className="float-right btn btn-sm btn-link text-decoration-none mr-2"
               onClick={handleResetLastSales}
             >
               <i className="fas fa-eraser mr-2" />
-              Reset sprzedaży
+              {TRL_Pack.fullMachine.salesReset}
             </button>
           </>
         )}
@@ -306,10 +307,10 @@ export default ({ machineId }) => {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th>Nr</th>
-              <th>Receptura</th>
-              <th>Cena (zł)</th>
-              <th className="text-center">Ostatnia sprzedaż</th>
+              <th>{TRL_Pack.machineRecipies.number}</th>
+              <th>{TRL_Pack.machineRecipies.recipies}</th>
+              <th>{TRL_Pack.machineRecipies.price} (zł)</th>
+              <th className="text-center">{TRL_Pack.machineRecipies.lastSales}</th>
               <th style={{ width: '1%' }} />
             </tr>
           </thead>
@@ -415,14 +416,14 @@ export default ({ machineId }) => {
           onClick={discardChanges}
           disabled={!isUnsavedData}
         >
-          Anuluj
+          {TRL_Pack.buttons.cancel}
         </button>
         <button
           className="btn btn-success btn-sm"
           onClick={submitChanges}
           disabled={!isUnsavedData}
         >
-          Zapisz
+          {TRL_Pack.buttons.save}
         </button>
       </div>
     </div >

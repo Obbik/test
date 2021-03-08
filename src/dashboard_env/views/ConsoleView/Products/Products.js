@@ -288,7 +288,7 @@ export default () => {
             />
           )}
           {!filteredProducts.length ? (
-            <NoResults buttonText="Dodaj produkt" onClick={() => { }} />
+            <NoResults buttonText={TRL_Pack.products.addProductButton} onClick={() => { }} />
           ) : (
               <>
                 <div>
@@ -296,8 +296,9 @@ export default () => {
                     className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
                     onClick={openForm()}
                   >
-                    <i className="fas fa-plus mr-2" /> Dodaj produkt
-                </button>
+                    <i className="fas fa-plus mr-2" />
+                    {TRL_Pack.products.addProductButton}
+                  </button>
                 </div>
                 <div className="overflow-auto">
                   <table className="table table-striped border">

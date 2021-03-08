@@ -432,7 +432,7 @@ export default () => {
             <div className="d-flex offset-lg-1 col col-lg-10">
               <form className="input-group input-group-sm" onSubmit={getReport}>
                 <div className="input-group-prepend">
-                  <label className="input-group-text">Raport</label>
+                  <label className="input-group-text">{TRL_Pack.Reports.reports}</label>
                 </div>
                 <select
                   className="form-control"
@@ -446,7 +446,7 @@ export default () => {
                   ))}
                 </select>
                 <div className="input-group-prepend">
-                  <label className="input-group-text">Od</label>
+                  <label className="input-group-text">{TRL_Pack.Reports.from}</label>
                 </div>
                 <input
                   type="date"
@@ -462,7 +462,7 @@ export default () => {
                   disabled={isDateRangeDisabled}
                 />
                 <div className="input-group-prepend">
-                  <label className="input-group-text">Do</label>
+                  <label className="input-group-text">{TRL_Pack.Reports.to}</label>
                 </div>
                 <input
                   type="date"
@@ -474,7 +474,7 @@ export default () => {
                   disabled={isDateRangeDisabled}
                 />
                 <div className="input-group-append">
-                  <button className="btn bg-white border">Generuj</button>
+                  <button className="btn bg-white border">{TRL_Pack.Reports.generate}</button>
                 </div>
               </form>
             </div>
@@ -508,62 +508,62 @@ export default () => {
               {currentReport.data && (
                 <>
                   {currentReport.data.filter(reportFilter).filter(tagFilter).length >
-                  0 ? (
-                    <div className="overflow-auto">
-                      <div>
-                        <button
-                          className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
-                          onClick={handleDownload}
-                        >
-                          <i className="fas fa-file-download mr-2" /> Pobierz raport
-                        </button>
-                      </div>
-                      <table className="table table-striped table-bordered align-middle report-table">
-                        <thead>
-                          <tr>
-                            {filter.showIndexes && <th className="text-center">#</th>}
-                            {filter.columns
-                              .filter(col => !col.hidden && !col.disabled)
-                              .map((col, idx) => (
-                                <th key={idx}>{col.name}</th>
+                    0 ? (
+                      <div className="overflow-auto">
+                        <div>
+                          <button
+                            className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+                            onClick={handleDownload}
+                          >
+                            <i className="fas fa-file-download mr-2" /> {TRL_Pack.downloadReport}
+                          </button>
+                        </div>
+                        <table className="table table-striped table-bordered align-middle report-table">
+                          <thead>
+                            <tr>
+                              {filter.showIndexes && <th className="text-center">#</th>}
+                              {filter.columns
+                                .filter(col => !col.hidden && !col.disabled)
+                                .map((col, idx) => (
+                                  <th key={idx}>{col.name}</th>
+                                ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {currentReport.data
+                              .filter(reportFilter)
+                              .filter(tagFilter)
+                              .sort(sortRows)
+                              .slice(
+                                (page - 1) * filter.rowsPerPage,
+                                page * filter.rowsPerPage
+                              )
+                              .map((row, row_idx) => (
+                                <tr key={row_idx}>
+                                  {filter.showIndexes && (
+                                    <td className="text-center small font-weight-bold">
+                                      {(page - 1) * filter.rowsPerPage + row_idx + 1}
+                                    </td>
+                                  )}
+                                  {Object.keys(row).map(
+                                    (col, col_idx) =>
+                                      filter.columns
+                                        .filter(col => !col.hidden && !col.disabled)
+                                        .map(col => col.id)
+                                        .includes(col_idx + 1) && (
+                                        <td key={col_idx} className="small">
+                                          {formatValue(col_idx, row[col])}
+                                        </td>
+                                      )
+                                  )}
+                                </tr>
                               ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {currentReport.data
-                            .filter(reportFilter)
-                            .filter(tagFilter)
-                            .sort(sortRows)
-                            .slice(
-                              (page - 1) * filter.rowsPerPage,
-                              page * filter.rowsPerPage
-                            )
-                            .map((row, row_idx) => (
-                              <tr key={row_idx}>
-                                {filter.showIndexes && (
-                                  <td className="text-center small font-weight-bold">
-                                    {(page - 1) * filter.rowsPerPage + row_idx + 1}
-                                  </td>
-                                )}
-                                {Object.keys(row).map(
-                                  (col, col_idx) =>
-                                    filter.columns
-                                      .filter(col => !col.hidden && !col.disabled)
-                                      .map(col => col.id)
-                                      .includes(col_idx + 1) && (
-                                      <td key={col_idx} className="small">
-                                        {formatValue(col_idx, row[col])}
-                                      </td>
-                                    )
-                                )}
-                              </tr>
-                            ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  ) : (
-                    <h5 className="text-center">Brak wyników</h5>
-                  )}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <h5 className="text-center">{TRL_Pack.Reports.noReports}</h5>
+                    )}
                 </>
               )}
             </>

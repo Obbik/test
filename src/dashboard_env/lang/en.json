@@ -5,6 +5,7 @@
     "goToShop": "Return to shop",
     "login": "Log in",
     "open": "Open",
+    "cancel":"Cancel",
     "saveVisit": "Save visit"
   },
   "auth": {
@@ -15,14 +16,38 @@
   "navigation": {
     "monitoring": "Monitoring",
     "machines": "Machines",
-    "reports": "Reports",
+    "reports":"Reports",
+    "terminals":"Terminals",
+    "clients":"Clients",
     "definitions": "Definitions",
+    "products": "Products",
+    "categories": "Categories",
+    "settings": "Settings",
+    "catalog":"Catalog",
+    "tags":"Tags",
+    "config": "Config",
+    "supply": "Supply",
     "logout": "Log out"
   },
+  "Reports":{
+    "reports":"Reports",
+    "new":"Nowy",
+    "format":"Format",
+    "name":"Nazwa",
+    "from":"Od",
+    "to":"Do",
+    "details":"Szczegóły",
+    "delete":"Usuń",
+    "noReports":"Brak Raportów",
+    "generate":"Generate",
+    "downloadReport":"Download Report"
+  }, 
   "navbar": {
     "products": "Products",
     "categories": "Categories",
     "settings": "Settings",
+    "catalog":"Catalog",
+    "tags":"Tags",
     "config": "Config",
     "supply": "Supply",
     "logout": "Log out"
@@ -69,6 +94,11 @@
       "machineType": "Machine type",
       "maintenance": "Maintenance"
     }
+  },
+  "tags":{
+    "machine":"Machine",
+    "product":"Product",
+    "others":"Others"
   },
   "machine": {
     "header": "Machine details",
@@ -171,6 +201,7 @@
     "newCategoryHeader": "New category",
     "editCategoryHeader": "Edit category",
     "props": {
+      "name":"Name",
       "image": "Image",
       "categoryName": "Name"},
 
@@ -178,6 +209,28 @@
       "image": "Image",
       "categoryName": "Category name"
     }
+  },
+  "fullMachine":{
+    "machineName":"Machine Name",
+    "location":"Location",
+    "machineType":"Machine Type",
+    "maintenace":"Maintenace",
+    "tags":"Tags",
+    "serialNumber":"Serial Number",
+    "support":"Service",
+    "lastVisit":"Last Visit",
+    "listOfProduct":"Product list on the machine",
+    "new":"New",
+    "download":"Download",
+    "salesReset":"Sales Reset"
+  },
+  "machineRecipies":{
+    "number":"Nr",
+    "recipies":"recipes",
+    "price":"Price (PLN)",
+    "lastSales":"Last sale",
+    "quantity":"Quantity",
+    "capacity":"Capacity"
   },
   "locations": {
     "header": "Locations",
@@ -197,6 +250,7 @@
   "machineTypes": {
     "header": "Machine types",
     "addMachineTypeButton": "Add machine type",
+    "confirmUnsaved":"Unsaved changes detected, are you sure you want to leave the page?",
     "confirmDeletionText": "Confirm machine type deletion?",
     "newItemHeader": "New machine type",
     "editItemHeader": "Edit machine type",

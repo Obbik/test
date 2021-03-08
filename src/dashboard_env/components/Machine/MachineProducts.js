@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { Prompt } from 'react-router';
+import { LangContext } from '../../context/lang-context'
 
 import useFetch from '../../hooks/fetchMSSQL-hook';
 import { NotificationContext } from '../../context/notification-context';
@@ -14,6 +15,7 @@ const MachineProducts = (props) => {
   const { fetchMssqlApi } = useFetch();
   const { ErrorNotification } = useContext(NotificationContext);
 
+  const { TRL_Pack } = useContext(LangContext)
 
   const [machineProducts, setMachineProducts] = useState([]);
   const [initialMachineProducts, setInitialMachineProducts] = useState([]);
@@ -235,12 +237,12 @@ const MachineProducts = (props) => {
   return (
     <div className="card">
       <h5 className="card-header">
-        Wybory
-                <span className="ml-2 badge badge-info">{machineProducts.length}</span>
+        {TRL_Pack.fullMachine.listOfProduct}
+        <span className="ml-2 badge badge-info">{machineProducts.length}</span>
         <button className="float-right btn btn-sm btn-link text-decoration-none" onClick={addTableRow}>
           <i className="fas fa-plus mr-2" />
-                    Nowy
-                </button>
+          {TRL_Pack.fullMachine.new}
+        </button>
         {initialMachineProducts.length > 0 && (
           <Fragment>
             <button
@@ -248,14 +250,14 @@ const MachineProducts = (props) => {
               onClick={handleDownload}
             >
               <i className="fas fa-file-download mr-2" />
-                            Pobierz
-                        </button>
+              {TRL_Pack.fullMachine.download}
+            </button>
             <button
               className="float-right btn btn-sm btn-link text-decoration-none mr-2"
               onClick={handleResetLastSales}>
               <i className="fas fa-eraser mr-2" />
-                            Reset sprzedaży
-                        </button>
+              {TRL_Pack.fullMachine.salesReset}
+            </button>
           </Fragment>
         )}
       </h5>
@@ -272,12 +274,12 @@ const MachineProducts = (props) => {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th>Nr</th>
-              <th>Produkt</th>
-              <th>Cena (zł)</th>
-              <th>Ilość</th>
-              <th>Pojemność</th>
-              <th className="text-center">Ostatnia sprzedaż</th>
+              <th>{TRL_Pack.machineRecipies.number}</th>
+              <th>{TRL_Pack.machineRecipies.recipies}</th>
+              <th>{TRL_Pack.machineRecipies.price}</th>
+              <th>{TRL_Pack.machineRecipies.quantity}</th>
+              <th>{TRL_Pack.machineRecipies.capacity}</th>
+              <th className="text-center">{TRL_Pack.machineRecipies.lastSales}</th>
               <th style={{ width: '1%' }} />
             </tr>
           </thead>
@@ -362,8 +364,8 @@ const MachineProducts = (props) => {
         </table>
       </div>
       <div className="card-footer text-center">
-        <button className="btn btn-secondary btn-sm mr-3" onClick={cancelSubmit} disabled={!isTableModified}>Anuluj</button>
-        <button className="btn btn-success btn-sm" onClick={(e) => handleSubmit(e)} disabled={!isTableModified}>Zapisz</button>
+        <button className="btn btn-secondary btn-sm mr-3" onClick={cancelSubmit} disabled={!isTableModified}>{TRL_Pack.buttons.cancel}</button>
+        <button className="btn btn-success btn-sm" onClick={(e) => handleSubmit(e)} disabled={!isTableModified}>{TRL_Pack.buttons.save}</button>
       </div>
     </div>
   )

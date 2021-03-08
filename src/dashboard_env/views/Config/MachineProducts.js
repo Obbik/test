@@ -29,7 +29,6 @@ export default () => {
       setMachineProducts(data)
     })
   }
-  console.log(machineProducts)
   const deliverMachineProduct = feederNo => () => {
     fetchMssqlApi(
       'shop/test-feeder',
@@ -72,9 +71,7 @@ export default () => {
         <FeederForm
           form={form}
           feederData={
-            form !== 'new'
-              ? (machineProducts.find(mp => mp.MachineProductId === form))
-              : null
+            form !== 'new' ? (machineProducts.find(mp => mp.MachineProductId === form)) : null
           }
           machineProducts={machineProducts}
           handleClose={closeForm}

@@ -77,10 +77,10 @@ export default () => {
                         {report.fileType === 'pdf' ? (
                           <i className="far fa-file-pdf" />
                         ) : (
-                          report.fileType === 'xlsx' && (
-                            <i className="far fa-file-excel" />
-                          )
-                        )}
+                            report.fileType === 'xlsx' && (
+                              <i className="far fa-file-excel" />
+                            )
+                          )}
                       </td>
                       <td>{report.name}</td>
                       <td>{report.dateFrom}</td>
@@ -96,8 +96,8 @@ export default () => {
                 </tbody>
               </table>
             ) : (
-              <h6 className="text-center mb-0">Brak raportów</h6>
-            )}
+                <h6 className="text-center mb-0">Brak raportów</h6>
+              )}
           </div>
         </div>
       </div>

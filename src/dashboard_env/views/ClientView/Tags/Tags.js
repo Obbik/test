@@ -4,9 +4,11 @@ import { NavigationContext } from '../../../context/navigation-context'
 import useFetch from '../../../hooks/fetchMSSQL-hook'
 import useForm from '../../../hooks/form-hook'
 import TagForm from '../../../components/Modals/TagForm'
+import { LangContext } from '../../../context/lang-context'
 
 export default () => {
   const { fetchMssqlApi } = useFetch()
+  const { TRL_Pack } = useContext(LangContext)
   const { setHeaderData } = useContext(NavigationContext)
   const { Searchbar, compareText } = useContext(SearchbarContext)
 
@@ -48,7 +50,7 @@ export default () => {
             className={`nav-link btn w-100 ${section === 'machine' ? 'active' : ''}`}
             onClick={changeSection('machine')}
           >
-            Maszyna
+            {TRL_Pack.tags.machine}
           </button>
         </li>
         <li className="nav-item w-50">
@@ -56,7 +58,7 @@ export default () => {
             className={`nav-link btn w-100 ${section === 'product' ? 'active' : ''}`}
             onClick={changeSection('product')}
           >
-            Produkt
+            {TRL_Pack.tags.product}
           </button>
         </li>
       </ul>
@@ -77,7 +79,7 @@ export default () => {
                 className="btn list-group-item list-group-item-action"
                 onClick={openForm('others')}
               >
-                Inne
+                {TRL_Pack.tags.others}
               </button>
             </div>
           </div>

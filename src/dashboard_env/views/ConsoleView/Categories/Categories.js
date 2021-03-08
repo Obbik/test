@@ -19,7 +19,7 @@ import filterItems from '../../../util/filterItems'
 export default () => {
   const { fetchMssqlApi } = useFetch()
   const { setHeaderData } = useContext(NavigationContext)
-  // const { TRL_Pack } = useContext(LangContext)
+  const { TRL_Pack } = useContext(LangContext)
   const { searchedText, updateSearchedText } = useFilter()
 
   const { form, openForm, closeForm } = useForm()
@@ -79,7 +79,7 @@ export default () => {
         <>
           <SearchInput onSearch={updateSearchedText} />
           {!filteredCategories.length ? (
-            <NoResults buttonText="Dodaj kategorie" onClick={openForm()} />
+            <NoResults buttonText={TRL_Pack.products.addProductButton} onClick={openForm()} />
           ) : (
               <>
                 <div>
@@ -87,8 +87,9 @@ export default () => {
                     className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
                     onClick={openForm()}
                   >
-                    <i className="fas fa-plus mr-2" /> Dodaj kategorie
-                </button>
+                    <i className="fas fa-plus mr-2" />
+                    {TRL_Pack.products.addProductButton}
+                  </button>
                 </div>
                 <div className="overflow-auto">
                   <table className="table table-striped border">
@@ -97,8 +98,8 @@ export default () => {
                         <th className="text-center" style={{ width: 50 }}>
                           #
                       </th>
-                        <th>Nazwa</th>
-                        <th>Zdjęcie</th>
+                        <th>{TRL_Pack.categories.props.name}</th>
+                        <th>{TRL_Pack.categories.props.image}</th>
                         <th style={{ width: '1%' }} colSpan={2} />
                       </tr>
                     </thead>
@@ -123,16 +124,6 @@ export default () => {
                               height="48"
                             />
                           </td>
-                          {/* <td>
-
-                            <Link
-                              to={`/products/${category.CategoryId}`}
-                              className="btn btn-link"
-                            >
-                              <i className="fas fa-cookie text-warning" />
-                            </Link>
-                            
-                          </td> */}
                           <td>
                             {
                               <button

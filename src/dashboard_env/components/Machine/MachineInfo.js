@@ -100,11 +100,6 @@ export default ({ machineData: initialMachineData, updateMachine, machineId, dat
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-
-
-
-
-
   const handleSubmit = evt => {
     evt.preventDefault()
 
@@ -203,7 +198,6 @@ export default ({ machineData: initialMachineData, updateMachine, machineId, dat
       maintenance: initialMachineData.MaintenanceName
     })
 
-
   return (
     <div className="row mb-4">
       <div className="col-12 col-md-6 mb-4 mb-md-0">
@@ -212,7 +206,7 @@ export default ({ machineData: initialMachineData, updateMachine, machineId, dat
           <div className="card-body d-flex flex-column justify-content-center">
             <Prompt
               when={isUnsavedData}
-              message="Wykryto niezapisane zmiany, czy na pewno chcesz opuścić stronę?"
+              message={TRL_Pack.machineTypes.confirmUnsaved}
             />
             <form onSubmit={handleSubmit} id="machine-form" autoComplete="off">
               <div className="row mb-3">
@@ -281,7 +275,7 @@ export default ({ machineData: initialMachineData, updateMachine, machineId, dat
                 </div>
               </div>
               <div className="row mb-n1">
-                <div className="col-lg-4 mb-2 mb-lg-0 text-lg-right">Tagi</div>
+                <div className="col-lg-4 mb-2 mb-lg-0 text-lg-right">{TRL_Pack.navbar.tags}</div>
                 <div className="col-lg-8 my-auto">
                   {tags.map(tag =>
                     tag.options.filter(opt => opt)
@@ -310,8 +304,6 @@ export default ({ machineData: initialMachineData, updateMachine, machineId, dat
                             </button>
                           )
                         }
-
-
                       }
                       )
                   )}
@@ -335,14 +327,14 @@ export default ({ machineData: initialMachineData, updateMachine, machineId, dat
               onClick={discardChanges}
               disabled={!isUnsavedData}
             >
-              Anuluj
+              {TRL_Pack.buttons.cancel}
             </button>
             <button
               className="btn btn-success btn-sm"
               form="machine-form"
             // disabled={!isUnsavedData}
             >
-              Zapisz
+              {TRL_Pack.buttons.save}
             </button>
           </div>
         </div>
@@ -352,21 +344,21 @@ export default ({ machineData: initialMachineData, updateMachine, machineId, dat
           <h5 className="card-header">{TRL_Pack.machine.info.header}</h5>
           <div className="card-body d-flex flex-column justify-content-center">
             <div className="row mb-3">
-              <div className="col-lg-4 mb-2 mb-lg-0 text-lg-right">Nr seryjny</div>
+              <div className="col-lg-4 mb-2 mb-lg-0 text-lg-right">{TRL_Pack.fullMachine.serialNumber}</div>
               <strong className="col-lg-8 text-center text-lg-left">
                 {initialMachineData.SerialNo}
               </strong>
             </div>
             {initialMachineData.LastVisit && (
               <div className="row mb-3">
-                <div className="col-lg-4 mb-2 mb-lg-0 text-lg-right">Ostatnia wizyta</div>
+                <div className="col-lg-4 mb-2 mb-lg-0 text-lg-right">{TRL_Pack.fullMachine.LastVisit}</div>
                 <strong className="col-lg-8 text-center text-lg-left">
                   {initialMachineData.LastVisit}
                 </strong>
               </div>
             )}
             <div className="row">
-              <div className="col-lg-4 mb-2 mb-lg-0 text-lg-right">Obsługa</div>
+              <div className="col-lg-4 mb-2 mb-lg-0 text-lg-right">{TRL_Pack.fullMachine.support}</div>
               <strong className="col-lg-8 text-center text-lg-left">
                 {initialMachineData.MaintenanceType}
               </strong>

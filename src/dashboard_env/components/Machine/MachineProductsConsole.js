@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import useFetch from '../../hooks/fetchMSSQL-hook'
 import sampleProduct from '../../assets/images/sample-product.svg'
 import { CONSOLE_CLOUD } from '../../config/config'
+import { LangContext } from '../../context/lang-context'
+
 
 export default () => {
   const { fetchMssqlApi } = useFetch()
@@ -11,6 +13,8 @@ export default () => {
     local: null,
     global: null
   })
+
+  const { TRL_Pack } = useContext(LangContext)
 
   const [currentView, setCurrentView] = useState(null)
   const toggleView = () => setCurrentView(prev => (prev === 'local' ? 'global' : 'local'))
@@ -34,7 +38,7 @@ export default () => {
     <div className="card">
       <div className="card-header d-flex align-items-center">
         <h5 className="mb-0 flex-grow-1">
-          Wybory
+          {TRL_Pack.fullMachine.listOfProduct}
           <span className="ml-2 badge badge-info">
             {console.log(machineProducts, currentView, machineProducts[currentView])}
             {machineProducts[currentView].feeders.length}
