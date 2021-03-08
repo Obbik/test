@@ -8,6 +8,7 @@ import useFilter from '../../../hooks/filter-hook'
 import SearchInput from '../../../components/SearchInput/SearchInput'
 import NoResults from '../../../components/NoResults/NoResults'
 import CategoryForm from '../../../components/Modals/CategoryForm'
+import AcceptForm from "../../../components/Modals/AcceptForm"
 
 import sampleProduct from '../../../assets/images/sample-product.svg'
 
@@ -23,7 +24,7 @@ export default () => {
 
   const { form, openForm, closeForm } = useForm()
   // const { categories, setCategories } = useState({})
-
+  const [categoryId, setCategoryId] = useState()
   const [categories, setCategories] = useState([])
 
   const getCategories = () => {
@@ -54,10 +55,13 @@ export default () => {
     })
   }
 
+  const handleModal = (categoryId) => {
+    setCategoryId(categoryId)
+    openForm("acceptModal")()
 
-  const deleteCategory = categoryId => () => {
-    if (window.confirm('Potwierdź usunięcie kategorii'))
-      fetchMssqlApi(`category/${categoryId}`, { method: 'DELETE' }, getCategories)
+  }
+  const deleteCategory = categoryId => {
+    fetchMssqlApi(`category/${categoryId}`, { method: 'DELETE' }, getCategories)
   }
   useEffect(() => {
     setHeaderData({ text: 'Kategorie' })
@@ -133,7 +137,7 @@ export default () => {
                             {
                               <button
                                 className="btn btn-link"
-                                onClick={deleteCategory(category.CategoryId)}
+                                onClick={() => handleModal(category.CategoryId)}
                               >
                                 <i className="fas fa-trash text-danger" />
                               </button>
@@ -150,7 +154,12 @@ export default () => {
       ) : (
           <NoResults buttonText="Dodaj kategorie" onClick={openForm()} />
         )}
-      {form && (
+      {
+        form === "acceptModal" && form && (
+          <AcceptForm handleClose={closeForm} categoryId={categoryId} deleteCategory={deleteCategory} />
+        )
+      }
+      {form !== "acceptModal" && form && (
         <CategoryForm
           categoryData={
             form !== 'new'

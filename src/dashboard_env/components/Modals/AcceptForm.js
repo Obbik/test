@@ -2,10 +2,10 @@ import React, { useState, useEffect, useContext } from 'react'
 
 import FormSkel from './FormSkel'
 
-export default ({ deleteProduct, handleClose, ean, IsSubscribed, unsubscribeProduct }) => {
+export default ({ deleteProduct, handleClose, ean, IsSubscribed, unsubscribeProduct, categoryId, deleteCategory }) => {
     const HandleDelete = evt => {
         evt.preventDefault()
-        !IsSubscribed ? deleteProduct(ean) : unsubscribeProduct(ean)
+        !categoryId ? (!IsSubscribed ? deleteProduct(ean) : unsubscribeProduct(ean)) : (deleteCategory(categoryId))
         handleClose()
     }
     return (
@@ -18,8 +18,9 @@ export default ({ deleteProduct, handleClose, ean, IsSubscribed, unsubscribeProd
                 <form onSubmit={HandleDelete} id="modal-form">
                     <div >
                         <label >
-                            {IsSubscribed ? "Potwierdz odsubskrybowanie produktu" :
-                                `zaakceptowanie spowoduje usuniecie o Eanie : ${ean}`
+
+                            {!categoryId ? (IsSubscribed ? "Potwierdz odsubskrybowanie produktu" :
+                                `zaakceptowanie spowoduje usuniecie o Eanie : ${ean}`) : ("Potwierdź usunięcie kategori")
                             }
                         </label>
                     </div>
