@@ -37,7 +37,7 @@ export default ({
         const currentCategory = categories.find(c => c.CategoryId === categoryId)
         if (currentCategory)
           setHeaderData({
-            text: 'Produkty',
+            text: TRL_Pack.navigation.products,
             subtext: currentCategory.Name
           })
         else history.replace('/products')

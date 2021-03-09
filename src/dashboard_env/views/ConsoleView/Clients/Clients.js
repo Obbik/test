@@ -9,9 +9,11 @@ import SearchInput from '../../../components/SearchInput/SearchInput'
 import NoResults from '../../../components/NoResults/NoResults'
 import ClientForm from '../../../components/Modals/ClientForm'
 import filterItems from '../../../util/filterItems'
+import { LangContext } from '../../../context/lang-context'
 
 export default () => {
   const { fetchMssqlApi } = useFetch()
+  const { TRL_Pack } = useContext(LangContext)
   const { setHeaderData } = useContext(NavigationContext)
   // const { TRL_Pack } = useContext(LangContext)
   const { searchedText, updateSearchedText } = useFilter()
@@ -48,7 +50,7 @@ export default () => {
   }
 
   useEffect(() => {
-    setHeaderData({ text: 'Klienci' })
+    setHeaderData({ text: TRL_Pack.navigation.clients })
 
     getClients()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,15 +74,15 @@ export default () => {
                       className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
                       onClick={openForm()}
                     >
-                      <i className="fas fa-plus mr-2" /> Dodaj klienta
-                  </button>
+                      <i className="fas fa-plus mr-2" /> {TRL_Pack.clients.addClient}
+                    </button>
                   </div>
                   <div className="overflow-auto">
                     <table className="table table-striped border">
                       <thead>
                         <tr>
-                          <th>Nazwa</th>
-                          <th>Baza</th>
+                          <th>{TRL_Pack.clients.name}</th>
+                          <th>{TRL_Pack.clients.base}</th>
                         </tr>
                       </thead>
                       <tbody>

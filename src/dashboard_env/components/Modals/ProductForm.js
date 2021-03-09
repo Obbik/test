@@ -199,7 +199,6 @@ export default ({ form, productData, getProducts, handleClose }) => {
       <form onSubmit={handleSubmit} id="modal-form" autoComplete="off">
         <div className="form-group">
           <label className="h6">{products.props.ean}</label>
-          {console.log(form)}
           <input
             type="number"
             name="ean"

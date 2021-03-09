@@ -62,11 +62,11 @@ export default () => {
                 <table className="table table-striped border">
                   <thead>
                     <tr>
-                      <th>Maszyna</th>
-                      <th>Typ</th>
-                      <th>Nr seryjny</th>
-                      <th>Terminal</th>
-                      <th>Klient</th>
+                      <th>{TRL_Pack.machines.properties.machineName}</th>
+                      <th>{TRL_Pack.machines.properties.machineType}</th>
+                      <th>{TRL_Pack.machines.properties.serialNo}</th>
+                      <th>{TRL_Pack.machines.properties.terminal}</th>
+                      <th>{TRL_Pack.machines.properties.client}</th>
                     </tr>
                   </thead>
                   <tbody>

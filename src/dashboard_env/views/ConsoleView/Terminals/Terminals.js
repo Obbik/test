@@ -10,7 +10,10 @@ import NoResults from '../../../components/NoResults/NoResults'
 import TerminalForm from '../../../components/Modals/TerminalForm'
 import filterItems from '../../../util/filterItems'
 
+import { LangContext } from '../../../context/lang-context'
+
 export default () => {
+  const { TRL_Pack } = useContext(LangContext)
   const { fetchMssqlApi } = useFetch()
   const { setHeaderData } = useContext(NavigationContext)
   // const { TRL_Pack } = useContext(LangContext)
@@ -61,7 +64,7 @@ export default () => {
   }
 
   useEffect(() => {
-    setHeaderData({ text: 'Terminale' })
+    setHeaderData({ text: TRL_Pack.navigation.terminals })
 
     getTerminals()
     getClients()
@@ -96,9 +99,9 @@ export default () => {
                     <table className="table table-striped border">
                       <thead>
                         <tr>
-                          <th>Nr seryjny</th>
-                          <th>Klient</th>
-                          <th>Data dodania</th>
+                          <th>{TRL_Pack.terminals.serialNo}</th>
+                          <th>{TRL_Pack.terminals.client}</th>
+                          <th>{TRL_Pack.terminals.addedDate}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -128,7 +131,7 @@ export default () => {
               )}
           </>
         ) : (
-            <NoResults buttonText="Dodaj terminal" onClick={openForm()} />
+            <NoResults buttonText={TRL_Pack.terminals.addTerminal} onClick={openForm()} />
           )}
         {form && (
           <TerminalForm

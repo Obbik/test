@@ -23,6 +23,11 @@
     "supply": "Doładowanie",
     "logout": "Wyloguj się"
   },
+  "supply":{
+    "fillUp":"Zapełnij wszystko",
+    "emptyAll":"Opróżnij wszystko",
+    "saveVisit":"Zapisz wizytę"
+  },
   "navigation": {
     "monitoring": "Monitoring",
     "machines": "Maszyny",
@@ -37,7 +42,8 @@
     "tags":"Tagi",
     "config": "Konfiguracja",
     "supply": "Dostawa",
-    "logout": "Wyloguj"
+    "logout": "Wyloguj",
+    "productCatalog":"Katalog Produktów"
   },
   "searchbarPlaceholder": "Szukaj...",
   "fileUploadPlaceholder": "Wybierz plik",
@@ -79,8 +85,21 @@
       "serialNo": "Nr seryjny",
       "location": "Lokalizacja",
       "machineType": "Typ maszyny",
-      "maintenance": "Tryb obsługi"
+      "maintenance": "Tryb obsługi",
+      "terminal":"Terminal",
+      "client":"Klient"
     }
+  },
+  "clients":{
+    "name":"Nazwa",
+    "base":"Baza",
+    "addClient":"Dodaj klienta"
+  },
+  "terminals":{
+    "serialNo":"Nr seryjny",
+    "client":"Klient",
+    "addedDate":"Data dodania",
+    "addTerminal":"Dodaj Terminal"
   },
   "machine": {
     "header": "Podgląd maszyny",
@@ -209,11 +228,14 @@
     }
   },
   "shelves": {
-    "configHeader": "Konfiguracja maszyny",
+    "configHeader": "Konfiguracja",
     "rechargeHeader": "Doładowanie",
     "addShelfButton": "Dodaj sprężynę",
     "confirmDeletion": "Czy na pewno chcesz usunąć sprężyne?",
     "newShelfHeader": "Dodaj sprężyne",
+    "config":"Konfiguracja",
+    "temperature":"Temperatura",
+    "elevator":"Winda/wybór",
     "editShelfHeader": "Edytuj sprężyne",
     "props": {
       "shelf": "#",
@@ -223,6 +245,11 @@
       "quantity": "Ilość",
       "capacity": "Pojemność"
     }
+  },
+  "errors":{ 
+    "correctData":"Proszę wpisać prawidłowe dane",
+    "invalidInput":"Nieprawidłowo wprowadzone dane",
+    "selectOneOption":"Podaj przynajmniej jedną opcję"
   },
   "locations": {
     "header": "Lokalizacje",
@@ -238,6 +265,10 @@
       "rent": "Czynsz",
       "comment": "Komentarz"
     }
+  },
+  "monitoring":{
+    "highestTransaction":"Najw. transakcji",
+    "lastTransaction":"Ost. transakcja"
   },
   "fullMachine":{
     "machineName":"Nazwa maszyny",

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { NavigationContext } from '../../../context/navigation-context'
 import { LangContext } from '../../../context/lang-context'
+
 import useFetch from '../../../hooks/fetchMSSQL-hook'
 import useForm from '../../../hooks/form-hook'
 import useFilter from '../../../hooks/filter-hook'
@@ -64,7 +65,7 @@ export default () => {
     fetchMssqlApi(`category/${categoryId}`, { method: 'DELETE' }, getCategories)
   }
   useEffect(() => {
-    setHeaderData({ text: 'Kategorie' })
+    setHeaderData({ text: TRL_Pack.navigation.categories })
     getCategories()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

@@ -91,7 +91,7 @@ export default ({ tagData, handleClose, getTags, section }) => {
             Type: section
           })
         })
-      else return ErrorNotification('Podaj przynajmniej jedną opcję')
+      else return ErrorNotification(TRL_Pack.selectOneOption)
     }
 
     Promise.all(promises).then(() => {
@@ -111,7 +111,7 @@ export default ({ tagData, handleClose, getTags, section }) => {
       <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div ref={modalRef} className="modal-content border-0">
           <div className="modal-header bg-light align-items-center">
-            <h6 className="modal-title">Tagi</h6>
+            <h6 className="modal-title">{TRL_Pack.fullMachine.tags}</h6>
             <button onClick={handleClose} className="btn p-1">
               <i className="fas fa-times" style={{ width: 15, height: 15 }} />
             </button>
@@ -119,7 +119,7 @@ export default ({ tagData, handleClose, getTags, section }) => {
           <div className="modal-body p-0">
             <form id="notes-form" onSubmit={handleSubmit} className="p-3">
               {tagData?.others ? (
-                <h6 className="text-center">Inne</h6>
+                <h6 className="text-center">{TRL_Pack.tags.others}</h6>
               ) : (
                   <input
                     className="form-control"

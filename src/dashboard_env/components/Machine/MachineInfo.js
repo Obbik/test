@@ -152,7 +152,7 @@ export default ({ machineData: initialMachineData, updateMachine, machineId, dat
       })
     })
 
-    if (!checkValidation(evt.target.elements)) return ErrorNotification('Invalid inputs.')
+    if (!checkValidation(evt.target.elements)) return ErrorNotification(TRL_Pack.errors.invalidInput)
 
     const { machineName, location, machineType, maintenance } = evt.target.elements
 

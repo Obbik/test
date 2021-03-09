@@ -311,7 +311,7 @@ export default ({ machineId }) => {
             <tr>
               <th>{TRL_Pack.machineRecipies.number}</th>
               <th>{TRL_Pack.machineRecipies.recipies}</th>
-              <th>{TRL_Pack.machineRecipies.price} (zł)</th>
+              <th>{TRL_Pack.machineRecipies.price}</th>
               <th className="text-center">{TRL_Pack.machineRecipies.lastSales}</th>
               <th style={{ width: '1%' }} />
             </tr>
@@ -366,7 +366,6 @@ export default ({ machineId }) => {
               .map((machineRecipe, idx) => (
                 <tr key={idx}>
                   <td>
-                    {console.log(machineRecipe)}
                     <TextInput
                       disabled
                       style={{ maxWidth: 75 }}

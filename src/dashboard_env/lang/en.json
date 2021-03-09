@@ -27,7 +27,8 @@
     "tags":"Tags",
     "config": "Config",
     "supply": "Supply",
-    "logout": "Log out"
+    "logout": "Log out",
+    "productCatalog":"Product catalog"
   },
   "Reports":{
     "reports":"Reports",
@@ -61,6 +62,12 @@
     "showIndexes": "Show indexes",
     "columns": "Columns"
   },
+  "terminals":{
+    "serialNo":"Serial number",
+    "client":"Client",
+    "addedDate":"Date",
+    "addTerminal":"Add terminal"
+  },
   "monitoring": {
     "header": "Monitoring",
     "serialNo": "Serial No",
@@ -70,7 +77,9 @@
     "softVersion": "Software version",
     "transactions": "Transactions",
     "notifications": "Notifications",
-    "info": "Info"
+    "info": "Info",
+    "next":"next",
+    "previous":"previous"
   },
   "notifications": {
     "level": "Level",
@@ -92,8 +101,15 @@
       "serialNo": "Serial No",
       "location": "Location",
       "machineType": "Machine type",
-      "maintenance": "Maintenance"
+      "maintenance": "Maintenance",
+      "terminal":"Terminal",
+      "client":"Client"
     }
+  },
+  "clients":{
+    "name":"Name",
+    "base":"Base",
+    "addClient":"Add Client"
   },
   "tags":{
     "machine":"Machine",
@@ -191,6 +207,16 @@
 
     }
   },
+  "errors":{ 
+    "correctData":"Please enter correct data",
+    "invalidInput":"Invalid input",
+    "selectOneOption":"Select at least one option"
+
+  },
+  "monitoring":{
+    "highestTransaction":"Largest transaction",
+    "lastTransaction":"Recent transactions "
+  },
   "categories": {
     "header": "Categories",
     "addCategoryButton": "Add category",
@@ -247,6 +273,11 @@
       "comment": "Comment"
     }
   },
+  "config":{
+    "config":"Konfiguracja",
+    "temperature":"Temperature",
+    "Elevator":"Elevator/Selection"
+  },
   "machineTypes": {
     "header": "Machine types",
     "addMachineTypeButton": "Add machine type",
@@ -268,12 +299,20 @@
       "maintenanceName": "Maintenance name"
     }
   },
+  "supply":{
+    "fillUp":"Fill everything up",
+    "emptyAll":"Empty everything",
+    "saveVisit":"Save Visit"
+  },
     "shelves": {
-      "configHeader": "Machine config",
+      "configHeader": "Config",
       "rechargeHeader": "Machine recharge",
       "addShelfButton": "Add shelf",
       "confirmDeletion": "Confirm category shelf",
       "newShelfHeader": "New shelf",
+      "config":"Konfiguracja",
+      "temperature":"Temperature",
+      "elevator":"Elevator/Selection",
       "editShelfHeader": "Edit shelf",
       "props": {
         "shelf": "#",

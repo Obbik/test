@@ -21,7 +21,7 @@ export default ({ logout }) => {
 
   const [machineType, setMachineType] = useState(null)
   const [machineProducts, setMachineProducts] = useState([])
-
+  const { TRL_Pack } = useContext(LangContext)
   //TODO CHECK ENDPOINT "Invalid object name 'tblProductEx'."
   const getMachineProducts = () => {
     fetchMssqlApi('machine-products', {}, data => {
@@ -92,7 +92,7 @@ export default ({ logout }) => {
               machineProduct => machineProduct.Quantity === machineProduct.MaxItemCount
             )}
           >
-            Zapełnij wszystko
+            {TRL_Pack.supply.fillUp}
           </button>
         </div>
         <div className="col">
@@ -103,7 +103,7 @@ export default ({ logout }) => {
               machineProduct => machineProduct.Quantity === 0
             )}
           >
-            Opróżnij wszystko
+            {TRL_Pack.supply.emptyAll}
           </button>
         </div>
         {machineType === 'LOCKER' && (

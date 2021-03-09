@@ -171,7 +171,7 @@ const MachineProducts = (props) => {
             }
           }
         } else {
-          NotificationManager.error('Please enter correct data');
+          NotificationManager.error(TRL_Pack.errors.correctData);
         }
       }
     });

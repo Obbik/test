@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { NotificationContext } from '../../context/notification-context'
-
+import { LangContext } from '../../context/lang-context'
 export default ({
   className,
   style,
@@ -16,17 +16,18 @@ export default ({
   max,
   step
 }) => {
+  const { TRL_Pack } = useContext(LangContext)
   const [isValid, setIsValid] = useState(true)
   const { ErrorNotification } = useContext(NotificationContext)
   useEffect(() => {
     setIsValid(() => {
-      if (required && !value) return false && ErrorNotification('Invalid inputs.')
-      if (minLength && value.length < minLength) return false && ErrorNotification('Invalid inputs.')
-      if (maxLength && value.length > maxLength) return false && ErrorNotification('Invalid inputs.')
-      if (type === 'number' && isNaN(value)) return false && ErrorNotification('Invalid inputs.')
-      if (Number(value) < min) return false && ErrorNotification('Invalid inputs.')
+      if (required && !value) return false && ErrorNotification(TRL_Pack.errors.invalidInput)
+      if (minLength && value.length < minLength) return false && ErrorNotification(TRL_Pack.errors.invalidInput)
+      if (maxLength && value.length > maxLength) return false && ErrorNotification(TRL_Pack.errors.invalidInput)
+      if (type === 'number' && isNaN(value)) return false && ErrorNotification(TRL_Pack.errors.invalidInput)
+      if (Number(value) < min) return false && ErrorNotification(TRL_Pack.errors.invalidInput)
       // if (max && Number(value) > max) return false
-      if (Number(value) > max) return false && ErrorNotification('Invalid inputs.')
+      if (Number(value) > max) return false && ErrorNotification(TRL_Pack.errors.invalidInput)
       return true
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps

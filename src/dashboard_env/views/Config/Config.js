@@ -27,7 +27,7 @@ export default () => {
             onClick={changeSection(0)}
             tabIndex="0"
           >
-            Konfiguracja
+            {shelves.config}
           </button>
         </li>
         <li className="nav-item">
@@ -36,7 +36,7 @@ export default () => {
             onClick={changeSection(1)}
             tabIndex="0"
           >
-            Temperatura
+            {shelves.temperature}
           </button>
         </li>
         <li className="nav-item">
@@ -45,7 +45,7 @@ export default () => {
             onClick={changeSection(2)}
             tabIndex="0"
           >
-            Winda/wybory
+            {shelves.elevator}
           </button>
         </li>
       </ul>

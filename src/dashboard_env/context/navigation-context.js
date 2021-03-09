@@ -112,7 +112,7 @@ export default ({ children }) => {
     })
 
   }
-  navlinks.push({ text: 'Wyloguj się', path: '/logout', icon: 'fas fa-sign-out-alt' })
+  navlinks.push({ text: TRL_Pack.navigation.logout, path: '/logout', icon: 'fas fa-sign-out-alt' })
 
   useEffect(() => {
     axios

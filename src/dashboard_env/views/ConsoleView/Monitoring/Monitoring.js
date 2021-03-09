@@ -24,7 +24,7 @@ export default () => {
   const { searchedText, updateSearchedText } = useFilter()
   const [sortType, setSortType] = useState('1')
   const updateSortType = id => setSortType(id)
-  const sortingOptions = ['Najw. transakcji', 'Ost. transakcja']
+  const sortingOptions = [TRL_Pack.monitoring.highestTransaction, TRL_Pack.monitoring.lastTransaction]
 
   const [machines, setMachines] = useState(null)
   const machineIndex = useRef(null)
@@ -124,13 +124,13 @@ export default () => {
             className="btn btn-link text-decoration-none"
           >
             <i className="fas fa-chevron-left" />
-            <span className="d-none d-md-inline ml-2">Poprzednia</span>
+            <span className="d-none d-md-inline ml-2">{TRL_Pack.monitoring.previous}</span>
           </button>
           <button
             onClick={handleSelectMachine('next')}
             className="btn btn-link text-decoration-none"
           >
-            <span className="d-none d-md-inline mr-2">Następna</span>
+            <span className="d-none d-md-inline mr-2">{TRL_Pack.monitoring.next}</span>
             <i className="fas fa-chevron-right" />
           </button>
         </div>

@@ -46,7 +46,7 @@ export default () => {
           categories.find(category => category.CategoryId === categoryId) &&
           categories.find(category => category.CategoryId === categoryId).Name
       })
-    else setHeaderData({ text: 'Katalog Produktów' })
+    else setHeaderData({ text: TRL_Pack.navigation.productCatalog })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, categories])
 
