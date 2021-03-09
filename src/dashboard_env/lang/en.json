@@ -252,7 +252,7 @@
   },
   "machineRecipies":{
     "number":"Nr",
-    "recipies":"recipes",
+    "recipies":"Product",
     "price":"Price (PLN)",
     "lastSales":"Last sale",
     "quantity":"Quantity",

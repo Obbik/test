@@ -113,7 +113,7 @@ export default () => {
     fetchMssqlApi(`product/${ean}`, { method: 'DELETE' }, getProducts)
   }
   useEffect(() => {
-    setHeaderData({ text: TRL_Pack.navigation.products })
+    setHeaderData({ text: 'Produkty' })
     getCategories()
     getProducts()
     // eslint-disable-next-line react-hooks/exhaustive-deps

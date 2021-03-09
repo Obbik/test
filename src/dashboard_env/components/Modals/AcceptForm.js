@@ -2,10 +2,12 @@ import React, { useState, useEffect, useContext } from 'react'
 
 import FormSkel from './FormSkel'
 
-export default ({ deleteProduct, handleClose, ean, IsSubscribed, unsubscribeProduct, categoryId, deleteCategory }) => {
+export default ({ deleteProduct, handleClose, ean, IsSubscribed, unsubscribeProduct, categoryId, deleteCategory, deleteLabel }) => {
     const HandleDelete = evt => {
         evt.preventDefault()
-        !categoryId ? (!IsSubscribed ? deleteProduct(ean) : unsubscribeProduct(ean)) : (deleteCategory(categoryId))
+        if (!deleteLabel)
+            !categoryId ? (!IsSubscribed ? deleteProduct(ean) : unsubscribeProduct(ean)) : (deleteCategory(categoryId))
+        else deleteLabel()
         handleClose()
     }
     return (

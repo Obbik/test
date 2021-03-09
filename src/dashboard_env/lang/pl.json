@@ -286,7 +286,7 @@
   },
   "machineRecipies":{
     "number":"Nr",
-    "recipies":"Receptura",
+    "recipies":"Produkt",
     "price":"Cena (zł)",
     "lastSales":"Ostatnia Sprzedaż",
     "quantity":"Ilość",

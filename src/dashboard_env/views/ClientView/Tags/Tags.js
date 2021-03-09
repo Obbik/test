@@ -5,7 +5,7 @@ import useFetch from '../../../hooks/fetchMSSQL-hook'
 import useForm from '../../../hooks/form-hook'
 import TagForm from '../../../components/Modals/TagForm'
 import { LangContext } from '../../../context/lang-context'
-
+import AcceptForm from '../../../components/Modals/AcceptForm'
 export default () => {
   const { fetchMssqlApi } = useFetch()
   const { TRL_Pack } = useContext(LangContext)
@@ -14,7 +14,7 @@ export default () => {
 
   const [section, setSection] = useState('machine')
   const changeSection = section => () => setSection(section)
-
+  const [tagLabel, setTagLabel] = useState()
   const [tags, setTags] = useState({
     machine: [],
     product: []
@@ -36,6 +36,11 @@ export default () => {
 
   const filteredTags = tags[section].filter(tag => compareText(tag.label))
 
+  const handleModal = (tagLabel) => {
+    setTagLabel(tagLabel)
+    // deleteLabel(tag.label)
+    openForm("acceptModal")()
+  }
   useEffect(() => {
     getTags()
     setHeaderData({ text: 'Tagi' })
@@ -95,7 +100,7 @@ export default () => {
                 <button
                   type="button"
                   className="btn btn-light position-absolute"
-                  onClick={deleteLabel(tag.label)}
+                  onClick={() => handleModal(tag.label)}
                   style={{
                     top: '50%',
                     right: 22,
@@ -121,7 +126,12 @@ export default () => {
             </div>
           </div>
         )}
-      {form && (
+      {
+        form === "acceptModal" && form && (
+          <AcceptForm handleClose={closeForm} deleteLabel={deleteLabel(tagLabel)} />
+        )
+      }
+      {form !== "acceptModal" && form && (
         <TagForm
           tagData={
             form === 'others'

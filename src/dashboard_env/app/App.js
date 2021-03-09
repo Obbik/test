@@ -88,7 +88,7 @@ export default () => {
           authRoutes.push({ path: '/', component: Monitoring })
           break;
         case "VD_MACHINES":
-          authRoutes.push({ path: '/machines', component: MachinesConsole },)
+          authRoutes.push({ path: '/machines', component: MachinesConsole }, { path: '/machine/:machineId', component: FullMachine })
           break;
         case "VD_TERMINALS":
           authRoutes.push({ path: '/terminals', component: Terminals },)
