@@ -8,7 +8,7 @@ import { API_URL } from '../../config/config';
 
 import TextInput from '../FormElements/TextInput';
 import DatalistInput from '../FormElements/DatalistInput';
-
+import { NotificationManager } from 'react-notifications';
 let tableRowId = 0;
 
 const MachineProducts = (props) => {
@@ -112,7 +112,11 @@ const MachineProducts = (props) => {
       if (RequestMethod) {
         productId = getProductId(Name); // Get product id
         // Validate inputs
-        if (MachineFeederNo && Name && PriceBrutto && PriceBrutto >= 0 && Quantity && parseInt(Quantity) >= 0 && MaxItemCount && parseInt(MaxItemCount) >= 0 && parseInt(MaxItemCount) >= parseInt(Quantity)) {
+        console.log(MachineFeederNo === true && Name === true && PriceBrutto === true && PriceBrutto >= 0 && Quantity && parseInt(Quantity) >= 0 && MaxItemCount && parseInt(MaxItemCount) >= 0 && parseInt(MaxItemCount) >= parseInt(Quantity))
+        // if (parseInt(MaxItemCount) < parseInt(Quantity)) {
+        //   NotificationManager.error('Please select higher quantity than Capacity value');
+        // }
+        if (MachineFeederNo === true && Name === true && PriceBrutto === true && PriceBrutto >= 0 && Quantity && parseInt(Quantity) >= 0 && MaxItemCount && parseInt(MaxItemCount) >= 0 && parseInt(MaxItemCount) >= parseInt(Quantity)) {
           // HTTP requests here
           const data = {
             MachineId: props.machineId,
@@ -167,12 +171,11 @@ const MachineProducts = (props) => {
             }
           }
         } else {
-          ErrorNotification('Please enter correct data');
+          NotificationManager.error('Please enter correct data');
         }
       }
     });
   }
-
   const cancelSubmit = () => {
     setMachineProducts(initialMachineProducts);
   }
@@ -185,6 +188,7 @@ const MachineProducts = (props) => {
       PriceBrutto: '',
       Quantity: '',
       MaxItemCount: '',
+      notDisabled: true,
       RequestMethod: 'POST'
     });
 
@@ -245,19 +249,19 @@ const MachineProducts = (props) => {
         </button>
         {initialMachineProducts.length > 0 && (
           <Fragment>
-            <button
+            {/* <button
               className="float-right btn btn-sm btn-link text-decoration-none mr-2"
               onClick={handleDownload}
             >
               <i className="fas fa-file-download mr-2" />
               {TRL_Pack.fullMachine.download}
-            </button>
-            <button
+            </button> */}
+            {/* <button
               className="float-right btn btn-sm btn-link text-decoration-none mr-2"
               onClick={handleResetLastSales}>
               <i className="fas fa-eraser mr-2" />
               {TRL_Pack.fullMachine.salesReset}
-            </button>
+            </button> */}
           </Fragment>
         )}
       </h5>
@@ -288,6 +292,7 @@ const MachineProducts = (props) => {
               <tr key={id}>
                 <td>
                   <TextInput
+                    disabled={machineProducts[id].notDisabled ? null : true}
                     style={{ maxWidth: 75 }}
                     name="MachineFeederNo"
                     value={machineProduct.MachineFeederNo}

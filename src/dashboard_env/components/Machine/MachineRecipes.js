@@ -6,6 +6,7 @@ import TextInput from '../FormElements/TextInput'
 import { API_URL } from '../../config/config'
 import { Prompt } from 'react-router'
 import { LangContext } from '../../context/lang-context'
+import { NotificationManager } from 'react-notifications';
 
 export default ({ machineId }) => {
   const { fetchMssqlApi } = useFetch()
@@ -74,7 +75,8 @@ export default ({ machineId }) => {
       {
         added: true,
         SlotNo: '',
-        PriceBrutto: 3,
+        PriceBrutto: "",
+        notDisabled: true,
         RecipeName: '',
         id: slotsCounter.current++
       }
@@ -227,7 +229,7 @@ export default ({ machineId }) => {
         return true
       })
     ) {
-      ErrorNotification('Invalid')
+      NotificationManager.error('Invalid data')
       return
     }
 
@@ -364,7 +366,9 @@ export default ({ machineId }) => {
               .map((machineRecipe, idx) => (
                 <tr key={idx}>
                   <td>
+                    {console.log(machineRecipe)}
                     <TextInput
+                      disabled
                       style={{ maxWidth: 75 }}
                       name="SlotNo"
                       value={machineRecipe.MachineFeederNo}

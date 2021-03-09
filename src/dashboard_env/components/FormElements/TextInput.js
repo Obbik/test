@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { NotificationContext } from '../../context/notification-context'
 
 export default ({
   className,
@@ -7,6 +8,7 @@ export default ({
   type,
   value,
   handleChange,
+  disabled,
   required,
   minLength,
   maxLength,
@@ -15,16 +17,16 @@ export default ({
   step
 }) => {
   const [isValid, setIsValid] = useState(true)
-
+  const { ErrorNotification } = useContext(NotificationContext)
   useEffect(() => {
     setIsValid(() => {
-      if (required && !value) return false
-      if (minLength && value.length < minLength) return false
-      if (maxLength && value.length > maxLength) return false
-      if (type === 'number' && isNaN(value)) return false
-      if (Number(value) < min) return false
-      if (max && Number(value) > max) return false
-      if (Number(value) > max) return false
+      if (required && !value) return false && ErrorNotification('Invalid inputs.')
+      if (minLength && value.length < minLength) return false && ErrorNotification('Invalid inputs.')
+      if (maxLength && value.length > maxLength) return false && ErrorNotification('Invalid inputs.')
+      if (type === 'number' && isNaN(value)) return false && ErrorNotification('Invalid inputs.')
+      if (Number(value) < min) return false && ErrorNotification('Invalid inputs.')
+      // if (max && Number(value) > max) return false
+      if (Number(value) > max) return false && ErrorNotification('Invalid inputs.')
       return true
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -32,6 +34,7 @@ export default ({
 
   return (
     <input
+      disabled={disabled ? true : null}
       className={`form-control form-control-sm ${className} ${!isValid ? 'invalid-input' : ''
         }`}
       {...{ name, type, value, style }}
