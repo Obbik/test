@@ -250,6 +250,12 @@
     "download":"Download",
     "salesReset":"Sales Reset"
   },
+  "modalDisplays":{
+    "deleteTag":"Confirm deletion of tag",
+    "deleteCategory":"Confirm deleting category",
+    "unsubProduct":"Confirm product unsubscription",
+    "delEan":"accepting will remove the product about Eana"
+  },
   "machineRecipies":{
     "number":"Nr",
     "recipies":"Product",

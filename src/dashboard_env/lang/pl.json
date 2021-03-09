@@ -292,6 +292,12 @@
     "quantity":"Ilość",
     "capacity":"Pojemność"
   },
+  "modalDisplays":{
+    "deleteTag":"Potwierdź usunięcie tagu",
+    "deleteCategory":"Potwierdź usunięcie kategori",
+    "unsubProduct":"Potwierdz odsubskrybowanie produktu",
+    "delEan":"zaakceptowanie spowoduje usuniecie produktu o Eanie"
+  },
   "machineTypes": {
     "header": "Typy maszyn",
     "addMachineTypeButton": "Dodaj typ maszyn",
