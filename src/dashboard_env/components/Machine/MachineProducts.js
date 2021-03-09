@@ -112,11 +112,12 @@ const MachineProducts = (props) => {
       if (RequestMethod) {
         productId = getProductId(Name); // Get product id
         // Validate inputs
-        console.log(MachineFeederNo === true && Name === true && PriceBrutto === true && PriceBrutto >= 0 && Quantity && parseInt(Quantity) >= 0 && MaxItemCount && parseInt(MaxItemCount) >= 0 && parseInt(MaxItemCount) >= parseInt(Quantity))
+
         // if (parseInt(MaxItemCount) < parseInt(Quantity)) {
         //   NotificationManager.error('Please select higher quantity than Capacity value');
         // }
-        if (MachineFeederNo === true && Name === true && PriceBrutto === true && PriceBrutto >= 0 && Quantity && parseInt(Quantity) >= 0 && MaxItemCount && parseInt(MaxItemCount) >= 0 && parseInt(MaxItemCount) >= parseInt(Quantity)) {
+
+        if (MachineFeederNo && Name && PriceBrutto && PriceBrutto >= 0 && Quantity && parseInt(Quantity) >= 0 && MaxItemCount && parseInt(MaxItemCount) >= 0 && parseInt(MaxItemCount) >= parseInt(Quantity)) {
           // HTTP requests here
           const data = {
             MachineId: props.machineId,
@@ -187,7 +188,7 @@ const MachineProducts = (props) => {
       Name: '',
       PriceBrutto: '',
       Quantity: '',
-      MaxItemCount: '',
+      MaxItemCount: '20',
       notDisabled: true,
       RequestMethod: 'POST'
     });

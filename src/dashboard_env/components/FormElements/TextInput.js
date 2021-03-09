@@ -21,13 +21,13 @@ export default ({
   const { ErrorNotification } = useContext(NotificationContext)
   useEffect(() => {
     setIsValid(() => {
-      if (required && !value) return false && ErrorNotification(TRL_Pack.errors.invalidInput)
-      if (minLength && value.length < minLength) return false && ErrorNotification(TRL_Pack.errors.invalidInput)
-      if (maxLength && value.length > maxLength) return false && ErrorNotification(TRL_Pack.errors.invalidInput)
-      if (type === 'number' && isNaN(value)) return false && ErrorNotification(TRL_Pack.errors.invalidInput)
-      if (Number(value) < min) return false && ErrorNotification(TRL_Pack.errors.invalidInput)
-      // if (max && Number(value) > max) return false
-      if (Number(value) > max) return false && ErrorNotification(TRL_Pack.errors.invalidInput)
+      if (required && !value) return false
+      if (minLength && value.length < minLength) return false
+      if (maxLength && value.length > maxLength) return false
+      if (type === 'number' && isNaN(value)) return false
+      if (Number(value) < min) return false
+      if (max && Number(value) > max) return true
+      if (Number(value) > max) return false
       return true
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
