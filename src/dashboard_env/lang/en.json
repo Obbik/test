@@ -251,6 +251,7 @@
     "salesReset":"Sales Reset"
   },
   "modalDisplays":{
+    "del":"Delete product",
     "deleteTag":"Confirm deletion of tag",
     "deleteCategory":"Confirm deleting category",
     "unsubProduct":"Confirm product unsubscription",

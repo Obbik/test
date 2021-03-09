@@ -293,6 +293,7 @@
     "capacity":"Pojemność"
   },
   "modalDisplays":{
+    "del":"Usuń Produkt",
     "deleteTag":"Potwierdź usunięcie tagu",
     "deleteCategory":"Potwierdź usunięcie kategori",
     "unsubProduct":"Potwierdz odsubskrybowanie produktu",

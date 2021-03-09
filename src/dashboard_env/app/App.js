@@ -85,10 +85,10 @@ export default () => {
     permission.forEach((permission) => {
       switch (permission.Name) {
         case "VD_MONITORING":
-          authRoutes.push({ path: '/', component: Monitoring })
+          authRoutes.push({ path: '/machines', component: MachinesConsole }, { path: '/machine/:machineId', component: FullMachineConsole })
           break;
         case "VD_MACHINES":
-          authRoutes.push({ path: '/machines', component: MachinesConsole }, { path: '/machine/:machineId', component: FullMachineConsole })
+          authRoutes.push({ path: '/', component: Monitoring })
           break;
         case "VD_TERMINALS":
           authRoutes.push({ path: '/terminals', component: Terminals },)
@@ -157,13 +157,12 @@ export default () => {
   }, [])
   return (
     <LangProvider>
-      <ErrorProvider>
-        <NotificationProvider>
-          <LoaderProvider>
+      <LoaderProvider>
+        <ErrorProvider>
+          <NotificationProvider>
             <div className="d-flex min-vh-100 bg-light">
               {isAuth ? (
                 <NavigationProvider>
-
                   <SearchbarProvider>
                     {authRoutes.length > 0 ? <Switch>
 
@@ -192,9 +191,9 @@ export default () => {
                 )}
               <NotificationContainer />
             </div>
-          </LoaderProvider>
-        </NotificationProvider>
-      </ErrorProvider>
+          </NotificationProvider>
+        </ErrorProvider>
+      </LoaderProvider>
     </LangProvider>
   )
 }

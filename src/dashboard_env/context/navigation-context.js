@@ -138,7 +138,7 @@ export default ({ children }) => {
           <ErrorWrapper />
         ) : (
             <div
-              className={`d-flex flex-column flex-grow-1 ${loader ? 'position-relative' : ''
+              className={`d-flex flex-column flex-grow-1 ${loader ? 'position-static' : ''
                 }`}
             >
               {sectionModal}

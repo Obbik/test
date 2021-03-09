@@ -27,7 +27,7 @@ export default ({ deleteProduct, handleClose, ean, IsSubscribed, unsubscribeProd
     }
     return (
         < FormSkel
-            headerText={"Usuń produkt"}
+            headerText={TRL_Pack.modalDisplays.del}
             handleClose={handleClose}
             acceptForm="true"
         >
