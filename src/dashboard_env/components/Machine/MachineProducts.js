@@ -222,8 +222,8 @@ const MachineProducts = (props) => {
 
   const handleDownload = () => {
     fetchMssqlApi(
-      `/machine-products-file?machineId=${props.machineId}`,
-      { method: 'POST', hideNotification: true },
+      `machine-products-file?machineId=${props.machineId}`,
+      { method: 'GET', hideNotification: true },
       path => {
         window.open(`${API_URL}/${path}`, '_blank')
       }
