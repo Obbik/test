@@ -404,8 +404,8 @@ export default ({ machineId }) => {
                       {machineRecipe.toDelete ? (
                         <i className="fas fa-trash-restore" />
                       ) : (
-                          <i className="fas fa-trash" />
-                        )}
+                        <i className="fas fa-trash" />
+                      )}
                     </button>
                   </td>
                 </tr>
@@ -431,10 +431,10 @@ export default ({ machineId }) => {
       </div>
     </div >
   ) : (
-      <div className="text-center py-2">
-        <button className="btn btn-link text-decoration-none" onClick={handleAddRecipe}>
-          <i className="fas fa-plus mr-2" /> Dodaj recepture
+    <div className="text-center py-2">
+      <button className="btn btn-link text-decoration-none" onClick={handleAddRecipe}>
+        <i className="fas fa-plus mr-2" /> Dodaj recepture
       </button>
-      </div>
-    )
+    </div>
+  )
 }

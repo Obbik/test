@@ -41,10 +41,10 @@ export default () => {
           {machineData.MaintenanceType === 'SNACK' ? (
             <MachineProducts machineId={machineId} />
           ) : (
-              machineData.MaintenanceType === 'COFFEE' && (
-                <MachineRecipes machineId={machineId} />
-              )
-            )}
+            machineData.MaintenanceType === 'COFFEE' && (
+              <MachineRecipes machineId={machineId} />
+            )
+          )}
           {/* <div className="row">
             <MachineReports serialNo={serialNo} />
           </div> */}
