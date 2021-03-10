@@ -83,6 +83,7 @@ export default () => {
                         <tr>
                           <th>{TRL_Pack.clients.name}</th>
                           <th>{TRL_Pack.clients.base}</th>
+                          <th>{TRL_Pack.machines.properties.delete}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -97,6 +98,11 @@ export default () => {
                               </button>
                             </td>
                             <td>{client.Abbreviation}</td>
+                            <td>
+                              <button className="btn btn-link link-icon" onClick={() => 0}>
+                                <i className="fas fa-trash text-danger" />
+                              </button>
+                            </td>
                           </tr>
                         ))}
                       </tbody>

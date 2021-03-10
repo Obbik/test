@@ -87,7 +87,8 @@
       "machineType": "Typ maszyny",
       "maintenance": "Tryb obsługi",
       "terminal":"Terminal",
-      "client":"Klient"
+      "client":"Klient",
+      "delete":"Usuń"
     }
   },
   "clients":{

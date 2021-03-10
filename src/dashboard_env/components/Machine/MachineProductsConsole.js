@@ -20,19 +20,18 @@ export default () => {
   const toggleView = () => setCurrentView(prev => (prev === 'local' ? 'global' : 'local'))
 
   const getMachineProducts = () => {
-    fetchMssqlApi(`machine/${machineId}/products`, {}, machineProducts => {
+    fetchMssqlApi(`machine/${machineId}`, {}, machineProducts => {
       setMachineProducts(machineProducts)
-      if (machineProducts.local) setCurrentView('local')
-      else if (machineProducts.global) setCurrentView('global')
+      // if (machineProducts.local) setCurrentView('local')
+      // else if (machineProducts.global) setCurrentView('global')
     })
   }
-
+  console.log(machineProducts)
   useEffect(() => {
     getMachineProducts()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if ((!machineProducts.local && !machineProducts.global) || !currentView) return <></>
 
   return (
     <div className="card">
@@ -40,24 +39,25 @@ export default () => {
         <h5 className="mb-0 flex-grow-1">
           {TRL_Pack.fullMachine.listOfProduct}
           <span className="ml-2 badge badge-info">
-            {console.log(machineProducts, currentView, machineProducts[currentView])}
-            {machineProducts[currentView].feeders.length}
+            test
+            {/* {machineProducts[currentView].feeders.length} */}
           </span>
         </h5>
         <span className="font-weight-bolder mb-0 mr-2">
-          {currentView === 'local' ? 'Lokalnie' : 'Serwer'}
-          {machineProducts[currentView].date && ` | ${machineProducts[currentView].date}`}
+          date
+          {/* {currentView === 'local' ? 'Lokalnie' : 'Serwer'} */}
+          {/* {machineProducts[currentView].date && ` | ${machineProducts[currentView].date}`} */}
         </span>
-        {machineProducts.local && machineProducts.global && (
+        {machineProducts && (
           <button
             className="btn btn-sm btn-link text-decoration-none"
             onClick={toggleView}
           >
-            {currentView === 'local' ? (
-              <i className="fas fa-database icon-large" />
-            ) : (
-                <i className="fas fa-server icon-large" />
-              )}
+
+            <i className="fas fa-database icon-large" />
+test
+            <i className="fas fa-server icon-large" />
+
           </button>
         )}
       </div>
@@ -71,9 +71,11 @@ export default () => {
               <th>Stan</th>
             </tr>
           </thead>
+
           <tbody>
-            {machineProducts[currentView].feeders
-              .sort((a, b) => a.MachineFeederNo - b.MachineFeederNo)
+            {console.log(machineProducts)}
+            {/* {machineProducts
+              // .sort((a, b) => a.MachineFeederNo - b.MachineFeederNo)
               .map((machineProduct, idx) => (
                 <tr key={idx}>
                   <td>{machineProduct.MachineFeederNo}</td>
@@ -92,7 +94,7 @@ export default () => {
                     {machineProduct.Quantity} / {machineProduct.MaxItemCount}
                   </td>
                 </tr>
-              ))}
+              ))} */}
           </tbody>
         </table>
       </div>

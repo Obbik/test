@@ -83,7 +83,7 @@ export default ({ form, productData, getProducts, handleClose }) => {
     evt.preventDefault()
 
     const { ean, name, image, description } = evt.target.elements
-
+    console.log("test")
     const formData = new FormData()
     formData.append('Ean', ean.value)
     formData.append('Name', name.value)

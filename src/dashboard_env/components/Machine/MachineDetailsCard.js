@@ -5,7 +5,6 @@ export default ({ machineData, getMachine }) => {
   const [machineForm, setMachineForm] = useState(null)
   const openMachineForm = () => setMachineForm(true)
   const closeMachineForm = () => setMachineForm(null)
-
   return (
     <>
       <div className="card h-100">

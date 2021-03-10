@@ -180,15 +180,14 @@ export default () => {
                     </Switch> :
                       null
                     }
-
                   </SearchbarProvider>
                 </NavigationProvider>
               ) : (
-                  <Switch>
-                    <Route exact path="/login" render={() => (<Login login={login} setPermission={setPermission} />)} />
-                    <Redirect to="/login" />
-                  </Switch>
-                )}
+                <Switch>
+                  <Route exact path="/login" render={() => (<Login login={login} setPermission={setPermission} />)} />
+                  <Redirect to="/login" />
+                </Switch>
+              )}
               <NotificationContainer />
             </div>
           </NotificationProvider>

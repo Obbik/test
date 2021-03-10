@@ -103,7 +103,8 @@
       "machineType": "Machine type",
       "maintenance": "Maintenance",
       "terminal":"Terminal",
-      "client":"Client"
+      "client":"Client",
+      "delete":"Delete"
     }
   },
   "clients":{

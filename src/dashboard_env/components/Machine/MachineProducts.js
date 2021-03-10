@@ -222,7 +222,7 @@ const MachineProducts = (props) => {
 
   const handleDownload = () => {
     fetchMssqlApi(
-      `report/machine-products/${props.machineId}`,
+      `/machine-products-file?machineId=${props.machineId}`,
       { method: 'POST', hideNotification: true },
       path => {
         window.open(`${API_URL}/${path}`, '_blank')
@@ -234,7 +234,7 @@ const MachineProducts = (props) => {
     const confirmReset = window.confirm('Potwierdź reset sprzedaży');
 
     if (confirmReset)
-      fetchMssqlApi(`machine/${props.machineId}/reset-sales`, { method: 'POST' }, () => {
+      fetchMssqlApi(`machine-product-sales/${props.machineId}`, { method: 'PUT' }, () => {
         getMachineProducts();
       });
   }
@@ -250,19 +250,19 @@ const MachineProducts = (props) => {
         </button>
         {initialMachineProducts.length > 0 && (
           <Fragment>
-            {/* <button
+            <button
               className="float-right btn btn-sm btn-link text-decoration-none mr-2"
               onClick={handleDownload}
             >
               <i className="fas fa-file-download mr-2" />
               {TRL_Pack.fullMachine.download}
-            </button> */}
-            {/* <button
+            </button>
+            <button
               className="float-right btn btn-sm btn-link text-decoration-none mr-2"
               onClick={handleResetLastSales}>
               <i className="fas fa-eraser mr-2" />
               {TRL_Pack.fullMachine.salesReset}
-            </button> */}
+            </button>
           </Fragment>
         )}
       </h5>
@@ -355,13 +355,13 @@ const MachineProducts = (props) => {
                     {machineProduct.RequestMethod === 'DELETE' ? (
                       <i className="fas fa-trash-restore" />
                     ) : (
-                        machineProduct.RequestMethod === 'POST' ? (
-                          <i className="fas fa-times" />
-                        ) : (
-                            <i className="fas fa-trash" />
-                          )
+                      machineProduct.RequestMethod === 'POST' ? (
+                        <i className="fas fa-times" />
+                      ) : (
+                        <i className="fas fa-trash" />
+                      )
 
-                      )}
+                    )}
                   </button>
                 </td>
               </tr>

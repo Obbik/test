@@ -18,7 +18,7 @@ export default () => {
   const { TRL_Pack } = useContext(LangContext)
 
   const [machineData, setMachineData] = useState({})
-
+  // console.log(machineData)
   const getMachine = () => {
     fetchMssqlApi(`machine/${machineId}`, {}, machineData =>
       setMachineData({ ...machineData })
@@ -42,7 +42,7 @@ export default () => {
           <MachineNotesCard />
         </div>
       </div>
-      <MachineProducts />
+      {/* <MachineProducts /> */}
     </>
   )
 }
