@@ -7,6 +7,7 @@ import { API_URL } from '../../config/config'
 import { Prompt } from 'react-router'
 import { LangContext } from '../../context/lang-context'
 import { NotificationManager } from 'react-notifications';
+import axios from 'axios'
 
 export default ({ machineId }) => {
   const { fetchMssqlApi } = useFetch()
@@ -244,18 +245,29 @@ export default ({ machineId }) => {
   const discardChanges = () => setMachineRecipesData(initialMachineRecipes.current)
 
   const handleDownload = () => {
-    fetchMssqlApi(
-      `/machine-recipes/${machineId}`,
-      { method: 'POST', hideNotification: true },
-      path => window.open(`${API_URL}/${path}`, '_blank')
-    )
+    const token = localStorage.getItem('token')
+    axios({
+      url: `${API_URL}/api/machine-products-file?machineId=${machineId}`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      responseType: 'blob', // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'file.csv');
+      document.body.appendChild(link);
+      link.click();
+    });
   }
 
   const handleResetLastSales = () => {
     const confirmReset = window.confirm('Potwierdź reset sprzedaży')
 
     if (confirmReset)
-      fetchMssqlApi(`/machine/${machineId}/reset-sales`, { method: 'POST' }, () => {
+      fetchMssqlApi(`machine-product-sales/${machineId}`, { method: 'PUT' }, () => {
         initialMachineRecipes.current = initialMachineRecipes.current.map(
           machineRecipe => ({ ...machineRecipe, LastSalesTotal: 0 })
         )

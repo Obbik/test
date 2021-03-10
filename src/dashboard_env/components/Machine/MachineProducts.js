@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect, useContext } from 'react';
 import { Prompt } from 'react-router';
 import { LangContext } from '../../context/lang-context'
-
+import axios from "axios"
 import useFetch from '../../hooks/fetchMSSQL-hook';
 import { NotificationContext } from '../../context/notification-context';
 import { API_URL } from '../../config/config';
@@ -221,18 +221,26 @@ const MachineProducts = (props) => {
   }
 
   const handleDownload = () => {
-    fetchMssqlApi(
-      `machine-products-file?machineId=${props.machineId}`,
-      { method: 'GET', hideNotification: true },
-      path => {
-        window.open(`${API_URL}/${path}`, '_blank')
-      }
-    )
+    const token = localStorage.getItem('token')
+    axios({
+      url: `${API_URL}/api/machine-products-file?machineId=${props.machineId}`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      responseType: 'blob', // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'file.csv');
+      document.body.appendChild(link);
+      link.click();
+    });
   }
 
   const handleResetLastSales = () => {
     const confirmReset = window.confirm('Potwierdź reset sprzedaży');
-
     if (confirmReset)
       fetchMssqlApi(`machine-product-sales/${props.machineId}`, { method: 'PUT' }, () => {
         getMachineProducts();
