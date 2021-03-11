@@ -1,9 +1,10 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import useFetch from '../../hooks/fetchMSSQL-hook';
-
+import { LangContext } from '../../context/lang-context'
 // TO DO: merge/unmerge user instructions
 
 const TestFeeder = () => {
+    const { TRL_Pack } = useContext(LangContext)
     const { fetchMssqlApi } = useFetch();
 
     const [machineFeederNo, setMachineFeederNo] = useState('');
@@ -29,18 +30,18 @@ const TestFeeder = () => {
         <Fragment>
             <div className="row">
                 <div className="col-12 mb-2">
-                    <h5>Ustawienia wyboru</h5>
+                    <h5>{TRL_Pack.lift.choiceSettings}</h5>
                 </div>
                 <div className="col-12">
                     <form onSubmit={handleSubmit} className="form-inline">
                         <div className="form-group mr-3">
-                            <label htmlFor="MachineFeederNo" className="sr-only">Numer wyboru</label>
+                            <label htmlFor="MachineFeederNo" className="sr-only">{TRL_Pack.lift.setNumberOfChoice}</label>
                             <input
                                 type="number"
                                 className="form-control"
                                 id="MachineFeederNo"
                                 name="MachineFeederNo"
-                                placeholder="Podaj nr wyboru"
+                                placeholder={TRL_Pack.lift.setNumberOfChoice}
                                 min={0}
                                 onChange={e => setMachineFeederNo(e.target.value)}
                                 onKeyUp={e => setMachineFeederNo(e.target.value)}
@@ -59,7 +60,7 @@ const TestFeeder = () => {
                                 checked={selectedRadio === "Vend"}
                             />
                             <label className="form-check-label" htmlFor="VendRadio">
-                                Wydaj
+                                {TRL_Pack.lift.spend}
                             </label>
                         </div>
                         <div className="form-check-inline">
@@ -73,7 +74,7 @@ const TestFeeder = () => {
                                 checked={selectedRadio === "Merge"}
                             />
                             <label className="form-check-label" htmlFor="MergeRadio">
-                                Połącz
+                                {TRL_Pack.lift.merge}
                             </label>
                         </div>
                         <div className="form-check-inline">
@@ -87,10 +88,10 @@ const TestFeeder = () => {
                                 checked={selectedRadio === "Unmerge"}
                             />
                             <label className="form-check-label" htmlFor="UnmergeRadio">
-                                Rozłącz
+                                {TRL_Pack.lift.unmerge}
                             </label>
                         </div>
-                        <button type="submit" className="btn btn-secondary mr-2">Wyślij</button>
+                        <button type="submit" className="btn btn-secondary mr-2">{TRL_Pack.lift.send}</button>
                     </form>
                 </div>
             </div>

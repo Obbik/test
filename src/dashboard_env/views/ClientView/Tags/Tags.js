@@ -21,7 +21,7 @@ export default () => {
   })
 
   const deleteLabel = label => () => {
-    if (window.confirm('Czy na pewno chcesz usunąć sekcje?'))
+    if (window.confirm(TRL_Pack.tags.deleteTag))
       fetchMssqlApi('tags', { method: 'DELETE', data: { Label: label } }, getTags)
   }
 
@@ -115,17 +115,17 @@ export default () => {
           </div>
         </>
       ) : (
-          <div className="row">
-            <div className="col-12 col-md-6 col-lg-4 mb-2">
-              <button
-                className="btn list-group-item list-group-item-action text-center"
-                onClick={openForm('new')}
-              >
-                <i className="fas fa-plus" />
-              </button>
-            </div>
+        <div className="row">
+          <div className="col-12 col-md-6 col-lg-4 mb-2">
+            <button
+              className="btn list-group-item list-group-item-action text-center"
+              onClick={openForm('new')}
+            >
+              <i className="fas fa-plus" />
+            </button>
           </div>
-        )}
+        </div>
+      )}
       {
         form === "acceptModal" && form && (
           <AcceptForm handleClose={closeForm} deleteLabel={deleteLabel(tagLabel)} />

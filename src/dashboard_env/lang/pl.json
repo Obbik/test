@@ -1,5 +1,6 @@
 {
   "buttons": {
+    
     "save": "Zapisz",
     "return": "Wróć",
     "cancel":"Anuluj",
@@ -97,12 +98,14 @@
     "addClient":"Dodaj klienta"
   },
   "terminals":{
+    "terminalDelete":"Potwierdź usunięcie terminala",
     "serialNo":"Nr seryjny",
     "client":"Klient",
     "addedDate":"Data dodania",
     "addTerminal":"Dodaj Terminal"
   },
   "machine": {
+    "addMachine":"Dodaj maszyne",
     "header": "Podgląd maszyny",
     "settings": {
       "header": "Ustawienia"
@@ -158,6 +161,7 @@
     "maintenances": "Tryby obsługi"
   },
   "products": {
+    "addProduct":"Dodaj produkt",
     "defaultHeader": "Produkty",
     "addProductButton": "Dodaj produkt",
     "productCategoryHeader": "Kategorie produktu",
@@ -182,6 +186,10 @@
     "header": "Produkty",
     "productCategoriesHeader": "Kategorie produktu",
     "confirmDeletionText": "Czy na pewno chcesz usunąć produkt?",
+    "confirmDeleteNote":"Potwierdź usunięcie notatki",
+    "noNotes":"Brak notatek",
+    "notes":"Notatki",
+    "addNotes":"Dodaj notatke",
     "newItemHeader": "Nowy produkt",
     "editItemHeader": "Edytuj produkt",
     "properties": {
@@ -205,8 +213,9 @@
     "downloadReport":"pobierz Raport"
   },
   "tags":{
-    "machine":"Machine",
-    "product":"Product",
+    "deleteTag":"Czy na pewno chcesz usunąć sekcje?",
+    "machine":"Maszyna",
+    "product":"Produkt",
     "others":"Inne"
   },
   "categories": {
@@ -272,7 +281,23 @@
     "highestTransaction":"Najw. transakcji",
     "lastTransaction":"Ost. transakcja"
   },
+  "lift":{
+    "choiceSettings":"Ustawienia wyboru",
+    "setNumberOfChoice":"Podaj nr wyboru",
+    "spend":"Wydaj",
+    "unmerge":"Rozłącz",
+    "send":"Wyślij",
+    "merge":"Połącz",
+    "elevatorSettings":"Ustawienia windy",
+    "elevatorReset":"Rest windy",
+    "shelf":"półka"
+  },
   "fullMachine":{
+    "information":"Informacje",
+    "deleteMachin":"Usuń maszyne",
+    "editMachine":"Edytuj maszyne",
+    "client":"Klient",
+    "deleteMachine":"Potwierdź usunięcie maszyny",
     "machineName":"Nazwa maszyny",
     "location":"Lokalizacja",
     "machineType":"Typ maszyny",
@@ -281,7 +306,7 @@
     "serialNumber":"Numer Seryjny",
     "support":"Obsługa",
     "lastVisit":"Ostatnia Wizyta",
-    "listOfProduct":"Product list on the machine",
+    "listOfProduct":"Lista produktów na maszynie",
     "new":"Nowy",
     "download":"Pobierz",
     "salesReset":"Reset sprzedaży"

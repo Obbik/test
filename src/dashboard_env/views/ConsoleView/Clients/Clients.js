@@ -68,52 +68,52 @@ export default () => {
             {!filteredClients.length ? (
               <NoResults buttonText="Dodaj klienta" onClick={openForm()} />
             ) : (
-                <>
-                  <div>
-                    <button
-                      className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
-                      onClick={openForm()}
-                    >
-                      <i className="fas fa-plus mr-2" /> {TRL_Pack.clients.addClient}
-                    </button>
-                  </div>
-                  <div className="overflow-auto">
-                    <table className="table table-striped border">
-                      <thead>
-                        <tr>
-                          <th>{TRL_Pack.clients.name}</th>
-                          <th>{TRL_Pack.clients.base}</th>
-                          <th>{TRL_Pack.machines.properties.delete}</th>
+              <>
+                <div>
+                  <button
+                    className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+                    onClick={openForm()}
+                  >
+                    <i className="fas fa-plus mr-2" /> {TRL_Pack.clients.addClient}
+                  </button>
+                </div>
+                <div className="overflow-auto">
+                  <table className="table table-striped border">
+                    <thead>
+                      <tr>
+                        <th>{TRL_Pack.clients.name}</th>
+                        <th>{TRL_Pack.clients.base}</th>
+                        <th>{TRL_Pack.machines.properties.delete}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredClients.map((client, idx) => (
+                        <tr key={idx}>
+                          <td>
+                            <button
+                              className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
+                              onClick={openForm(client.CustomerId)}
+                            >
+                              {client.Name}
+                            </button>
+                          </td>
+                          <td>{client.Abbreviation}</td>
+                          <td>
+                            <button className="btn btn-link link-icon" onClick={() => 0}>
+                              <i className="fas fa-trash text-danger" />
+                            </button>
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {filteredClients.map((client, idx) => (
-                          <tr key={idx}>
-                            <td>
-                              <button
-                                className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
-                                onClick={openForm(client.CustomerId)}
-                              >
-                                {client.Name}
-                              </button>
-                            </td>
-                            <td>{client.Abbreviation}</td>
-                            <td>
-                              <button className="btn btn-link link-icon" onClick={() => 0}>
-                                <i className="fas fa-trash text-danger" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </>
-              )}
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
           </>
         ) : (
-            <NoResults buttonText="Dodaj klienta" onClick={openForm()} />
-          )}
+          <NoResults buttonText={TRL_Pack.clients.addClient} onClick={openForm()} />
+        )}
         {form && (
           <ClientForm
             clientData={

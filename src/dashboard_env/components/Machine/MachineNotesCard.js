@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom'
+import { LangContext } from '../../context/lang-context'
 import useFetch from '../../hooks/fetchMSSQL-hook'
 import ServiceNotes from '../Modals/ServiceNotes'
 
 export default () => {
   const { fetchMssqlApi } = useFetch()
   const { machineId } = useParams()
-
+  const { TRL_Pack } = useContext(LangContext)
   const [serviceNotes, setServiceNotes] = useState([])
   const [serviceNotesModal, setServiceNotesModal] = useState(false)
   const openServiceNotesModal = () => setServiceNotesModal(true)
@@ -17,7 +18,7 @@ export default () => {
   }
 
   const deleteServiceNote = id => () => {
-    if (window.confirm('Potwierdź usunięcie notatki'))
+    if (window.confirm())
       fetchMssqlApi(`service-note/${id}`, { method: 'DELETE' }, getServiceNotes)
   }
 
@@ -47,13 +48,13 @@ export default () => {
     <>
       <div className="card h-100">
         <h5 className="card-header">
-          Notatki
+          {TRL_Pack.products.notes}
           <button
             className="float-right btn btn-sm btn-link text-decoration-none"
             onClick={openServiceNotesModal}
           >
             <i className="fas fa-plus mr-2" />
-            Dodaj notatke
+            {TRL_Pack.products.addNotes}
           </button>
         </h5>
         <div className="card-body d-flex flex-column justify-content-center">
@@ -79,7 +80,7 @@ export default () => {
               ))}
             </ul>
           ) : (
-            <span className="text-center font-weight-bolder">Brak notatek</span>
+            <span className="text-center font-weight-bolder">{TRL_Pack.products.noNotes}</span>
           )}
         </div>
       </div>

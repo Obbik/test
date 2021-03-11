@@ -49,7 +49,7 @@ export default () => {
         const currentCategory = categories.find(c => c.CategoryId === categoryId)
         if (currentCategory)
           setHeaderData({
-            text: 'Produkty',
+            text: TRL_Pack.definitions.products,
             subtext: currentCategory.Name
           })
         else history.replace('/products')
@@ -114,7 +114,7 @@ export default () => {
     fetchMssqlApi(`product/${ean}`, { method: 'DELETE' }, getProducts)
   }
   useEffect(() => {
-    setHeaderData({ text: 'Produkty' })
+    setHeaderData({ text: TRL_Pack.definitions.products })
     getCategories()
     getProducts()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -291,98 +291,98 @@ export default () => {
           {!filteredProducts.length ? (
             <NoResults buttonText={TRL_Pack.products.addProductButton} onClick={() => { }} />
           ) : (
-              <>
-                <div>
-                  <button
-                    className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
-                    onClick={openForm()}
-                  >
-                    <i className="fas fa-plus mr-2" />
-                    {TRL_Pack.products.addProductButton}
-                  </button>
-                </div>
-                <div className="overflow-auto">
-                  <table className="table table-striped border">
-                    <thead>
-                      <tr>
-                        {filter.showIndexes && <th className="text-center">#</th>}
-                        {filter.columns
-                          .filter(col => !col.hidden && !col.disabled)
-                          .map((col, idx) => (
-                            <th key={idx}>{col.name}</th>
-                          ))}
-                        <th />
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredProducts
-                        .filter(reportFilter)
-                        .sort(sortRows)
-                        .slice(
-                          (filter.page - 1) * filter.rowsPerPage,
-                          filter.page * filter.rowsPerPage
-                        )
-                        .map((product, idx) => (
-                          <tr key={idx}>
-                            {Object.keys(product)
-                              .filter((col, col_idx) =>
-                                filter.columns
-                                  .filter(col => !col.hidden && !col.disabled)
-                                  .map(col => col.id)
-                                  .includes(col_idx + 1)
-                              )
-
-                              .map((col, col_idx) => (
-                                <td key={col_idx} className="small">
-                                  <button
-                                    style={{ wordBreak: 'break-word' }}
-                                    className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
-                                    onClick={openForm(product.EAN)}>
-                                    {sessionStorage.getItem("DB_TYPE") !== "mysql" ? returnParsedIsShared(product[col]) : product[col]}
-                                  </button>
-                                </td>
-                              ))}
-                            <td>
-                              <img
-                                src={`${API_URL}/${product.Image}`}
-                                onError={evt => (evt.target.src = sampleProduct)}
-                                alt={product.Name}
-                                width="48"
-                                height="48"
-                              />
-                            </td>
-                            <td>
-                              {!product.IsSubscribed ?
-                                <button
-                                  className="btn btn-link"
-                                  // onClick={deleteProduct(product.EAN)}
-                                  onClick={() => handleModal(product.EAN, product.IsSubscribed)}
-
-                                >
-                                  <i className="fas fa-trash text-danger" />
-                                </button>
-                                : <button
-                                  className="btn btn-link"
-                                  onClick={() => handleModal(product.EAN, product.IsSubscribed)}
-                                // onClick={unsubscribeProduct(product.EAN)}
-
-                                >
-                                  <i className="fas fa-times text-danger" />
-                                </button>}
-
-                            </td>
-                          </tr>
-
+            <>
+              <div>
+                <button
+                  className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+                  onClick={openForm()}
+                >
+                  <i className="fas fa-plus mr-2" />
+                  {TRL_Pack.products.addProductButton}
+                </button>
+              </div>
+              <div className="overflow-auto">
+                <table className="table table-striped border">
+                  <thead>
+                    <tr>
+                      {filter.showIndexes && <th className="text-center">#</th>}
+                      {filter.columns
+                        .filter(col => !col.hidden && !col.disabled)
+                        .map((col, idx) => (
+                          <th key={idx}>{col.name}</th>
                         ))}
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            )}
+                      <th />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredProducts
+                      .filter(reportFilter)
+                      .sort(sortRows)
+                      .slice(
+                        (filter.page - 1) * filter.rowsPerPage,
+                        filter.page * filter.rowsPerPage
+                      )
+                      .map((product, idx) => (
+                        <tr key={idx}>
+                          {Object.keys(product)
+                            .filter((col, col_idx) =>
+                              filter.columns
+                                .filter(col => !col.hidden && !col.disabled)
+                                .map(col => col.id)
+                                .includes(col_idx + 1)
+                            )
+
+                            .map((col, col_idx) => (
+                              <td key={col_idx} className="small">
+                                <button
+                                  style={{ wordBreak: 'break-word' }}
+                                  className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
+                                  onClick={openForm(product.EAN)}>
+                                  {sessionStorage.getItem("DB_TYPE") !== "mysql" ? returnParsedIsShared(product[col]) : product[col]}
+                                </button>
+                              </td>
+                            ))}
+                          <td>
+                            <img
+                              src={`${API_URL}/${product.Image}`}
+                              onError={evt => (evt.target.src = sampleProduct)}
+                              alt={product.Name}
+                              width="48"
+                              height="48"
+                            />
+                          </td>
+                          <td>
+                            {!product.IsSubscribed ?
+                              <button
+                                className="btn btn-link"
+                                // onClick={deleteProduct(product.EAN)}
+                                onClick={() => handleModal(product.EAN, product.IsSubscribed)}
+
+                              >
+                                <i className="fas fa-trash text-danger" />
+                              </button>
+                              : <button
+                                className="btn btn-link"
+                                onClick={() => handleModal(product.EAN, product.IsSubscribed)}
+                              // onClick={unsubscribeProduct(product.EAN)}
+
+                              >
+                                <i className="fas fa-times text-danger" />
+                              </button>}
+
+                          </td>
+                        </tr>
+
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
         </>
       ) : (
-          <NoResults buttonText="Dodaj produkt" onClick={openForm()} />
-        )
+        <NoResults buttonText={TRL_Pack.products.addProduct} onClick={openForm()} />
+      )
       }{
         form === "acceptModal" && form && (
           <AcceptForm ean={ean} handleClose={closeForm} deleteProduct={deleteProduct} unsubscribeProduct={unsubscribeProduct} IsSubscribed={subscribed} />

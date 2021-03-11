@@ -44,7 +44,7 @@ export default () => {
       <>
         <SearchInput onSearch={updateSearchedText} />
         {!filteredMachines.length ? (
-          <NoResults buttonText="Dodaj maszyne" onClick={openForm()} />
+          <NoResults buttonText={TRL_Pack.machine.addMachine} onClick={openForm()} />
         ) : (
           <>
             <div>
@@ -52,7 +52,7 @@ export default () => {
                 className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
                 onClick={openForm()}
               >
-                <i className="fas fa-plus mr-2" /> Dodaj maszyne
+                <i className="fas fa-plus mr-2" /> {TRL_Pack.machine.addMachine}
               </button>
             </div>
             <div className="overflow-auto">

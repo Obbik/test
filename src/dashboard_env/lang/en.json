@@ -63,6 +63,7 @@
     "columns": "Columns"
   },
   "terminals":{
+    "terminalDelete":"Confirm terminal deletion",
     "serialNo":"Serial number",
     "client":"Client",
     "addedDate":"Date",
@@ -113,11 +114,13 @@
     "addClient":"Add Client"
   },
   "tags":{
+    "deleteTag":"Are you sure you want to delete sections",
     "machine":"Machine",
     "product":"Product",
     "others":"Others"
   },
   "machine": {
+    "addMachine":"Add machine",
     "header": "Machine details",
     "settings": {
       "header": "Settings"
@@ -173,9 +176,14 @@
     "maintenances": "Maintenances"
   },
   "products": {
+    "addProduct":"Add product",
     "header": "Products",
     "productCategoriesHeader": "Product categories",
     "confirmDeletionText": "Confirm product deletion",
+    "confirmDeleteNote":"Confirm note deletion",
+    "noNotes":"No notes",
+    "notes":"Notes",
+    "addNotes":"Add notes",
     "newItemHeader": "New product",
     "editItemHeader": "Edit product",
     "filter":{
@@ -239,6 +247,11 @@
     }
   },
   "fullMachine":{
+    "information":"Information",
+    "deleteMachin":"Delete machine",
+    "editMachine":"Edit machine",
+    "client":"Client",
+    "deleteMachine":"Confirm machine deletion",
     "machineName":"Machine Name",
     "location":"Location",
     "machineType":"Machine Type",
@@ -251,6 +264,17 @@
     "new":"New",
     "download":"Download",
     "salesReset":"Sales Reset"
+  },
+  "lift":{
+    "choiceSettings":"choice settings",
+    "setNumberOfChoice":"Specify a choice number",
+    "spend":"Spend",
+    "unmerge":"Disconnect",
+    "send":"Send",
+    "merge":"Merge",
+    "elevatorSettings":"Elevator settings",
+    "elevatorReset":"Elevator Rest",
+    "shelf":"Shelf"
   },
   "modalDisplays":{
     "del":"Delete product",

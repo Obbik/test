@@ -1,27 +1,27 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import MachineForm from '../Modals/MachineForm'
 import { Redirect } from 'react-router'
-
+import { LangContext } from '../../context/lang-context'
 export default ({ machineData, getMachine, deleteMachine }) => {
   const [machineForm, setMachineForm] = useState(null)
   const openMachineForm = () => setMachineForm(true)
   const closeMachineForm = () => setMachineForm(null)
-
+  const { TRL_Pack } = useContext(LangContext)
   return (
     <>
       <div className="card h-100">
         <h5 className="card-header">
-          Informacje
+          {TRL_Pack.fullMachine.information}
           <button className="float-right btn btn-link link-icon" onClick={() => deleteMachine(machineData.MachineId) && <Redirect to="/dashboard/machines" />}>
             <i className="fas fa-trash text-danger ml-2 mr-2" />
-            <span style={{ color: "red" }}>Usuń maszyne</span>
+            <span style={{ color: "red" }}>{TRL_Pack.fullMachine.deleteMachin}</span>
           </button>
           <button
             className="float-right btn btn-sm btn-link text-decoration-none"
             onClick={openMachineForm}
           >
             <i className="fas fa-pencil-alt mr-2" />
-            Edytuj maszyne
+            {TRL_Pack.fullMachine.editMachine}
 
           </button>
 
@@ -29,7 +29,7 @@ export default ({ machineData, getMachine, deleteMachine }) => {
         <div className="card-body d-flex flex-column justify-content-center">
           <div className="row mb-3">
             <div className="col-lg-4 mb-2 mb-lg-0 text-lg-right font-weight-bolder">
-              Nazwa maszyny
+              {TRL_Pack.fullMachine.machineName}
             </div>
             <div className="col-lg-8 my-auto text-center text-lg-left">
               {machineData.MachineName}
@@ -45,7 +45,7 @@ export default ({ machineData, getMachine, deleteMachine }) => {
           </div>
           <div className="row mb-3">
             <div className="col-lg-4 mb-2 mb-lg-0 text-lg-right font-weight-bolder">
-              Nr seryjny
+              {TRL_Pack.fullMachine.serialNumber}
             </div>
             <div className="col-lg-8 my-auto text-center text-lg-left">
               {machineData.SerialNo}
@@ -63,7 +63,7 @@ export default ({ machineData, getMachine, deleteMachine }) => {
           )}
           <div className="row">
             <div className="col-lg-4 mb-2 mb-lg-0 text-lg-right font-weight-bolder">
-              Klient
+              {TRL_Pack.fullMachine.client}
             </div>
             <div className="col-lg-8 my-auto text-center text-lg-left">
               {machineData.ClientName}

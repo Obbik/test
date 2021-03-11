@@ -26,7 +26,7 @@ export default () => {
   }
 
   const deleteMachine = id => {
-    if (window.confirm('Potwierdź usunięcie maszyny'))
+    if (window.confirm(TRL_Pack.fullMachine.deleteMachine))
       fetchMssqlApi(`machine/${id}`, { method: 'DELETE' })
   }
 

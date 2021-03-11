@@ -61,7 +61,7 @@ export default () => {
     }
   }
   const deleteTerminal = (id) => {
-    if (window.confirm("potwierdz usuniecie "))
+    if (window.confirm(TRL_Pack.terminals.terminalDelete))
       fetchMssqlApi(`terminal/${id}`, { method: 'DELETE' }, getTerminals)
   }
   useEffect(() => {
@@ -85,7 +85,7 @@ export default () => {
           <>
             <SearchInput onSearch={updateSearchedText} />
             {!filteredTerminals.length ? (
-              <NoResults buttonText="Dodaj terminal" onClick={openForm()} />
+              <NoResults buttonText={TRL_Pack.terminals.addTerminal} onClick={openForm()} />
             ) : (
               <>
                 <div>
@@ -93,7 +93,7 @@ export default () => {
                     className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
                     onClick={openForm()}
                   >
-                    <i className="fas fa-plus mr-2" /> Dodaj terminal
+                    <i className="fas fa-plus mr-2" /> {TRL_Pack.terminals.addTerminal}
                   </button>
                 </div>
                 <div className="overflow-auto">
