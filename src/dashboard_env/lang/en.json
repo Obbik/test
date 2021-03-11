@@ -209,6 +209,7 @@
     }
   },
   "errors":{ 
+    "sameNumber":"Plese enter valid number",
     "correctData":"Please enter correct data",
     "invalidInput":"Invalid input",
     "selectOneOption":"Select at least one option"

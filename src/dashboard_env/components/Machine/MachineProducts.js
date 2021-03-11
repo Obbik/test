@@ -56,14 +56,14 @@ const MachineProducts = (props) => {
     });
   }
 
-  const handleChange = (machineProductId, e) => {
+  const handleChange = (machineProductId, e, tableRow) => {
     const name = e.target.name;
     const value = name === 'PriceBrutto' ? parseFloat(e.target.value) : e.target.value;
 
-    const index = machineProducts.findIndex(machineProduct => machineProduct.MachineProductId === machineProductId);
+    let index = machineProducts.findIndex(machineProduct => machineProduct.MachineProductId === machineProductId);
+    if (tableRow !== undefined) index = machineProducts.findIndex(machineProduct => machineProduct.TableRowId === tableRow);
     const initialMachineProductIndex = initialMachineProducts.findIndex(initialMachineProduct => initialMachineProduct.MachineProductId === machineProductId);
     let newMachineProducts = [...machineProducts];
-
     let requestMethod = !newMachineProducts[index].RequestMethod || newMachineProducts[index].RequestMethod === 'DELETE' ? 'PUT' : newMachineProducts[index].RequestMethod;
     newMachineProducts[index] = { ...newMachineProducts[index], [name]: value };
 
@@ -106,16 +106,23 @@ const MachineProducts = (props) => {
       if (i === modifiedMachineProducts.length - 1) {
         _getMachineProducts = true;
       }
-
+      console.log(machineProducts, modifiedMachineProducts)
       const { DiscountedPrice, MachineProductId, MachineInventoryItemId, MachineFeederNo, Name, PriceBrutto, Quantity, MaxItemCount, RequestMethod } = machineProduct;
       // Check if a request method is assigned to machine product
       if (RequestMethod) {
         productId = getProductId(Name); // Get product id
         // Validate inputs
+        let isEqual
+        for (let x = 0; x < modifiedMachineProducts.length - 1; x++) {
+          if (modifiedMachineProducts[x].MachineFeederNo === modifiedMachineProducts[x + 1].MachineFeederNo) {
+            isEqual = true
 
-        // if (parseInt(MaxItemCount) < parseInt(Quantity)) {
-        //   NotificationManager.error('Please select higher quantity than Capacity value');
-        // }
+          }
+        }
+        if (isEqual === true) {
+          return NotificationManager.error(TRL_Pack.errors.sameNumber);
+        }
+
 
         if (MachineFeederNo && Name && PriceBrutto && PriceBrutto >= 0 && Quantity && parseInt(Quantity) >= 0 && MaxItemCount && parseInt(MaxItemCount) >= 0 && parseInt(MaxItemCount) >= parseInt(Quantity)) {
           // HTTP requests here
@@ -305,7 +312,7 @@ const MachineProducts = (props) => {
                     style={{ maxWidth: 75 }}
                     name="MachineFeederNo"
                     value={machineProduct.MachineFeederNo}
-                    handleChange={(e => handleChange(machineProduct.MachineProductId, e))}
+                    handleChange={(e => handleChange(machineProduct.MachineProductId, e, machineProduct.TableRowId))}
                     required
                   />
                 </td>
@@ -313,7 +320,7 @@ const MachineProducts = (props) => {
                   <DatalistInput
                     name="Name"
                     value={machineProduct.Name}
-                    handleChange={(e => handleChange(machineProduct.MachineProductId, e))}
+                    handleChange={(e => handleChange(machineProduct.MachineProductId, e, machineProduct.TableRowId))}
                     list={product.map(product => product.Name)}
                   />
                 </td>
@@ -322,7 +329,7 @@ const MachineProducts = (props) => {
                     style={{ maxWidth: 100 }}
                     name="PriceBrutto"
                     value={machineProduct.PriceBrutto}
-                    handleChange={(e => handleChange(machineProduct.MachineProductId, e))}
+                    handleChange={(e => handleChange(machineProduct.MachineProductId, e, machineProduct.TableRowId))}
                     type="number"
                     min={0}
                     step={0.1}
@@ -335,7 +342,7 @@ const MachineProducts = (props) => {
                     style={{ maxWidth: 100 }}
                     name="Quantity"
                     value={machineProduct.Quantity}
-                    handleChange={(e => handleChange(machineProduct.MachineProductId, e))}
+                    handleChange={(e => handleChange(machineProduct.MachineProductId, e, machineProduct.TableRowId))}
                     type="number"
                     min={0}
                     max={machineProduct.MaxItemCount}
@@ -348,7 +355,7 @@ const MachineProducts = (props) => {
                     style={{ maxWidth: 100 }}
                     name="MaxItemCount"
                     value={machineProduct.MaxItemCount}
-                    handleChange={(e => handleChange(machineProduct.MachineProductId, e))}
+                    handleChange={(e => handleChange(machineProduct.MachineProductId, e, machineProduct.TableRowId))}
                     type="number"
                     min={0}
                     required

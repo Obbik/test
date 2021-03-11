@@ -234,12 +234,29 @@ export default ({ machineId }) => {
       return
     }
 
-    if (changedSlots.added.length) changedSlots.added.forEach(slot => addSlot(slot))
-    if (changedSlots.deleted.length)
-      changedSlots.deleted.forEach(slot => deleteFeeder(slot))
-    if (changedSlots.modified.length)
-      changedSlots.modified.forEach(slot => modifyFeeder(slot))
 
+    let isEqual
+    for (let x = 0; x < changedSlots.added.length - 1; x++) {
+      console.log(changedSlots.added[x].MachineFeederNo)
+      if (changedSlots.added[x].MachineFeederNo === changedSlots.added[x + 1].MachineFeederNo) {
+        isEqual = true
+      }
+    }
+    if (isEqual === true) {
+      return NotificationManager.error(TRL_Pack.errors.sameNumber);
+    }
+    else {
+
+      if (changedSlots.added.length) changedSlots.added.forEach(slot => addSlot(slot))
+      if (changedSlots.deleted.length)
+        changedSlots.deleted.forEach(slot => deleteFeeder(slot))
+      if (changedSlots.modified.length)
+        changedSlots.modified.forEach(slot => modifyFeeder(slot))
+      getMachineRecipes()
+      getRecipes()
+    }
+    getMachineRecipes()
+    getRecipes()
   }
 
   const discardChanges = () => setMachineRecipesData(initialMachineRecipes.current)

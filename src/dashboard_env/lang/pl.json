@@ -248,6 +248,7 @@
     }
   },
   "errors":{ 
+    "sameNumber":"Proszę podać inny numer",
     "correctData":"Proszę wpisać prawidłowe dane",
     "invalidInput":"Nieprawidłowo wprowadzone dane",
     "selectOneOption":"Podaj przynajmniej jedną opcję"
