@@ -1,22 +1,30 @@
 import React, { useState } from 'react'
 import MachineForm from '../Modals/MachineForm'
+import { Redirect } from 'react-router'
 
-export default ({ machineData, getMachine }) => {
+export default ({ machineData, getMachine, deleteMachine }) => {
   const [machineForm, setMachineForm] = useState(null)
   const openMachineForm = () => setMachineForm(true)
   const closeMachineForm = () => setMachineForm(null)
+
   return (
     <>
       <div className="card h-100">
         <h5 className="card-header">
           Informacje
+          <button className="float-right btn btn-link link-icon" onClick={() => deleteMachine(machineData.MachineId) && <Redirect to="/dashboard/machines" />}>
+            <i className="fas fa-trash text-danger ml-2 mr-2" />
+            <span style={{ color: "red" }}>Usuń maszyne</span>
+          </button>
           <button
             className="float-right btn btn-sm btn-link text-decoration-none"
             onClick={openMachineForm}
           >
             <i className="fas fa-pencil-alt mr-2" />
             Edytuj maszyne
+
           </button>
+
         </h5>
         <div className="card-body d-flex flex-column justify-content-center">
           <div className="row mb-3">

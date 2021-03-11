@@ -106,7 +106,6 @@ const MachineProducts = (props) => {
       if (i === modifiedMachineProducts.length - 1) {
         _getMachineProducts = true;
       }
-      console.log(machineProducts, modifiedMachineProducts)
       const { DiscountedPrice, MachineProductId, MachineInventoryItemId, MachineFeederNo, Name, PriceBrutto, Quantity, MaxItemCount, RequestMethod } = machineProduct;
       // Check if a request method is assigned to machine product
       if (RequestMethod) {
@@ -240,7 +239,7 @@ const MachineProducts = (props) => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'file.csv');
+      link.setAttribute('download', 'Maschine-products.xls');
       document.body.appendChild(link);
       link.click();
     });

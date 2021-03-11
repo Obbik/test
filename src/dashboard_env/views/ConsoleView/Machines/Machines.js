@@ -24,10 +24,7 @@ export default () => {
     fetchMssqlApi('machines', {}, machines => setMachines(machines))
   }
 
-  const deleteMachine = id => {
-    if (window.confirm('Potwierdź usunięcie maszyny'))
-      fetchMssqlApi(`machine/${id}`, { method: 'DELETE' }, getMachines)
-  }
+
 
   useEffect(() => {
     setHeaderData({ text: TRL_Pack.machines.header })
@@ -67,7 +64,6 @@ export default () => {
                     <th>{TRL_Pack.machines.properties.serialNo}</th>
                     <th>{TRL_Pack.machines.properties.terminal}</th>
                     <th>{TRL_Pack.machines.properties.client}</th>
-                    <th>{TRL_Pack.machines.properties.delete}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -93,12 +89,8 @@ export default () => {
                         <td>{machine.SerialNo}</td>
                         <td>{machine.Terminal}</td>
                         <td>{machine.ClientName}</td>
-                        <td>
-                          <button className="btn btn-link link-icon" onClick={() => deleteMachine(machine.MachineId)}>
-                            <i className="fas fa-trash text-danger" />
-                          </button>
-                        </td>
                       </tr>
+
                     ))}
                 </tbody>
               </table>

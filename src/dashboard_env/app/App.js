@@ -84,14 +84,14 @@ export default () => {
   else if (localStorage.getItem('clientId') === 'console') {
     permission.forEach((permission) => {
       switch (permission.Name) {
-        case "VD_MONITORING":
-          authRoutes.push({ path: '/machines', component: MachinesConsole }, { path: '/machine/:machineId', component: FullMachineConsole })
-          break;
         case "VD_MACHINES":
-          authRoutes.push({ path: '/', component: Monitoring })
+          authRoutes.push({ path: '/machines', component: MachinesConsole }, { path: '/machine/:machineId', component: FullMachineConsole })
           break;
         case "VD_TERMINALS":
           authRoutes.push({ path: '/terminals', component: Terminals },)
+          break;
+        case "VD_MONITORING":
+          authRoutes.push({ path: '/', component: Monitoring })
           break;
         case "VD_CUSTOMERS":
           authRoutes.push({ path: '/clients', component: Clients },)
@@ -135,7 +135,7 @@ export default () => {
       }
     })
   }
-
+  console.log(authRoutes)
   const getInitialRoutes = () => {
     if (authRoutes.length > 0) {
       if (typeof (authRoutes[0].path) == "object")

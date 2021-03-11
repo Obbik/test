@@ -26,7 +26,6 @@ export default () => {
       // else if (machineProducts.global) setCurrentView('global')
     })
   }
-  console.log(machineProducts)
   useEffect(() => {
     getMachineProducts()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,7 +72,6 @@ test
           </thead>
 
           <tbody>
-            {console.log(machineProducts)}
             {/* {machineProducts
               // .sort((a, b) => a.MachineFeederNo - b.MachineFeederNo)
               .map((machineProduct, idx) => (

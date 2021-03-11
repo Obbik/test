@@ -27,10 +27,10 @@ export default () => {
     const { note } = evt.target.elements
 
     fetchMssqlApi(
-      `service-note/${machineId}`,
+      `service-note`,
       {
         method: 'POST',
-        data: { Note: note.value }
+        data: { MachineId: machineId, Note: note.value }
       },
       () => {
         closeServiceNotesModal()
@@ -79,8 +79,8 @@ export default () => {
               ))}
             </ul>
           ) : (
-              <span className="text-center font-weight-bolder">Brak notatek</span>
-            )}
+            <span className="text-center font-weight-bolder">Brak notatek</span>
+          )}
         </div>
       </div>
       {serviceNotesModal && (

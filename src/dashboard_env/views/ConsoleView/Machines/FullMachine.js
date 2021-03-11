@@ -25,6 +25,11 @@ export default () => {
     )
   }
 
+  const deleteMachine = id => {
+    if (window.confirm('Potwierdź usunięcie maszyny'))
+      fetchMssqlApi(`machine/${id}`, { method: 'DELETE' })
+  }
+
   useEffect(() => {
     setHeaderData({ text: TRL_Pack.machines.header })
     getMachine()
@@ -36,7 +41,7 @@ export default () => {
       <ReturnLink path="/machines" />
       <div className="row mb-4">
         <div className="col-12 col-md-6 mb-4 mb-md-0">
-          <MachineDetailsCard machineData={machineData} getMachine={getMachine} />
+          <MachineDetailsCard machineData={machineData} getMachine={getMachine} deleteMachine={deleteMachine} />
         </div>
         <div className="col-12 col-md-6">
           <MachineNotesCard />
