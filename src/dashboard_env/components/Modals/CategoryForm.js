@@ -74,7 +74,6 @@ export default ({ categoryData, getCategories, handleClose }) => {
   }
 
   const disableButton = () => {
-    console.log(disabled === true)
     if (disabled === true && categoryData ? name === (categoryData.Name) : "")
       return "disabled"
     else return ""

@@ -7,7 +7,8 @@ export default ({ children }) => {
 
   const incrementRequests = () => setActiveRequests(prev => prev + 1)
   const decrementRequests = () => setActiveRequests(prev => prev - 1)
-
+  !activeRequests === 0 ? document.body.style.overflow = "hidden" : document.body.style.overflow = "visible"
+  console.log(activeRequests)
   return (
     <LoaderContext.Provider
       value={{

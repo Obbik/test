@@ -83,7 +83,6 @@ export default ({ form, productData, getProducts, handleClose }) => {
     evt.preventDefault()
 
     const { ean, name, image, description } = evt.target.elements
-    console.log("test")
     const formData = new FormData()
     formData.append('Ean', ean.value)
     formData.append('Name', name.value)
@@ -229,7 +228,6 @@ export default ({ form, productData, getProducts, handleClose }) => {
         </div>
         <div className="form-group">
           <label className="h6">{products.props.productName}</label>
-          {console.log(disabled)}
           <input
             name="name"
             className="form-control"

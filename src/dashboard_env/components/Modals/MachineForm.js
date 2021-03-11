@@ -22,7 +22,6 @@ export default ({ postSubmit, machineData, handleClose }) => {
 
   const submitMachine = evt => {
     evt.preventDefault()
-    console.log("test", machineData)
     const { name, serialNo, type, client, terminal } = evt.target.elements
 
     if (

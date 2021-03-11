@@ -135,7 +135,7 @@ export default () => {
       }
     })
   }
-  console.log(authRoutes)
+
   const getInitialRoutes = () => {
     if (authRoutes.length > 0) {
       if (typeof (authRoutes[0].path) == "object")

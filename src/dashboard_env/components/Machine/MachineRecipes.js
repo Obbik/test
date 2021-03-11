@@ -127,7 +127,6 @@ export default ({ machineId }) => {
   }
 
   const modifyFeeder = slot => {
-    console.log(slot)
     fetchMssqlApi(
       `machine-product/${slot.MachineProductId}`,
       { method: 'PUT', data: slot },
@@ -216,7 +215,6 @@ export default ({ machineId }) => {
             const RecipeId = recipeNameToId(RecipeName)
 
             if (!MachineProductId || isNaN(RecipeId) || isNaN(PriceBrutto)) return false
-            console.log(machineRecipe)
             changedSlots.modified.push({
               RecipeId: RecipeId,
               RecipeName: RecipeName,
@@ -237,7 +235,6 @@ export default ({ machineId }) => {
 
     let isEqual
     for (let x = 0; x < changedSlots.added.length - 1; x++) {
-      console.log(changedSlots.added[x].MachineFeederNo)
       if (changedSlots.added[x].MachineFeederNo === changedSlots.added[x + 1].MachineFeederNo) {
         isEqual = true
       }

@@ -42,7 +42,6 @@ export default ({
   }
 
   const getProducts = () => {
-    console.log("testproduktow")
     fetchMssqlApi('products', {}, products => setItems(products))
   }
 
@@ -161,11 +160,11 @@ export default ({
           )}
         </>
       ) : (
-          <NoResults
-            onClick={openNewForm}
-            buttonText={TRL_Pack.products.addProductButton}
-          />
-        )}
+        <NoResults
+          onClick={openNewForm}
+          buttonText={TRL_Pack.products.addProductButton}
+        />
+      )}
       {formModal && (
         <ProductForm
           productData={filteredItems.find(p => p.ProductId === formModal)}
