@@ -288,8 +288,8 @@ export default () => {
     const reportDateRange = !isDateRangeDisabled
       ? `?dateFrom=${dateFrom.value}&dateTo=${dateTo.value}`
       : ''
-
-    fetchMssqlApi(report.apiPath + reportDateRange, {}, data => {
+    console.log("/reports/" + report.apiPath + reportDateRange)
+    fetchMssqlApi("/reports/" + report.apiPath + reportDateRange, {}, data => {
       report.data = data
       setHeaderData({ text: TRL_Pack.reports.header, subtext: report.label })
       setFilter(prev => ({
@@ -509,61 +509,61 @@ export default () => {
                 <>
                   {currentReport.data.filter(reportFilter).filter(tagFilter).length >
                     0 ? (
-                      <div className="overflow-auto">
-                        <div>
-                          <button
-                            className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
-                            onClick={handleDownload}
-                          >
-                            <i className="fas fa-file-download mr-2" /> {TRL_Pack.downloadReport}
-                          </button>
-                        </div>
-                        <table className="table table-striped table-bordered align-middle report-table">
-                          <thead>
-                            <tr>
-                              {filter.showIndexes && <th className="text-center">#</th>}
-                              {filter.columns
-                                .filter(col => !col.hidden && !col.disabled)
-                                .map((col, idx) => (
-                                  <th key={idx}>{col.name}</th>
-                                ))}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {currentReport.data
-                              .filter(reportFilter)
-                              .filter(tagFilter)
-                              .sort(sortRows)
-                              .slice(
-                                (page - 1) * filter.rowsPerPage,
-                                page * filter.rowsPerPage
-                              )
-                              .map((row, row_idx) => (
-                                <tr key={row_idx}>
-                                  {filter.showIndexes && (
-                                    <td className="text-center small font-weight-bold">
-                                      {(page - 1) * filter.rowsPerPage + row_idx + 1}
-                                    </td>
-                                  )}
-                                  {Object.keys(row).map(
-                                    (col, col_idx) =>
-                                      filter.columns
-                                        .filter(col => !col.hidden && !col.disabled)
-                                        .map(col => col.id)
-                                        .includes(col_idx + 1) && (
-                                        <td key={col_idx} className="small">
-                                          {formatValue(col_idx, row[col])}
-                                        </td>
-                                      )
-                                  )}
-                                </tr>
-                              ))}
-                          </tbody>
-                        </table>
+                    <div className="overflow-auto">
+                      <div>
+                        <button
+                          className="d-block btn btn-link text-decoration-none ml-auto my-2 mr-1"
+                          onClick={handleDownload}
+                        >
+                          <i className="fas fa-file-download mr-2" /> {TRL_Pack.downloadReport}
+                        </button>
                       </div>
-                    ) : (
-                      <h5 className="text-center">{TRL_Pack.Reports.noReports}</h5>
-                    )}
+                      <table className="table table-striped table-bordered align-middle report-table">
+                        <thead>
+                          <tr>
+                            {filter.showIndexes && <th className="text-center">#</th>}
+                            {filter.columns
+                              .filter(col => !col.hidden && !col.disabled)
+                              .map((col, idx) => (
+                                <th key={idx}>{col.name}</th>
+                              ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {currentReport.data
+                            .filter(reportFilter)
+                            .filter(tagFilter)
+                            .sort(sortRows)
+                            .slice(
+                              (page - 1) * filter.rowsPerPage,
+                              page * filter.rowsPerPage
+                            )
+                            .map((row, row_idx) => (
+                              <tr key={row_idx}>
+                                {filter.showIndexes && (
+                                  <td className="text-center small font-weight-bold">
+                                    {(page - 1) * filter.rowsPerPage + row_idx + 1}
+                                  </td>
+                                )}
+                                {Object.keys(row).map(
+                                  (col, col_idx) =>
+                                    filter.columns
+                                      .filter(col => !col.hidden && !col.disabled)
+                                      .map(col => col.id)
+                                      .includes(col_idx + 1) && (
+                                      <td key={col_idx} className="small">
+                                        {formatValue(col_idx, row[col])}
+                                      </td>
+                                    )
+                                )}
+                              </tr>
+                            ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <h5 className="text-center">{TRL_Pack.Reports.noReports}</h5>
+                  )}
                 </>
               )}
             </>
