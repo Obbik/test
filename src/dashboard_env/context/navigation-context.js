@@ -109,8 +109,9 @@ export default ({ children }) => {
         default:
           break;
       }
-    })
 
+    })
+    navlinks.push({ text: "summaries", path: '/summaries', icon: 'fas fa-table' },)
   }
   navlinks.push({ text: TRL_Pack.navigation.logout, path: '/logout', icon: 'fas fa-sign-out-alt' })
 
@@ -137,15 +138,15 @@ export default ({ children }) => {
         {fatalError ? (
           <ErrorWrapper />
         ) : (
-            <div
-              className={`d-flex flex-column flex-grow-1 ${loader ? 'position-static' : ''
-                }`}
-            >
-              {sectionModal}
-              {loader && <Loader />}
-              <div className="container-lg p-3 h-100 d-flex flex-column">{children}</div>
-            </div>
-          )}
+          <div
+            className={`d-flex flex-column flex-grow-1 ${loader ? 'position-static' : ''
+              }`}
+          >
+            {sectionModal}
+            {loader && <Loader />}
+            <div className="container-lg p-3 h-100 d-flex flex-column">{children}</div>
+          </div>
+        )}
       </div>
     </NavigationContext.Provider>
   )

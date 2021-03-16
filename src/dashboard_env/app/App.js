@@ -41,8 +41,11 @@ import FullMachine from '../views/ClientView/Machines/FullMachine'
 import Catalog from '../views/ClientView/Catalog/Catalog'
 import Reports from '../views/ClientView/Reports/Reports'
 import Tags from '../views/ClientView/Tags/Tags'
-
+import Summaries from "../views/ClientView/Summaries/Summaries"
 import useAuth from '../hooks/auth-hook'
+import SummaryCategory from '../views/ClientView/Summaries/SummaryCategory'
+import SummaryFilter from '../views/ClientView/Summaries/SummaryFilter'
+
 
 
 export default () => {
@@ -128,11 +131,19 @@ export default () => {
           authRoutes.push({ path: '/tags', component: Tags },)
           break;
         case "VD_REPORTS":
-          authRoutes.push({ path: '/reports', component: Reports },)
+          authRoutes.push({ path: '/reports', component: Reports })
           break;
         default:
           break;
       }
+      //repair tis shit
+      authRoutes.push(
+        { path: '/summaries', component: Summaries },
+        { path: '/summaries/:summariesId', component: SummaryCategory },
+        { path: '/summaries/:summariesId/:summariesCategoryId', component: SummaryFilter },
+        { path: '/summaries/:summariesId/:summariesCategoryId/:summariesReportId', component: SummaryFilter }
+
+      )
     })
   }
 
