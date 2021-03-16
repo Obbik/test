@@ -146,12 +146,13 @@ export default () => {
     }
   }
   useEffect(() => {
-    axios
-      .get(`${API_URL}/api/permissions`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        },
-      }).then(({ data }) => setPermission(data))
+    if (isAuth)
+      axios
+        .get(`${API_URL}/api/permissions`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          },
+        }).then(({ data }) => setPermission(data))
 
   }, [])
   return (
