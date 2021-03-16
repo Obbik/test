@@ -140,7 +140,6 @@ export default () => {
     if (authRoutes.length > 0) {
       if (typeof (authRoutes[0].path) == "object")
         return <Redirect to={authRoutes[0].path[0]} />
-
       else {
         return <Redirect to={authRoutes[0].path} />
       }
