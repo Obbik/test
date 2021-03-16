@@ -5,6 +5,7 @@ import useFetch from '../../../hooks/fetchMSSQL-hook'
 import Pagination from '../../../components/Pagination/Pagination'
 import Filter from '../../../components/Filter/Filter'
 import { API_URL } from '../../../config/config'
+import axios from "axios"
 
 export default () => {
   const { TRL_Pack } = useContext(LangContext)
@@ -288,7 +289,6 @@ export default () => {
     const reportDateRange = !isDateRangeDisabled
       ? `?dateFrom=${dateFrom.value}&dateTo=${dateTo.value}`
       : ''
-    console.log("/reports/" + report.apiPath + reportDateRange)
     fetchMssqlApi("/reports/" + report.apiPath + reportDateRange, {}, data => {
       report.data = data
       setHeaderData({ text: TRL_Pack.reports.header, subtext: report.label })
@@ -331,12 +331,23 @@ export default () => {
     const reportDateRange = !isDateRangeDisabled
       ? `?dateFrom=${currentReport.dateFrom}&dateTo=${currentReport.dateTo}`
       : ''
-
-    fetchMssqlApi(
-      currentReport.apiPath + reportDateRange,
-      { method: 'POST', data, hideNotification: true },
-      path => window.open(`${API_URL}/${path}`, '_blank')
-    )
+    console.log("/reports/" + currentReport.apiPath + "-file")
+    const token = localStorage.getItem('token')
+    axios({
+      url: `${API_URL}/api/reports/${currentReport.apiPath}-file`,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      responseType: 'blob', // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${currentReport.apiPath}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+    });
   }
 
   const handleSwitchPage = pageNo => () => setPage(pageNo)

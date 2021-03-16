@@ -80,7 +80,7 @@ export default () => {
         <>
           <SearchInput onSearch={updateSearchedText} />
           {!filteredCategories.length ? (
-            <NoResults buttonText={TRL_Pack.products.addProductButton} onClick={openForm()} />
+            <NoResults buttonText={TRL_Pack.products.addCategoryButton} onClick={openForm()} />
           ) : (
             <>
               <div>
@@ -89,7 +89,7 @@ export default () => {
                   onClick={openForm()}
                 >
                   <i className="fas fa-plus mr-2" />
-                  {TRL_Pack.products.addProductButton}
+                  {TRL_Pack.categories.addCategoryButton}
                 </button>
               </div>
               <div className="overflow-auto">
