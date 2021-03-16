@@ -45,7 +45,7 @@ import Summaries from "../views/ClientView/Summaries/Summaries"
 import useAuth from '../hooks/auth-hook'
 import SummaryCategory from '../views/ClientView/Summaries/SummaryCategory'
 import SummaryFilter from '../views/ClientView/Summaries/SummaryFilter'
-
+import SummariesReport from "../views/ClientView/Summaries/SummariesReport"
 
 
 export default () => {
@@ -136,12 +136,12 @@ export default () => {
         default:
           break;
       }
-      //repair tis shit
+      //repair tis shit nested rutes
       authRoutes.push(
         { path: '/summaries', component: Summaries },
         { path: '/summaries/:summariesId', component: SummaryCategory },
         { path: '/summaries/:summariesId/:summariesCategoryId', component: SummaryFilter },
-        { path: '/summaries/:summariesId/:summariesCategoryId/:summariesReportId', component: SummaryFilter }
+        { path: '/summaries/:summariesId/:summariesCategoryId/:summariesReportId', component: SummariesReport }
 
       )
     })
@@ -158,12 +158,13 @@ export default () => {
     }
   }
   useEffect(() => {
-    axios
-      .get(`${API_URL}/api/permissions`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        },
-      }).then(({ data }) => setPermission(data))
+    if (isAuth)
+      axios
+        .get(`${API_URL}/api/permissions`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          },
+        }).then(({ data }) => setPermission(data))
 
   }, [])
   return (

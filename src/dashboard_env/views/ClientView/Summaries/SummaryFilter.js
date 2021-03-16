@@ -10,6 +10,7 @@ import useFetch from '../../../hooks/fetchMSSQL-hook'
 import useForm from '../../../hooks/form-hook'
 
 const SummaryFilter = (props) => {
+    console.log(props)
     let history = useHistory();
     const { fetchMssqlApi } = useFetch()
     const { TRL_Pack } = useContext(LangContext)
@@ -109,7 +110,7 @@ const SummaryFilter = (props) => {
                                     <td><input type="checkbox" value={machine.shared} checked={machine.shared ? true : null} disabled /></td>
                                     <td style={{ width: "30px" }}>{machine.stworzony}</td>
                                     <td style={{ width: "30px" }}>  <Link
-                                        to={`/machine/${machine.MachineId}`}
+                                        to={`${props.location.pathname}/${machine.ID}`}
                                         className="btn btn-link link-icon"
                                     >
                                         <i className="far fa-edit" />
