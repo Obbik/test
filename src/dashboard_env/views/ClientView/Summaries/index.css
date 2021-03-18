@@ -1,8 +1,15 @@
-.tile{
-    text-decoration: none;
-    background-color:#f3f3f3
+.tile {
+	text-decoration: none;
+	background-color: #f3f3f3;
 }
-.tile:hover{
-    cursor: pointer;
-    background-color: lightgray;
+.tile:hover {
+	cursor: pointer;
+	background-color: lightgray;
+}
+.chosenOption:hover {
+	background-color: lightgray;
+	cursor: pointer;
+}
+.headerTitle::first-letter {
+	text-transform: uppercase;
 }

@@ -1,6 +1,6 @@
 {
   "buttons": {
-    
+    "confirm":"Akceptuj",
     "save": "Zapisz",
     "return": "Wróć",
     "cancel":"Anuluj",
@@ -219,6 +219,7 @@
     "others":"Inne"
   },
   "categories": {
+    "chooseFile":"Wybierz plik ",
     "header": "Kategorie",
     "addCategoryButton": "Dodaj kategorie",
     "confirmDeletionText": "Czy na pewno chcesz usunąć kategorie?",

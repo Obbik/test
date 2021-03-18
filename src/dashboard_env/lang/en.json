@@ -1,5 +1,6 @@
 {
   "buttons": {
+    "confirm":"Confirm",
     "save": "Save",
     "return": "Return",
     "goToShop": "Return to shop",
@@ -228,6 +229,7 @@
     "lastTransaction":"Recent transactions "
   },
   "categories": {
+    "chooseFile":"choose File",
     "header": "Categories",
     "addCategoryButton": "Add category",
     "confirmDeletionText": "Confirm category deletion",

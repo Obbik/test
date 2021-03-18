@@ -116,7 +116,7 @@ export default ({ categoryData, getCategories, handleClose }) => {
                 disabled={disableShared()}
               />
               <label className="custom-file-label" htmlFor="image-upload">
-                Choose file
+                {categories.chooseFile}
               </label>
             </div>
           </div>

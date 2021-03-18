@@ -27,7 +27,7 @@ export default ({ headerText, noFooter, classes, handleClose, children, style, d
             <div className="modal-footer bg-light">
               {
                 <button type="submit" disabled={disableSubmit ? "disabled" : ""} className="btn btn-success btn-sm" form="modal-form">
-                  {acceptForm ? "confirm" : TRL_Pack.buttons.save}
+                  {acceptForm ? TRL_Pack.buttons.confirm : TRL_Pack.buttons.save}
                 </button>
               }
             </div>
