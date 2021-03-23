@@ -56,7 +56,7 @@ export default () => {
       }
     })
   }
-
+  console.log(products)
   const getProducts = () => {
     if (categoryId) {
       fetchMssqlApi(`products/${categoryId}`, {}, (products) => setProducts(products))

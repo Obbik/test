@@ -5,14 +5,14 @@ import { NavigationContext } from '../../../context/navigation-context'
 import { LangContext } from '../../../context/lang-context'
 
 
-
 import useFetch from '../../../hooks/fetchMSSQL-hook'
 import useForm from '../../../hooks/form-hook'
 
+import SummaryForm from '../../../components/Modals/SummaryForm';
+
 const SummaryFilter = (props) => {
     const [reports, setReports] = useState([])
-
-    const { reportID } = useParams()
+    const [timeStamps, setTimeStamps] = useState([])
     const { fetchMssqlApi } = useFetch()
     const { TRL_Pack } = useContext(LangContext)
 
@@ -22,6 +22,7 @@ const SummaryFilter = (props) => {
 
     useEffect(() => {
         fetchMssqlApi(`report-conditions`, {}, reports => setReports(reports))
+        fetchMssqlApi(`time-spans`, {}, timeStamps => setTimeStamps(timeStamps))
     }, [])
     return (
         <>
@@ -30,24 +31,18 @@ const SummaryFilter = (props) => {
                     <button
                         onClick={() => history.goBack()}
                         className=" btn btn-link text-decoration-none"
-                    // onClick={openForm()}
+
                     >
-                        <i className="fas fa-arrow-left mr-2" /> wróć
-                </button>
+                        {/* <i className="fas fa-arrow-left mr-2" /> wróć */}
+                    </button>
                     <div style={{ flex: "1" }} />
                     <button
                         className=" btn btn-link text-decoration-none "
-                    // onClick={openForm()}
-                    >
-                        <i className="fa fa-download mr-2" /> Pobierz raport
-                </button>
-                    <button
-                        className=" btn btn-link text-decoration-none "
-                    // onClick={openForm()}
+                        onClick={openForm()}
                     >
                         <i className="fas fa-plus ml-2" /> Dodaj Raport
                 </button>
-
+                    {console.log(reports)}
                 </div>
             </div>
             <div className="overflow-auto text-center">
@@ -58,9 +53,11 @@ const SummaryFilter = (props) => {
                             {/* <th>User</th> */}
                             <th>Name</th>
                             <th>Time</th>
-                            {/* <th>shared</th>
-                            <th>mail sender</th>
-                            <th>datetime</th> */}
+                            <th>shared</th>
+                            {/* <th>mail sender</th>
+                            <th>datetime</th> */ }
+                            <th></th>
+                            <th></th>
                             <th></th>
                         </tr>
                     </thead>
@@ -70,27 +67,37 @@ const SummaryFilter = (props) => {
                                 <tr key={idx} className="mx-2">
                                     <td>{data.ReportConditionId}</td>
                                     <td>{data.Name}</td>
-                                    <td>{data.TimeSpanId}</td>
-                                    {/* <td><input type="checkbox" value={data.mailSender} checked={data.mailSender ? true : null} disabled /></td>
-                                    <td><input type="checkbox" value={data.shared} checked={data.shared ? true : null} disabled /></td> */}
-                                    {/* <td style={{ width: "30px" }}>{data.stworzony}</td> */}
-                                    <td style={{ width: "30px" }}>  <Link
-                                        to={`${props.location.pathname}/${data.ReportConditionId}`}
-                                        className="btn btn-link link-icon"
-                                    >
-                                        <i className="far fa-edit" />
-                                    </Link></td>
+                                    <td>{data.TimeSpanName}</td>
+                                    <td style={{ width: "30px" }}>
+                                        <Link
+                                            to={`${props.location.pathname}/${data.ReportConditionId}`}
+                                            className="btn btn-link link-icon"
+                                        >
+                                            <i className="far fa-edit" />
+                                        </Link></td>
+
+                                    <td style={{ width: "30px" }}>
+                                        <button
+                                            className=" btn btn-link text-decoration-none "
+                                        >
+                                            <i className="fa fa-download" />
+                                        </button>
+                                    </td>
+
                                 </tr>
 
                             ))}
                     </tbody>
                 </table>
             </div>
-            {/* {form !== "acceptModal" && form && (
-                <AdminForm
+            {form !== "acceptModal" && form && (
+                <SummaryForm
+                    headerText="Podsumownie"
                     handleClose={closeForm}
+                    timeStamps={timeStamps}
+                    reportName={reports}
                 />
-            )} */}
+            )}
         </>
 
     )

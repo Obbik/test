@@ -59,7 +59,7 @@ export default () => {
   sessionStorage.setItem("DB_TYPE", DB_TYPE)
   let authRoutes = []
 
-
+  console.log(isAuth)
 
   if (sessionStorage.getItem('DB_TYPE') === "mysql") // MACHINE Routes
   {
@@ -138,10 +138,10 @@ export default () => {
       }
       //repair tis shit nested rutes
       authRoutes.push(
-        { path: '/summaries', component: Summaries },
-        { path: '/summaries/:summariesId', component: SummaryCategory },
-        { path: '/summaries/:summariesId/:summariesCategoryId', component: SummaryFilter },
-        { path: '/summaries/:summariesId/:summariesCategoryId/:summariesReportId', component: SummariesReport }
+        // { path: '/summaries', component: Summaries },
+        // { path: '/summaries/:summariesId', component: SummaryCategory },
+        { path: '/summaries', component: SummaryFilter },
+        { path: '/summaries/:summariesReportId', component: SummariesReport }
 
       )
     })

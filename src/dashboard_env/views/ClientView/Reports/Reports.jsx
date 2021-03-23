@@ -288,7 +288,6 @@ export default () => {
     const reportDateRange = !isDateRangeDisabled
       ? `?dateFrom=${dateFrom.value}&dateTo=${dateTo.value}`
       : ''
-    console.log("/reports/" + report.apiPath + reportDateRange)
     fetchMssqlApi("/reports/" + report.apiPath + reportDateRange, {}, data => {
       report.data = data
       setHeaderData({ text: TRL_Pack.reports.header, subtext: report.label })

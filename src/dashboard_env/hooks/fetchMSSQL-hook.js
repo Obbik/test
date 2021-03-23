@@ -5,7 +5,10 @@ import { LoaderContext } from '../context/loader-context'
 import { ErrorContext } from '../context/error-context'
 import { API_URL } from '../config/config'
 
+import { useHistory } from 'react-router-dom'
+
 export default () => {
+  const history = useHistory()
   const { incrementRequests, decrementRequests } = useContext(LoaderContext)
   const { ErrorNotification, SuccessNofication } = useContext(NotificationContext)
   const { setError } = useContext(ErrorContext)
@@ -42,7 +45,7 @@ export default () => {
       .catch(err => {
         decrementRequests()
         if (onError) onError(err)
-
+        if (err.response.data.message === "jwt malformed") window.location.reload();
         if (method === 'GET') setError(err.response?.data || 'Failed to fetch data.')
         else ErrorNotification(err.response?.data || err.toString())
 
