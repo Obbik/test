@@ -369,10 +369,8 @@ export default () => {
                               >
                                 <i className="fas fa-times text-danger" />
                               </button>}
-
                           </td>
                         </tr>
-
                       ))}
                   </tbody>
                 </table>

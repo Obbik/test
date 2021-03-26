@@ -43,7 +43,6 @@ import Reports from '../views/ClientView/Reports/Reports'
 import Tags from '../views/ClientView/Tags/Tags'
 import Summaries from "../views/ClientView/Summaries/Summaries"
 import useAuth from '../hooks/auth-hook'
-import SummaryCategory from '../views/ClientView/Summaries/SummaryCategory'
 import SummaryFilter from '../views/ClientView/Summaries/SummaryFilter'
 import SummariesReport from "../views/ClientView/Summaries/SummariesReport"
 
@@ -138,10 +137,9 @@ export default () => {
       }
       //repair tis shit nested rutes
       authRoutes.push(
-        // { path: '/summaries', component: Summaries },
-        // { path: '/summaries/:summariesId', component: SummaryCategory },
-        { path: '/summaries', component: SummaryFilter },
-        { path: '/summaries/:summariesReportId', component: SummariesReport }
+        { path: '/summaries', component: Summaries },
+        { path: '/summaries/:ReportId', component: SummaryFilter },
+        { path: '/summaries/:ReportId/:summariesReportId', component: SummariesReport }
 
       )
     })

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, createRef } from 'react'
 import { useHistory, Link, useParams } from "react-router-dom";
 import useFetch from '../../../hooks/fetchMSSQL-hook'
 import { Accordion, Card, Button } from 'react-bootstrap'
@@ -6,19 +6,21 @@ const SummariesReport = () => {
     const { fetchMssqlApi } = useFetch()
     const { summariesReportId } = useParams()
     const history = useHistory()
-
+    const input = createRef()
     const [products, setProducts] = useState([])
     const [recipies, setRecipies] = useState([])
     const [machines, setMachines] = useState([])
     const [report, setReports] = useState([])
     const [timeStamps, setTimeStamps] = useState([])
-    const [chosenOptions, setChosenOptions] = useState({ machine: ["123", "1234", "4321"], users: [], products: [], recipies: [] })
+    const [chosenOptions, setChosenOptions] = useState({ machine: [], user: [], product: [], recipe: [] })
+    const [displayChosenOptions, setDisplayChosenOptions] = useState(chosenOptions)
     const [inputData, setInputData] = useState({
         machine: "",
-        products: "",
-        recipies: "",
-        users: ""
+        product: "",
+        recipe: "",
+        user: ""
     })
+
     const [actualReportData, setActualReportData] = useState(
         {
             ReportConditionId: "",
@@ -30,16 +32,50 @@ const SummariesReport = () => {
             IncludeAllUsers: "",
         }
     )
+    console.log(actualReportData)
     const addButton = (name) => {
-        if (inputData[name].length > 0)
-            setChosenOptions(prev => ({ ...prev, [name]: [...prev[name], inputData[name]] }))
+        let nameObject = 0
+        const upperFirstLetterName = `${name.charAt(0).toUpperCase() + name.slice(1)}`
+        const id = parseInt(inputData[name])
+        if (name === "machine") {
+            nameObject = machines.find(obj => obj.MachineId == id)
+        }
+        else if (name === "product") {
+            nameObject = products.find(obj => obj.EAN == id)
+        }
+        else if (name === "recipe") {
+            nameObject = recipies.find(obj => obj.RecipeId == id)
+        }
+        if (!nameObject) return
+
+        fetchMssqlApi(`report-condition-${name}`,
+            { method: "POST", data: { ReportConditionId: summariesReportId, [upperFirstLetterName + "Id"]: id } })
+        if (name === "machine") {
+            setChosenOptions(prev =>
+            ({
+                ...prev, [name]: [...prev[name],
+                {
+                    [upperFirstLetterName + "Name"]: nameObject[upperFirstLetterName + "Name"],
+                    [`ReportCondition${upperFirstLetterName}Id`]: nameObject[upperFirstLetterName + "Id"]
+                }]
+            }))
+        }
+        else if (name === "product" || name === "recipe") {
+            setChosenOptions(prev =>
+            ({
+                ...prev, [name]: [...prev[name],
+                {
+                    [upperFirstLetterName + "Name"]: nameObject.Name,
+                    [`ReportCondition${upperFirstLetterName}Id`]: nameObject[upperFirstLetterName + "Id"]
+                }]
+            }))
+        }
     }
-    console.log(chosenOptions)
+
     const handleChange = (e, checkbox, inputName) => {
 
         const name = e.target.name
         const value = e.target.value
-
         if (value === "false" && checkbox) {
             setChosenOptions(prev => ({ ...prev, [inputName]: [] }))
         }
@@ -51,7 +87,6 @@ const SummariesReport = () => {
             }))
         }
         else if (name === "TimeSpanName" || name === "Name") {
-            console.log(name)
             setActualReportData(prev => ({
                 ...prev,
                 [name]: value
@@ -64,30 +99,61 @@ const SummariesReport = () => {
                     [name]: value
                 }))
     }
+    const toggleTitle = (name) => {
+        displayChosenOptions[name].length !== 0 ?
+            setDisplayChosenOptions(prev => ({ ...prev, [name]: [] }))
+            :
+            setDisplayChosenOptions(prev => ({ ...prev, [name]: chosenOptions[name] }))
+    }
     const showSelectedTitle = (name) => {
+        const upperFirstLetterName = `${name.charAt(0).toUpperCase() + name.slice(1)}`
         return (
             <div>
-                {chosenOptions[name].length > 0 && <div className="text-center headerTitle" style={{ background: "#f3f3f3" }}>{name}</div>}
-                {chosenOptions[name].map((val, idx) =>
-                    <div key={idx} className="text-center chosenOption" onClick={() => setChosenOptions(prev => (chosenOptions[name].splice(idx, 1), { ...prev, [name]: chosenOptions[name] }))}>{val}</div>)
+                {chosenOptions[name].length > 0 && <div className="text-center headerTitle" style={{ background: "#f3f3f3" }}>
+                    <input className="form-check-input" style={{ marginTop: "6px", position: "relative" }} type="checkbox" id={name} onClick={() => toggleTitle(name)} />
+                    <label className="form-check-label" htmlFor={name}>{name}</label>
+                </div>}
+
+                {displayChosenOptions[name].map((value, idx) =>
+                    <div key={idx} className="text-center chosenOption" onClick={
+
+                        () => fetchMssqlApi(`report-condition-${name}/${value[`ReportCondition${upperFirstLetterName}Id`]}`, { method: "DELETE" },
+                            setChosenOptions(prev => (chosenOptions[name].splice(idx, 1), { ...prev, [name]: chosenOptions[name] }))
+                        )
+                    }>
+                        {`${value[upperFirstLetterName + "Name"]}`}
+                    </div>)
                 }
             </div >
         )
     }
 
     useEffect(() => {
-        fetchMssqlApi(`/products`, {}, product => setProducts(product))
+        fetchMssqlApi(`/products-list`, {}, product => setProducts(product))
+        fetchMssqlApi(`/reports-list`, {}, report => setReports(report))
         fetchMssqlApi(`/recipes`, {}, recipies => setRecipies(recipies))
         fetchMssqlApi(`/machines`, {}, machines => setMachines(machines))
         fetchMssqlApi(`/report-conditions`, {}, report => setReports(report))
         fetchMssqlApi(`time-spans`, {}, timeStamps => setTimeStamps(timeStamps))
-        fetchMssqlApi(`report-condition/${summariesReportId}`, {}, report => setActualReportData(...report))
+        fetchMssqlApi(`report-condition/${summariesReportId}`, {}, report => setActualReportData(report))
+        fetchMssqlApi(`report-condition-machines?reportConditionId=${summariesReportId}`, {}, value =>
+            setChosenOptions(prev => ({ ...prev, machine: value })))
+        fetchMssqlApi(`report-condition-users?reportConditionId=${summariesReportId}`, {}, value =>
+            setChosenOptions(prev => ({ ...prev, user: value })))
+        fetchMssqlApi(`report-condition-products?reportConditionId=${summariesReportId}`, {}, value =>
+            setChosenOptions(prev => ({ ...prev, product: value })))
+        fetchMssqlApi(`/report-condition-recipes?reportConditionId=${summariesReportId}`, {}, value =>
+            setChosenOptions(prev => ({ ...prev, recipe: value })))
     }, [])
 
     const handleSubmit = (e) => {
         e.preventDefault()
     }
 
+    useEffect(() => {
+        setDisplayChosenOptions(chosenOptions)
+
+    }, [chosenOptions])
 
     return (
         <>
@@ -107,7 +173,12 @@ const SummariesReport = () => {
                             <form id="machine-form" onSubmit={(e) => handleSubmit(e)} autoComplete="off">
                                 <div className="row  text-center">
                                     <div className="col-lg-12 mb-2  ">
-                                        ID:  {actualReportData.ReportConditionId}
+                                        ID: {actualReportData.ReportConditionId}
+                                    </div>
+                                </div>
+                                <div className="row  text-center">
+                                    <div className="col-lg-12 mb-2  ">
+                                        Typ raportu:  {actualReportData.ReportName}
                                     </div>
                                 </div>
                                 <div className="row mb-3 text-center">
@@ -120,15 +191,16 @@ const SummariesReport = () => {
                                             style={{ maxWidth: 275 }}
                                             list="Name"
                                             name="Name"
+                                            disabled
                                             value={actualReportData.Name}
                                             onChange={e => handleChange(e)}
                                             minLength={2}
                                             maxLength={50}
 
                                         />
-                                        <datalist id="Name">
+                                        {/* <datalist id="Name">
                                             {report.map((report) => <option key={report.ReportConditionId} value={report.Name} />)}
-                                        </datalist>
+                                        </datalist> */}
                                     </div>
                                 </div>
                                 <div className="row mb-3 text-center">
@@ -173,7 +245,7 @@ const SummariesReport = () => {
                                             maxLength={50}
                                         >
                                             <option defaultValue >Open this select menu</option>
-                                            {machines.map((machine, idx) => <option key={idx} value={machine.MachineName} > {machine.MachineName}</option>)}
+                                            {machines.map((machine, idx) => <option key={machine.MachineId} value={parseInt(machine.MachineId)} > {machine.MachineName}</option>)}
 
                                         </select>
                                         <button className="fas fa-plus btn btn-primary" onClick={() => addButton("machine")} />
@@ -184,7 +256,7 @@ const SummariesReport = () => {
                                         <input className="col-lg-4 mb-2 mb-lg-0"
                                             name="IncludeAllProducts"
                                             checked={actualReportData.IncludeAllProducts}
-                                            type="checkbox" onChange={e => handleChange(e, true, "products")}
+                                            type="checkbox" onChange={e => handleChange(e, true, "product")}
                                             value={actualReportData.IncludeAllProducts} />
                                         IncludeAllProducts
                                     </div>
@@ -192,7 +264,7 @@ const SummariesReport = () => {
                                         <select
                                             className={" form-control mx-auto mx-lg-0 text-center"}
                                             style={{ maxWidth: 275 }}
-                                            name="products"
+                                            name="product"
                                             value={inputData.product}
                                             onChange={(value) => handleChange(value)}
                                             minLength={2}
@@ -201,9 +273,9 @@ const SummariesReport = () => {
                                             required
                                         >
                                             <option defaultValue >Open this select menu</option>
-                                            {products.map((product, idx) => <option key={idx} value={product.Name} >{product.Name}</option>)}
+                                            {products.map((product, idx) => <option key={idx} value={product.EAN} >{product.Name}</option>)}
                                         </select>
-                                        <button className="fas fa-plus btn btn-primary" onClick={() => addButton("products")} />
+                                        <button className="fas fa-plus btn btn-primary" onClick={() => addButton("product")} />
                                     </div>) : ""}
                                 </div>
                                 <div className="row mb-3 text-center">
@@ -219,16 +291,16 @@ const SummariesReport = () => {
                                         <select
                                             className={" form-control mx-auto mx-lg-0 text-center"}
                                             style={{ maxWidth: 275 }}
-                                            name="recipies"
+                                            name="recipe"
                                             value={inputData.recipies}
                                             onChange={(value) => handleChange(value)}
                                             aria-label="Select Value"
                                             required
                                         >
                                             <option defaultValue >Open this select menu</option>
-                                            {recipies.map((recipe) => <option key={recipe.RecipeId} value={recipe.Name} >{recipe.Name}</option>)}
+                                            {recipies.map((recipe) => <option key={recipe.RecipeId} value={recipe.RecipeId} >{recipe.Name}</option>)}
                                         </select>
-                                        <button type="button" className="fas fa-plus btn btn-primary" onClick={() => addButton("recipies")} />
+                                        <button type="button" className="fas fa-plus btn btn-primary" onClick={() => addButton("recipe")} />
                                     </div>) : ""}
                                 </div>
 
@@ -279,9 +351,9 @@ const SummariesReport = () => {
                         <Accordion.Collapse eventKey="0" style={{ overflowY: "scroll", height: "437.5px" }}>
                             <Card.Body className="p-0 m-0" style={{ height: "437.5px" }}>
                                 {showSelectedTitle("machine")}
-                                {showSelectedTitle("users")}
-                                {showSelectedTitle("products")}
-                                {showSelectedTitle("recipies")}
+                                {showSelectedTitle("user")}
+                                {showSelectedTitle("product")}
+                                {showSelectedTitle("recipe")}
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>

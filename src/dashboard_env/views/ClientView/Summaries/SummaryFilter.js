@@ -19,9 +19,8 @@ const SummaryFilter = (props) => {
     const { form, openForm, closeForm } = useForm()
 
     let history = useHistory();
-
     useEffect(() => {
-        fetchMssqlApi(`report-conditions`, {}, reports => setReports(reports))
+        fetchMssqlApi(`report-conditions?reportId=${props.match.params.ReportId}`, {}, reports => setReports(reports))
         fetchMssqlApi(`time-spans`, {}, timeStamps => setTimeStamps(timeStamps))
     }, [])
     return (
@@ -33,7 +32,7 @@ const SummaryFilter = (props) => {
                         className=" btn btn-link text-decoration-none"
 
                     >
-                        {/* <i className="fas fa-arrow-left mr-2" /> wróć */}
+                        <i className="fas fa-arrow-left mr-2" /> wróć
                     </button>
                     <div style={{ flex: "1" }} />
                     <button

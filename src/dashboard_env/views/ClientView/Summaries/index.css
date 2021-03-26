@@ -1,6 +1,5 @@
 .tile {
 	text-decoration: none;
-	background-color: #f3f3f3;
 }
 .tile:hover {
 	cursor: pointer;

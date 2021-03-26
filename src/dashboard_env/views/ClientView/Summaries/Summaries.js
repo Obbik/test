@@ -1,32 +1,45 @@
-import React from 'react'
-import { Link, Route, Switch, Redirect } from "react-router-dom"
-import SummaryCategory from "./SummaryCategory"
+import React, { useEffect, useState } from 'react'
+import { Link, Route, Switch, useParams } from "react-router-dom"
 import './index.css'
 
+import useFetch from '../../../hooks/fetchMSSQL-hook'
 
 
 const Summaries = () => {
 
-    const categories = ["Dokumenty", "Faktury", "Magazyn", "Maszyny", "Produkty"]
+    const { ReportIdName } = useParams()
+    const { fetchMssqlApi } = useFetch()
+    const [reports, setReports] = useState([])
 
+
+    useEffect(() => {
+        fetchMssqlApi(`/reports-list`, {}, report => setReports(report))
+    }, [])
     return (
-        <div className="d-flex align-items-center flex-column justify-content-center text-center ">
+        <div className="d-flex align-items-center flex-column justify-content-center align-self-center text-center ">
             <h1>Wybierz raport</h1>
-            {categories.map((section, key) => (
-                <div key={key} className="card blue border card rounded col-12 my-1 col-md-6 tile" style={{ "lineHeight": "5" }}>
-                    <Link style={{ textDecoration: 'none' }} to={`/summaries/${section.toLowerCase()}`}>
-                        <p className="card-title font-weight-bold text-decoration-none" style={{ "fontSize": "2rem" }}>{section}</p>
-                    </Link>
-                    <Switch>
-                        <Route
-                            exact
-                            path={`/summaries/${section.toLowerCase()}`}
+            <div className=" blue border  rounded col-12 my-1 col-md-6 my-2 py-2 ">
+                {reports.map((section, key) => (
+                    <div key={key} >
+                        {console.log(section)}
+                        <hr />
+                        <Link style={{ textDecoration: 'none' }}
+                            to={`/summaries/${section.ReportId}`}
                         >
-                            <SummaryCategory data={section} />
-                        </Route>
-                    </Switch>
-                </div>
-            ))}
+
+                            <p className=" font-weight-bold text-decoration-none" style={{ "fontSize": "2rem" }}>{section.Name}</p>
+                        </Link>
+                        <Switch>
+                            <Route
+                                exact
+                                path={`/summaries/${section.ReportId}`}
+                            >
+                            </Route>
+                        </Switch>
+                    </div>
+                ))}
+                <hr />
+            </div>
         </div>
     )
 }
