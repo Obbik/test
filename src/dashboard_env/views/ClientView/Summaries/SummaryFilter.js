@@ -17,7 +17,7 @@ const SummaryFilter = (props) => {
     const { TRL_Pack } = useContext(LangContext)
 
     const { form, openForm, closeForm } = useForm()
-
+    console.log(reports)
     let history = useHistory();
     useEffect(() => {
         fetchMssqlApi(`report-conditions?reportId=${props.match.params.ReportId}`, {}, reports => setReports(reports))
@@ -67,6 +67,7 @@ const SummaryFilter = (props) => {
                                     <td>{data.ReportConditionId}</td>
                                     <td>{data.Name}</td>
                                     <td>{data.TimeSpanName}</td>
+                                    <td>{data.IsShared ? "współdzdzielone" : "nie współdzielona"}</td>
                                     <td style={{ width: "30px" }}>
                                         <Link
                                             to={`${props.location.pathname}/${data.ReportConditionId}`}
@@ -95,6 +96,7 @@ const SummaryFilter = (props) => {
                     handleClose={closeForm}
                     timeStamps={timeStamps}
                     reportName={reports}
+                    reportId={props.match.params.ReportId}
                 />
             )}
         </>

@@ -1,33 +1,44 @@
 import React, { useState } from 'react'
 import FormSkel from './../../components/Modals/FormSkel'
 
+import useFetch from '../../hooks/fetchMSSQL-hook'
 
 
+const SummaryForm = ({ headerText, handleClose, timeStamps, reportId }) => {
+    const { fetchMssqlApi } = useFetch()
 
-const SummaryForm = ({ headerText, handleClose, timeStamps, reportName }) => {
+    const [time, setTime] = useState(1)
+    const [name, SetName] = useState()
+    // const TimeSpanId = timeStamps.find(obj => obj.Name == time)
 
-    const [time, setTime] = useState()
-
-    const handleChange = (e) => {
-
-
-        setTime(e.target.value)
-
+    const handleSubmit = (e) => {
+        fetchMssqlApi("report-condition", {
+            method: "POST",
+            data: {
+                ReportId: parseInt(reportId),
+                Name: name,
+                IncludeAllMachines: 0,
+                IncludeAllProducts: 0,
+                IncludeAllRecipes: 0,
+                IncludeAllUsers: 0,
+                TimeSpanId: parseInt(time)
+            }
+        })
     }
-
     return (
         <>
             <FormSkel
                 headerText={headerText}
                 handleClose={handleClose}
             >
-                <form onSubmit={null} id="modal-form" autoComplete="off">
+                <form onSubmit={e => handleSubmit(e)} id="modal-form" autoComplete="off">
                     <div className="form-group">
                         <label className="h6">Nazwa </label>
                         <input
                             name="name"
                             className="form-control"
-                            // defaultValue={clientData && clientData.Name}
+                            value={name}
+                            onChange={(e) => SetName(e.target.value)}
                             required
                         />
                     </div>
@@ -39,12 +50,12 @@ const SummaryForm = ({ headerText, handleClose, timeStamps, reportName }) => {
 
                                 name="TimeSpanName"
                                 value={time}
-                                onChange={e => handleChange(e)}
+                                onChange={(e) => setTime(e.target.value)}
                                 minLength={2}
                                 maxLength={50}
                                 required
                             >
-                                {timeStamps.map((timestamp) => <option key={timestamp.TimeSpanId} value={timestamp.Name} > {timestamp.Name} </option>)}
+                                {timeStamps.map((timestamp) => <option key={timestamp.TimeSpanId} value={timestamp.TimeSpanId} > {timestamp.Name} </option>)}
                             </select>
                         </div>
                     </div>

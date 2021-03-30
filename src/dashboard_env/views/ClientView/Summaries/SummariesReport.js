@@ -1,18 +1,23 @@
-import React, { useState, useEffect, useRef, createRef } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useHistory, Link, useParams } from "react-router-dom";
 import useFetch from '../../../hooks/fetchMSSQL-hook'
 import { Accordion, Card, Button } from 'react-bootstrap'
-const SummariesReport = () => {
+import axios from "axios"
+import { API_URL } from '../../../config/config'
+import notificationContext, { NotificationContext } from '../../../context/notification-context'
+
+const SummariesReport = (props) => {
+    const { ErrorNotification, SuccessNofication } = useContext(NotificationContext)
     const { fetchMssqlApi } = useFetch()
     const { summariesReportId } = useParams()
     const history = useHistory()
-    const input = createRef()
     const [products, setProducts] = useState([])
     const [recipies, setRecipies] = useState([])
     const [machines, setMachines] = useState([])
     const [report, setReports] = useState([])
+
     const [timeStamps, setTimeStamps] = useState([])
-    const [chosenOptions, setChosenOptions] = useState({ machine: [], user: [], product: [], recipe: [] })
+    const [chosenOptions, setChosenOptions] = useState({ machine: ["21602", "NEC154057"], user: [], product: ["Barszcz MASPEX 12kg", "lion 42g"], recipe: [] })
     const [displayChosenOptions, setDisplayChosenOptions] = useState(chosenOptions)
     const [inputData, setInputData] = useState({
         machine: "",
@@ -20,7 +25,6 @@ const SummariesReport = () => {
         recipe: "",
         user: ""
     })
-
     const [actualReportData, setActualReportData] = useState(
         {
             ReportConditionId: "",
@@ -32,8 +36,8 @@ const SummariesReport = () => {
             IncludeAllUsers: "",
         }
     )
-    console.log(actualReportData)
     const addButton = (name) => {
+        const token = localStorage.getItem('token')
         let nameObject = 0
         const upperFirstLetterName = `${name.charAt(0).toUpperCase() + name.slice(1)}`
         const id = parseInt(inputData[name])
@@ -46,39 +50,82 @@ const SummariesReport = () => {
         else if (name === "recipe") {
             nameObject = recipies.find(obj => obj.RecipeId == id)
         }
+
         if (!nameObject) return
 
-        fetchMssqlApi(`report-condition-${name}`,
-            { method: "POST", data: { ReportConditionId: summariesReportId, [upperFirstLetterName + "Id"]: id } })
-        if (name === "machine") {
-            setChosenOptions(prev =>
-            ({
-                ...prev, [name]: [...prev[name],
-                {
-                    [upperFirstLetterName + "Name"]: nameObject[upperFirstLetterName + "Name"],
-                    [`ReportCondition${upperFirstLetterName}Id`]: nameObject[upperFirstLetterName + "Id"]
-                }]
-            }))
-        }
-        else if (name === "product" || name === "recipe") {
-            setChosenOptions(prev =>
-            ({
-                ...prev, [name]: [...prev[name],
-                {
-                    [upperFirstLetterName + "Name"]: nameObject.Name,
-                    [`ReportCondition${upperFirstLetterName}Id`]: nameObject[upperFirstLetterName + "Id"]
-                }]
-            }))
-        }
-    }
 
+        else if (name === "product")
+            axios({
+                method: "POST",
+                url: `${API_URL}/api/report-condition-${name}`,
+                data: { ReportConditionId: parseInt(summariesReportId), Ean: id },
+                headers: { Authorization: `Bearer ${token}` }
+            }).then((res) => {
+                SuccessNofication(res.data.message)
+                setChosenOptions(prev =>
+                ({
+                    ...prev, [name]: [...prev[name],
+                    {
+                        [upperFirstLetterName + "Name"]: nameObject.Name,
+                        [`ReportCondition${upperFirstLetterName}Id`]: res.data.id
+                    }]
+                }))
+            }).catch(err => {
+                if (err.response.data.message === "jwt malformed") window.location.reload();
+                else ErrorNotification(err.response?.data || err.toString())
+            })
+
+        if (name === "machine") {
+            axios({
+                method: "POST",
+                url: `${API_URL}/api/report-condition-${name}`,
+                data: { ReportConditionId: parseInt(summariesReportId), MachineId: id },
+                headers: { Authorization: `Bearer ${token}` }
+            }).then((res) => {
+                SuccessNofication(res.data.message)
+                setChosenOptions(prev =>
+                ({
+                    ...prev, [name]: [...prev[name],
+                    {
+                        [upperFirstLetterName + "Name"]: nameObject.MachineName,
+                        [`ReportCondition${upperFirstLetterName}Id`]: res.data.id
+                    }]
+                }))
+            }).catch(err => {
+                if (err.response.data.message === "jwt malformed") window.location.reload();
+                else ErrorNotification(err.response?.data || err.toString())
+            })
+        }
+        else if (name === "recipe") {
+            axios({
+                method: "POST",
+                url: `${API_URL}/api/report-condition-${name}`,
+                data: { ReportConditionId: parseInt(summariesReportId), RecipeId: id },
+                headers: { Authorization: `Bearer ${token}` }
+            }).then((res) => {
+                SuccessNofication(res.data.message)
+                setChosenOptions(prev =>
+                ({
+                    ...prev, [name]: [...prev[name],
+                    {
+                        [upperFirstLetterName + "Name"]: nameObject.Name,
+                        [`ReportCondition${upperFirstLetterName}Id`]: res.data.id
+                    }]
+                }))
+            }).catch(err => {
+                if (err.response.data.message === "jwt malformed") window.location.reload();
+                else ErrorNotification(err.response?.data || err.toString())
+            })
+        }
+
+    }
     const handleChange = (e, checkbox, inputName) => {
 
         const name = e.target.name
         const value = e.target.value
-        if (value === "false" && checkbox) {
-            setChosenOptions(prev => ({ ...prev, [inputName]: [] }))
-        }
+        // if (value === "false" && checkbox) {
+        //     setChosenOptions(prev => ({ ...prev, [inputName]: [] }))
+        // }
 
         if (checkbox === true) {
             setActualReportData(prev => ({
@@ -107,19 +154,18 @@ const SummariesReport = () => {
     }
     const showSelectedTitle = (name) => {
         const upperFirstLetterName = `${name.charAt(0).toUpperCase() + name.slice(1)}`
+        const includeAll = actualReportData[`IncludeAll${upperFirstLetterName}s`]
         return (
             <div>
                 {chosenOptions[name].length > 0 && <div className="text-center headerTitle" style={{ background: "#f3f3f3" }}>
                     <input className="form-check-input" style={{ marginTop: "6px", position: "relative" }} type="checkbox" id={name} onClick={() => toggleTitle(name)} />
-                    <label className="form-check-label" htmlFor={name}>{name}</label>
+                    <label style={includeAll ? { textDecoration: "line-through" } : {}} className="form-check-label" htmlFor={name}>{name}</label>
                 </div>}
 
                 {displayChosenOptions[name].map((value, idx) =>
-                    <div key={idx} className="text-center chosenOption" onClick={
-
+                    <div key={idx} className="text-center chosenOption" style={includeAll ? { textDecoration: "line-through" } : {}} onClick={
                         () => fetchMssqlApi(`report-condition-${name}/${value[`ReportCondition${upperFirstLetterName}Id`]}`, { method: "DELETE" },
-                            setChosenOptions(prev => (chosenOptions[name].splice(idx, 1), { ...prev, [name]: chosenOptions[name] }))
-                        )
+                            setChosenOptions(prev => (chosenOptions[name].splice(idx, 1), { ...prev, [name]: chosenOptions[name] })))
                     }>
                         {`${value[upperFirstLetterName + "Name"]}`}
                     </div>)
@@ -127,13 +173,22 @@ const SummariesReport = () => {
             </div >
         )
     }
-
+    const handleSortTable = (e) => {
+        for (const [key, value] of Object.entries(displayChosenOptions)) {
+            const uppercaseName = `${key.charAt(0).toUpperCase() + key.slice(1)}Name`
+            const filtered = value.filter(item => item[uppercaseName].includes(e.target.value));
+            e.target.value.length == 0 ? setDisplayChosenOptions(chosenOptions) :
+                setDisplayChosenOptions((prev) => ({
+                    ...prev,
+                    [key]: filtered
+                }))
+        }
+    }
     useEffect(() => {
         fetchMssqlApi(`/products-list`, {}, product => setProducts(product))
         fetchMssqlApi(`/reports-list`, {}, report => setReports(report))
         fetchMssqlApi(`/recipes`, {}, recipies => setRecipies(recipies))
         fetchMssqlApi(`/machines`, {}, machines => setMachines(machines))
-        fetchMssqlApi(`/report-conditions`, {}, report => setReports(report))
         fetchMssqlApi(`time-spans`, {}, timeStamps => setTimeStamps(timeStamps))
         fetchMssqlApi(`report-condition/${summariesReportId}`, {}, report => setActualReportData(report))
         fetchMssqlApi(`report-condition-machines?reportConditionId=${summariesReportId}`, {}, value =>
@@ -148,6 +203,23 @@ const SummariesReport = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        const { ReportId } = report.find(obj => obj.Name === actualReportData.ReportName)
+
+        const { Name, TimeSpanName, IncludeAllMachines, IncludeAllProducts, IncludeAllRecipes } = actualReportData
+
+        const { TimeSpanId } = timeStamps.find(obj => obj.Name === TimeSpanName)
+        fetchMssqlApi(`report-condition/${actualReportData.ReportConditionId}`, {
+            method: "PUT", data:
+            {
+                Name,
+                TimeSpanId: parseInt(TimeSpanId),
+                ReportId: parseInt(ReportId),
+                IncludeAllMachines: Number(IncludeAllMachines),
+                IncludeAllProducts: Number(IncludeAllProducts),
+                IncludeAllRecipes: Number(IncludeAllRecipes),
+                IncludeAllUsers: 0
+            }
+        })
     }
 
     useEffect(() => {
@@ -159,18 +231,20 @@ const SummariesReport = () => {
         <>
             <div className="row mb-4 justify-content-center">
                 <div className="col-12 col-md-6 mb-4 mb-md-0">
-                    <button
+                    <div
                         style={{ width: "1000px !important" }}
-                        onClick={() => history.goBack()}
-                        className=" btn btn-link text-left text-decoration-none w-100"
+
+                        className=" btn btn-link justify-content-between d-flex text-decoration-none w-100"
 
                     >
-                        <i className="fas fa-arrow-left mr-2" /> wróć
-                </button>
+                        <i className="fas fa-arrow-left mr-2 text-decoration-none" onClick={() => history.goBack()} > wróć</i>
+                        <i className="fa fa-download mr-2 text-decoration-none" onClick={() => history.goBack()} > pobierz</i>
+                    </div>
+
                     <div className="card">
                         <h5 className="card-header">Podstawowe Dane </h5>
                         <div className="card-body d-flex flex-column justify-content-center ">
-                            <form id="machine-form" onSubmit={(e) => handleSubmit(e)} autoComplete="off">
+                            <form id="machine-form" onSubmit={(e) => e.preventDefault()} autoComplete="off">
                                 <div className="row  text-center">
                                     <div className="col-lg-12 mb-2  ">
                                         ID: {actualReportData.ReportConditionId}
@@ -191,7 +265,6 @@ const SummariesReport = () => {
                                             style={{ maxWidth: 275 }}
                                             list="Name"
                                             name="Name"
-                                            disabled
                                             value={actualReportData.Name}
                                             onChange={e => handleChange(e)}
                                             minLength={2}
@@ -283,7 +356,7 @@ const SummariesReport = () => {
                                         <input className="col-lg-4 mb-2 mb-lg-0"
                                             name="IncludeAllRecipes"
                                             checked={actualReportData.IncludeAllRecipes}
-                                            type="checkbox" onChange={e => handleChange(e, true, "recipies")}
+                                            type="checkbox" onChange={e => handleChange(e, true, "recipe")}
                                             value={actualReportData.IncludeAllRecipes} />
                                         IncludeAllRecipes
                                     </div>
@@ -332,7 +405,7 @@ const SummariesReport = () => {
                                     </div>
                                 </div> */}
                                 <div className="text-center my-3">
-                                    <button className="btn btn-primary" >Submit</button>
+                                    <button className="btn btn-primary" onClick={(e) => handleSubmit(e)} >Submit</button>
                                 </div>
                             </form>
 
@@ -342,7 +415,9 @@ const SummariesReport = () => {
 
                 </div>
                 <Accordion defaultActiveKey="0" className="col-lg-3 col-md-6 col-sm-12">
+
                     <Card style={{ marginTop: "37.5px" }}>
+                        <input type="text" className="w-100 form-control" onChange={(e) => handleSortTable(e)} />
                         <Card.Header>
                             <Accordion.Toggle as={Button} variant="link" eventKey="0">
                                 Twoje wybory
