@@ -6,6 +6,7 @@
 	background-color: lightgray;
 }
 .chosenOption:hover {
+	text-decoration: line-through;
 	background-color: lightgray;
 	cursor: pointer;
 }
