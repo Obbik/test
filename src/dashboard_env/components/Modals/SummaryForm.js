@@ -9,7 +9,6 @@ const SummaryForm = ({ headerText, handleClose, timeStamps, reportId }) => {
 
     const [time, setTime] = useState(1)
     const [name, SetName] = useState()
-    // const TimeSpanId = timeStamps.find(obj => obj.Name == time)
 
     const handleSubmit = (e) => {
         fetchMssqlApi("report-condition", {
@@ -21,7 +20,8 @@ const SummaryForm = ({ headerText, handleClose, timeStamps, reportId }) => {
                 IncludeAllProducts: 0,
                 IncludeAllRecipes: 0,
                 IncludeAllUsers: 0,
-                TimeSpanId: parseInt(time)
+                TimeSpanId: parseInt(time),
+                StartDateTime: new Date().toISOString().split('T')[0] + "T" + "00:" + "00:" + "00"
             }
         })
     }

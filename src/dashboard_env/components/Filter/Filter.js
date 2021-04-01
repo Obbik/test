@@ -227,7 +227,8 @@ export default ({ filter, setFilter, columns, data, resetPage, tags, resetFilter
                     {[...new Set(data.map(d => d[Object.keys(d)[col.id - 1]]))]
                       .map(
                         (entry, idx) => (
-                          < option key={idx} value={entry} >{entry === 0 ? TRL_Pack.products.props.notShared : TRL_Pack.products.props.shared} </ option>
+
+                          < option key={idx} value={entry} >{entry === 0 || entry === false ? TRL_Pack.products.props.notShared : TRL_Pack.products.props.shared} </ option>
                         )
 
                       )}

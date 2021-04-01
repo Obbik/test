@@ -106,12 +106,15 @@ export default ({ children }) => {
         case "VD_REPORTS":
           navlinks.push({ text: TRL_Pack.navigation.reports, path: '/reports', icon: 'far fa-file-alt' },)
           break;
+        case "VD_REPORT_CONDITIONS":
+          navlinks.push({ text: TRL_Pack.summaries.summaries, path: '/summaries', icon: 'fas fa-table' },)
+          break;
         default:
           break;
       }
 
     })
-    navlinks.push({ text: "summaries", path: '/summaries', icon: 'fas fa-table' },)
+
   }
   navlinks.push({ text: TRL_Pack.navigation.logout, path: '/logout', icon: 'fas fa-sign-out-alt' })
 

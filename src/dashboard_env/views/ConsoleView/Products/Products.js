@@ -56,7 +56,6 @@ export default () => {
       }
     })
   }
-  console.log(products)
   const getProducts = () => {
     if (categoryId) {
       fetchMssqlApi(`products/${categoryId}`, {}, (products) => setProducts(products))
@@ -233,6 +232,7 @@ export default () => {
   }
 
   const returnParsedIsShared = (col) => {
+    console.log(col)
     if (typeof col === 'string') {
       return col
     }

@@ -70,6 +70,31 @@
     "addedDate":"Date",
     "addTerminal":"Add terminal"
   },
+  "summaries":{
+    "summaries":"Podsumowania",
+    "reportName":"Nazwa raportu",
+    "frequencySending":"Częstotliwość wysyłania",
+    "creationDateTime":"Czas stworzenia",
+    "sharedProduct":"Współdzielony",
+    "includeAllMachines":"Uwzględnij wszystkie maszyny",
+    "includeAllProducts":"Uwzględnij wszystkie produkty",
+    "includeAllRecipes":"Uwzględnij wszystkie receptury",
+    "includeAllUsers":"Uwzględnij wszystkich użytkowników",
+    "searchBar":"Wyszukaj wartości",
+    "recipes":"Receptury",
+    "products":"Produkty",
+    "machines":"Maszyny",
+    "users":"Użytkownicy",
+    "submit":"Zatwierdź",
+    "back":"wróć",
+    "download":"Pobierz",
+    "choises":"Twoje wybory",
+    "endDate":"Data końcowa",
+    "startDate":"Data startowa",
+    "name":"Nazwa",
+    "timeStamp":"Okres Czasu",
+    "addReport":"Dodaj raport"
+  },
   "monitoring": {
     "header": "Monitoring",
     "serialNo": "Serial No",
@@ -249,6 +274,7 @@
     }
   },
   "fullMachine":{
+    "saveVisit":"Save visit",
     "information":"Information",
     "deleteMachin":"Delete machine",
     "editMachine":"Edit machine",

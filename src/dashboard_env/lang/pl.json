@@ -55,6 +55,35 @@
     "showIndexes": "Pokaż indeksy",
     "columns": "Kolumny"
   },
+  "summaries" :{
+
+    "summaries":"Zestawienia",
+    "reportName":"Nazwa raportu",
+    "frequencySending":"Częstotliwość wysyłania",
+    "creationDateTime":"Czas stworzenia",
+    "sharedProduct":"Współdzielony",
+    "includeAllMachines":"wszystkie maszyny",
+    "includeAllProducts":"wszystkie produkty",
+    "includeAllRecipes":"wszystkie receptury",
+    "includeAllUsers":"wszystkich użytkowników",
+    "searchBar":"Wyszukaj wartości",
+    "recipes":"Receptury",
+    "products":"Produkty",
+    "machines":"Maszyny",
+    "users":"Użytkownicy",
+    "submit":"Zatwierdź",
+    "back":"wróć",
+    "download":"Pobierz",
+    "choices":"Twoje wybory",
+    "endDate":"Data końcowa",
+    "startDate":"Data startowa",
+    "name":"Nazwa",
+    "timeStamp":"Okres Czasu",
+    "addReport":"Dodaj raport",
+    "reportType":"Typ raportu:",
+    "openSelectBar":"Naciśnij aby otworzyć menu"
+    
+  },
   "monitoring": {
     "header": "Monitoring",
     "serialNo": "Nr seryjny",
@@ -294,6 +323,7 @@
     "shelf":"półka"
   },
   "fullMachine":{
+    "saveVisit":"Zapisz wizytę",
     "information":"Informacje",
     "deleteMachin":"Usuń maszyne",
     "editMachine":"Edytuj maszyne",
@@ -312,6 +342,7 @@
     "download":"Pobierz",
     "salesReset":"Reset sprzedaży"
   },
+
   "machineRecipies":{
     "number":"Nr",
     "recipies":"Produkt",

@@ -132,16 +132,14 @@ export default () => {
         case "VD_REPORTS":
           authRoutes.push({ path: '/reports', component: Reports })
           break;
+        case "VD_REPORT_CONDITIONS":
+          authRoutes.push({ path: '/summaries', component: Summaries },
+            { path: '/summaries/:ReportId', component: SummaryFilter },
+            { path: '/summaries/:ReportId/:summariesReportId', component: SummariesReport })
+          break;
         default:
           break;
       }
-      //repair tis shit nested rutes
-      authRoutes.push(
-        { path: '/summaries', component: Summaries },
-        { path: '/summaries/:ReportId', component: SummaryFilter },
-        { path: '/summaries/:ReportId/:summariesReportId', component: SummariesReport }
-
-      )
     })
   }
 

@@ -1,24 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { NavigationContext } from '../../../context/navigation-context'
 import { LangContext } from '../../../context/lang-context'
-import { useHistory, useParams, Link } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 import useFetch from '../../../hooks/fetchMSSQL-hook'
 import useForm from '../../../hooks/form-hook'
 import useFilter from '../../../hooks/filter-hook'
 
 
 // import SearchInput from '../../../components/SearchInput/SearchInput'
-import NoResults from '../../../components/NoResults/NoResults'
 import Pagination from '../../../components/Pagination/Pagination'
 import Filter from '../../../components/Filter/Filter'
-
-
 import SummaryForm from '../../../components/Modals/SummaryForm';
-
-
 import filterItems from '../../../util/filterItems'
-
-
 
 
 export default (props) => {
@@ -26,7 +19,6 @@ export default (props) => {
     const { setHeaderData } = useContext(NavigationContext)
     const { TRL_Pack } = useContext(LangContext)
     const { searchedText, updateSearchedText, page, updateCurrentPage } = useFilter()
-    const { categoryId } = useParams()
     const history = useHistory()
 
     const resetPage = () => setFilter(prev => ({ ...prev, page: 1 }))
@@ -35,29 +27,12 @@ export default (props) => {
     const { form, openForm, closeForm } = useForm()
 
 
-
     const [timeStamps, setTimeStamps] = useState([])
     const [reports, setReports] = useState([])
-    const [subscribed, setSubscribed] = useState(false)
-    const [ean, setEan] = useState(null)
+    const [summary, setSummary] = useState([])
 
     const handleSwitchPage = pageNo => () => setFilter(prev => ({ ...prev, page: pageNo }))
 
-    console.log(reports)
-    // const getCategories = () => {
-    //     fetchMssqlApi('categories', {}, categories => {
-    //         setCategories(categories)
-    //         if (categoryId) {
-    //             const currentCategory = categories.find(c => c.CategoryId === categoryId)
-    //             if (currentCategory)
-    //                 setHeaderData({
-    //                     text: TRL_Pack.definitions.products,
-    //                     subtext: currentCategory.Name
-    //                 })
-    //             else history.replace('/products')
-    //         }
-    //     })
-    // }
     const getData = () => {
         fetchMssqlApi(`time-spans`, {}, timeStamps => setTimeStamps(timeStamps))
         fetchMssqlApi(`report-conditions?reportId=${props.match.params.ReportId}`, {}, reports => setReports(reports))
@@ -85,44 +60,42 @@ export default (props) => {
             columns: [
                 {
                     id: 1,
-                    name: "id",
+                    name: "Id",
                     type: "price",
                     sortable: true,
                     searchable: true,
                 },
                 {
                     id: 3,
-                    name: "Report Name",
+                    name: TRL_Pack.summaries.reportName,
                     sortable: true,
                     searchable: true,
                     type: 'text',
                 },
                 {
-                    id: 8,
-                    name: "Częstotliwość wysyłania ",
-                    sortable: true,
-                    searchable: true,
-                    type: 'text',
-                },
-                {
-                    id: 9,
-                    name: "Czas stworzenia",
+                    id: 10,
+                    name: TRL_Pack.summaries.frequencySending,
                     sortable: true,
                     searchable: true,
                     type: 'text',
                 },
                 {
                     id: 11,
-                    name: "Współdzielenie",
+                    name: TRL_Pack.summaries.creationDateTime,
                     sortable: true,
                     searchable: true,
+                    type: 'text',
+                },
+                {
+                    id: 13,
+                    name: TRL_Pack.summaries.sharedProduct,
+                    sortable: true,
+                    searchable: true,
+                    selectable: true,
                     type: 'bool',
                 },
             ]
         }
-
-
-
     }
 
     const reportFilter = row =>
@@ -166,7 +139,6 @@ export default (props) => {
     }
 
     const returnParsedIsShared = (col) => {
-
         if (typeof col === 'string') {
             return col
         }
@@ -189,14 +161,10 @@ export default (props) => {
         } else return defaultFilter
     })
     const filteredProducts = reports.filter(({ Name }) => filterItems(searchedText, Name))
-
-    const handleModal = (ean, isSubscribed) => {
-        setSubscribed(isSubscribed)
-        setEan(ean)
-        openForm("acceptModal")()
-
-    }
-
+    const currentSummary = summary.find(array => (array.ReportId == props.match.params.ReportId))
+    useEffect(() => {
+        fetchMssqlApi(`/reports-list`, {}, summary => setSummary(summary))
+    }, [])
     return (
         <>
             { (
@@ -223,97 +191,95 @@ export default (props) => {
                             }}
                         />
                     )}
+                    <div className="text-center"><h2>{currentSummary?.Name}</h2></div>
                     <div className="d-flex justify-content-end">
                         <button
-                            onClick={() => history.goBack()}
+                            onClick={() => history.push("/summaries")}
                             className=" btn btn-link text-decoration-none"
 
                         >
-                            <i className="fas fa-arrow-left mr-2" /> wróć
-                    </button>
+                            <i className="fas fa-arrow-left mr-2" /> {TRL_Pack.summaries.back}
+                        </button>
                         <div style={{ flex: "1" }} />
                         <button
                             className=" btn btn-link text-decoration-none "
                             onClick={openForm()}
                         >
-                            <i className="fas fa-plus ml-2" /> Dodaj Raport
-                </button>
+                            <i className="fas fa-plus ml-2" /> {TRL_Pack.summaries.addReport}
+                        </button>
                     </div>
-                    {!filteredProducts.length ? (
-                        <NoResults buttonText={TRL_Pack.products.addProductButton} onClick={() => { }} />
-                    ) : (
-                        <>
 
-                            <div className="overflow-auto">
-                                <table className="table table-striped border">
-                                    <thead>
-                                        <tr>
-                                            {filter.showIndexes && <th className="text-center">#</th>}
-                                            {filter.columns
-                                                .filter(col => !col.hidden && !col.disabled)
-                                                .map((col, idx) => (
-                                                    <th key={idx}>{col.name}</th>
-                                                ))}
-                                            <th />
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {filteredProducts
-                                            .filter(reportFilter)
-                                            .sort(sortRows)
-                                            .slice(
-                                                (filter.page - 1) * filter.rowsPerPage,
-                                                filter.page * filter.rowsPerPage
-                                            )
-                                            .map((product, idx) => (
-                                                <tr key={idx}>
-                                                    {Object.keys(product)
-                                                        .filter((col, col_idx) => {
-                                                            console.log(col, col_idx)
-                                                            return filter.columns
-                                                                .filter(col => !col.hidden && !col.disabled)
-                                                                .map(col => col.id)
-                                                                .includes(col_idx + 1)
-                                                        }
-                                                        )
-                                                        .map((col, col_idx) => (
-                                                            <td key={col_idx} className="small">
-                                                                <button
+                    <>
 
-                                                                    style={{ wordBreak: 'break-word' }}
-                                                                    className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
-                                                                >
-                                                                    {sessionStorage.getItem("DB_TYPE") !== "mysql" ? returnParsedIsShared(product[col]) : product[col]}
-                                                                </button>
-                                                            </td>
-                                                        ))}
-                                                    <td></td>
-                                                    <td style={{ width: "30px" }}>
-                                                        <Link
-                                                            to={`${props.location.pathname}/${product.ReportConditionId}`}
-                                                            className="btn btn-link link-icon"
-
-                                                        >
-                                                            <i className="far fa-edit" />
-                                                        </Link>
-                                                    </td>
-                                                </tr>
+                        <div className="overflow-auto">
+                            <table className="table table-striped border">
+                                <thead>
+                                    <tr>
+                                        {filter.showIndexes && <th className="text-center">#</th>}
+                                        {filter.columns
+                                            .filter(col => !col.hidden && !col.disabled)
+                                            .map((col, idx) => (
+                                                <th key={idx}>{col.name}</th>
                                             ))}
-                                    </tbody>
-                                </table>
-                                {form !== "acceptModal" && form && (
-                                    <SummaryForm
-                                        headerText="Podsumownie"
-                                        handleClose={closeForm}
-                                        timeStamps={timeStamps}
-                                        reportName={reports}
-                                        reportId={props.match.params.ReportId}
-                                    />
-                                )}
-                            </div>
-                        </>
-                    )}
+                                        <th />
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredProducts
+                                        .filter(reportFilter)
+                                        .sort(sortRows)
+                                        .slice(
+                                            (filter.page - 1) * filter.rowsPerPage,
+                                            filter.page * filter.rowsPerPage
+                                        )
+                                        .map((product, idx) => (
+                                            <tr key={idx}>
+                                                {Object.keys(product)
+                                                    .filter((col, col_idx) => {
+                                                        return filter.columns
+                                                            .filter(col => !col.hidden && !col.disabled)
+                                                            .map(col => col.id)
+                                                            .includes(col_idx + 1)
+                                                    }
+                                                    )
+                                                    .map((col, col_idx) => (
+                                                        <td key={col_idx} className="small">
+                                                            <button
+
+                                                                style={{ wordBreak: 'break-word' }}
+                                                                className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
+                                                            >
+                                                                {sessionStorage.getItem("DB_TYPE") !== "mysql" ? returnParsedIsShared(product[col]) : product[col]}
+                                                            </button>
+                                                        </td>
+                                                    ))}
+                                                <td></td>
+                                                <td style={{ width: "30px" }}>
+                                                    <Link
+                                                        to={`${props.location.pathname}/${product.ReportConditionId}`}
+                                                        className="btn btn-link link-icon"
+
+                                                    >
+                                                        <i className="far fa-edit" />
+                                                    </Link>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                </tbody>
+                            </table>
+                            {form === "new" && form && (
+                                <SummaryForm
+                                    headerText="Podsumownie"
+                                    handleClose={closeForm}
+                                    timeStamps={timeStamps}
+                                    reportName={reports}
+                                    reportId={props.match.params.ReportId}
+                                />
+                            )}
+                        </div>
+                    </>
+
                 </>
             )
             }

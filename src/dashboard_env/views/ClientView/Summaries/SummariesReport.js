@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useHistory, Link, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import useFetch from '../../../hooks/fetchMSSQL-hook'
+import { LangContext } from '../../../context/lang-context'
 import { Accordion, Card, Button } from 'react-bootstrap'
-import axios from "axios"
 import { API_URL } from '../../../config/config'
-import notificationContext, { NotificationContext } from '../../../context/notification-context'
+import { NotificationContext } from '../../../context/notification-context'
 
+import axios from "axios"
+import moment from "moment"
 const SummariesReport = (props) => {
     const { ErrorNotification, SuccessNofication } = useContext(NotificationContext)
+    const { TRL_Pack } = useContext(LangContext)
     const { fetchMssqlApi } = useFetch()
     const { summariesReportId } = useParams()
     const history = useHistory()
@@ -17,6 +20,7 @@ const SummariesReport = (props) => {
     const [machines, setMachines] = useState([])
     const [report, setReports] = useState([])
     const [user, setUsers] = useState([])
+
 
     const [timeStamps, setTimeStamps] = useState([])
     const [chosenOptions, setChosenOptions] = useState({ machine: [], user: [], product: [], recipe: [] })
@@ -36,6 +40,8 @@ const SummariesReport = (props) => {
             IncludeAllProducts: "",
             IncludeAllRecipes: "",
             IncludeAllUsers: "",
+            EndDateTime: "",
+            StartDateTime: new Date().toISOString().split('T')[0] + "T" + "00:" + "00:" + "00"
         }
     )
 
@@ -146,6 +152,7 @@ const SummariesReport = (props) => {
         }
 
     }
+
     const getData = () => {
         fetchMssqlApi(`report/${props.match.params.ReportId}`, {}, category => setCategory(category))
         fetchMssqlApi(`users`, {}, users => setUsers(users))
@@ -155,6 +162,7 @@ const SummariesReport = (props) => {
         fetchMssqlApi(`/machines`, {}, machines => setMachines(machines))
         fetchMssqlApi(`time-spans`, {}, timeStamps => setTimeStamps(timeStamps))
         fetchMssqlApi(`report-condition/${summariesReportId}`, {}, report => setActualReportData(report))
+
         fetchMssqlApi(`report-condition-machines?reportConditionId=${summariesReportId}`, {}, value =>
             setChosenOptions(prev => ({ ...prev, machine: value })))
         fetchMssqlApi(`report-condition-users?reportConditionId=${summariesReportId}`, {}, value =>
@@ -164,28 +172,34 @@ const SummariesReport = (props) => {
         fetchMssqlApi(`/report-condition-recipes?reportConditionId=${summariesReportId}`, {}, value =>
             setChosenOptions(prev => ({ ...prev, recipe: value })))
     }
+    const handleChangeDate = (e, endtime) => {
+        let value = e.target.value
+        endtime ?
+            setActualReportData((prev) => ({ ...prev, EndDateTime: value }))
+            :
+            setActualReportData((prev) => ({ ...prev, StartDateTime: value }))
 
-    console.log(timeStamps)
+    }
     const isCustomDateNeeded = () => {
         const timeStamp = (timeStamps.find(obj => obj.Name === actualReportData.TimeSpanName))
-        console.log(timeStamp?.TimeSpanId)
         if (timeStamp?.TimeSpanId === "2" || timeStamp?.TimeSpanId === "18") {
             return (
-
-                <div className="  mt-3 d-flex justify-content-center">
-                    <input type="datetime-local" className=" input-group pl-2 date col-lg-5 col-md-7  col-sm-7 mb-2 mb-lg-0" />
+                <div className="  mt-3 mb-1 d-flex justify-content-center">
+                    <input type="datetime-local" style={{ borderRadius: "25px 25px 25px 25px", border: "1px solid #6c757d " }} className=" input-group pl-2 date col-lg-6 col-md-8  col-sm-7 mb-2 mb-lg-0"
+                        value={moment(actualReportData.StartDateTime).format("YYYY-MM-DDTkk:mm")} onChange={(e) => handleChangeDate(e)}
+                    />
                 </div>
             )
         }
         else if (timeStamp?.TimeSpanId === "3") {
             return (
-                <div className=" mt-3 d-flex justify-content-center ">
+                <div className=" mt-3 mb-1 d-flex justify-content-center ">
                     <div className="mr-2">
-                        <input type="datetime-local" className=" w-100 input-group " />
+                        <input type="datetime-local" value={moment(actualReportData.StartDateTime).format("YYYY-MM-DDTkk:mm")} onChange={(e) => handleChangeDate(e)} className=" w-100 input-group " />
                         Data początkowa
                     </div>
                     <div className="">
-                        <input type="datetime-local" className=" w-100 input-group" />
+                        <input type="datetime-local" value={moment(actualReportData.EndDateTime).format("YYYY-MM-DDTkk:mm")} onChange={(e) => handleChangeDate(e, true)} className=" w-100 input-group" />
                         Data końcowa
                     </div>
                 </div>
@@ -196,7 +210,6 @@ const SummariesReport = (props) => {
     }
 
     const handleChange = (e, checkbox, inputName) => {
-
         const name = e.target.name
         const value = e.target.value
 
@@ -213,11 +226,12 @@ const SummariesReport = (props) => {
             }))
         }
         else
-            if (value !== "Open this select menu")
-                setInputData(prev => ({
-                    ...prev,
-                    [name]: value
-                }))
+            console.log(value)
+        if (value !== "Open this select menu" || value !== "Naciśnij aby otworzyć menu")
+            setInputData(prev => ({
+                ...prev,
+                [name]: value
+            }))
     }
     const toggleTitle = (name) => {
         displayChosenOptions[name].length !== 0 ?
@@ -225,15 +239,21 @@ const SummariesReport = (props) => {
             :
             setDisplayChosenOptions(prev => ({ ...prev, [name]: chosenOptions[name] }))
     }
-    const showSelectedTitle = (name) => {
+    const showSelectedTitle = (name, displayName) => {
+
+
         const upperFirstLetterName = `${name.charAt(0).toUpperCase() + name.slice(1)}`
         const includeAll = actualReportData[`IncludeAll${upperFirstLetterName}s`]
         return (
             <div>
-                {chosenOptions[name].length > 0 && <div className="text-center headerTitle" style={{ background: "#f3f3f3" }}>
-                    <input className="form-check-input" style={{ marginTop: "6px", position: "relative" }} type="checkbox" id={name} onClick={() => toggleTitle(name)} />
-                    <label style={includeAll ? { textDecoration: "line-through" } : {}} className="form-check-label" htmlFor={name}>{name}</label>
-                </div>}
+                {chosenOptions[name].length > 0 &&
+                    <div className="text-center headerTitle " style={{ background: "#f3f3f3" }}>
+                        <input className="form-check-input" type="checkbox" id={name} onClick={() => toggleTitle(name)} />
+                        <label style={includeAll ? { textDecoration: "line-through" } : {}} className="form-check-label" htmlFor={name}>
+                            {displayName}
+
+                        </label>
+                    </div>}
 
                 {displayChosenOptions[name].map((value, idx) =>
                     <div key={idx} className="text-center chosenOption" style={includeAll ? { textDecoration: "line-through" } : {}} onClick={
@@ -249,7 +269,7 @@ const SummariesReport = (props) => {
     const handleSortTable = (e) => {
         for (const [key, value] of Object.entries(displayChosenOptions)) {
             const uppercaseName = `${key.charAt(0).toUpperCase() + key.slice(1)}Name`
-            const filtered = value.filter(item => item[uppercaseName].includes(e.target.value));
+            const filtered = value.filter(item => item[uppercaseName].toLowerCase().includes(e.target.value));
             e.target.value.length == 0 ? setDisplayChosenOptions(chosenOptions) :
                 setDisplayChosenOptions((prev) => ({
                     ...prev,
@@ -263,26 +283,43 @@ const SummariesReport = (props) => {
     }, [])
 
     const handleSubmit = (e) => {
+
+        let data
         e.preventDefault()
         const { ReportId } = report.find(obj => obj.Name === actualReportData.ReportName)
 
-        const { Name, TimeSpanName, IncludeAllUsers, IncludeAllMachines, IncludeAllProducts, IncludeAllRecipes } = actualReportData
+        const { Name, TimeSpanName, IncludeAllUsers, IncludeAllMachines, StartDateTime, EndDateTime, IncludeAllProducts, IncludeAllRecipes } = actualReportData
 
         const { TimeSpanId } = timeStamps.find(obj => obj.Name === TimeSpanName)
-        fetchMssqlApi(`report-condition/${actualReportData.ReportConditionId}`, {
-            method: "PUT", data:
-            {
+
+        console.log(EndDateTime)
+        EndDateTime?.length > 0 ? data = {
+            Name,
+            TimeSpanId: parseInt(TimeSpanId),
+            ReportId: parseInt(ReportId),
+            IncludeAllMachines: Number(IncludeAllMachines),
+            IncludeAllProducts: Number(IncludeAllProducts),
+            IncludeAllRecipes: Number(IncludeAllRecipes),
+            IncludeAllUsers: Number(IncludeAllUsers),
+            StartDateTime,
+            EndDateTime
+        } :
+            data = {
                 Name,
                 TimeSpanId: parseInt(TimeSpanId),
                 ReportId: parseInt(ReportId),
                 IncludeAllMachines: Number(IncludeAllMachines),
                 IncludeAllProducts: Number(IncludeAllProducts),
                 IncludeAllRecipes: Number(IncludeAllRecipes),
-                IncludeAllUsers: Number(IncludeAllUsers)
+                IncludeAllUsers: Number(IncludeAllUsers),
+                StartDateTime
+
             }
+
+        fetchMssqlApi(`report-condition/${actualReportData.ReportConditionId}`, {
+            method: "PUT", data
         })
         getData()
-
     }
 
     const downloadReport = () => {
@@ -314,8 +351,8 @@ const SummariesReport = (props) => {
                         className=" btn btn-link justify-content-between d-flex text-decoration-none w-100"
 
                     >
-                        <i className="fas fa-arrow-left mr-2 text-decoration-none" onClick={() => history.goBack()} > wróć</i>
-                        <i className="fa fa-download mr-2 text-decoration-none" onClick={() => downloadReport()} > pobierz</i>
+                        <i className="fas fa-arrow-left mr-2 text-decoration-none" onClick={() => history.goBack()} > {TRL_Pack.summaries.back}</i>
+                        <i className="fa fa-download mr-2 text-decoration-none" onClick={() => downloadReport()} > {TRL_Pack.summaries.download}</i>
                     </div>
 
                     <div className="card">
@@ -329,12 +366,12 @@ const SummariesReport = (props) => {
                                 </div>
                                 <div className="row  text-center">
                                     <div className="col-lg-12 mb-2  ">
-                                        Typ raportu:  {actualReportData.ReportName}
+                                        {TRL_Pack.summaries.reportType}  {actualReportData.ReportName}
                                     </div>
                                 </div>
                                 <div className="row mb-3 text-center">
                                     <div className="col-lg-4 mb-2  ">
-                                        Name
+                                        {TRL_Pack.summaries.name}
                                     </div>
                                     <div className="col-lg-8 my-auto">
                                         <input
@@ -353,7 +390,7 @@ const SummariesReport = (props) => {
 
                                 <div className="row mb-3 text-center justify-content-center">
                                     <div className="col-lg-4 mb-2 mb-lg-0 ">
-                                        Okres Czasu
+                                        {TRL_Pack.summaries.timeStamp}
                                     </div>
                                     <div className="col-lg-8 my-auto">
                                         <select
@@ -377,14 +414,14 @@ const SummariesReport = (props) => {
 
                                 {category.IncludeAllUsers ? (
                                     <div className="row mb-3 text-center">
-                                        <div className="col-lg-4 mb-2  ">
+                                        <div className="col-lg-4 mb-2  d-flex flex-column align-items-center">
                                             <input className="col-lg-4 mb-2 mb-lg-0"
                                                 name="IncludeAllUsers"
                                                 checked={actualReportData.IncludeAllUsers}
                                                 type="checkbox" onChange={e => handleChange(e, true)}
                                                 value={actualReportData.IncludeAllUsers} />
-                                        IncludeAllUsers
-                                    </div>
+                                            <span className="text-center">{TRL_Pack.summaries.IncludeAllUsers}</span>
+                                        </div>
                                         {actualReportData.IncludeAllUsers ? (
 
 
@@ -400,7 +437,7 @@ const SummariesReport = (props) => {
                                                     required
                                                 >
 
-                                                    <option defaultValue >Open this select menu</option>
+                                                    <option defaultValue >{TRL_Pack.summaries.openSelectBar}</option>
                                                     {user.map((user, ksx) => <option key={ksx} value={user.UserId} >{user.Name}</option>)}
 
                                                 </select>
@@ -414,15 +451,15 @@ const SummariesReport = (props) => {
                                 {category.IncludeMachines && (
 
                                     <div className="row mb-3 text-center">
-                                        <div className="col-lg-4 mb-2  ">
+                                        <div className="col-lg-4 mb-2  d-flex flex-column align-items-center">
                                             <input className="col-lg-4 mb-2 mb-lg-0"
                                                 name="IncludeAllMachines"
                                                 checked={actualReportData.IncludeAllMachines}
                                                 type="checkbox" onChange={e => handleChange(e, true, "machine")}
                                                 value={actualReportData.IncludeAllMachines} />
-                                        IncludeAllMachines
+                                            <span className="text-center">{TRL_Pack.summaries.IncludeAllMachines}</span>
 
-                                    </div>
+                                        </div>
                                         {actualReportData.IncludeAllMachines === false ? (<div className={" d-flex col-lg-8 my-auto input-group mb-3"}>
                                             <select
                                                 type="select"
@@ -446,14 +483,14 @@ const SummariesReport = (props) => {
                                 {category.IncludeProducts && (
 
                                     <div className="row mb-3 text-center">
-                                        <div className="col-lg-4 mb-2  ">
+                                        <div className="col-lg-4 mb-2 d-flex flex-column align-items-center ">
                                             <input className="col-lg-4 mb-2 mb-lg-0"
                                                 name="IncludeAllProducts"
                                                 checked={actualReportData.IncludeAllProducts}
                                                 type="checkbox" onChange={e => handleChange(e, true, "product")}
                                                 value={actualReportData.IncludeAllProducts} />
-                                        IncludeAllProducts
-                                    </div>
+                                            <span className="text-center">{TRL_Pack.summaries.includeAllProducts}</span>
+                                        </div>
                                         {actualReportData.IncludeAllProducts === false ? (<div className={"d-flex col-lg-8 my-auto"}>
                                             <select
                                                 className={" form-control mx-auto mx-lg-0 text-center"}
@@ -466,7 +503,7 @@ const SummariesReport = (props) => {
                                                 list="IncludeProducts"
                                                 required
                                             >
-                                                <option defaultValue >Open this select menu</option>
+                                                <option defaultValue >{TRL_Pack.summaries.openSelectBar}</option>
                                                 {products.map((product, idx) => <option key={idx} value={product.EAN} >{product.Name}</option>)}
                                             </select>
                                             <button className="fas fa-plus btn btn-primary" onClick={() => addButton("product")} />
@@ -476,14 +513,14 @@ const SummariesReport = (props) => {
                                 {category.IncludeRecipes && (
 
                                     <div className="row mb-3 text-center">
-                                        <div className="col-lg-4 mb-2  ">
+                                        <div className="col-lg-4 mb-2   d-flex flex-column align-items-center">
                                             <input className="col-lg-4 mb-2 mb-lg-0"
                                                 name="IncludeAllRecipes"
                                                 checked={actualReportData.IncludeAllRecipes}
                                                 type="checkbox" onChange={e => handleChange(e, true, "recipe")}
                                                 value={actualReportData.IncludeAllRecipes} />
-                                        IncludeAllRecipes
-                                    </div>
+                                            <span className="text-center"> {TRL_Pack.summaries.IncludeAllRecipes}</span>
+                                        </div>
                                         {actualReportData.IncludeAllRecipes === false ? (<div className={"d-flex col-lg-8 my-auto "}>
                                             <select
                                                 className={" form-control mx-auto mx-lg-0 text-center"}
@@ -494,7 +531,7 @@ const SummariesReport = (props) => {
                                                 aria-label="Select Value"
                                                 required
                                             >
-                                                <option defaultValue >Open this select menu</option>
+                                                <option defaultValue >{TRL_Pack.summaries.openSelectBar}</option>
                                                 {recipies.map((recipe) => <option key={recipe.RecipeId} value={recipe.RecipeId} >{recipe.Name}</option>)}
                                             </select>
                                             <button type="button" className="fas fa-plus btn btn-primary" onClick={() => addButton("recipe")} />
@@ -504,7 +541,7 @@ const SummariesReport = (props) => {
 
 
                                 <div className="text-center my-3">
-                                    <button className="btn btn-primary" onClick={(e) => handleSubmit(e)} >Submit</button>
+                                    <button className="btn btn-primary" onClick={(e) => handleSubmit(e)} >{TRL_Pack.summaries.submit}</button>
                                 </div>
                             </form>
 
@@ -512,22 +549,22 @@ const SummariesReport = (props) => {
 
                     </div>
 
-                </div>
-                <Accordion defaultActiveKey="0" className="col-lg-3 col-md-6 col-sm-12">
+                </div >
+                <Accordion defaultActiveKey="0" className="col-12 col-md-6 mb-4 mb-md-0">
 
                     <Card style={{ marginTop: "28px", resize: "horizontal" }} >
-                        <input type="text" className="w-100 form-control" placeholder="Wyszukaj wartości" onChange={(e) => handleSortTable(e)} />
+                        <input type="text" className="w-100 form-control" placeholder={TRL_Pack.summaries.searchBar} onChange={(e) => handleSortTable(e)} />
                         <Card.Header>
                             <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                                Twoje wybory
-                         </Accordion.Toggle>
+                                {TRL_Pack.summaries.choices}
+                            </Accordion.Toggle>
                         </Card.Header>
                         <Accordion.Collapse eventKey="0" style={{ overflowY: "scroll", height: "430px" }}>
                             <Card.Body className="p-0 m-0" style={{ height: "430px" }}>
-                                {showSelectedTitle("machine")}
-                                {showSelectedTitle("user")}
-                                {showSelectedTitle("product")}
-                                {showSelectedTitle("recipe")}
+                                {showSelectedTitle("machine", TRL_Pack.summaries.machines)}
+                                {showSelectedTitle("user", TRL_Pack.summaries.users)}
+                                {showSelectedTitle("product", TRL_Pack.summaries.products)}
+                                {showSelectedTitle("recipe", TRL_Pack.summaries.recipes)}
                             </Card.Body>
                         </Accordion.Collapse>
                     </Card>

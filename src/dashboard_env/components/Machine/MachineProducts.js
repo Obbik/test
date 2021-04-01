@@ -253,6 +253,17 @@ const MachineProducts = (props) => {
       });
   }
 
+  const saveVisit = () => {
+    fetchMssqlApi(`visit`, {
+      method: 'POST', data: {
+        MachineId: props.machineId,
+        IsCoinInventory: true
+      }
+    }, () => {
+      fetchMssqlApi(`machine-products?machineId=${props.machineId}`, {}, products => setProducts(products))
+
+    });
+  }
   return (
     <div className="card">
       <h5 className="card-header">
@@ -261,6 +272,10 @@ const MachineProducts = (props) => {
         <button className="float-right btn btn-sm btn-link text-decoration-none" onClick={addTableRow}>
           <i className="fas fa-plus mr-2" />
           {TRL_Pack.fullMachine.new}
+        </button>
+        <button className="float-right btn btn-sm btn-link text-decoration-none" onClick={() => saveVisit()}>
+          <i className="fas fa-save mr-1" />
+          {TRL_Pack.fullMachine.saveVisit}
         </button>
         {initialMachineProducts.length > 0 && (
           <Fragment>
