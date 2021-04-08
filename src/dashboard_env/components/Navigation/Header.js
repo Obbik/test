@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 
 import onClickAway from '../../util/onClickAway'
 
+import "./style.css"
+
 export default ({ toggleSidebar, navlinks, headerData: { text, subtext } = {} }) => {
   const navbarRef = useRef(null)
 

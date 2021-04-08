@@ -3,14 +3,14 @@ import { NavigationContext } from '../../../context/navigation-context'
 import { LangContext } from '../../../context/lang-context'
 import { useHistory, Link } from 'react-router-dom'
 import useFetch from '../../../hooks/fetchMSSQL-hook'
-import useForm from '../../../hooks/form-hook'
+
 import useFilter from '../../../hooks/filter-hook'
 
 
 // import SearchInput from '../../../components/SearchInput/SearchInput'
 import Pagination from '../../../components/Pagination/Pagination'
 import Filter from '../../../components/Filter/Filter'
-import SummaryForm from '../../../components/Modals/SummaryForm';
+
 import filterItems from '../../../util/filterItems'
 
 
@@ -24,7 +24,7 @@ export default (props) => {
     const resetPage = () => setFilter(prev => ({ ...prev, page: 1 }))
     const resetFilter = () => setFilter(defaultFilter)
     const toggleFilter = () => setFilter(prev => ({ ...prev, visible: !prev.visible }))
-    const { form, openForm, closeForm } = useForm()
+
 
 
     const [timeStamps, setTimeStamps] = useState([])
@@ -201,12 +201,15 @@ export default (props) => {
                             <i className="fas fa-arrow-left mr-2" /> {TRL_Pack.summaries.back}
                         </button>
                         <div style={{ flex: "1" }} />
-                        <button
-                            className=" btn btn-link text-decoration-none "
-                            onClick={openForm()}
+
+                        <Link
+                            to={`${props.location.pathname}/new`}
+                            className="btn btn-link link-icon"
+
                         >
                             <i className="fas fa-plus ml-2" /> {TRL_Pack.summaries.addReport}
-                        </button>
+                        </Link>
+
                     </div>
 
                     <>
@@ -268,7 +271,7 @@ export default (props) => {
                                         ))}
                                 </tbody>
                             </table>
-                            {form === "new" && form && (
+                            {/* {form === "new" && form && (
                                 <SummaryForm
                                     headerText="Podsumownie"
                                     handleClose={closeForm}
@@ -276,7 +279,7 @@ export default (props) => {
                                     reportName={reports}
                                     reportId={props.match.params.ReportId}
                                 />
-                            )}
+                            )} */}
                         </div>
                     </>
 

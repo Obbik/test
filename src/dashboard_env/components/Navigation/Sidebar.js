@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import logo from '../../assets/images/logo-vendim.png'
 import logoSm from '../../assets/images/logo-vendim-sm.png'
 
+import "./style.css"
+
 export default ({ width, navlinks }) => {
   const currentPath = window.location.pathname.slice(10)
   const ListItem = ({ icon, text, path, onClick }) => (
@@ -35,7 +37,7 @@ export default ({ width, navlinks }) => {
           )}
         </li>
       ) : (
-        <li className="py-2 text-center">
+        <li className="py-2 text-center lista">
           {path ? (
             <Link
               to={path}
@@ -118,7 +120,7 @@ export default ({ width, navlinks }) => {
           <img src={logoSm} alt="logo" height="25" />
         )}
       </div>
-      <ul className="list-group list-group-flush pt-3 px-2 list-unstyled">
+      <ul className="list-group list-group-flush pt-3 px-2 list-unstyled "  >
         {navlinks.map((navlink, idx) => (
           <ListItem key={idx} {...navlink} />
         ))}

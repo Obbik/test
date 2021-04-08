@@ -232,6 +232,7 @@ const MachineProducts = (props) => {
       url: `${API_URL}/api/machine-products-file?machineId=${props.machineId}`,
       method: 'GET',
       headers: {
+
         Authorization: `Bearer ${token}`
       },
       responseType: 'blob', // important

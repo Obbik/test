@@ -69,6 +69,8 @@ export default ({ machineData: initialMachineData, updateMachine, machineId, dat
       )
   }
 
+  console.log(tags)
+
   const getTags = () => {
     fetchMssqlApi(`tags/${initialMachineData.MachineId}`, {}, tags =>
       setTags(() => {
@@ -280,7 +282,6 @@ export default ({ machineData: initialMachineData, updateMachine, machineId, dat
                   {tags.map(tag =>
                     tag.options.filter(opt => opt)
                       .map(opt => {
-
                         if (opt.isActive === true) {
                           return (
                             <button

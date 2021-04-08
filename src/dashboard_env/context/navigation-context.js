@@ -40,7 +40,7 @@ export default ({ children }) => {
     permission.forEach((permission) => {
       switch (permission.Name) {
         case "VD_PRODUCTS":
-          navlinks.push({ text: TRL_Pack.navbar.products, path: '/products', icon: 'fas fa-cookie-bite' },)
+          navlinks.push({ text: TRL_Pack.navbar.products, path: '/products', icon: 'fas fa-cookie-bite ' },)
           break;
         case "VD_CATEGORIES":
           navlinks.push({ text: TRL_Pack.navbar.categories, path: '/categories', icon: 'fas fa-th-large' },)
@@ -89,7 +89,7 @@ export default ({ children }) => {
     permission.forEach((permission) => {
       switch (permission.Name) {
         case "VD_PRODUCTS":
-          navlinks.push({ text: TRL_Pack.navbar.products, path: '/products', icon: 'fas fa-cookie-bite' })
+          navlinks.push({ text: TRL_Pack.navbar.products, path: '/products', icon: 'fas fa-cookie-bite ' })
           break;
         case "VD_CATEGORIES":
           navlinks.push({ text: TRL_Pack.navbar.categories, path: '/categories', icon: 'fas fa-th-large' })

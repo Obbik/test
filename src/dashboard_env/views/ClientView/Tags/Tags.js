@@ -57,6 +57,7 @@ export default () => {
           >
             {TRL_Pack.tags.machine}
           </button>
+          
         </li>
         <li className="nav-item w-50">
           <button
