@@ -658,7 +658,7 @@ const SummariesReport = (props) => {
 
 
                                             <div className="d-flex col-sm-12 col-lg-8 my-auto input-group mb-3">
-                                                <select
+                                                <input
                                                     className={" col-sm-12 form-control mx-auto mx-lg-0 text-center"}
                                                     name="user"
                                                     value={inputData.user}
@@ -666,12 +666,12 @@ const SummariesReport = (props) => {
                                                     minLength={2}
                                                     maxLength={50}
 
-                                                >
+                                                />
 
-                                                    <option defaultValue >{TRL_Pack.summaries.openSelectBar}</option>
-                                                    {user.map((user, ksx) => <option key={ksx} value={user.UserId} >{user.Name}</option>)}
 
-                                                </select>
+                                                {user.map((user, ksx) => <option key={ksx} value={user.UserId} >{user.Name}</option>)}
+
+
                                                 <button className="fas fa-plus btn btn-primary" onClick={() => addButton("user")} />
                                             </div>
                                         ) :
@@ -705,9 +705,7 @@ const SummariesReport = (props) => {
                                         </div>
                                         {actualReportData.IncludeAllMachines === false ? (<div className={" d-flex  col-sm-12 col-lg-8 my-auto input-group mb-3"}>
                                             <input
-                                                type="select"
                                                 className={" form-control mx-auto  mx-lg-0 text-center"}
-
                                                 name="machine"
                                                 value={inputData.machine}
                                                 onChange={(value) => handleChange(value)}
@@ -716,8 +714,6 @@ const SummariesReport = (props) => {
                                                 maxLength={50}
                                             />
                                             <datalist id="IncludeMachines">
-
-                                                <option defaultValue >Open this select menu</option>
                                                 {machines.map((machine, idx) => <option key={machine.MachineId} value={machine.MachineName} > {machine.MachineName}
                                                 </option>)}
                                             </datalist>
@@ -765,7 +761,6 @@ const SummariesReport = (props) => {
 
                                                 />
                                                 <datalist id="IncludeProducts" name="product">
-                                                    <option defaultValue >{TRL_Pack.summaries.openSelectBar}</option>
                                                     {products.map((product, idx) => <option key={idx} value={product.Name} >{product.Name}</option>)}
                                                 </datalist>
 
@@ -774,11 +769,9 @@ const SummariesReport = (props) => {
                                             </div>) :
                                             <div className={" col-sm-12 d-flex col-lg-8 my-auto"}>
                                                 <input
-
                                                     className={" form-control mx-auto mx-lg-0 text-center"}
                                                     disabled
                                                     value={inputData.product}
-
                                                 />
                                                 <button className="fas fa-plus btn btn-primary" onClick={() => addButton("product")} />
                                             </div>}
@@ -805,7 +798,6 @@ const SummariesReport = (props) => {
                                                 list="IncludeRecipes"
                                             />
                                             <datalist id="IncludeRecipes" >
-                                                <option defaultValue >{TRL_Pack.summaries.openSelectBar}</option>
                                                 {recipies.map((recipe) => <option key={recipe.RecipeId} value={recipe.Name} >{recipe.Name}</option>)}
                                             </datalist>
                                             <button type="button" className="fas fa-plus btn btn-primary" onClick={() => addButton("recipe")} />
