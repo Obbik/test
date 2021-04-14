@@ -4,7 +4,6 @@ import { LangContext } from '../../../context/lang-context'
 import { useHistory, Link } from 'react-router-dom'
 
 
-import moment from "moment"
 
 import useFetch from '../../../hooks/fetchMSSQL-hook'
 import useFilter from '../../../hooks/filter-hook'
@@ -206,7 +205,7 @@ export default (props) => {
                             className=" btn btn-link text-decoration-none"
 
                         >
-                            <i className="fas fa-arrow-left mr-2" /> {TRL_Pack.summaries.back}
+                            <i className="fas fa-arrow-left mr-2" />
                         </button>
                         <div style={{ flex: "1" }} />
 

@@ -287,7 +287,7 @@ const SummariesReport = (props) => {
         if (timeStamp?.TimeSpanId === "2" || timeStamp?.TimeSpanId === "18") {
             return (
                 <div className="  mt-3 mb-3 d-flex justify-content-center">
-                    <input type="datetime-local" style={{ borderRadius: "25px 25px 25px 25px", border: "1px solid #6c757d " }} className=" input-group pl-2 date col-lg-6 col-md-8  col-sm-7 mb-2 mb-lg-0"
+                    <input type="datetime-local" style={{ border: "1px solid rgba(0, 0, 0, .1)", padding: ".375rem .75rem" }} className="rounded input-group pl-2 date col-lg-6 col-md-8  col-sm-7 mb-2 mb-lg-0"
                         value={moment(actualReportData.StartDateTime).format("YYYY-MM-DDTkk:mm")} onChange={(e) => handleChangeDate(e)}
                     />
                 </div>
@@ -297,11 +297,11 @@ const SummariesReport = (props) => {
             return (
                 <div className=" mt-3 mb-1 d-flex justify-content-center ">
                     <div className="mr-2">
-                        <input type="datetime-local" value={moment(actualReportData.StartDateTime).format("YYYY-MM-DDTkk:mm")} onChange={(e) => handleChangeDate(e)} className=" w-100 input-group " />
+                        <input type="datetime-local" className="rounded" style={{ padding: ".375rem .75rem", border: "1px solid rgba(0, 0, 0, .1)" }} value={moment(actualReportData.StartDateTime).format("YYYY-MM-DDTkk:mm")} onChange={(e) => handleChangeDate(e)} className=" w-100 input-group " />
                         Data początkowa
                     </div>
                     <div className="">
-                        <input type="datetime-local" value={moment(actualReportData.EndDateTime).format("YYYY-MM-DDTkk:mm")} onChange={(e) => handleChangeDate(e, true)} className=" w-100 input-group" />
+                        <input type="datetime-local" className="rounded" style={{ padding: ".375rem .75rem", border: "1px solid rgba(0, 0, 0, .1)" }} value={moment(actualReportData.EndDateTime).format("YYYY-MM-DDTkk:mm")} onChange={(e) => handleChangeDate(e, true)} className=" w-100 input-group" />
                         Data końcowa
                     </div>
                 </div>
@@ -570,7 +570,7 @@ const SummariesReport = (props) => {
                         className=" btn btn-link justify-content-between d-flex text-decoration-none w-100"
                     >
                         <i className="fas fa-arrow-left mr-2 text-decoration-none"  > </i>
-                        {props.match.params.summariesReportId !== "new" && (<i className="fa fa-download mr-2 text-decoration-none" onClick={() => downloadReport()} > {TRL_Pack.summaries.download}</i>)}
+                        {props.match.params.summariesReportId !== "new" && (<i className="fa fa-download mr-2 " onClick={() => downloadReport()} > <span style={{ fontWeight: "500", fontFamily: "'Lato', 'Arial', sans-serif" }}>{TRL_Pack.summaries.download}</span></i>)}
                     </div>
                     <div className="card" >
                         <h5 className="card-header">{reportName?.Name} </h5>
