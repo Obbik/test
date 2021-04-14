@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, Route, Switch, useParams } from "react-router-dom"
+import { Link, Route, Switch } from "react-router-dom"
 import './index.css'
 
 import _ from "lodash"
@@ -10,7 +10,6 @@ import "./index.css"
 
 const Summaries = () => {
 
-    const { ReportIdName } = useParams()
     const { fetchMssqlApi } = useFetch()
     const [clickedCategory, setClickedCategory] = useState()
     const [reports, setReports] = useState([])
@@ -44,7 +43,6 @@ const Summaries = () => {
                     {groupedReports[clickedCategory]?.map(elem =>
 
                         <div className="p-3 button " key={elem.ReportId}  >
-                            {console.log(elem)}
                             <Link className="font-weight-bold"
                                 title={elem.GeneralDescription}
                                 data-toggle="popover"

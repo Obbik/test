@@ -232,7 +232,6 @@ export default () => {
   }
 
   const returnParsedIsShared = (col) => {
-    console.log(col)
     if (typeof col === 'string') {
       return col
     }

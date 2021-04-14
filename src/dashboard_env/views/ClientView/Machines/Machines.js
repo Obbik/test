@@ -14,7 +14,6 @@ export default () => {
 
   const [tags, setTags] = useState([])
   const [machines, setMachines] = useState([])
-  console.log(machines)
 
   const handleSwitchPage = pageNo => () => setFilter(prev => ({ ...prev, page: pageNo }))
   const resetPage = () => setFilter(prev => ({ ...prev, page: 1 }))

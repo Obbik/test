@@ -61,7 +61,9 @@ const MachineProducts = (props) => {
     const value = name === 'PriceBrutto' ? parseFloat(e.target.value) : e.target.value;
 
     let index = machineProducts.findIndex(machineProduct => machineProduct.MachineProductId === machineProductId);
+
     if (tableRow !== undefined) index = machineProducts.findIndex(machineProduct => machineProduct.TableRowId === tableRow);
+
     const initialMachineProductIndex = initialMachineProducts.findIndex(initialMachineProduct => initialMachineProduct.MachineProductId === machineProductId);
     let newMachineProducts = [...machineProducts];
     let requestMethod = !newMachineProducts[index].RequestMethod || newMachineProducts[index].RequestMethod === 'DELETE' ? 'PUT' : newMachineProducts[index].RequestMethod;

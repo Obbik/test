@@ -7,12 +7,12 @@ import { API_URL } from '../../../config/config'
 import { NotificationContext } from '../../../context/notification-context'
 
 import { NotificationManager } from 'react-notifications'
-import DropdownInput from "react-dropdown-select"
+
 
 import "./index.css"
 import axios from "axios"
 import moment from "moment"
-import _ from "lodash"
+
 const SummariesReport = (props) => {
     const { ErrorNotification, SuccessNofication } = useContext(NotificationContext)
     const { TRL_Pack } = useContext(LangContext)
@@ -22,17 +22,16 @@ const SummariesReport = (props) => {
 
     const leftDivRef = useRef()
     const rightDivRef = useRef()
-    const testRef = useRef()
 
-    const [arrow, setArrow] = useState(true)
-    const [isAccordeonHiden, setIsAccordeonHidden] = useState(true)
+
+
+
     const [category, setCategory] = useState([])
     const [products, setProducts] = useState([])
     const [recipies, setRecipies] = useState([])
     const [machines, setMachines] = useState([])
     const [report, setReports] = useState([])
     const [user, setUsers] = useState([])
-    const [height, setHeight] = useState("430px")
     const [timeStamps, setTimeStamps] = useState([])
     const [chosenOptions, setChosenOptions] = useState({ machine: [], user: [], product: [], recipe: [] })
     const [displayChosenOptions, setDisplayChosenOptions] = useState(chosenOptions)
@@ -469,8 +468,6 @@ const SummariesReport = (props) => {
                 IncludeAllUsers: Number(IncludeAllUsers),
                 TimeSpanId: Number(TimeSpanid),
                 StartDateTime,
-
-
             }
 
         axios({
@@ -484,7 +481,6 @@ const SummariesReport = (props) => {
                 chosenOptions.machine.forEach(element => {
                     MachineData.push({ ReportConditionId: res.data.id, MachineId: element.MachineId })
                 });
-
                 fetchMssqlApi(`/report-condition-machine`, {
                     method: "POST", data: MachineData
                 })
@@ -493,14 +489,11 @@ const SummariesReport = (props) => {
             if (chosenOptions?.product?.length > 0) {
                 let ProductData = []
                 chosenOptions.product.forEach(element => {
-
                     ProductData.push({ ReportConditionId: res.data.id, Ean: element.ProductId })
                 });
-
                 fetchMssqlApi(`/report-condition-product`, {
                     method: "POST", data: ProductData
                 })
-
             }
             if (chosenOptions?.recipe?.length > 0) {
                 let RecipeData = []
@@ -511,7 +504,6 @@ const SummariesReport = (props) => {
                 fetchMssqlApi(`/report-condition-recipe`, {
                     method: "POST", data: RecipeData
                 })
-
             }
 
             if (chosenOptions?.user?.length > 0) {
@@ -525,12 +517,8 @@ const SummariesReport = (props) => {
                 })
 
             }
-
             history.push(`/summaries/${props.match.params.ReportId}/${res.data.id}`)
             window.location.reload()
-
-
-
         }).catch(err => {
             if (err.response.data.message === "jwt malformed") window.location.reload();
             else ErrorNotification(err.response?.data || err.toString())

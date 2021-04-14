@@ -69,7 +69,6 @@ export default ({ machineData: initialMachineData, updateMachine, machineId, dat
       )
   }
 
-  console.log(tags)
 
   const getTags = () => {
     fetchMssqlApi(`tags/${initialMachineData.MachineId}`, {}, tags =>
