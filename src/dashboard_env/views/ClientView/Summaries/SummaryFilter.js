@@ -52,7 +52,6 @@ export default (props) => {
 
 
     const displayProperDate = (oldDate) => {
-        console.log(oldDate)
         const date = new Date(oldDate)
         const properDate = date.toISOString().split('T')[0]
         return properDate
@@ -258,7 +257,6 @@ export default (props) => {
                                                                 style={{ wordBreak: 'break-word' }}
                                                                 className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
                                                             >
-                                                                {col_idx === 2 ? console.log(col) : ""}
                                                                 {sessionStorage.getItem("DB_TYPE") !== "mysql" ? (col_idx === 2 ? displayProperDate(product[col]) : returnParsedIsShared(product[col])) : product[col]}
                                                             </button>
                                                         </td>
