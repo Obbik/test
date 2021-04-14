@@ -388,7 +388,7 @@ const SummariesReport = (props) => {
 
     const handleSubmit = (e) => {
 
-        let data
+
         e.preventDefault()
         const { ReportId } = report.find(obj => obj.Name === actualReportData.ReportName)
 
@@ -397,7 +397,7 @@ const SummariesReport = (props) => {
         const { TimeSpanId } = timeStamps.find(obj => obj.Name === TimeSpanName)
 
 
-        EndDateTime?.length > 0 ? data = {
+        const data = {
             Name,
             TimeSpanId: parseInt(TimeSpanId),
             ReportId: parseInt(ReportId),
@@ -407,18 +407,7 @@ const SummariesReport = (props) => {
             IncludeAllUsers: Number(IncludeAllUsers),
             StartDateTime,
             EndDateTime
-        } :
-            data = {
-                Name,
-                TimeSpanId: parseInt(TimeSpanId),
-                ReportId: parseInt(ReportId),
-                IncludeAllMachines: Number(IncludeAllMachines),
-                IncludeAllProducts: Number(IncludeAllProducts),
-                IncludeAllRecipes: Number(IncludeAllRecipes),
-                IncludeAllUsers: Number(IncludeAllUsers),
-                StartDateTime
-
-            }
+        }
 
         fetchMssqlApi(`report-condition/${actualReportData.ReportConditionId}`, {
             method: "PUT", data
@@ -427,8 +416,7 @@ const SummariesReport = (props) => {
         getCategoryData()
     }
 
-    const handleSubmitNew = (e) => {
-        let data
+    const handleSubmitNew = async (e) => {
         let timeData
         let TimeSpanid = 1
         const token = localStorage.getItem('token')
@@ -448,7 +436,7 @@ const SummariesReport = (props) => {
             TimeSpanid = timeData.TimeSpanId
         }
 
-        EndDateTime?.length > 0 ? data = {
+        const data = {
             Name,
             ReportId: Number(props.match.params.ReportId),
             IncludeAllMachines: Number(IncludeAllMachines),
@@ -458,75 +446,87 @@ const SummariesReport = (props) => {
             TimeSpanId: Number(TimeSpanid),
             StartDateTime,
             EndDateTime
-        } :
-            data = {
-                Name,
-                ReportId: Number(props.match.params.ReportId),
-                IncludeAllMachines: Number(IncludeAllMachines),
-                IncludeAllProducts: Number(IncludeAllProducts),
-                IncludeAllRecipes: Number(IncludeAllRecipes),
-                IncludeAllUsers: Number(IncludeAllUsers),
-                TimeSpanId: Number(TimeSpanid),
-                StartDateTime,
-            }
+        }
 
         axios({
             method: "POST",
             url: `${API_URL}/api/report-condition`,
             data,
             headers: { Authorization: `Bearer ${token}` }
-        }).then((res) => {
-            if (chosenOptions?.machine?.length > 0) {
-                let MachineData = []
-                chosenOptions.machine.forEach(element => {
-                    MachineData.push({ ReportConditionId: res.data.id, MachineId: element.MachineId })
-                });
-                fetchMssqlApi(`/report-condition-machine`, {
-                    method: "POST", data: MachineData
-                })
-            }
-
-            if (chosenOptions?.product?.length > 0) {
-                let ProductData = []
-                chosenOptions.product.forEach(element => {
-                    ProductData.push({ ReportConditionId: res.data.id, Ean: element.ProductId })
-                });
-                fetchMssqlApi(`/report-condition-product`, {
-                    method: "POST", data: ProductData
-                })
-            }
-            if (chosenOptions?.recipe?.length > 0) {
-                let RecipeData = []
-                chosenOptions.recipe.forEach(element => {
-
-                    RecipeData.push({ ReportConditionId: res.data.id, RecipeId: element.RecipeId })
-                });
-                fetchMssqlApi(`/report-condition-recipe`, {
-                    method: "POST", data: RecipeData
-                })
-            }
-
-            if (chosenOptions?.user?.length > 0) {
-                let UserData = []
-                chosenOptions.user.forEach(element => {
-
-                    UserData.push({ ReportConditionId: res.data.id, UserId: element.UserId })
-                });
-                fetchMssqlApi(`/report-condition-user`, {
-                    method: "POST", data: UserData
-                })
-
-            }
-            NotificationManager.success("Successfully added a statement")
-            history.push(`/summaries/${props.match.params.ReportId}`)
-
-        }).catch(err => {
-            if (err.response.data.message === "jwt malformed") window.location.reload();
-            else ErrorNotification(err.response?.data || err.toString())
         })
+            .then(res => {
+                const id = res.data.id;
+                const requests = []
+                // axios.all
+                // TO DO: replace res.data.id -> id
+                if (chosenOptions?.machine?.length > 0) {
+                    let MachineData = []
+                    chosenOptions.machine.forEach(element => {
+                        MachineData.push({ ReportConditionId: id, MachineId: element.MachineId })
+                    });
+                    requests.push(axios({
+                        method: "POST",
+                        url: `${API_URL}/api/report-condition-machine`,
+                        data: MachineData,
+                        headers: { Authorization: `Bearer ${token}` }
+                    }))
+                }
+
+                if (chosenOptions?.product?.length > 0) {
+                    let ProductData = []
+                    chosenOptions.product.forEach(element => {
+                        ProductData.push({ ReportConditionId: id, Ean: element.ProductId })
+                    });
+
+                    requests.push(axios({
+                        method: "POST",
+                        url: `${API_URL}/api/report-condition-product`,
+                        data: ProductData,
+                        headers: { Authorization: `Bearer ${token}` }
+                    }))
+
+                }
+
+                if (chosenOptions?.recipe?.length > 0) {
+                    let RecipeData = []
+                    chosenOptions.recipe.forEach(element => {
+
+                        RecipeData.push({ ReportConditionId: id, RecipeId: element.RecipeId })
+                    });
+
+                    requests.push(axios({
+                        method: "POST",
+                        url: `${API_URL}/api/report-condition-recipe`,
+                        data: RecipeData,
+                        headers: { Authorization: `Bearer ${token}` }
+                    }))
+
+                }
+                if (chosenOptions?.user?.length > 0) {
+                    let UserData = []
+                    chosenOptions.user.forEach(element => {
+
+                        UserData.push({ ReportConditionId: id, UserId: element.UserId })
+                    });
+                    requests.push(axios({
+                        method: "POST",
+                        url: `${API_URL}/api/report-condition-user`,
+                        data: UserData,
+                        headers: { Authorization: `Bearer ${token}` }
+                    }))
+                }
+                axios.all(requests).then(
+                    res => {
+                        NotificationManager.success("Successfully added a statement")
+                        history.push(`/summaries/${props.match.params.ReportId}`)
+                    }
+                )
+
+            }).catch(err => {
+                if (err.response.data.message === "jwt malformed") window.location.reload();
+                else ErrorNotification(err.response?.data || err.toString())
+            })
     }
-
-
 
 
     const downloadReport = () => {
