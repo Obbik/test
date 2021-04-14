@@ -109,8 +109,8 @@ const SummariesReport = (props) => {
             })
         }
 
-        if (isDuplicate === true) return NotificationManager.error("Rekord już istnieje")
-        if (!nameObject) return NotificationManager.error("Niepoprawne dane")
+        if (isDuplicate === true) return NotificationManager.error("The record already exists")
+        if (!nameObject) return NotificationManager.error("Incorrect data")
         if (nameObject) {
 
 
@@ -439,7 +439,7 @@ const SummariesReport = (props) => {
 
 
         if (TimeSpanName === TRL_Pack.summaries.openSelectBar || TimeSpanName === "") {
-            NotificationManager.error("Wybierz prawidłową datę")
+            NotificationManager.error("Select the correct date")
             return
         }
 
@@ -517,7 +517,7 @@ const SummariesReport = (props) => {
                 })
 
             }
-            NotificationManager.success("Pomyślnie dodano zestawienie")
+            NotificationManager.success("Successfully added a statement")
             history.push(`/summaries/${props.match.params.ReportId}`)
 
         }).catch(err => {
