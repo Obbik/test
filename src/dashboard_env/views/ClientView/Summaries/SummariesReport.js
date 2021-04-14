@@ -48,10 +48,10 @@ const SummariesReport = (props) => {
             ReportConditionId: "",
             Name: "",
             TimeSpanName: "",
-            IncludeAllMachines: true,
-            IncludeAllProducts: true,
-            IncludeAllRecipes: true,
-            IncludeAllUsers: true,
+            IncludeAllMachines: false,
+            IncludeAllProducts: false,
+            IncludeAllRecipes: false,
+            IncludeAllUsers: false,
             EndDateTime: new Date().toISOString().split('T')[0] + "T" + "23:" + "59:" + "59",
             StartDateTime: new Date().toISOString().split('T')[0] + "T" + "00:" + "00:" + "00"
         }
@@ -426,7 +426,6 @@ const SummariesReport = (props) => {
         getCategoryData()
     }
 
-
     const handleSubmitNew = (e) => {
         let data
         let timeData
@@ -517,8 +516,7 @@ const SummariesReport = (props) => {
                 })
 
             }
-            history.push(`/summaries/${props.match.params.ReportId}/${res.data.id}`)
-            window.location.reload()
+            history.push(`/summaries/${props.match.params.ReportId}`)
         }).catch(err => {
             if (err.response.data.message === "jwt malformed") window.location.reload();
             else ErrorNotification(err.response?.data || err.toString())
@@ -555,7 +553,6 @@ const SummariesReport = (props) => {
             getIndividualData()
             getCategoryData()
         }
-
     }, [])
 
 
