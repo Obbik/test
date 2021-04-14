@@ -79,7 +79,8 @@ const SummariesReport = (props) => {
 
         }
         else if (name === "user") {
-            nameObject = user.find(obj => obj.Name === inputData.user)
+            nameObject = user.find(obj => obj.UserId === inputData.user)
+            console.log(user, inputData)
             displayChosenOptions[name].forEach(elem => {
                 if (Object.values(elem).indexOf(nameObject?.Name) > -1) {
                     isDuplicate = true
@@ -516,7 +517,9 @@ const SummariesReport = (props) => {
                 })
 
             }
+            NotificationManager.success("Pomyślnie dodano zestawienie")
             history.push(`/summaries/${props.match.params.ReportId}`)
+
         }).catch(err => {
             if (err.response.data.message === "jwt malformed") window.location.reload();
             else ErrorNotification(err.response?.data || err.toString())
