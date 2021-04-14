@@ -2,8 +2,11 @@ import React, { useState, useEffect, useContext } from 'react'
 import { NavigationContext } from '../../../context/navigation-context'
 import { LangContext } from '../../../context/lang-context'
 import { useHistory, Link } from 'react-router-dom'
-import useFetch from '../../../hooks/fetchMSSQL-hook'
 
+
+import moment from "moment"
+
+import useFetch from '../../../hooks/fetchMSSQL-hook'
 import useFilter from '../../../hooks/filter-hook'
 
 
@@ -46,6 +49,17 @@ export default (props) => {
     }, [])
     let defaultFilter
 
+
+
+
+    const displayProperDate = (oldDate) => {
+        console.log(oldDate)
+        const date = new Date(oldDate)
+        const properDate = date.toISOString().split('T')[0]
+        return properDate
+    }
+
+
     if (localStorage.getItem("clientId") !== "console" && sessionStorage.getItem("DB_TYPE") !== "mysql") {
         defaultFilter = {
             showIndexes: false,
@@ -58,13 +72,7 @@ export default (props) => {
             activeTags: [],
             disableIndexes: "true",
             columns: [
-                {
-                    id: 1,
-                    name: "Id",
-                    type: "price",
-                    sortable: true,
-                    searchable: true,
-                },
+
                 {
                     id: 3,
                     name: TRL_Pack.summaries.reportName,
@@ -74,7 +82,7 @@ export default (props) => {
                 },
                 {
                     id: 10,
-                    name: TRL_Pack.summaries.frequencySending,
+                    name: TRL_Pack.summaries.timeFrame,
                     sortable: true,
                     searchable: true,
                     type: 'text',
@@ -211,9 +219,7 @@ export default (props) => {
                         </Link>
 
                     </div>
-
                     <>
-
                         <div className="overflow-auto">
                             <table className="table table-striped border">
                                 <thead>
@@ -253,7 +259,8 @@ export default (props) => {
                                                                 style={{ wordBreak: 'break-word' }}
                                                                 className="btn btn-link font-size-inherit text-reset text-decoration-none p-1"
                                                             >
-                                                                {sessionStorage.getItem("DB_TYPE") !== "mysql" ? returnParsedIsShared(product[col]) : product[col]}
+                                                                {col_idx === 2 ? console.log(col) : ""}
+                                                                {sessionStorage.getItem("DB_TYPE") !== "mysql" ? (col_idx === 2 ? displayProperDate(product[col]) : returnParsedIsShared(product[col])) : product[col]}
                                                             </button>
                                                         </td>
                                                     ))}
@@ -262,7 +269,6 @@ export default (props) => {
                                                     <Link
                                                         to={`${props.location.pathname}/${product.ReportConditionId}`}
                                                         className="btn btn-link link-icon"
-
                                                     >
                                                         <i className="far fa-edit" />
                                                     </Link>
@@ -271,15 +277,6 @@ export default (props) => {
                                         ))}
                                 </tbody>
                             </table>
-                            {/* {form === "new" && form && (
-                                <SummaryForm
-                                    headerText="Podsumownie"
-                                    handleClose={closeForm}
-                                    timeStamps={timeStamps}
-                                    reportName={reports}
-                                    reportId={props.match.params.ReportId}
-                                />
-                            )} */}
                         </div>
                     </>
 

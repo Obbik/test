@@ -71,6 +71,7 @@
     "addTerminal":"Add terminal"
   },
   "summaries" :{
+    "timeFrame":"Time frame",
     "summaries":"Summaries",
     "reportName":"Report name",
     "frequencySending":"Sending frequency",

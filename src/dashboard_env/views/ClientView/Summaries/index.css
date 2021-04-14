@@ -14,6 +14,26 @@
 	text-transform: uppercase;
 }
 
+.arrow_clicked {
+	cursor: pointer;
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 0.2s;
+	-moz-transition-timing-function: cubic-bezier(100, 50, 21, 6);
+	-moz-transition-property: all;
+	-moz-transition-timing-function: cubic-bezier(100, 50, 21, 6);
+	background: none;
+}
+
+.arrow_not_clicked {
+	cursor: pointer;
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 0.2s;
+	-moz-transition-timing-function: cubic-bezier(100, 50, 21, 6);
+	-moz-transition-property: all;
+	-moz-transition-timing-function: cubic-bezier(100, 50, 21, 6);
+	transform: rotate(90deg);
+}
+
 .button {
 	-webkit-transition-property: all;
 	-webkit-transition-duration: 0.2s;

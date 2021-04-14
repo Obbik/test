@@ -29,13 +29,12 @@ const Summaries = () => {
     };
 
 
-    console.log(groupedReports[clickedCategory])
     return (
         <div className="d-flex align-items-center flex-column justify-content-center align-self-center text-center ">
             <h1>Wybierz raport</h1>
             <div className=" blue d-flex flex-wrap sm-justify-content-start md-justify-content-center text-center my-1 rounded col-lg-12 my-1  col-sm-12 my-2 py-2  ">
                 <div className="left mr-2">
-                    {Object.keys(groupedReports).map(elem => <div className="font-weight-bold button " onClick={() => setClickedCategory(elem)}>
+                    {Object.keys(groupedReports).map((elem, idx) => <div key={idx} className="font-weight-bold button " onClick={() => setClickedCategory(elem)}>
 
                         {elem}
 
@@ -45,14 +44,14 @@ const Summaries = () => {
                     {groupedReports[clickedCategory]?.map(elem =>
 
                         <div className="p-3 button " key={elem.ReportId}  >
-
+                            {console.log(elem)}
                             <Link className="font-weight-bold"
-                                // title={section.GeneralDescription}
-                                // data-toggle="popover"
-                                // data-placement="top"
-                                // data-trigger="hover"
-                                // data-content="Click anywhere in the document to close this popover"
-                                // data-container="body"
+                                title={elem.GeneralDescription}
+                                data-toggle="popover"
+                                data-placement="top"
+                                data-trigger="hover"
+                                data-content="Click anywhere in the document to close this popover"
+                                data-container="body"
                                 style={{ textDecoration: 'none', color: "#000000" }}
                                 to={`/summaries/${elem.ReportId}`}
                             >

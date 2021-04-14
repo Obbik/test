@@ -1,28 +1,38 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { Redirect, useHistory, useParams } from "react-router-dom";
+import React, { useState, useEffect, useContext, useRef } from 'react'
+import { useHistory, useParams } from "react-router-dom";
 import useFetch from '../../../hooks/fetchMSSQL-hook'
 import { LangContext } from '../../../context/lang-context'
-import { Accordion, Card, Button } from 'react-bootstrap'
+import { Accordion, Card } from 'react-bootstrap'
 import { API_URL } from '../../../config/config'
 import { NotificationContext } from '../../../context/notification-context'
 
 import { NotificationManager } from 'react-notifications'
+import DropdownInput from "react-dropdown-select"
 
+import "./index.css"
 import axios from "axios"
 import moment from "moment"
+import _ from "lodash"
 const SummariesReport = (props) => {
     const { ErrorNotification, SuccessNofication } = useContext(NotificationContext)
     const { TRL_Pack } = useContext(LangContext)
     const { fetchMssqlApi } = useFetch()
     const { summariesReportId } = useParams()
     const history = useHistory()
+
+    const leftDivRef = useRef()
+    const rightDivRef = useRef()
+    const testRef = useRef()
+
+    const [arrow, setArrow] = useState(true)
+    const [isAccordeonHiden, setIsAccordeonHidden] = useState(true)
     const [category, setCategory] = useState([])
     const [products, setProducts] = useState([])
     const [recipies, setRecipies] = useState([])
     const [machines, setMachines] = useState([])
     const [report, setReports] = useState([])
     const [user, setUsers] = useState([])
-
+    const [height, setHeight] = useState("430px")
     const [timeStamps, setTimeStamps] = useState([])
     const [chosenOptions, setChosenOptions] = useState({ machine: [], user: [], product: [], recipe: [] })
     const [displayChosenOptions, setDisplayChosenOptions] = useState(chosenOptions)
@@ -48,156 +58,195 @@ const SummariesReport = (props) => {
         }
     )
 
+
+
     const addButton = (name) => {
         const token = localStorage.getItem('token')
-
+        let isDuplicate = false
 
         let nameObject = 0
         const upperFirstLetterName = `${name.charAt(0).toUpperCase() + name.slice(1)}`
-        const id = parseInt(inputData[name])
+
 
         if (name === "machine") {
-            nameObject = machines.find(obj => obj.MachineId == id)
+            nameObject = machines.find(obj => obj.MachineName === inputData.machine)
+            displayChosenOptions[name].forEach(elem => {
+                if (Object.values(elem).indexOf(nameObject?.MachineName) > -1) {
+                    isDuplicate = true
+                }
+                else isDuplicate = false
+            })
+
+
         }
         else if (name === "user") {
-            nameObject = user.find(obj => obj.UserId == id)
+            nameObject = user.find(obj => obj.Name === inputData.user)
+            displayChosenOptions[name].forEach(elem => {
+                if (Object.values(elem).indexOf(nameObject?.Name) > -1) {
+                    isDuplicate = true
+                }
+                else isDuplicate = false
+            })
+
         }
         else if (name === "product") {
-            nameObject = products.find(obj => obj.EAN == id)
+
+            nameObject = products.find(obj => obj.Name === inputData.product)
+            displayChosenOptions[name].forEach(elem => {
+                if (Object.values(elem).indexOf(nameObject?.Name) > -1) {
+                    isDuplicate = true
+                }
+                else isDuplicate = false
+            })
         }
         else if (name === "recipe") {
-            nameObject = recipies.find(obj => obj.RecipeId == id)
+            nameObject = recipies.find(obj => obj.Name === inputData.recipe)
+            displayChosenOptions[name].forEach(elem => {
+                if (Object.values(elem).indexOf(nameObject?.Name) > -1) {
+                    isDuplicate = true
+                }
+                else isDuplicate = false
+            })
         }
-        if (!nameObject) return
 
-        if (props.match.params.summariesReportId === "new") {
-            if (name === "user") {
-                setChosenOptions(prev =>
-                ({
-                    ...prev, [name]: [...prev[name],
-                    {
-                        [upperFirstLetterName + "Name"]: nameObject.Name,
-                        [`${upperFirstLetterName}Id`]: nameObject[upperFirstLetterName + "Id"]
-                    }]
-                }))
+        if (isDuplicate === true) return NotificationManager.error("Rekord już istnieje")
+        if (!nameObject) return NotificationManager.error("Niepoprawne dane")
+        if (nameObject) {
+
+
+            if (props.match.params.summariesReportId === "new") {
+                if (name === "user") {
+                    setChosenOptions(prev =>
+                    ({
+                        ...prev, [name]: [...prev[name],
+                        {
+                            [upperFirstLetterName + "Name"]: nameObject.Name,
+                            [`${upperFirstLetterName}Id`]: nameObject[upperFirstLetterName + "Id"]
+                        }]
+                    }))
+                }
+                else if (name === "product") {
+                    setChosenOptions(prev =>
+                    ({
+                        ...prev, [name]: [...prev[name],
+                        {
+                            [upperFirstLetterName + "Name"]: nameObject.Name,
+                            [`${upperFirstLetterName}Id`]: nameObject.EAN
+                        }]
+                    }))
+                }
+                else if (name === "machine") {
+                    setChosenOptions(prev =>
+                    ({
+                        ...prev, [name]: [...prev[name],
+                        {
+                            [upperFirstLetterName + "Name"]: nameObject.MachineName,
+                            [`${upperFirstLetterName}Id`]: nameObject[upperFirstLetterName + "Id"]
+                        }]
+                    }))
+                }
+                else if (name === "recipe") {
+                    setChosenOptions(prev =>
+                    ({
+                        ...prev, [name]: [...prev[name],
+                        {
+                            [upperFirstLetterName + "Name"]: nameObject.Name,
+                            [`${upperFirstLetterName}Id`]: nameObject.RecipeId
+                        }]
+                    }))
+                }
+                return
             }
-            else if (name === "product") {
-                setChosenOptions(prev =>
-                ({
-                    ...prev, [name]: [...prev[name],
-                    {
-                        [upperFirstLetterName + "Name"]: nameObject.Name,
-                        [`${upperFirstLetterName}Id`]: nameObject.EAN
-                    }]
-                }))
-            }
-            else if (name === "machine") {
-                setChosenOptions(prev =>
-                ({
-                    ...prev, [name]: [...prev[name],
-                    {
-                        [upperFirstLetterName + "Name"]: nameObject.MachineName,
-                        [`${upperFirstLetterName}Id`]: nameObject[upperFirstLetterName + "Id"]
-                    }]
-                }))
+
+            if (name === "product")
+                axios({
+                    method: "POST",
+                    url: `${API_URL}/api/report-condition-${name}`,
+                    data: { ReportConditionId: summariesReportId, Ean: nameObject.EAN },
+                    headers: { Authorization: `Bearer ${token}` }
+                }).then((res) => {
+                    SuccessNofication(res.data.message)
+                    setChosenOptions(prev =>
+                    ({
+                        ...prev, [name]: [...prev[name],
+                        {
+                            [upperFirstLetterName + "Name"]: nameObject.Name,
+                            [`ReportCondition${upperFirstLetterName}Id`]: res.data.rows[0].ReportConditionProductId
+                        }]
+                    }))
+                }).catch(err => {
+                    if (err.response.data.message === "jwt malformed") window.location.reload();
+                    else ErrorNotification(err.response?.data || err.toString())
+                })
+            else if (name === "user")
+                axios({
+                    method: "POST",
+                    url: `${API_URL}/api/report-condition-${name}`,
+                    data: { ReportConditionId: parseInt(summariesReportId), UserId: nameObject.UserId },
+                    headers: { Authorization: `Bearer ${token}` }
+                }).then((res) => {
+
+                    SuccessNofication(res.data.message)
+                    setChosenOptions(prev =>
+                    ({
+                        ...prev, [name]: [...prev[name],
+                        {
+                            [upperFirstLetterName + "Name"]: nameObject.Name,
+                            [`ReportCondition${upperFirstLetterName}Id`]: res.data.rows[0].ReportConditionUserId
+                        }]
+                    }))
+                }).catch(err => {
+                    if (err.response.data.message === "jwt malformed") window.location.reload();
+                    else ErrorNotification(err.response?.data || err.toString())
+                })
+
+            if (name === "machine") {
+
+                axios({
+                    method: "POST",
+                    url: `${API_URL}/api/report-condition-${name}`,
+                    data: { ReportConditionId: props.match.params.summariesReportId, MachineId: nameObject.MachineId },
+                    headers: { Authorization: `Bearer ${token}` }
+                }).then((res) => {
+
+                    SuccessNofication(res.data.message)
+                    setChosenOptions(prev =>
+                    ({
+                        ...prev, [name]: [...prev[name],
+                        {
+                            [upperFirstLetterName + "Name"]: nameObject.MachineName,
+                            [`ReportCondition${upperFirstLetterName}Id`]: res.data.rows[0].ReportConditionMachineId
+                        }]
+                    }))
+                }).catch(err => {
+                    if (err.response.data.message === "jwt malformed") window.location.reload();
+                    else ErrorNotification(err.response?.data || err.toString())
+                })
             }
             else if (name === "recipe") {
-                setChosenOptions(prev =>
-                ({
-                    ...prev, [name]: [...prev[name],
-                    {
-                        [upperFirstLetterName + "Name"]: nameObject.Name,
-                        [`${upperFirstLetterName}Id`]: nameObject.RecipeId
-                    }]
-                }))
+                axios({
+                    method: "POST",
+                    url: `${API_URL}/api/report-condition-${name}`,
+                    data: { ReportConditionId: parseInt(summariesReportId), RecipeId: nameObject.RecipeId },
+                    headers: { Authorization: `Bearer ${token}` }
+                }).then((res) => {
+                    SuccessNofication(res.data.message)
+                    setChosenOptions(prev =>
+                    ({
+                        ...prev, [name]: [...prev[name],
+                        {
+                            [upperFirstLetterName + "Name"]: nameObject.Name,
+                            [`ReportCondition${upperFirstLetterName}Id`]: res.data.rows[0].ReportConditionRecipeId
+                        }]
+                    }))
+                }).catch(err => {
+                    if (err.response.data.message === "jwt malformed") window.location.reload();
+                    else ErrorNotification(err.response?.data || err.toString())
+                })
             }
+        }
 
 
-            return
-        }
-        else if (name === "product")
-            axios({
-                method: "POST",
-                url: `${API_URL}/api/report-condition-${name}`,
-                data: { ReportConditionId: parseInt(summariesReportId), Ean: id },
-                headers: { Authorization: `Bearer ${token}` }
-            }).then((res) => {
-                SuccessNofication(res.data.message)
-                setChosenOptions(prev =>
-                ({
-                    ...prev, [name]: [...prev[name],
-                    {
-                        [upperFirstLetterName + "Name"]: nameObject.Name,
-                        [`ReportCondition${upperFirstLetterName}Id`]: res.data.id
-                    }]
-                }))
-            }).catch(err => {
-                if (err.response.data.message === "jwt malformed") window.location.reload();
-                else ErrorNotification(err.response?.data || err.toString())
-            })
-        else if (name === "user")
-            axios({
-                method: "POST",
-                url: `${API_URL}/api/report-condition-${name}`,
-                data: { ReportConditionId: parseInt(summariesReportId), UserId: id },
-                headers: { Authorization: `Bearer ${token}` }
-            }).then((res) => {
-                SuccessNofication(res.data.message)
-                setChosenOptions(prev =>
-                ({
-                    ...prev, [name]: [...prev[name],
-                    {
-                        [upperFirstLetterName + "Name"]: nameObject.Name,
-                        [`ReportCondition${upperFirstLetterName}Id`]: res.data.id
-                    }]
-                }))
-            }).catch(err => {
-                if (err.response.data.message === "jwt malformed") window.location.reload();
-                else ErrorNotification(err.response?.data || err.toString())
-            })
-
-        if (name === "machine") {
-            axios({
-                method: "POST",
-                url: `${API_URL}/api/report-condition-${name}`,
-                data: { ReportConditionId: parseInt(summariesReportId), MachineId: id },
-                headers: { Authorization: `Bearer ${token}` }
-            }).then((res) => {
-                SuccessNofication(res.data.message)
-                setChosenOptions(prev =>
-                ({
-                    ...prev, [name]: [...prev[name],
-                    {
-                        [upperFirstLetterName + "Name"]: nameObject.MachineName,
-                        [`ReportCondition${upperFirstLetterName}Id`]: res.data.id
-                    }]
-                }))
-            }).catch(err => {
-                if (err.response.data.message === "jwt malformed") window.location.reload();
-                else ErrorNotification(err.response?.data || err.toString())
-            })
-        }
-        else if (name === "recipe") {
-            axios({
-                method: "POST",
-                url: `${API_URL}/api/report-condition-${name}`,
-                data: { ReportConditionId: parseInt(summariesReportId), RecipeId: id },
-                headers: { Authorization: `Bearer ${token}` }
-            }).then((res) => {
-                SuccessNofication(res.data.message)
-                setChosenOptions(prev =>
-                ({
-                    ...prev, [name]: [...prev[name],
-                    {
-                        [upperFirstLetterName + "Name"]: nameObject.Name,
-                        [`ReportCondition${upperFirstLetterName}Id`]: res.data.id
-                    }]
-                }))
-            }).catch(err => {
-                if (err.response.data.message === "jwt malformed") window.location.reload();
-                else ErrorNotification(err.response?.data || err.toString())
-            })
-        }
 
     }
 
@@ -259,13 +308,12 @@ const SummariesReport = (props) => {
                 </div>
             )
         }
-
-
     }
 
     const handleChange = (e, checkbox, inputName) => {
         const name = e.target.name
         const value = e.target.value
+        let objectName
 
         if (checkbox === true) {
             setActualReportData(prev => ({
@@ -280,12 +328,12 @@ const SummariesReport = (props) => {
             }))
         }
         else
-
             if (value !== "Open this select menu" || value !== "Naciśnij aby otworzyć menu")
-                setInputData(prev => ({
-                    ...prev,
-                    [name]: value
-                }))
+                objectName = products.find(obj => obj.Name === value)
+        setInputData(prev => ({
+            ...prev,
+            [name]: objectName ? objectName.Name : value
+        }))
     }
     const toggleTitle = (name) => {
         displayChosenOptions[name].length !== 0 ?
@@ -301,15 +349,18 @@ const SummariesReport = (props) => {
         return (
             <div>
                 {chosenOptions[name].length > 0 &&
-                    <div className="text-center headerTitle " style={{ background: "#f3f3f3" }}>
-                        <input className="form-check-input" type="checkbox" id={name} onClick={() => toggleTitle(name)} />
-                        <label style={includeAll ? { textDecoration: "line-through" } : {}} className="form-check-label" htmlFor={name}>
+                    <div className="text-center headerTitle d-flex align-items-center" style={{ background: "#f3f3f3", position: "relative" }}>
+                        <label style={includeAll ? { textDecoration: "line-through", flex: 1 } : { flex: 1 }} className="form-check-label " htmlFor={name}>
                             {displayName}
                         </label>
+                        <div className={displayChosenOptions[name].length > 0 ? "fas fa-arrow-down arrow_clicked" : "fas fa-arrow-down arrow_not_clicked"} id={name}
+
+
+                            onClick={() => toggleTitle(name)} />
                     </div>}
 
                 {displayChosenOptions[name].map((value, idx) =>
-                    <div key={idx} className="text-center chosenOption" style={includeAll ? { textDecoration: "line-through" } : {}} onClick={
+                    <div key={idx} className="text-center chosenOption font-weight-normal" style={includeAll ? { textDecoration: "line-through" } : {}} onClick={
                         props.match.params.summariesReportId !== "new" ?
                             () => fetchMssqlApi(`report-condition-${name}/${value[`ReportCondition${upperFirstLetterName}Id`]}`, { method: "DELETE" },
                                 setChosenOptions(prev => (chosenOptions[name].splice(idx, 1), { ...prev, [name]: chosenOptions[name] })))
@@ -462,7 +513,7 @@ const SummariesReport = (props) => {
                 })
 
             }
-            console.log(chosenOptions)
+
             if (chosenOptions?.user?.length > 0) {
                 let UserData = []
                 chosenOptions.user.forEach(element => {
@@ -488,12 +539,13 @@ const SummariesReport = (props) => {
 
 
 
+
     const downloadReport = () => {
         const token = localStorage.getItem('token')
         axios({
             method: "POST",
             url: `${API_URL}/api/report-guid`,
-            data: { ReportConditionId: parseInt(summariesReportId) },
+            data: { ReportConditionId: parseInt(props.match.params.summariesReportId) },
             headers: { Authorization: `Bearer ${token}` }
         }).then((res) => {
             window.open(res.data.url)
@@ -502,9 +554,9 @@ const SummariesReport = (props) => {
             else ErrorNotification(err.response?.data || err.toString())
         })
     }
+
     useEffect(() => {
         setDisplayChosenOptions(chosenOptions)
-
     }, [chosenOptions])
 
     useEffect(() => {
@@ -515,33 +567,29 @@ const SummariesReport = (props) => {
             getIndividualData()
             getCategoryData()
         }
+
     }, [])
+
+
     return (
         <>
             <div className="row mb-4 justify-content-center">
                 <div className="col-12 col-md-6 mb-4 mb-md-0">
                     <div
+                        onClick={() => history.push(`/summaries/${props.match.params.ReportId}`)}
                         style={{ width: "1000px !important" }}
 
                         className=" btn btn-link justify-content-between d-flex text-decoration-none w-100"
-
                     >
-                        <i className="fas fa-arrow-left mr-2 text-decoration-none" onClick={() => history.push(`/summaries/${props.match.params.ReportId}`)} > {TRL_Pack.summaries.back}</i>
+                        <i className="fas fa-arrow-left mr-2 text-decoration-none"  > </i>
                         {props.match.params.summariesReportId !== "new" && (<i className="fa fa-download mr-2 text-decoration-none" onClick={() => downloadReport()} > {TRL_Pack.summaries.download}</i>)}
                     </div>
-
-                    <div className="card">
-                        <h5 className="card-header">Podstawowe Dane </h5>
-                        <div className="card-body d-flex flex-column justify-content-center ">
+                    <div className="card" >
+                        <h5 className="card-header">{reportName?.Name} </h5>
+                        <div className="card-body justify-content-center " ref={leftDivRef}>
                             <form id="machine-form" onSubmit={(e) => e.preventDefault()} autoComplete="off">
-
-                                <div className="row  text-center">
-                                    <div className="col-lg-12 mb-2  ">
-                                        {TRL_Pack.summaries.reportType}  {reportName?.Name}
-                                    </div>
-                                </div>
                                 <div className="row mb-3 text-center">
-                                    <div className="col-lg-4 mb-2  ">
+                                    <div className="col-lg-4 mb-2 font-weight-normal align-self-center ">
                                         {TRL_Pack.summaries.name}
                                     </div>
                                     <div className="col-lg-8 my-auto">
@@ -560,7 +608,7 @@ const SummariesReport = (props) => {
                                 </div>
 
                                 <div className="row mb-3 text-center justify-content-center">
-                                    <div className="col-lg-4 mb-2 mb-lg-0 ">
+                                    <div className="col-lg-4 mb-2 mb-lg-0  font-weight-normal align-self-center">
                                         {TRL_Pack.summaries.timeStamp}
                                     </div>
                                     <div className="col-lg-8 my-auto">
@@ -572,7 +620,7 @@ const SummariesReport = (props) => {
                                             onChange={e => handleChange(e)}
                                             minLength={2}
                                             maxLength={50}
-                                            required
+
                                         >
                                             {props.match.params.summariesReportId === "new" && <option defaultValue value={TRL_Pack.summaries.openSelectBar} >{TRL_Pack.summaries.openSelectBar}</option>}
                                             {timeStamps.map((timestamp) => <option key={timestamp.TimeSpanId} value={timestamp.Name} > {timestamp.Name} </option>)}
@@ -586,27 +634,26 @@ const SummariesReport = (props) => {
 
                                 {category.IncludeUsers ? (
                                     <div className="row mb-3 text-center">
-                                        <div className="col-lg-4 mb-2  d-flex flex-column align-items-center">
+                                        <div className="col-lg-4 col-sm-12 mb-2  d-flex flex-column align-items-center align-self-center">
                                             <input className="col-lg-4 mb-2 mb-lg-0"
                                                 name="IncludeAllUsers"
                                                 checked={actualReportData.IncludeAllUsers}
                                                 type="checkbox" onChange={e => handleChange(e, true)}
                                                 value={actualReportData.IncludeAllUsers} />
-                                            <span className="text-center">{TRL_Pack.summaries.includeAllUsers}</span>
+                                            <span className="text-center font-weight-normal">{TRL_Pack.summaries.includeAllUsers}</span>
                                         </div>
                                         {actualReportData.IncludeAllUsers === false && (
 
 
-                                            <div className="d-flex col-lg-8 my-auto input-group mb-3">
+                                            <div className="d-flex col-sm-12 col-lg-8 my-auto input-group mb-3">
                                                 <select
-                                                    className={" form-control mx-auto mx-lg-0 text-center"}
-                                                    style={{ maxWidth: 275 }}
+                                                    className={" col-sm-12 form-control mx-auto mx-lg-0 text-center"}
                                                     name="user"
                                                     value={inputData.users}
                                                     onChange={(value) => handleChange(value)}
                                                     minLength={2}
                                                     maxLength={50}
-                                                    required
+
                                                 >
 
                                                     <option defaultValue >{TRL_Pack.summaries.openSelectBar}</option>
@@ -623,120 +670,153 @@ const SummariesReport = (props) => {
                                 {category.IncludeMachines && (
 
                                     <div className="row mb-3 text-center">
-                                        <div className="col-lg-4 mb-2  d-flex flex-column align-items-center">
+                                        <div className="col-lg-4 mb-2  d-flex flex-column align-items-center align-self-center">
                                             <input className="col-lg-4 mb-2 mb-lg-0"
                                                 name="IncludeAllMachines"
                                                 checked={actualReportData.IncludeAllMachines}
                                                 type="checkbox" onChange={e => handleChange(e, true, "machine")}
                                                 value={actualReportData.IncludeAllMachines} />
-                                            <span className="text-center">{TRL_Pack.summaries.includeAllMachines}</span>
+                                            <span className="text-center font-weight-normal">{TRL_Pack.summaries.includeAllMachines}</span>
 
                                         </div>
-                                        {actualReportData.IncludeAllMachines === false ? (<div className={" d-flex col-lg-8 my-auto input-group mb-3"}>
-                                            <select
+                                        {actualReportData.IncludeAllMachines === false ? (<div className={" d-flex  col-sm-12 col-lg-8 my-auto input-group mb-3"}>
+                                            <input
                                                 type="select"
-                                                className={" form-control mx-auto mx-lg-0 text-center"}
-                                                style={{ maxWidth: 275 }}
+                                                className={" form-control mx-auto  mx-lg-0 text-center"}
+
                                                 name="machine"
                                                 value={inputData.machine}
                                                 onChange={(value) => handleChange(value)}
+                                                list="IncludeMachines"
                                                 minLength={2}
                                                 maxLength={50}
-                                            >
-                                                <option defaultValue >Open this select menu</option>
-                                                {machines.map((machine, idx) => <option key={machine.MachineId} value={parseInt(machine.MachineId)} > {machine.MachineName}</option>)}
+                                            />
+                                            <datalist id="IncludeMachines">
 
-                                            </select>
+                                                <option defaultValue >Open this select menu</option>
+                                                {machines.map((machine, idx) => <option key={machine.MachineId} value={machine.MachineName} > {machine.MachineName}
+                                                </option>)}
+                                            </datalist>
                                             <button className="fas fa-plus btn btn-primary" onClick={() => addButton("machine")} />
-                                        </div>) : ""}
+                                        </div>) :
+                                            <div className={"d-flex col-lg-8 my-auto"}>
+                                                <input
+
+                                                    className={" form-control mx-auto mx-lg-0 text-center"}
+                                                    disabled
+                                                    value={inputData.product}
+
+                                                />
+                                                <button className="fas fa-plus btn btn-primary" onClick={() => addButton("product")} />
+                                            </div>}
                                     </div>
                                 )}
 
                                 {category.IncludeProducts && (
 
-                                    <div className="row mb-3 text-center">
-                                        <div className="col-lg-4 mb-2 d-flex flex-column align-items-center ">
-                                            <input className="col-lg-4 mb-2 mb-lg-0"
-                                                name="IncludeAllProducts"
-                                                checked={actualReportData.IncludeAllProducts}
-                                                type="checkbox" onChange={e => handleChange(e, true, "product")}
-                                                value={actualReportData.IncludeAllProducts} />
-                                            <span className="text-center">{TRL_Pack.summaries.includeAllProducts}</span>
+                                    <div className="row mb-3 text-center line-height-2">
+                                        <div className="col-lg-4 mb-2  d-flex flex-column align-items-center align-self-center">
+                                            <div className="ml-1">
+                                                <input className=" mb-2 mt-2 mb-lg-0 "
+                                                    name="IncludeAllProducts"
+                                                    checked={actualReportData.IncludeAllProducts}
+                                                    type="checkbox" onChange={e => handleChange(e, true, "product")}
+                                                    value={actualReportData.IncludeAllProducts} />
+
+                                            </div>
+                                            <span className="text-center font-weight-normal">{TRL_Pack.summaries.includeAllProducts}</span>
                                         </div>
-                                        {actualReportData.IncludeAllProducts === false ? (<div className={"d-flex col-lg-8 my-auto"}>
-                                            <select
-                                                className={" form-control mx-auto mx-lg-0 text-center"}
-                                                style={{ maxWidth: 275 }}
-                                                name="product"
-                                                value={inputData.product}
-                                                onChange={(value) => handleChange(value)}
-                                                minLength={2}
-                                                maxLength={50}
-                                                list="IncludeProducts"
-                                                required
-                                            >
-                                                <option defaultValue >{TRL_Pack.summaries.openSelectBar}</option>
-                                                {products.map((product, idx) => <option key={idx} value={product.EAN} >{product.Name}</option>)}
-                                            </select>
-                                            <button className="fas fa-plus btn btn-primary" onClick={() => addButton("product")} />
-                                        </div>) : ""}
+                                        {actualReportData.IncludeAllProducts === false ? (
+                                            <div className={"d-flex col-lg-8 my-auto col-sm-12 "}>
+
+                                                <input
+                                                    className={" form-control mx-auto mx-lg-0 text-center"}
+
+                                                    name="product"
+                                                    value={inputData.product}
+                                                    onChange={(value) => handleChange(value)}
+                                                    minLength={2}
+                                                    maxLength={50}
+                                                    list="IncludeProducts"
+
+                                                />
+                                                <datalist id="IncludeProducts" name="product">
+                                                    <option defaultValue >{TRL_Pack.summaries.openSelectBar}</option>
+                                                    {products.map((product, idx) => <option key={idx} value={product.Name} >{product.Name}</option>)}
+                                                </datalist>
+
+
+                                                <button className="fas fa-plus btn btn-primary" onClick={() => addButton("product")} />
+                                            </div>) :
+                                            <div className={" col-sm-12 d-flex col-lg-8 my-auto"}>
+                                                <input
+
+                                                    className={" form-control mx-auto mx-lg-0 text-center"}
+                                                    disabled
+                                                    value={inputData.product}
+
+                                                />
+                                                <button className="fas fa-plus btn btn-primary" onClick={() => addButton("product")} />
+                                            </div>}
                                     </div>
                                 )}
                                 {category.IncludeRecipes && (
-
-                                    <div className="row mb-3 text-center">
-                                        <div className="col-lg-4 mb-2   d-flex flex-column align-items-center">
+                                    <div className="row mb-3 text-center line-height-2">
+                                        <div className="col-lg-4 mb-2   d-flex flex-column align-items-center align-self-center">
                                             <input className="col-lg-4 mb-2 mb-lg-0"
                                                 name="IncludeAllRecipes"
                                                 checked={actualReportData.IncludeAllRecipes}
                                                 type="checkbox" onChange={e => handleChange(e, true, "recipe")}
                                                 value={actualReportData.IncludeAllRecipes} />
-                                            <span className="text-center"> {TRL_Pack.summaries.includeAllRecipes}</span>
+                                            <span className="text-center font-weight-normal"> {TRL_Pack.summaries.includeAllRecipes}</span>
                                         </div>
-                                        {actualReportData.IncludeAllRecipes === false ? (<div className={"d-flex col-lg-8 my-auto "}>
-                                            <select
+                                        {actualReportData.IncludeAllRecipes === false ? (<div className={"d-flex col-sm-12  col-lg-8 my-auto "}>
+                                            <input
                                                 className={" form-control mx-auto mx-lg-0 text-center"}
-                                                style={{ maxWidth: 275 }}
+
                                                 name="recipe"
                                                 value={inputData.recipies}
                                                 onChange={(value) => handleChange(value)}
                                                 aria-label="Select Value"
-                                                required
-                                            >
+                                                list="IncludeRecipes"
+                                            />
+                                            <datalist id="IncludeRecipes" >
                                                 <option defaultValue >{TRL_Pack.summaries.openSelectBar}</option>
-                                                {recipies.map((recipe) => <option key={recipe.RecipeId} value={recipe.RecipeId} >{recipe.Name}</option>)}
-                                            </select>
+                                                {recipies.map((recipe) => <option key={recipe.RecipeId} value={recipe.Name} >{recipe.Name}</option>)}
+                                            </datalist>
                                             <button type="button" className="fas fa-plus btn btn-primary" onClick={() => addButton("recipe")} />
-                                        </div>) : ""}
+                                        </div>) : <div className={" col-sm-12 d-flex col-lg-8 my-auto"}>
+                                            <input
+
+                                                className={" form-control mx-auto mx-lg-0 text-center"}
+                                                disabled
+                                                value={inputData.product}
+
+                                            />
+                                            <button className="fas fa-plus btn btn-primary" onClick={() => addButton("product")} />
+                                        </div>}
                                     </div>
                                 )}
                                 <div className="text-center my-3">
                                     <button className="btn btn-primary" onClick={(e) => props.match.params.summariesReportId === "new" ? handleSubmitNew(e) : handleSubmit(e)} >{TRL_Pack.summaries.submit}</button>
                                 </div>
                             </form>
-
                         </div>
-
                     </div>
-
                 </div >
                 <Accordion defaultActiveKey="0" className="col-12 col-md-6 mb-4 mb-md-0">
 
-                    <Card style={{ marginTop: "28px", resize: "horizontal" }} >
-                        <input type="text" className="w-100 form-control" placeholder={TRL_Pack.summaries.searchBar} onChange={(e) => handleSortTable(e)} />
-                        <Card.Header>
-                            <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                                {TRL_Pack.summaries.choices}
-                            </Accordion.Toggle>
-                        </Card.Header>
-                        <Accordion.Collapse eventKey="0" style={{ overflowY: "scroll", height: "430px" }}>
-                            <Card.Body className="p-0 m-0" style={{ height: "430px" }}>
-                                {showSelectedTitle("machine", TRL_Pack.summaries.machines)}
-                                {showSelectedTitle("user", TRL_Pack.summaries.users)}
-                                {showSelectedTitle("product", TRL_Pack.summaries.products)}
-                                {showSelectedTitle("recipe", TRL_Pack.summaries.recipes)}
-                            </Card.Body>
-                        </Accordion.Collapse>
+                    <Card ref={rightDivRef} style={{ marginTop: "28px", }} >
+                        <div className="d-flex">
+                            <input type="text" className="border-right-0 form-control" style={{ outline: "none", borderRadius: 0, }} placeholder={TRL_Pack.summaries.searchBar} onChange={(e) => handleSortTable(e)} />
+                        </div>
+
+                        <Card.Body className="p-0 m-0" style={{ height: leftDivRef?.current?.offsetHeight }}>
+                            {showSelectedTitle("machine", TRL_Pack.summaries.machines)}
+                            {showSelectedTitle("user", TRL_Pack.summaries.users)}
+                            {showSelectedTitle("product", TRL_Pack.summaries.products)}
+                            {showSelectedTitle("recipe", TRL_Pack.summaries.recipes)}
+                        </Card.Body>
                     </Card>
 
                 </Accordion>

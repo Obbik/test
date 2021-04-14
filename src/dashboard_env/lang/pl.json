@@ -56,7 +56,7 @@
     "columns": "Kolumny"
   },
   "summaries" :{
-
+    "timeFrame":"Zakres czasowy",
     "summaries":"Zestawienia",
     "reportName":"Nazwa raportu",
     "frequencySending":"Częstotliwość wysyłania",
@@ -66,22 +66,22 @@
     "includeAllProducts":"Wszystkie produkty",
     "includeAllRecipes":"Wszystkie receptury",
     "includeAllUsers":"Wszystkich użytkowników",
-    "searchBar":"Wyszukaj wartości",
+    "searchBar":"Wyszukaj",
     "recipes":"Receptury",
-    "products":"Produkty",
+    "products":"Produkty",  
     "machines":"Maszyny",
     "users":"Użytkownicy",
-    "submit":"Zatwierdź",
+    "submit":"Zapisz",
     "back":"wróć",
     "download":"Pobierz",
     "choices":"Twoje wybory",
     "endDate":"Data końcowa",
     "startDate":"Data startowa",
     "name":"Nazwa",
-    "timeStamp":"Okres Czasu",
+    "timeStamp":"Okres czasu",
     "addReport":"Dodaj raport",
     "reportType":"Typ raportu:",
-    "openSelectBar":"Naciśnij aby otworzyć menu"
+    "openSelectBar":"Wybierz"
     
   },
   "monitoring": {
