@@ -630,7 +630,7 @@ const SummariesReport = (props) => {
                                                 value={actualReportData.IncludeAllUsers} />
                                             <span className="text-center font-weight-normal">{TRL_Pack.summaries.includeAllUsers}</span>
                                         </div>
-                                        {actualReportData.IncludeAllUsers === false && (
+                                        {actualReportData.IncludeAllUsers === false ? (
 
 
                                             <div className="d-flex col-sm-12 col-lg-8 my-auto input-group mb-3">
@@ -650,7 +650,19 @@ const SummariesReport = (props) => {
                                                 </select>
                                                 <button className="fas fa-plus btn btn-primary" onClick={() => addButton("user")} />
                                             </div>
-                                        )}
+                                        ) :
+
+                                            <div className={" col-sm-12 d-flex col-lg-8 my-auto"}>
+                                                <input
+
+                                                    className={" form-control mx-auto mx-lg-0 text-center"}
+                                                    disabled
+                                                    value={inputData.product}
+
+                                                />
+                                                <button className="fas fa-plus btn btn-primary" onClick={() => addButton("product")} />
+                                            </div>
+                                        }
 
                                     </div>
                                 ) : ""}
