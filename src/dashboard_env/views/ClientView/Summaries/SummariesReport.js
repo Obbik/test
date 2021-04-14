@@ -75,8 +75,6 @@ const SummariesReport = (props) => {
                 }
                 else isDuplicate = false
             })
-
-
         }
         else if (name === "user") {
             nameObject = user.find(obj => obj.UserId === inputData.user)
@@ -116,6 +114,9 @@ const SummariesReport = (props) => {
 
             if (props.match.params.summariesReportId === "new") {
                 if (name === "user") {
+                    setInputData(prev => ({
+                        ...prev, [name]: ""
+                    }))
                     setChosenOptions(prev =>
                     ({
                         ...prev, [name]: [...prev[name],
@@ -124,8 +125,12 @@ const SummariesReport = (props) => {
                             [`${upperFirstLetterName}Id`]: nameObject[upperFirstLetterName + "Id"]
                         }]
                     }))
+                    console.log(inputData)
                 }
                 else if (name === "product") {
+                    setInputData(prev => ({
+                        ...prev, [name]: ""
+                    }))
                     setChosenOptions(prev =>
                     ({
                         ...prev, [name]: [...prev[name],
@@ -136,6 +141,9 @@ const SummariesReport = (props) => {
                     }))
                 }
                 else if (name === "machine") {
+                    setInputData(prev => ({
+                        ...prev, [name]: ""
+                    }))
                     setChosenOptions(prev =>
                     ({
                         ...prev, [name]: [...prev[name],
@@ -146,6 +154,10 @@ const SummariesReport = (props) => {
                     }))
                 }
                 else if (name === "recipe") {
+                    console.log(inputData, name)
+                    setInputData(prev => ({
+                        ...prev, [name]: ""
+                    }))
                     setChosenOptions(prev =>
                     ({
                         ...prev, [name]: [...prev[name],
@@ -166,6 +178,9 @@ const SummariesReport = (props) => {
                     headers: { Authorization: `Bearer ${token}` }
                 }).then((res) => {
                     SuccessNofication(res.data.message)
+                    setInputData(prev => ({
+                        ...prev, [name]: ""
+                    }))
                     setChosenOptions(prev =>
                     ({
                         ...prev, [name]: [...prev[name],
@@ -187,6 +202,9 @@ const SummariesReport = (props) => {
                 }).then((res) => {
 
                     SuccessNofication(res.data.message)
+                    setInputData(prev => ({
+                        ...prev, [name]: ""
+                    }))
                     setChosenOptions(prev =>
                     ({
                         ...prev, [name]: [...prev[name],
@@ -210,6 +228,9 @@ const SummariesReport = (props) => {
                 }).then((res) => {
 
                     SuccessNofication(res.data.message)
+                    setInputData(prev => ({
+                        ...prev, [name]: ""
+                    }))
                     setChosenOptions(prev =>
                     ({
                         ...prev, [name]: [...prev[name],
@@ -231,6 +252,9 @@ const SummariesReport = (props) => {
                     headers: { Authorization: `Bearer ${token}` }
                 }).then((res) => {
                     SuccessNofication(res.data.message)
+                    setInputData(prev => ({
+                        ...prev, [name]: ""
+                    }))
                     setChosenOptions(prev =>
                     ({
                         ...prev, [name]: [...prev[name],
@@ -457,8 +481,6 @@ const SummariesReport = (props) => {
             .then(res => {
                 const id = res.data.id;
                 const requests = []
-                // axios.all
-                // TO DO: replace res.data.id -> id
                 if (chosenOptions?.machine?.length > 0) {
                     let MachineData = []
                     chosenOptions.machine.forEach(element => {
@@ -515,14 +537,16 @@ const SummariesReport = (props) => {
                         headers: { Authorization: `Bearer ${token}` }
                     }))
                 }
-                axios.all(requests).then(
-                    res => {
-                        NotificationManager.success("Successfully added a statement")
-                        history.push(`/summaries/${props.match.params.ReportId}`)
-                    }
-                )
+                return axios.all(requests)
 
-            }).catch(err => {
+
+            })
+            .then(
+                res => {
+                    NotificationManager.success("Successfully added a statement")
+                    history.push(`/summaries/${props.match.params.ReportId}`)
+                })
+            .catch(err => {
                 if (err.response.data.message === "jwt malformed") window.location.reload();
                 else ErrorNotification(err.response?.data || err.toString())
             })
@@ -637,7 +661,7 @@ const SummariesReport = (props) => {
                                                 <select
                                                     className={" col-sm-12 form-control mx-auto mx-lg-0 text-center"}
                                                     name="user"
-                                                    value={inputData.users}
+                                                    value={inputData.user}
                                                     onChange={(value) => handleChange(value)}
                                                     minLength={2}
                                                     maxLength={50}
@@ -775,7 +799,7 @@ const SummariesReport = (props) => {
                                                 className={" form-control mx-auto mx-lg-0 text-center"}
 
                                                 name="recipe"
-                                                value={inputData.recipies}
+                                                value={inputData.recipe}
                                                 onChange={(value) => handleChange(value)}
                                                 aria-label="Select Value"
                                                 list="IncludeRecipes"
