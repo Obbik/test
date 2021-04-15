@@ -1,0 +1,6 @@
+.lista {
+	transition: all 0.2s ease-in-out;
+}
+.lista:hover {
+	transform: scale(1.1);
+}

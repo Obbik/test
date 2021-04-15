@@ -1,0 +1,392 @@
+{
+  "buttons": {
+    "confirm":"Confirm",
+    "save": "Save",
+    "return": "Return",
+    "goToShop": "Return to shop",
+    "login": "Log in",
+    "open": "Open",
+    "cancel":"Cancel",
+    "saveVisit": "Save visit"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "clientId": "Client ID"
+  },
+  "navigation": {
+    "monitoring": "Monitoring",
+    "machines": "Machines",
+    "reports":"Reports",
+    "terminals":"Terminals",
+    "clients":"Clients",
+    "definitions": "Definitions",
+    "products": "Products",
+    "categories": "Categories",
+    "settings": "Settings",
+    "catalog":"Catalog",
+    "tags":"Tags",
+    "config": "Config",
+    "supply": "Supply",
+    "logout": "Log out",
+    "productCatalog":"Product catalog"
+  },
+  "Reports":{
+    "reports":"Reports",
+    "new":"Nowy",
+    "format":"Format",
+    "name":"Nazwa",
+    "from":"Od",
+    "to":"Do",
+    "details":"Szczegóły",
+    "delete":"Usuń",
+    "noReports":"Brak Raportów",
+    "generate":"Generate",
+    "downloadReport":"Download Report"
+  }, 
+  "navbar": {
+    "products": "Products",
+    "categories": "Categories",
+    "settings": "Settings",
+    "catalog":"Catalog",
+    "tags":"Tags",
+    "config": "Config",
+    "supply": "Supply",
+    "logout": "Log out"
+  },
+  "searchbarPlaceholder": "Search...",
+  "fileUploadPlaceholder": "Choose file",
+  "noResults": "No results found",
+  "filter": {
+    "rowsPerPage": "Rows per page",
+    "sortBy": "Sort by",
+    "showIndexes": "Show indexes",
+    "columns": "Columns"
+  },
+  "terminals":{
+    "terminalDelete":"Confirm terminal deletion",
+    "serialNo":"Serial number",
+    "client":"Client",
+    "addedDate":"Date",
+    "addTerminal":"Add terminal"
+  },
+  "summaries" :{
+    "timeFrame":"Time frame",
+    "summaries":"Summaries",
+    "reportName":"Report name",
+    "frequencySending":"Sending frequency",
+    "creationDateTime":"Creation time",
+    "sharedProduct":"Shared",
+    "includeAllMachines":"All Machines",
+    "includeAllProducts":"All Products",
+    "includeAllRecipes":"All Recipes",
+    "includeAllUsers":"All Users",
+    "searchBar":"Search for values",
+    "recipes":"Recipes",
+    "products":"Products",
+    "machines":"Machines",
+    "users":"Users",
+    "submit":"Submit",
+    "back":"Go Back",
+    "download":"Download",
+    "choices":"Your choices",
+    "endDate":"End date",
+    "startDate":"Start date",
+    "name":"Name",
+    "timeStamp":"Time Period",
+    "addReport":"Add report",
+    "reportType":"Report type:",
+    "openSelectBar":"Click to open the menu"
+    
+  },
+  "monitoring": {
+    "header": "Monitoring",
+    "serialNo": "Serial No",
+    "machine": "Machine",
+    "ipAddress": "IP Address",
+    "technicalData": "Technical data",
+    "softVersion": "Software version",
+    "transactions": "Transactions",
+    "notifications": "Notifications",
+    "info": "Info",
+    "next":"next",
+    "previous":"previous"
+  },
+  "notifications": {
+    "level": "Level",
+    "alert": "Alert",
+    "date": "Date"
+  },
+  "transactions": {
+    "status": "Status",
+    "payment": "Payment",
+    "cost": "Cost",
+    "date": "Date",
+    "shelf": "Shelf",
+    "ean": "EAN"
+  },
+  "machines": {
+    "header": "Machines",
+    "properties": {
+      "machineName": "Machine name",
+      "serialNo": "Serial No",
+      "location": "Location",
+      "machineType": "Machine type",
+      "maintenance": "Maintenance",
+      "terminal":"Terminal",
+      "client":"Client",
+      "delete":"Delete"
+    }
+  },
+  "clients":{
+    "name":"Name",
+    "base":"Base",
+    "addClient":"Add Client"
+  },
+  "tags":{
+    "deleteTag":"Are you sure you want to delete sections",
+    "machine":"Machine",
+    "product":"Product",
+    "others":"Others"
+  },
+  "machine": {
+    "addMachine":"Add machine",
+    "header": "Machine details",
+    "settings": {
+      "header": "Settings"
+    },
+    "info": {
+      "header": "Info"
+    }
+  },
+  "reports": {
+    "header": "Reports",
+    "lastVisits": {
+      "title": "Last visits",
+      "cols": ["Machine", "Date", "Serviceman", "Sale", "Coin extraction"]
+    },
+    "lastCoinInventories": {
+      "title": "Last coin inventories",
+      "cols": [
+        "Machine",
+        "Serial No",
+        "Machine Type",
+        "Serviceman",
+        "Date",
+        "KP",
+        "Coins Value",
+        "Expected Coins Value",
+        "Coin Sales Diff",
+        "Cashless Sales Diff",
+        "Total Sales Diff"
+      ]
+    },
+    "lastCoinInventoriesSum": {
+      "title": "Last coin inventories summary",
+      "cols": [
+        "Machine",
+        "Serial No",
+        "Machine Type",
+        "Coins Value",
+        "Expected Coins Value",
+        "Coin Sales Diff",
+        "Cashless Sales Diff",
+        "Total Sales Diff",
+        "Comment",
+        "Servicemen"
+      ]
+    }
+  },
+  "definitions": {
+    "header": "Definitions",
+    "products": "Products",
+    "categories": "Categories",
+    "locations": "Locations",
+    "machineTypes": "Machine Types",
+    "maintenances": "Maintenances"
+  },
+  "products": {
+    "addProduct":"Add product",
+    "header": "Products",
+    "productCategoriesHeader": "Product categories",
+    "confirmDeletionText": "Confirm product deletion",
+    "confirmDeleteNote":"Confirm note deletion",
+    "noNotes":"No notes",
+    "notes":"Notes",
+    "addNotes":"Add notes",
+    "newItemHeader": "New product",
+    "editItemHeader": "Edit product",
+    "filter":{
+        "productName":"Product name",
+        "isShared":"Shared products",
+        "ean":"Ean"
+        
+    },
+    "properties": {
+      "ean": "EAN",
+      "image": "Image",
+      "productName": "Product name",
+      "description": "Description"
+    },
+    "defaultHeader": "Products",
+    "addProductButton": "Add product",
+    "productCategoryHeader": "Product categories",
+    "confirmDeletion": "Confirm product deletion",
+    "newProductHeader": "New product",
+    "editProductHeader": "Edit product",
+    "editProductDisabledHeader":"Product Description",
+    "sharedProductLackOption":"None",
+    "props": {
+      "ean": "Ean",
+      "image": "Image",
+      "productName": "Name",
+      "description": "Description",
+      "shared":"Yes",
+      "notShared":"No"
+
+    }
+  },
+  "errors":{ 
+    "sameNumber":"Plese enter valid number",
+    "correctData":"Please enter correct data",
+    "invalidInput":"Invalid input",
+    "selectOneOption":"Select at least one option"
+
+  },
+  "monitoring":{
+    "highestTransaction":"Largest transaction",
+    "lastTransaction":"Recent transactions "
+  },
+  "categories": {
+    "chooseFile":"choose File",
+    "header": "Categories",
+    "addCategoryButton": "Add category",
+    "confirmDeletionText": "Confirm category deletion",
+    "newItemHeader": "New category",
+    "editItemHeader": "Edit category",
+    "confirmDeletion": "Confirm category deletion",
+    "newCategoryHeader": "New category",
+    "editCategoryHeader": "Edit category",
+    "props": {
+      "name":"Name",
+      "image": "Image",
+      "categoryName": "Name"},
+
+    "properties": {
+      "image": "Image",
+      "categoryName": "Category name"
+    }
+  },
+  "fullMachine":{
+    "saveVisit":"Save visit",
+    "information":"Information",
+    "deleteMachin":"Delete machine",
+    "editMachine":"Edit machine",
+    "client":"Client",
+    "deleteMachine":"Confirm machine deletion",
+    "machineName":"Machine Name",
+    "location":"Location",
+    "machineType":"Machine Type",
+    "maintenace":"Maintenace",
+    "tags":"Tags",
+    "serialNumber":"Serial Number",
+    "support":"Service",
+    "lastVisit":"Last Visit",
+    "listOfProduct":"Product list on the machine",
+    "new":"New",
+    "download":"Download",
+    "salesReset":"Sales Reset"
+  },
+  "lift":{
+    "choiceSettings":"choice settings",
+    "setNumberOfChoice":"Specify a choice number",
+    "spend":"Spend",
+    "unmerge":"Disconnect",
+    "send":"Send",
+    "merge":"Merge",
+    "elevatorSettings":"Elevator settings",
+    "elevatorReset":"Elevator Rest",
+    "shelf":"Shelf"
+  },
+  "modalDisplays":{
+    "del":"Delete product",
+    "deleteTag":"Confirm deletion of tag",
+    "deleteCategory":"Confirm deleting category",
+    "unsubProduct":"Confirm product unsubscription",
+    "delEan":"accepting will remove the product about Eana"
+  },
+  "machineRecipies":{
+    "number":"Nr",
+    "recipies":"Product",
+    "price":"Price (PLN)",
+    "lastSales":"Last sale",
+    "quantity":"Quantity",
+    "capacity":"Capacity"
+  },
+  "locations": {
+    "header": "Locations",
+    "addLocationButton": "Add location",
+    "confirmDeletionText": "Confirm location deletion",
+    "newItemHeader": "New location",
+    "editItemHeader": "Edit location",
+    "properties": {
+      "locationName": "Location name",
+      "geolocation": "Geolocation",
+      "long": "Longitude",
+      "lat": "Latitude",
+      "rent": "Rent",
+      "comment": "Comment"
+    }
+  },
+  "config":{
+    "config":"Konfiguracja",
+    "temperature":"Temperature",
+    "Elevator":"Elevator/Selection"
+  },
+  "machineTypes": {
+    "header": "Machine types",
+    "addMachineTypeButton": "Add machine type",
+    "confirmUnsaved":"Unsaved changes detected, are you sure you want to leave the page?",
+    "confirmDeletionText": "Confirm machine type deletion?",
+    "newItemHeader": "New machine type",
+    "editItemHeader": "Edit machine type",
+    "properties": {
+      "machineTypeName": "Machine type name"
+    }
+  },
+  "maintenances": {
+    "header": "Maintenances",
+    "addMaintenanceButton": "Add maintenance",
+    "confirmDeletionText": "Confirm maintennace deletion",
+    "newItemHeader": "New maintenance",
+    "editItemHeader": "Edit maintenance",
+    "properties": {
+      "maintenanceName": "Maintenance name"
+    }
+  },
+  "supply":{
+    "fillUp":"Fill everything up",
+    "emptyAll":"Empty everything",
+    "saveVisit":"Save Visit"
+  },
+    "shelves": {
+      "configHeader": "Config",
+      "rechargeHeader": "Machine recharge",
+      "addShelfButton": "Add shelf",
+      "confirmDeletion": "Confirm category shelf",
+      "newShelfHeader": "New shelf",
+      "config":"Konfiguracja",
+      "temperature":"Temperature",
+      "elevator":"Elevator/Selection",
+      "editShelfHeader": "Edit shelf",
+      "props": {
+        "shelf": "#",
+        "productName": "Product",
+        "price": "Price",
+        "discountedPrice": "Discounted price",
+        "quantity": "Quantity",
+        "capacity": "Capacity"
+
+      }
+    }
+}

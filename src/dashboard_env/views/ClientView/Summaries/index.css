@@ -1,0 +1,72 @@
+.tile {
+	text-decoration: none;
+}
+.tile:hover {
+	cursor: pointer;
+	background-color: lightgray;
+}
+.chosenOption:hover {
+	text-decoration: line-through;
+	background-color: lightgray;
+	cursor: pointer;
+}
+.headerTitle::first-letter {
+	text-transform: uppercase;
+}
+
+.arrow_clicked {
+	cursor: pointer;
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 0.2s;
+	-moz-transition-timing-function: cubic-bezier(100, 50, 21, 6);
+	-moz-transition-property: all;
+	-moz-transition-timing-function: cubic-bezier(100, 50, 21, 6);
+	background: none;
+}
+
+.arrow_not_clicked {
+	cursor: pointer;
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 0.2s;
+	-moz-transition-timing-function: cubic-bezier(100, 50, 21, 6);
+	-moz-transition-property: all;
+	-moz-transition-timing-function: cubic-bezier(100, 50, 21, 6);
+	transform: rotate(90deg);
+}
+
+.button {
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 0.2s;
+	-moz-transition-timing-function: cubic-bezier(100, 50, 21, 6);
+	-moz-transition-property: all;
+	-moz-transition-timing-function: cubic-bezier(100, 50, 21, 6);
+	color: #999;
+	padding: 10px 20px;
+	font-size: 12px;
+	text-decoration: none;
+	letter-spacing: 2px;
+	font-size: 1.2rem;
+	padding: 20px 20px;
+}
+
+.button:hover {
+	cursor: pointer;
+	border: none;
+	/* background: rgba(0, 0, 0, 0.4); */
+
+	color: black;
+}
+.right {
+	border-left: 1px solid grey;
+	width: 300px;
+}
+
+@media screen and (max-width: 600px) {
+	.left {
+		width: 100%;
+	}
+	.right {
+		width: 100%;
+		border: none;
+	}
+}

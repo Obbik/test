@@ -1,0 +1,382 @@
+{
+  "buttons": {
+    "confirm":"Akceptuj",
+    "save": "Zapisz",
+    "return": "Wróć",
+    "cancel":"Anuluj",
+    "goToShop": "Wróć do sklepu",
+    "login": "Zaloguj się",
+    "open": "Otwórz",
+    "saveVisit": "Zapisz wizytę"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Hasło",
+    "clientId": "ID klienta"
+  },
+  "navbar": {
+    "products": "Produkty",
+    "categories": "Kategorie",
+    "catalog":"Katalog",
+    "tags":"Tagi",
+    "settings": "Ustawienia",
+    "config": "Konfiguracja",
+    "supply": "Doładowanie",
+    "logout": "Wyloguj się"
+  },
+  "supply":{
+    "fillUp":"Zapełnij wszystko",
+    "emptyAll":"Opróżnij wszystko",
+    "saveVisit":"Zapisz wizytę"
+  },
+  "navigation": {
+    "monitoring": "Monitoring",
+    "machines": "Maszyny",
+    "reports":"Raporty",
+    "terminals":"Terminale",
+    "clients":"Klienci",
+    "definitions": "Definicje",
+    "products": "Produkty",
+    "categories": "Kategorie",
+    "settings": "Ustawienia",
+    "catalog":"Katalog",
+    "tags":"Tagi",
+    "config": "Konfiguracja",
+    "supply": "Dostawa",
+    "logout": "Wyloguj",
+    "productCatalog":"Katalog Produktów"
+  },
+  "searchbarPlaceholder": "Szukaj...",
+  "fileUploadPlaceholder": "Wybierz plik",
+  "noResults": "Brak danych",
+  "filter": {
+    "rowsPerPage": "Ilość wyników",
+    "sortBy": "Sortowanie",
+    "showIndexes": "Pokaż indeksy",
+    "columns": "Kolumny"
+  },
+  "summaries" :{
+    "timeFrame":"Zakres czasowy",
+    "summaries":"Zestawienia",
+    "reportName":"Nazwa raportu",
+    "frequencySending":"Częstotliwość wysyłania",
+    "creationDateTime":"Czas stworzenia",
+    "sharedProduct":"Współdzielony",
+    "includeAllMachines":"Wszystkie maszyny",
+    "includeAllProducts":"Wszystkie produkty",
+    "includeAllRecipes":"Wszystkie receptury",
+    "includeAllUsers":"Wszystkich użytkowników",
+    "searchBar":"Wyszukaj",
+    "recipes":"Receptury",
+    "products":"Produkty",  
+    "machines":"Maszyny",
+    "users":"Użytkownicy",
+    "submit":"Zapisz",
+    "back":"wróć",
+    "download":"Pobierz",
+    "choices":"Twoje wybory",
+    "endDate":"Data końcowa",
+    "startDate":"Data startowa",
+    "name":"Nazwa",
+    "timeStamp":"Okres czasu",
+    "addReport":"Dodaj raport",
+    "reportType":"Typ raportu:",
+    "openSelectBar":"Wybierz"
+    
+  },
+  "monitoring": {
+    "header": "Monitoring",
+    "serialNo": "Nr seryjny",
+    "machine": "Maszyna",
+    "ipAddress": "Adres IP",
+    "technicalData": "Dane techniczne",
+    "softVersion": "Wersja oprogramowania",
+    "transactions": "Transakcje",
+    "notifications": "Powiadomienia",
+    "info": "Informacje"
+  },
+  "notifications": {
+    "level": "Poziom",
+    "alert": "Błąd",
+    "date": "Data"
+  },
+  "transactions": {
+    "status": "Status",
+    "payment": "Płatność",
+    "cost": "Koszt",
+    "date": "Data",
+    "shelf": "Nr wyboru",
+    "ean": "Ean"
+  },
+  "machines": {
+    "header": "Maszyny",
+    "properties": {
+      "machineName": "Nazwa maszyny",
+      "serialNo": "Nr seryjny",
+      "location": "Lokalizacja",
+      "machineType": "Typ maszyny",
+      "maintenance": "Tryb obsługi",
+      "terminal":"Terminal",
+      "client":"Klient",
+      "delete":"Usuń"
+    }
+  },
+  "clients":{
+    "name":"Nazwa",
+    "base":"Baza",
+    "addClient":"Dodaj klienta"
+  },
+  "terminals":{
+    "terminalDelete":"Potwierdź usunięcie terminala",
+    "serialNo":"Nr seryjny",
+    "client":"Klient",
+    "addedDate":"Data dodania",
+    "addTerminal":"Dodaj Terminal"
+  },
+  "machine": {
+    "addMachine":"Dodaj maszyne",
+    "header": "Podgląd maszyny",
+    "settings": {
+      "header": "Ustawienia"
+    },
+    "info": {
+      "header": "Informacje"
+    }
+  },
+  "reports": {
+    "header": "Raporty",
+    "lastVisits": {
+      "title": "Ostatnie wizyty",
+      "cols": ["Maszyna", "Data", "Serwisant", "Sprzedaż", "Wyciąganie monet"]
+    },
+    "lastCoinInventories": {
+      "title": "Ostatnie inwentarze monet",
+      "cols": [
+        "Maszyna",
+        "Nr seryjny",
+        "Typ maszyny",
+        "Serwisant",
+        "Data",
+        "KP",
+        "Wartości monet",
+        "Oczekiwana wartość monet",
+        "Różnica sprzedaży monetami",
+        "Różnica sprzedaży bezgotówkowej",
+        "Różnica sprzedaży całkowitej"
+      ]
+    },
+    "lastCoinInventoriesSum": {
+      "title": "Ostatnie inwentarze monet - podsumowanie",
+      "cols": [
+        "Maszyna",
+        "Nr seryjny",
+        "Typ maszyny",
+        "Suma wartości monet",
+        "Oczekiwana wartość monet",
+        "Różnica sprzedaży monetami",
+        "Różnica sprzedaży bezgotówkowej",
+        "Różnica sprzedaży całkowitej",
+        "Komentarz",
+        "Serwisanci"
+      ]
+    }
+  },
+  "definitions": {
+    "header": "Definicje",
+    "products": "Produkty",
+    "categories": "Kategorie",
+    "locations": "Lokalizacje",
+    "machineTypes": "Typy maszyn",
+    "maintenances": "Tryby obsługi"
+  },
+  "products": {
+    "addProduct":"Dodaj produkt",
+    "defaultHeader": "Produkty",
+    "addProductButton": "Dodaj produkt",
+    "productCategoryHeader": "Kategorie produktu",
+    "confirmDeletion": "Czy na pewno chcesz usunąć produkt?",
+    "newProductHeader": "Dodaj produkt",
+    "editProductHeader": "Edytuj produkt",
+    "editProductDisabledHeader":"Opis produktu",
+    "sharedProductLackOption":"brak",
+    "filter":{
+      "productName":"Nazwa produktu",
+      "isShared":"Produkty współdzielone",
+      "ean":"Ean"
+    },
+    "props": {
+      "ean": "Ean",
+      "image": "Zdjęcie",
+      "productName": "Nazwa produktu",
+      "description": "Opis",
+      "shared":"Tak",
+      "notShared":"Nie"
+    },
+    "header": "Produkty",
+    "productCategoriesHeader": "Kategorie produktu",
+    "confirmDeletionText": "Czy na pewno chcesz usunąć produkt?",
+    "confirmDeleteNote":"Potwierdź usunięcie notatki",
+    "noNotes":"Brak notatek",
+    "notes":"Notatki",
+    "addNotes":"Dodaj notatke",
+    "newItemHeader": "Nowy produkt",
+    "editItemHeader": "Edytuj produkt",
+    "properties": {
+      "ean": "Ean",
+      "image": "Zdjęcie",
+      "productName": "Nazwa produktu",
+      "description": "Opis"
+    }
+  },
+  "Reports":{
+    "reports":"Reports",
+    "new":"Nowy",
+    "format":"Format",
+    "name":"Nazwa",
+    "from":"Od",
+    "to":"Do",
+    "details":"Szczegóły",
+    "delete":"Usuń",
+    "noReports":"Brak Raportów",
+    "generate":"generuj",
+    "downloadReport":"pobierz Raport"
+  },
+  "tags":{
+    "deleteTag":"Czy na pewno chcesz usunąć sekcje?",
+    "machine":"Maszyna",
+    "product":"Produkt",
+    "others":"Inne"
+  },
+  "categories": {
+    "chooseFile":"Wybierz plik ",
+    "header": "Kategorie",
+    "addCategoryButton": "Dodaj kategorie",
+    "confirmDeletionText": "Czy na pewno chcesz usunąć kategorie?",
+    "newItemHeader": "Nowa kategoria",
+    "editItemHeader": "Edytuj kategorie",
+    "properties": {
+      "name":"nazwa",
+      "image": "Zdjęcie",
+      "categoryName": "Nazwa kategorii"
+    },
+    "confirmDeletion": "Czy na pewno chcesz usunąć kategorie?",
+    "newCategoryHeader": "Dodaj kategorie",
+    "editCategoryHeader": "Edytuj kategorie",
+    "props": {
+      "image": "Zdjęcie",
+      "categoryName": "Nazwa kategorii"
+    }
+  },
+  "shelves": {
+    "configHeader": "Konfiguracja",
+    "rechargeHeader": "Doładowanie",
+    "addShelfButton": "Dodaj sprężynę",
+    "confirmDeletion": "Czy na pewno chcesz usunąć sprężyne?",
+    "newShelfHeader": "Dodaj sprężyne",
+    "config":"Konfiguracja",
+    "temperature":"Temperatura",
+    "elevator":"Winda/wybór",
+    "editShelfHeader": "Edytuj sprężyne",
+    "props": {
+      "shelf": "#",
+      "productName": "Nazwa produktu",
+      "price": "Cena",
+      "discountedPrice": "Cena promocyjna",
+      "quantity": "Ilość",
+      "capacity": "Pojemność"
+    }
+  },
+  "errors":{ 
+    "sameNumber":"Proszę podać inny numer",
+    "correctData":"Proszę wpisać prawidłowe dane",
+    "invalidInput":"Nieprawidłowo wprowadzone dane",
+    "selectOneOption":"Podaj przynajmniej jedną opcję"
+  },
+  "locations": {
+    "header": "Lokalizacje",
+    "addLocationButton": "Dodaj lokalizacje",
+    "confirmDeletionText": "Czy na pewno chcesz usunąć lokalizacje?",
+    "newItemHeader": "Nowa lokalizacja",
+    "editItemHeader": "Edytuj lokalizacje",
+    "properties": {
+      "locationName": "Nazwa lokalizacji",
+      "geolocation": "Geolokalizacja",
+      "long": "Wysokość geo",
+      "lat": "Szerokość geo",
+      "rent": "Czynsz",
+      "comment": "Komentarz"
+    }
+  },
+  "monitoring":{
+    "highestTransaction":"Najw. transakcji",
+    "lastTransaction":"Ost. transakcja"
+  },
+  "lift":{
+    "choiceSettings":"Ustawienia wyboru",
+    "setNumberOfChoice":"Podaj nr wyboru",
+    "spend":"Wydaj",
+    "unmerge":"Rozłącz",
+    "send":"Wyślij",
+    "merge":"Połącz",
+    "elevatorSettings":"Ustawienia windy",
+    "elevatorReset":"Rest windy",
+    "shelf":"półka"
+  },
+  "fullMachine":{
+    "saveVisit":"Zapisz wizytę",
+    "information":"Informacje",
+    "deleteMachin":"Usuń maszyne",
+    "editMachine":"Edytuj maszyne",
+    "client":"Klient",
+    "deleteMachine":"Potwierdź usunięcie maszyny",
+    "machineName":"Nazwa maszyny",
+    "location":"Lokalizacja",
+    "machineType":"Typ maszyny",
+    "maintenace":"Konserwacja",
+    "tags":"Tagi",
+    "serialNumber":"Numer Seryjny",
+    "support":"Obsługa",
+    "lastVisit":"Ostatnia Wizyta",
+    "listOfProduct":"Lista produktów na maszynie",
+    "new":"Nowy",
+    "download":"Pobierz",
+    "salesReset":"Reset sprzedaży"
+  },
+
+  "machineRecipies":{
+    "number":"Nr",
+    "recipies":"Produkt",
+    "price":"Cena (zł)",
+    "lastSales":"Ostatnia Sprzedaż",
+    "quantity":"Ilość",
+    "capacity":"Pojemność"
+  },
+  "modalDisplays":{
+    "del":"Usuń Produkt",
+    "deleteTag":"Potwierdź usunięcie tagu",
+    "deleteCategory":"Potwierdź usunięcie kategori",
+    "unsubProduct":"Potwierdz odsubskrybowanie produktu",
+    "delEan":"zaakceptowanie spowoduje usuniecie produktu o Eanie"
+  },
+  "machineTypes": {
+    "header": "Typy maszyn",
+    "addMachineTypeButton": "Dodaj typ maszyn",
+    "confirmUnsaved":"Wykryto niezapisane zmiany, czy na pewno chcesz opuścić stronę?",
+    "confirmDeletionText": "Czy na pewno chcesz usunąć typ maszyn?",
+    "newItemHeader": "Nowy typ maszyn",
+    "editItemHeader": "Edytuj typ maszyn",
+    "properties": {
+      "machineTypeName": "Nazwa typu maszyn"
+    }
+  },
+  "maintenances": {
+    "header": "Tryby obsługi",
+    "addMaintenanceButton": "Dodaj tryb obsługi",
+    "confirmDeletionText": "Czy na pewno chcesz usunąć tryb obsługi?",
+    "newItemHeader": "Nowy tryb obsługi",
+    "editItemHeader": "Edytuj tryb obsługi",
+    "properties": {
+      "maintenanceName": "Nazwa trybu obsługi"
+    }
+  }
+}
