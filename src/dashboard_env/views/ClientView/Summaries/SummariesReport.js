@@ -5,8 +5,10 @@ import { LangContext } from '../../../context/lang-context'
 import { Accordion, Card } from 'react-bootstrap'
 import { API_URL } from '../../../config/config'
 import { NotificationContext } from '../../../context/notification-context'
-
+import { LoaderContext } from '../../../context/loader-context'
 import { NotificationManager } from 'react-notifications'
+
+import Loader from '../../../components/Loader/Loader'
 
 
 import "./index.css"
@@ -15,6 +17,7 @@ import moment from "moment"
 
 const SummariesReport = (props) => {
     const { ErrorNotification, SuccessNofication } = useContext(NotificationContext)
+    const { loader, incrementRequests, decrementRequests } = useContext(LoaderContext)
     const { TRL_Pack } = useContext(LangContext)
     const { fetchMssqlApi } = useFetch()
     const { summariesReportId } = useParams()
@@ -22,9 +25,6 @@ const SummariesReport = (props) => {
 
     const leftDivRef = useRef()
     const rightDivRef = useRef()
-
-
-
 
     const [category, setCategory] = useState([])
     const [products, setProducts] = useState([])
@@ -77,10 +77,9 @@ const SummariesReport = (props) => {
             })
         }
         else if (name === "user") {
-            nameObject = user.find(obj => obj.UserId === inputData.user)
-            console.log(user, inputData)
+            nameObject = user.find(obj => obj.Email === inputData.user)
             displayChosenOptions[name].forEach(elem => {
-                if (Object.values(elem).indexOf(nameObject?.Name) > -1) {
+                if (Object.values(elem).indexOf(nameObject?.Email) > -1) {
                     isDuplicate = true
                 }
                 else isDuplicate = false
@@ -121,11 +120,11 @@ const SummariesReport = (props) => {
                     ({
                         ...prev, [name]: [...prev[name],
                         {
-                            [upperFirstLetterName + "Name"]: nameObject.Name,
+                            Email: nameObject.Email,
                             [`${upperFirstLetterName}Id`]: nameObject[upperFirstLetterName + "Id"]
                         }]
                     }))
-                    console.log(inputData)
+
                 }
                 else if (name === "product") {
                     setInputData(prev => ({
@@ -154,7 +153,7 @@ const SummariesReport = (props) => {
                     }))
                 }
                 else if (name === "recipe") {
-                    console.log(inputData, name)
+
                     setInputData(prev => ({
                         ...prev, [name]: ""
                     }))
@@ -170,13 +169,16 @@ const SummariesReport = (props) => {
                 return
             }
 
-            if (name === "product")
+            if (name === "product") {
+
+                incrementRequests()
                 axios({
                     method: "POST",
                     url: `${API_URL}/api/report-condition-${name}`,
                     data: { ReportConditionId: summariesReportId, Ean: nameObject.EAN },
                     headers: { Authorization: `Bearer ${token}` }
                 }).then((res) => {
+                    decrementRequests()
                     SuccessNofication(res.data.message)
                     setInputData(prev => ({
                         ...prev, [name]: ""
@@ -190,17 +192,20 @@ const SummariesReport = (props) => {
                         }]
                     }))
                 }).catch(err => {
+                    decrementRequests()
                     if (err.response.data.message === "jwt malformed") window.location.reload();
                     else ErrorNotification(err.response?.data || err.toString())
                 })
-            else if (name === "user")
+            }
+            else if (name === "user") {
+                incrementRequests()
                 axios({
                     method: "POST",
                     url: `${API_URL}/api/report-condition-${name}`,
                     data: { ReportConditionId: parseInt(summariesReportId), UserId: nameObject.UserId },
                     headers: { Authorization: `Bearer ${token}` }
                 }).then((res) => {
-
+                    decrementRequests()
                     SuccessNofication(res.data.message)
                     setInputData(prev => ({
                         ...prev, [name]: ""
@@ -209,24 +214,27 @@ const SummariesReport = (props) => {
                     ({
                         ...prev, [name]: [...prev[name],
                         {
-                            [upperFirstLetterName + "Name"]: nameObject.Name,
+                            Email: nameObject.Email,
                             [`ReportCondition${upperFirstLetterName}Id`]: res.data.rows[0].ReportConditionUserId
                         }]
                     }))
                 }).catch(err => {
+
                     if (err.response.data.message === "jwt malformed") window.location.reload();
                     else ErrorNotification(err.response?.data || err.toString())
                 })
+            }
 
-            if (name === "machine") {
 
+            else if (name === "machine") {
+                incrementRequests()
                 axios({
                     method: "POST",
                     url: `${API_URL}/api/report-condition-${name}`,
                     data: { ReportConditionId: props.match.params.summariesReportId, MachineId: nameObject.MachineId },
                     headers: { Authorization: `Bearer ${token}` }
                 }).then((res) => {
-
+                    decrementRequests()
                     SuccessNofication(res.data.message)
                     setInputData(prev => ({
                         ...prev, [name]: ""
@@ -240,17 +248,20 @@ const SummariesReport = (props) => {
                         }]
                     }))
                 }).catch(err => {
+                    decrementRequests()
                     if (err.response.data.message === "jwt malformed") window.location.reload();
                     else ErrorNotification(err.response?.data || err.toString())
                 })
             }
             else if (name === "recipe") {
+                incrementRequests()
                 axios({
                     method: "POST",
                     url: `${API_URL}/api/report-condition-${name}`,
                     data: { ReportConditionId: parseInt(summariesReportId), RecipeId: nameObject.RecipeId },
                     headers: { Authorization: `Bearer ${token}` }
                 }).then((res) => {
+                    decrementRequests()
                     SuccessNofication(res.data.message)
                     setInputData(prev => ({
                         ...prev, [name]: ""
@@ -264,6 +275,7 @@ const SummariesReport = (props) => {
                         }]
                     }))
                 }).catch(err => {
+                    decrementRequests()
                     if (err.response.data.message === "jwt malformed") window.location.reload();
                     else ErrorNotification(err.response?.data || err.toString())
                 })
@@ -337,6 +349,7 @@ const SummariesReport = (props) => {
     const handleChange = (e, checkbox, inputName) => {
         const name = e.target.name
         const value = e.target.value
+
         let objectName
 
         if (checkbox === true) {
@@ -352,12 +365,16 @@ const SummariesReport = (props) => {
             }))
         }
         else
-            if (value !== "Open this select menu" || value !== "Naciśnij aby otworzyć menu")
-                objectName = products.find(obj => obj.Name === value)
+
+
+            if (name === "user") objectName = user.find(obj => obj.Email === value)
+        // objectName = user.find(obj => obj.Name = value)
+
         setInputData(prev => ({
             ...prev,
-            [name]: objectName ? objectName.Name : value
+            [name]: objectName ? objectName.Email : value
         }))
+
     }
     const toggleTitle = (name) => {
         displayChosenOptions[name].length !== 0 ?
@@ -391,15 +408,19 @@ const SummariesReport = (props) => {
                             :
                             () => setChosenOptions(prev => (chosenOptions[name].splice(idx, 1), { ...prev, [name]: chosenOptions[name] }))
                     }>
-                        {`${value[upperFirstLetterName + "Name"]}`}
+
+                        {name === "user" ? `${value.Email}` : `${value[upperFirstLetterName + "Name"]}`}
                     </div>)
                 }
             </div >
         )
     }
     const handleSortTable = (e) => {
+        let uppercaseName
         for (const [key, value] of Object.entries(displayChosenOptions)) {
-            const uppercaseName = `${key.charAt(0).toUpperCase() + key.slice(1)}Name`
+            key === "user" ? uppercaseName = "Email" :
+                uppercaseName = `${key.charAt(0).toUpperCase() + key.slice(1)}Name`
+
             const filtered = value.filter(item => item[uppercaseName].toLowerCase().includes(e.target.value));
             e.target.value.length == 0 ? setDisplayChosenOptions(chosenOptions) :
                 setDisplayChosenOptions((prev) => ({
@@ -568,6 +589,10 @@ const SummariesReport = (props) => {
         })
     }
 
+
+
+
+
     useEffect(() => {
         setDisplayChosenOptions(chosenOptions)
     }, [chosenOptions])
@@ -585,6 +610,7 @@ const SummariesReport = (props) => {
 
     return (
         <>
+            {loader && <Loader />}
             <div className="row mb-4 justify-content-center">
                 <div className="col-12 col-md-6 mb-4 mb-md-0">
                     <div
@@ -665,12 +691,13 @@ const SummariesReport = (props) => {
                                                     onChange={(value) => handleChange(value)}
                                                     minLength={2}
                                                     maxLength={50}
+                                                    list="IncludeUsers"
 
                                                 />
 
-
-                                                {user.map((user, ksx) => <option key={ksx} value={user.UserId} >{user.Name}</option>)}
-
+                                                <datalist id="IncludeUsers" >
+                                                    {user.map((user, ksx) => <option key={user.UserId} value={user.Email} >{user.Email}</option>)}
+                                                </datalist>
 
                                                 <button className="fas fa-plus btn btn-primary" onClick={() => addButton("user")} />
                                             </div>
@@ -827,7 +854,7 @@ const SummariesReport = (props) => {
                             <input type="text" className="border-right-0 form-control" style={{ outline: "none", borderRadius: 0, }} placeholder={TRL_Pack.summaries.searchBar} onChange={(e) => handleSortTable(e)} />
                         </div>
 
-                        <Card.Body className="p-0 m-0" style={{ height: leftDivRef?.current?.offsetHeight }}>
+                        <Card.Body className="p-0 m-0" style={{ overflow: "scroll", height: leftDivRef?.current?.offsetHeight }}>
                             {showSelectedTitle("machine", TRL_Pack.summaries.machines)}
                             {showSelectedTitle("user", TRL_Pack.summaries.users)}
                             {showSelectedTitle("product", TRL_Pack.summaries.products)}
