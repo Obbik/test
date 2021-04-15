@@ -20,6 +20,7 @@ export default (props) => {
     const { fetchMssqlApi } = useFetch()
     const { setHeaderData } = useContext(NavigationContext)
     const { TRL_Pack } = useContext(LangContext)
+
     const { searchedText, updateSearchedText, page, updateCurrentPage } = useFilter()
     const history = useHistory()
 
@@ -42,7 +43,7 @@ export default (props) => {
 
 
     useEffect(() => {
-        setHeaderData({ text: TRL_Pack.definitions.products })
+        setHeaderData({ text: "Zestawienia" })
         getData()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

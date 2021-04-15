@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { Link, Route, Switch } from "react-router-dom"
+import { NavigationContext } from '../../../context/navigation-context'
 import './index.css'
 
 import _ from "lodash"
@@ -9,7 +10,7 @@ import "./index.css"
 
 
 const Summaries = () => {
-
+    const { setHeaderData } = useContext(NavigationContext)
     const { fetchMssqlApi } = useFetch()
     const [clickedCategory, setClickedCategory] = useState()
     const [reports, setReports] = useState([])
@@ -17,6 +18,8 @@ const Summaries = () => {
     const groupedReports = _.groupBy(reports, (data) => data.ParentName)
     useEffect(() => {
         fetchMssqlApi(`/reports`, {}, report => setReports(report))
+
+        setHeaderData({ text: "Zestawienia" })
 
     }, [])
 

@@ -7,7 +7,7 @@ import { API_URL } from '../../../config/config'
 import { NotificationContext } from '../../../context/notification-context'
 import { LoaderContext } from '../../../context/loader-context'
 import { NotificationManager } from 'react-notifications'
-
+import { NavigationContext } from '../../../context/navigation-context'
 import Loader from '../../../components/Loader/Loader'
 
 
@@ -16,6 +16,7 @@ import axios from "axios"
 import moment from "moment"
 
 const SummariesReport = (props) => {
+    const { setHeaderData } = useContext(NavigationContext)
     const { ErrorNotification, SuccessNofication } = useContext(NotificationContext)
     const { loader, incrementRequests, decrementRequests } = useContext(LoaderContext)
     const { TRL_Pack } = useContext(LangContext)
@@ -598,6 +599,7 @@ const SummariesReport = (props) => {
     }, [chosenOptions])
 
     useEffect(() => {
+        setHeaderData({ text: "Zestawienia" })
         if (props.match.params.summariesReportId === "new") {
             getCategoryData()
         }
