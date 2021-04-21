@@ -35,6 +35,8 @@ import Clients from '../views/ConsoleView/Clients/Clients'
 import Products from '../views/ConsoleView/Products/Products'
 import Categories from '../views/ConsoleView/Categories/Categories'
 
+import Users from "../views/ClientView/Users/Users"
+
 import Machines from '../views/ClientView/Machines/Machines'
 import FullMachine from '../views/ClientView/Machines/FullMachine'
 // import Definition from '../views/ClientView/Definitions/Definition'
@@ -47,8 +49,9 @@ import SummaryFilter from '../views/ClientView/Summaries/SummaryFilter'
 import SummariesReport from "../views/ClientView/Summaries/SummariesReport"
 
 
+
+
 export default () => {
-  let history = useHistory();
 
   const { isAuth, login, logout } = useAuth()
 
@@ -58,7 +61,6 @@ export default () => {
   sessionStorage.setItem("DB_TYPE", DB_TYPE)
   let authRoutes = []
 
-  console.log(isAuth)
 
   if (sessionStorage.getItem('DB_TYPE') === "mysql") // MACHINE Routes
   {
@@ -137,6 +139,11 @@ export default () => {
             { path: '/summaries/:ReportId', component: SummaryFilter },
             { path: '/summaries/:ReportId/:summariesReportId', component: SummariesReport })
           break;
+        case "VD_USERS":
+          authRoutes.push(
+            { path: '/users', component: Users },
+          )
+          break;
         default:
           break;
       }
@@ -173,7 +180,6 @@ export default () => {
                 <NavigationProvider>
                   <SearchbarProvider>
                     {authRoutes.length > 0 ? <Switch>
-
                       {authRoutes.map((route, idx) => (
                         <Route key={idx} exact {...route} />
                       ))}

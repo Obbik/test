@@ -109,6 +109,9 @@ export default ({ children }) => {
         case "VD_REPORT_CONDITIONS":
           navlinks.push({ text: TRL_Pack.summaries.summaries, path: '/summaries', icon: 'fas fa-table' },)
           break;
+        case "VD_USERS":
+          navlinks.push({ text: TRL_Pack.navigation.users, path: '/users', icon: 'fa fa-users' },)
+          break;
         default:
           break;
       }

@@ -15,6 +15,7 @@
     "clientId": "Client ID"
   },
   "navigation": {
+    "users":"Users",
     "monitoring": "Monitoring",
     "machines": "Machines",
     "reports":"Reports",
@@ -30,6 +31,19 @@
     "supply": "Supply",
     "logout": "Log out",
     "productCatalog":"Product catalog"
+  },
+  "Users":{
+    "Name":"Name",
+    "LastName":"Last name",
+    "Position":"Position",
+    "AddUser":"Add user",
+    "ChangePassword":"Change password",
+    "CurrentPassword":"Current password",
+    "NewPassword":"New password",
+    "RepeatNewPassword":"Repeat new password",
+    "ChangeEmail":"Change Email",
+    "Users":"Users",
+    "Password":"Password"
   },
   "Reports":{
     "reports":"Reports",

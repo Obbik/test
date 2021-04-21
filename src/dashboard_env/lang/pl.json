@@ -30,6 +30,7 @@
     "saveVisit":"Zapisz wizytę"
   },
   "navigation": {
+    "users":"Użytkownicy",
     "monitoring": "Monitoring",
     "machines": "Maszyny",
     "reports":"Raporty",
@@ -228,6 +229,19 @@
       "description": "Opis"
     }
   },
+  "Users":{
+    "Name":"Nazwa",
+    "LastName":"Nazwisko",
+    "Position":"Stanowisko",
+    "AddUser":"Dodaj użytkownika",
+    "ChangePassword":"Zmiana hasła",
+    "CurrentPassword":"Aktualne hasło",
+    "NewPassword":"Nowe hasło",
+    "RepeatNewPassword":"Powtórz nowe hasło",
+    "ChangeEmail":"Zmiana Emaila",
+    "Users":"Użytkownicy",
+    "Password":"Hasło"
+  },
   "Reports":{
     "reports":"Reports",
     "new":"Nowy",
@@ -352,7 +366,7 @@
     "capacity":"Pojemność"
   },
   "modalDisplays":{
-    "del":"Usuń Produkt",
+    "del":"Usuń",
     "deleteTag":"Potwierdź usunięcie tagu",
     "deleteCategory":"Potwierdź usunięcie kategori",
     "unsubProduct":"Potwierdz odsubskrybowanie produktu",

@@ -109,10 +109,10 @@ export default ({
                           {category.Name}
                         </button>
                       ) : (
-                          <span style={{ wordBreak: 'break-word' }} className="p-1">
-                            {category.Name}
-                          </span>
-                        )}
+                        <span style={{ wordBreak: 'break-word' }} className="p-1">
+                          {category.Name}
+                        </span>
+                      )}
                     </td>
                     <td className="text-center">
                       <img
@@ -148,11 +148,11 @@ export default ({
           </table>
         </div>
       ) : (
-          <NoResults
-            onClick={openForm()}
-            buttonText={TRL_Pack.categories.addCategoryButton}
-          />
-        )}
+        <NoResults
+          onClick={openForm()}
+          buttonText={TRL_Pack.categories.addCategoryButton}
+        />
+      )}
       {form && (
         <CategoryForm
           categoryData={

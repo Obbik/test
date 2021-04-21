@@ -38,7 +38,6 @@ export default () => {
         decrementRequests()
         onSuccess(res.data)
         if (method !== 'GET') {
-          console.log(res)
           if (!hideNotification) SuccessNofication(res.data.message)
         }
       })

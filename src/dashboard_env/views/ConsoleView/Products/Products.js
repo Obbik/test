@@ -26,7 +26,7 @@ export default () => {
   const { fetchMssqlApi } = useFetch()
   const { setHeaderData } = useContext(NavigationContext)
   const { TRL_Pack } = useContext(LangContext)
-  const { searchedText, updateSearchedText, page, updateCurrentPage } = useFilter()
+  const { searchedText } = useFilter()
   const { categoryId } = useParams()
   const history = useHistory()
 
@@ -257,7 +257,6 @@ export default () => {
     setSubscribed(isSubscribed)
     setEan(ean)
     openForm("acceptModal")()
-
   }
 
   return (

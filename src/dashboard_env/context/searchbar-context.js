@@ -23,7 +23,7 @@ export default ({ children }) => {
         arg && String(arg).toLowerCase().includes(searchedTextRef.current.toLowerCase())
     )
 
-  const Searchbar = ({ callback = () => {} }) => {
+  const Searchbar = ({ callback = () => { } }) => {
     const handleChange = evt => {
       searchedTextRef.current = evt.target.value
       if (page !== 1) setPage(1)
@@ -66,7 +66,7 @@ export default ({ children }) => {
   const Pagination = ({
     totalItems,
     itemsPerPage = defaultItemsPerPage,
-    callback = () => {}
+    callback = () => { }
   }) => {
     const handleChange = newPage => () => {
       setPage(newPage)
